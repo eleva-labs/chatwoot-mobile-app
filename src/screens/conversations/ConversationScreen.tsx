@@ -19,7 +19,7 @@ import {
   AssigneeTypeFilters,
 } from './components';
 
-import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
+import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper, FloatingActionButton } from '@/components-next';
 
 import { EmptyStateIcon } from '@/svg-icons';
 import {
@@ -289,6 +289,11 @@ const ConversationScreen = () => {
     dispatch(resetActionState());
   };
 
+  const handleFabPress = () => {
+    // TODO: Implement FAB action (e.g., create new conversation, quick action menu, etc.)
+    console.log('FAB pressed - Add your action here');
+  };
+
   const filterSnapPoints = useMemo(() => {
     switch (currentBottomSheet) {
       case 'status':
@@ -335,6 +340,7 @@ const ConversationScreen = () => {
         </BottomSheetModal>
         <ActionBottomSheet />
         <ActionTabs />
+        <FloatingActionButton onPress={handleFabPress} />
       </ConversationListStateProvider>
     </SafeAreaView>
   );
