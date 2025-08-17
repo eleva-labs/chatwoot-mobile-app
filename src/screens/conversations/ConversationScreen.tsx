@@ -19,7 +19,7 @@ import {
   AssigneeTypeFilters,
 } from './components';
 
-import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper, FloatingActionButton } from '@/components-next';
+import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper, FloatingActionButton, AIChatModal } from '@/components-next';
 
 import { EmptyStateIcon } from '@/svg-icons';
 import {
@@ -270,6 +270,7 @@ const ConversationList = () => {
 const ConversationScreen = () => {
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
   const dispatch = useAppDispatch();
+  const [isAIChatVisible, setIsAIChatVisible] = useState(false);
 
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
@@ -289,10 +290,13 @@ const ConversationScreen = () => {
     dispatch(resetActionState());
   };
 
-  const handleFabPress = () => {
-    // TODO: Implement FAB action (e.g., create new conversation, quick action menu, etc.)
-    console.log('FAB pressed - Add your action here');
-  };
+  const handleFabPress = useCallback(() => {
+    setIsAIChatVisible(true);
+  }, []);
+
+  const handleCloseAIChat = useCallback(() => {
+    setIsAIChatVisible(false);
+  }, []);
 
   const filterSnapPoints = useMemo(() => {
     switch (currentBottomSheet) {
@@ -341,6 +345,10 @@ const ConversationScreen = () => {
         <ActionBottomSheet />
         <ActionTabs />
         <FloatingActionButton onPress={handleFabPress} />
+        <AIChatModal 
+          visible={isAIChatVisible} 
+          onClose={handleCloseAIChat} 
+        />
       </ConversationListStateProvider>
     </SafeAreaView>
   );

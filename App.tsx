@@ -1,3 +1,4 @@
+import './polyfills'; // Must be first for AI SDK support
 import * as Sentry from '@sentry/react-native';
 import { getApps } from '@react-native-firebase/app';
 import { waitForFirebaseInit } from './src/utils/firebaseUtils';
