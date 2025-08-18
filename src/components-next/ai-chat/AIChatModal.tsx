@@ -6,7 +6,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { fetch as expoFetch } from 'expo/fetch';
-import { generateAPIUrl } from '../../../utils';
+import { generateAPIUrl } from 'utils/utils';
 
 import { tailwind } from '@/theme';
 import { Icon } from '@/components-next/common';
@@ -99,6 +99,15 @@ export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatMod
   const [input, setInput] = useState('');
   const haptic = useHaptic('selection');
   const inputRef = useRef<TextInput>(null);
+
+  // Verify polyfills are loaded
+  React.useEffect(() => {
+    console.log('🔍 Checking AI SDK polyfills...');
+    console.log('TransformStream available:', 'TransformStream' in global);
+    console.log('ReadableStream available:', 'ReadableStream' in global);
+    console.log('WritableStream available:', 'WritableStream' in global);
+    console.log('structuredClone available:', 'structuredClone' in global);
+  }, []);
 
   const { messages, error, sendMessage } = useChat({
     transport: new DefaultChatTransport({
