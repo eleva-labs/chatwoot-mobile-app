@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, TextInput, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { View, TextInput, KeyboardAvoidingView, Platform, Pressable, Dimensions } from 'react-native';
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
@@ -11,7 +11,7 @@ import { generateAPIUrl } from 'utils/utils';
 import { tailwind } from '@/theme';
 import { Icon } from '@/components-next/common';
 import { CloseIcon, SendIcon } from '@/svg-icons';
-import { useHaptic } from '@/utils';
+import { useHaptic, useTabBarHeight } from '@/utils';
 
 type AIChatModalProps = {
   visible: boolean;
@@ -99,6 +99,8 @@ export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatMod
   const [input, setInput] = useState('');
   const haptic = useHaptic('selection');
   const inputRef = useRef<TextInput>(null);
+  const tabBarHeight = useTabBarHeight();
+  const screenHeight = Dimensions.get('window').height;
 
   // Verify polyfills are loaded
   React.useEffect(() => {
@@ -145,14 +147,22 @@ export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatMod
     <Animated.View
       entering={FadeIn.duration(200)}
       exiting={FadeOut.duration(200)}
-      style={tailwind.style('absolute inset-0 bg-black/50 z-50')}
+      style={[
+        tailwind.style('absolute left-0 right-0 bg-black/50 z-50'),
+        { 
+          height: screenHeight
+        }
+      ]}
     >
       <Animated.View
         entering={SlideInDown.springify().damping(15).stiffness(150)}
         exiting={SlideOutDown.springify().damping(15).stiffness(150)}
-        style={tailwind.style('flex-1 mt-20 bg-white rounded-t-3xl overflow-hidden')}
+        style={[
+          tailwind.style('flex-1 mt-20 bg-white rounded-t-3xl overflow-hidden'),
+          { marginBottom: tabBarHeight }
+        ]}
       >
-        <SafeAreaView edges={['top']} style={tailwind.style('flex-1')}>
+        <SafeAreaView edges={['top', 'bottom']} style={tailwind.style('flex-1')}>
           {/* Header */}
           <View
             style={tailwind.style(
@@ -201,20 +211,41 @@ export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatMod
           {/* Input */}
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={tailwind.style('px-4 pb-4 pt-2 border-t border-gray-200')}
+            style={{
+              paddingHorizontal: 16,
+              paddingBottom: 16,
+              paddingTop: 8,
+              borderTopWidth: 1,
+              borderTopColor: '#e5e7eb',
+              backgroundColor: 'white',
+            }}
           >
-            <View style={tailwind.style('flex-row items-end space-x-3')}>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              gap: 12,
+            }}>
               <TextInput
                 ref={inputRef}
                 value={input}
                 onChangeText={setInput}
                 placeholder="Ask me about the weather..."
-                placeholderTextColor={tailwind.color('text-gray-400')}
+                placeholderTextColor="#9ca3af"
                 multiline
                 maxLength={500}
-                style={tailwind.style(
-                  'flex-1 min-h-[44px] max-h-[120px] px-4 py-3 bg-gray-50 rounded-2xl text-base font-inter-normal-20 text-gray-900',
-                )}
+                style={{
+                  flex: 1,
+                  minHeight: 44,
+                  maxHeight: 120,
+                  paddingHorizontal: 16,
+                  paddingVertical: 12,
+                  backgroundColor: '#f9fafb',
+                  borderRadius: 20,
+                  fontSize: 16,
+                  color: '#111827',
+                  borderWidth: 1,
+                  borderColor: '#e5e7eb',
+                }}
                 onSubmitEditing={handleSend}
                 blurOnSubmit={false}
               />
@@ -222,10 +253,14 @@ export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatMod
               <Pressable
                 onPress={handleSend}
                 disabled={!input.trim()}
-                style={tailwind.style(
-                  'w-11 h-11 bg-blue-600 rounded-full items-center justify-center',
-                  !input.trim() && 'opacity-50',
-                )}
+                style={{
+                  width: 44,
+                  height: 44,
+                  backgroundColor: input.trim() ? '#2563eb' : '#93c5fd',
+                  borderRadius: 22,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
               >
                 <Icon icon={<SendIcon />} size={20} />
               </Pressable>
@@ -233,6 +268,19 @@ export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatMod
           </KeyboardAvoidingView>
         </SafeAreaView>
       </Animated.View>
+      
+      {/* White overlay for tab bar area - separate from modal content */}
+      <View 
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: tabBarHeight,
+          backgroundColor: 'white',
+          zIndex: 51, // Above the main overlay
+        }}
+      />
     </Animated.View>
   );
 };
