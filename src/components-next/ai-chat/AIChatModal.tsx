@@ -95,7 +95,7 @@ const MessageItem = ({ message }: MessageItemProps) => {
   );
 };
 
-export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatModalProps) => {
+export const AIChatModal = ({ visible, onClose }: AIChatModalProps) => {
   const [input, setInput] = useState('');
   const haptic = useHaptic('selection');
   const inputRef = useRef<TextInput>(null);
@@ -111,23 +111,54 @@ export const AIChatModal = ({ visible, onClose, conversationContext }: AIChatMod
     console.log('structuredClone available:', 'structuredClone' in global);
   }, []);
 
+  // Debug API URL generation
+  const apiUrl = generateAPIUrl('/api/ai-chat');
+  console.log('🌐 Generated API URL:', apiUrl);
+
   const { messages, error, sendMessage } = useChat({
     transport: new DefaultChatTransport({
       fetch: expoFetch as unknown as typeof globalThis.fetch,
-      api: generateAPIUrl('/api/ai-chat'),
+      api: apiUrl,
     }),
     onError: error => {
-      console.error('AI Chat Error:', error);
+      console.error('💥 AI Chat Hook Error:', error);
+    },
+    onFinish: (message) => {
+      console.log('✅ AI Chat Hook - Message finished:', message);
     },
   });
+
+  // Log any errors from useChat
+  React.useEffect(() => {
+    if (error) {
+      console.error('🚨 useChat error:', error);
+    }
+  }, [error]);
+
+  // Log messages array changes
+  React.useEffect(() => {
+    console.log('📋 Messages array updated:', messages.length, 'messages');
+    if (messages.length > 0) {
+      console.log('📝 Latest message:', messages[messages.length - 1]);
+    }
+  }, [messages]);
 
   const handleSend = useCallback(() => {
     if (!input.trim()) return;
 
+    console.log('📤 Sending message:', input.trim());
+    console.log('🔗 Using API URL:', apiUrl);
+    
     haptic?.();
-    sendMessage({ text: input.trim() });
-    setInput('');
-  }, [input, sendMessage, haptic]);
+    
+    try {
+      sendMessage({ text: input.trim() });
+      console.log('✅ sendMessage called successfully');
+      setInput('');
+    } catch (error) {
+      console.error('💥 Error calling sendMessage:', error);
+    }
+  }, [input, sendMessage, haptic, apiUrl]);
 
   const handleClose = useCallback(() => {
     haptic?.();

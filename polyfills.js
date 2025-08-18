@@ -1,24 +1,11 @@
 import { Platform } from 'react-native';
+import structuredClone from '@ungap/structured-clone';
 
-// Synchronous polyfills that run immediately during bundle evaluation
+// Immediate synchronous polyfills
 console.log('🔧 Setting up AI SDK polyfills IMMEDIATELY...');
 
 if (Platform.OS !== 'web') {
-  // Synchronous polyfill setup - no async needed for critical APIs
-  if (typeof global.polyfillGlobal === 'undefined') {
-    // Fallback polyfillGlobal if not available
-    global.polyfillGlobal = (name, getValue) => {
-      global[name] = getValue();
-    };
-  }
-
-  // Immediate polyfills - no async import needed
-  if (!('structuredClone' in global)) {
-    global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
-    console.log('✅ structuredClone polyfilled immediately');
-  }
-
-  // Critical stream polyfills - defined immediately
+  // CRITICAL: Set up stream polyfills immediately (synchronously)
   if (!('ReadableStream' in global)) {
     global.ReadableStream = class ReadableStream {
       constructor(source = {}) {
@@ -70,7 +57,7 @@ if (Platform.OS !== 'web') {
         };
       }
     };
-    console.log('✅ ReadableStream polyfilled immediately');
+    console.log('✅ ReadableStream polyfilled IMMEDIATELY');
   }
 
   if (!('WritableStream' in global)) {
@@ -96,7 +83,7 @@ if (Platform.OS !== 'web') {
         };
       }
     };
-    console.log('✅ WritableStream polyfilled immediately');
+    console.log('✅ WritableStream polyfilled IMMEDIATELY');
   }
 
   if (!('TransformStream' in global)) {
@@ -127,11 +114,34 @@ if (Platform.OS !== 'web') {
         });
       }
     };
-    console.log('✅ TransformStream polyfilled immediately');
+    console.log('✅ TransformStream polyfilled IMMEDIATELY');
   }
 
-  console.log('🎉 All AI SDK polyfills loaded IMMEDIATELY!');
+  // Official AI SDK polyfills from documentation (async)
+  const setupPolyfills = async () => {
+    const { polyfillGlobal } = await import(
+      'react-native/Libraries/Utilities/PolyfillFunctions'
+    );
 
+    const { TextEncoderStream, TextDecoderStream } = await import(
+      '@stardazed/streams-text-encoding'
+    );
+
+    if (!('structuredClone' in global)) {
+      polyfillGlobal('structuredClone', () => structuredClone);
+      console.log('✅ structuredClone polyfilled');
+    }
+
+    polyfillGlobal('TextEncoderStream', () => TextEncoderStream);
+    console.log('✅ TextEncoderStream polyfilled');
+    
+    polyfillGlobal('TextDecoderStream', () => TextDecoderStream);
+    console.log('✅ TextDecoderStream polyfilled');
+
+    console.log('🎉 All AI SDK polyfills loaded successfully!');
+  };
+
+  setupPolyfills();
 }
 
 export {};
