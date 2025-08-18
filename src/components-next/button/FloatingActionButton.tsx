@@ -15,7 +15,7 @@ import { Image } from 'expo-image';
 import { tailwind } from '@/theme';
 import { useHaptic, useTabBarHeight } from '@/utils';
 import { Icon } from '@/components-next/common';
-import aiIcon from '@/assets/images/ai_icon.png';
+import aiIcon from '@/assets/images/person_icon.png';
 
 type FloatingActionButtonProps = {
   onPress?: () => void;

@@ -345,10 +345,7 @@ const ConversationScreen = () => {
         <ActionBottomSheet />
         <ActionTabs />
         <FloatingActionButton onPress={handleFabPress} />
-        <AIChatModal 
-          visible={isAIChatVisible} 
-          onClose={handleCloseAIChat} 
-        />
+        <AIChatModal visible={isAIChatVisible} onClose={handleCloseAIChat} />
       </ConversationListStateProvider>
     </SafeAreaView>
   );

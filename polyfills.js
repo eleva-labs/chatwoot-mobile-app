@@ -56,6 +56,108 @@ if (Platform.OS !== 'web') {
           }
         };
       }
+
+      pipeThrough(transform) {
+        const reader = this.getReader();
+        const writer = transform.writable.getWriter();
+
+        const pump = async () => {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              await writer.close();
+              break;
+            }
+            await writer.write(value);
+          }
+        };
+
+        pump().catch(() => {
+          // Handle errors silently for now
+        });
+
+        return transform.readable;
+      }
+
+      pipeTo(destination) {
+        const reader = this.getReader();
+        const writer = destination.getWriter();
+
+        const pump = async () => {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              await writer.close();
+              break;
+            }
+            await writer.write(value);
+          }
+        };
+
+        return pump();
+      }
+
+      tee() {
+        const reader = this.getReader();
+        let buffer = [];
+        let finished = false;
+        let readers = [null, null];
+
+        const createTeeStream = (index) => {
+          return new ReadableStream({
+            start(controller) {
+              readers[index] = controller;
+              if (buffer.length > 0) {
+                buffer.forEach(chunk => {
+                  if (chunk.done) {
+                    controller.close();
+                  } else {
+                    controller.enqueue(chunk.value);
+                  }
+                });
+              }
+              if (finished) {
+                controller.close();
+              }
+            }
+          });
+        };
+
+        // Start reading from source
+        const pump = async () => {
+          while (true) {
+            const chunk = await reader.read();
+            buffer.push(chunk);
+            
+            if (readers[0]) {
+              if (chunk.done) {
+                readers[0].close();
+              } else {
+                readers[0].enqueue(chunk.value);
+              }
+            }
+            
+            if (readers[1]) {
+              if (chunk.done) {
+                readers[1].close();
+              } else {
+                readers[1].enqueue(chunk.value);
+              }
+            }
+            
+            if (chunk.done) {
+              finished = true;
+              break;
+            }
+          }
+        };
+
+        pump().catch(() => {
+          // Handle errors silently for now
+        });
+
+        return [createTeeStream(0), createTeeStream(1)];
+      }
     };
     console.log('✅ ReadableStream polyfilled IMMEDIATELY');
   }

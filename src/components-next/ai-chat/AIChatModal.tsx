@@ -3,10 +3,7 @@ import { View, TextInput, KeyboardAvoidingView, Platform, Pressable, Dimensions 
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
-import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport } from 'ai';
-import { fetch as expoFetch } from 'expo/fetch';
-import { generateAPIUrl } from 'utils/utils';
+import { createChatTransport } from '@/services/ChatTransport';
 
 import { tailwind } from '@/theme';
 import { Icon } from '@/components-next/common';
@@ -111,29 +108,83 @@ export const AIChatModal = ({ visible, onClose }: AIChatModalProps) => {
     console.log('structuredClone available:', 'structuredClone' in global);
   }, []);
 
-  // Debug API URL generation
-  const apiUrl = generateAPIUrl('/api/ai-chat');
-  console.log('🌐 Generated API URL:', apiUrl);
+  // Custom chat state management
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-  const { messages, error, sendMessage } = useChat({
-    transport: new DefaultChatTransport({
-      fetch: expoFetch as unknown as typeof globalThis.fetch,
-      api: apiUrl,
-    }),
-    onError: error => {
-      console.error('💥 AI Chat Hook Error:', error);
-    },
-    onFinish: (message) => {
-      console.log('✅ AI Chat Hook - Message finished:', message);
-    },
-  });
+  // Create custom transport for direct OpenAI calls
+  const chatTransport = createChatTransport();
+  console.log('🔧 Custom ChatTransport created');
 
-  // Log any errors from useChat
-  React.useEffect(() => {
-    if (error) {
-      console.error('🚨 useChat error:', error);
+  const sendMessage = useCallback(async (content: { text: string }) => {
+    console.log('📤 Custom sendMessage called with:', content.text);
+    
+    // Add user message immediately
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      parts: [{ type: 'text', text: content.text }],
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Prepare messages for OpenAI format
+      const allMessages = [...messages, userMessage];
+      console.log('🔄 Sending to transport, total messages:', allMessages.length);
+      
+      // Create a mock Request/Response for our transport
+      const requestBody = JSON.stringify({ messages: allMessages });
+      const mockOptions: RequestInit = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: requestBody,
+      };
+      
+      const response = await chatTransport.call('/api/chat', mockOptions);
+      console.log('✅ Got response from transport');
+      console.log('🔍 Response details:', {
+        status: response.status,
+        headers: Object.fromEntries(response.headers || []),
+        bodyExists: !!response.body,
+        bodyType: typeof response.body
+      });
+      
+      // Parse the JSON response
+      const responseText = await response.text();
+      console.log('📄 Response text:', responseText);
+      
+      try {
+        const responseData = JSON.parse(responseText);
+        console.log('📊 Parsed response data:', responseData);
+        
+        if (responseData.type === 'text' && responseData.text) {
+          // Create assistant message with the response text
+          const assistantMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            parts: [{ type: 'text', text: responseData.text }],
+          };
+          
+          console.log('✅ Adding assistant message:', assistantMessage);
+          setMessages(prev => [...prev, assistantMessage]);
+        } else {
+          console.error('⚠️ Unexpected response format:', responseData);
+        }
+      } catch (parseError) {
+        console.error('💥 Failed to parse JSON response:', parseError);
+        console.error('📄 Raw response text:', responseText);
+      }
+    } catch (err) {
+      console.error('💥 Error in custom sendMessage:', err);
+      setError(err instanceof Error ? err : new Error('Unknown error'));
+    } finally {
+      setIsLoading(false);
     }
-  }, [error]);
+  }, [messages, chatTransport]);
 
   // Log messages array changes
   React.useEffect(() => {
@@ -144,21 +195,16 @@ export const AIChatModal = ({ visible, onClose }: AIChatModalProps) => {
   }, [messages]);
 
   const handleSend = useCallback(() => {
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
-    console.log('📤 Sending message:', input.trim());
-    console.log('🔗 Using API URL:', apiUrl);
+    console.log('📤 Sending message via custom transport:', input.trim());
     
     haptic?.();
+    setInput('');
     
-    try {
-      sendMessage({ text: input.trim() });
-      console.log('✅ sendMessage called successfully');
-      setInput('');
-    } catch (error) {
-      console.error('💥 Error calling sendMessage:', error);
-    }
-  }, [input, sendMessage, haptic, apiUrl]);
+    // Call our custom sendMessage function
+    sendMessage({ text: input.trim() });
+  }, [input, isLoading, sendMessage, haptic]);
 
   const handleClose = useCallback(() => {
     haptic?.();
