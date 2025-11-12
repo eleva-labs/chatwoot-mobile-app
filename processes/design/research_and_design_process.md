@@ -308,7 +308,7 @@ Grep: "Platform.OS" --output-mode content
 - Comprehensive understanding of current architecture
 - List of affected files (backend + frontend)
 - Identified patterns and conventions
-- Impact assessment (database, API, frontend, tests, Enterprise)
+- Impact assessment (state, API, UI, tests, platform compatibility)
 - Examples of similar implementations
 
 ---
@@ -388,12 +388,12 @@ Grep: "Platform.OS" --output-mode content
 ### Step 3.2: Analyze Trade-offs
 
 **For Each Approach, Document**:
-1. **Alignment with Architecture** - Follows Rails MVC + Services? Vue.js patterns?
+1. **Alignment with Architecture** - Follows Redux Toolkit patterns? React Native conventions?
 2. **Complexity** - Implementation difficulty, files affected, risk level
 3. **Maintainability** - Easy to understand? Easy to extend? Technical debt?
-4. **Performance** - Database queries? API response time? Frontend rendering?
-5. **Testing** - Testability? Coverage needed? (RSpec + Vitest)
-6. **Migration** - Migration complexity? Rollback strategy? Backward compatibility?
+4. **Performance** - API response time? Component rendering? Redux state updates?
+5. **Testing** - Testability? Coverage needed? (Jest)
+6. **Migration** - State migration complexity? Rollback strategy? Backward compatibility?
 7. **i18n** - Translations needed? Both en and es covered?
 
 ### Step 3.3: Discuss with User
@@ -409,7 +409,7 @@ I've analyzed your request and generated 3 potential approaches:
 
 **Approach 2: Proper Integration (My Recommendation)**
 - Balanced effort (3-4 days)
-- Follows Rails/Vue.js best practices
+- Follows React Native + Redux best practices
 - Complete functionality
 - Extensible
 
@@ -471,21 +471,26 @@ What do you think? Do you have timeline constraints or other considerations I sh
 
 ### What Will Be Changed
 
-#### Backend (X files)
-- **Models**: [List files and changes]
+#### Redux State Management (X files)
+- **Slices**: [List files and changes]
+- **Actions**: [List files and changes]
 - **Services**: [List files and changes]
-- **Controllers**: [List files and changes]
-- **Migrations**: [List new migrations]
+- **Selectors**: [List files and changes]
+- **Listeners**: [List files and changes]
 - **Tests**: [List test files]
 
-#### Frontend (X files)
+#### UI Components (X files)
+- **Screens**: [List files and changes]
 - **Components**: [List files and changes]
-- **Vuex Store**: [List files and changes]
-- **API Client**: [List files and changes]
-- **i18n**: [List translation files]
+- **Navigation**: [List files and changes]
 - **Tests**: [List test files]
 
-**Total Files**: X files (X backend + X frontend)
+#### Utilities & i18n (X files)
+- **Hooks**: [List files and changes]
+- **Utils**: [List files and changes]
+- **i18n**: [List translation files (en + es)]
+
+**Total Files**: X files (X Redux + X UI + X utilities)
 
 ### Estimated Effort
 - **Duration**: X days
@@ -524,7 +529,7 @@ Create file: `/docs/ignored/design/<feature_name>_research.md`
 **Include**:
 1. Original request
 2. Clarifications and assumptions
-3. Architecture analysis findings (Rails + Vue.js)
+3. Architecture analysis findings (React Native + Redux)
 4. Alternative approaches considered
 5. Final recommendation
 6. Trade-off justification
@@ -553,23 +558,23 @@ Create file: `/docs/ignored/design/<feature_name>_research.md`
 
 ### Phase 2: Repository Analysis ✅
 
-- [ ] Used Glob to find relevant files (backend + frontend)
+- [ ] Used Glob to find relevant files (Redux state + UI components)
 - [ ] Used Grep to search for patterns
-- [ ] Read all relevant model files
-- [ ] Read all relevant service files
-- [ ] Read all relevant controller files
-- [ ] Read all relevant Vue component files
-- [ ] Read all relevant Vuex store files
+- [ ] Read all relevant Redux slice files
+- [ ] Read all relevant Redux action files
+- [ ] Read all relevant Redux service files
+- [ ] Read all relevant React Native component files
+- [ ] Read all relevant screen files
 - [ ] Read all relevant i18n files (en + es)
-- [ ] Read all relevant test files (RSpec + Vitest)
+- [ ] Read all relevant test files (Jest)
 - [ ] Read CLAUDE.md for project guidelines
-- [ ] Read ARCHITECTURE.md for system overview
-- [ ] Identified existing patterns (Rails + Vue.js)
+- [ ] Read README_CHATSCOMMERCE.md for mobile app overview
+- [ ] Identified existing patterns (React Native + Redux)
 - [ ] Mapped dependencies and impacts
-- [ ] Assessed database impact (Rails migrations)
-- [ ] Assessed API impact (Jbuilder, controllers)
-- [ ] Assessed frontend impact (components, Vuex, i18n)
-- [ ] Checked Enterprise compatibility
+- [ ] Assessed backend API integration requirements
+- [ ] Assessed Redux state impact (slices, actions, selectors)
+- [ ] Assessed UI impact (components, screens, navigation, i18n)
+- [ ] Checked platform compatibility (iOS + Android)
 - [ ] Found similar implementations for reference
 
 ### Phase 3: Solution Exploration ✅

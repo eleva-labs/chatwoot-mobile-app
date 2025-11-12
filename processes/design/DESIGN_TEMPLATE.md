@@ -34,32 +34,45 @@
 
 ### Code Examples
 
-**Current Backend Implementation**:
-```ruby
-# File: app/models/store.rb:15
-class Store < ApplicationRecord
-  belongs_to :account
-  validates :name, presence: true
+**Current Redux State Implementation**:
+```typescript
+// File: src/store/inbox/inboxSlice.ts:15
+import { createSlice } from '@reduxjs/toolkit';
 
-  # Current logic that will be changed/extended
-  def current_method
-    # Existing implementation
-  end
-end
+const inboxSlice = createSlice({
+  name: 'inbox',
+  initialState: {
+    inboxes: [],
+    loading: false,
+    error: null,
+  },
+  reducers: {
+    setInboxes: (state, action) => {
+      state.inboxes = action.payload;
+    },
+  },
+});
+
+export default inboxSlice;
 ```
 
-**Current Frontend Implementation**:
-```vue
-<!-- File: app/javascript/dashboard/components/StoreDetails.vue:20 -->
-<script setup>
-// Current component logic
-</script>
+**Current React Native Component**:
+```typescript
+// File: src/screens/inbox/InboxList.tsx:20
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useAppSelector } from '@/store/hooks';
+import { tailwind } from '@/theme/tailwind';
 
-<template>
-  <div class="flex flex-col">
-    <!-- Current UI -->
-  </div>
-</template>
+export const InboxList = () => {
+  const inboxes = useAppSelector(state => state.inbox.inboxes);
+
+  return (
+    <View style={tailwind('flex-1 bg-white')}>
+      {/* Current UI */}
+    </View>
+  );
+};
 ```
 
 ### Problems Identified
@@ -72,10 +85,10 @@ end
    - **Evidence**: [Supporting data]
 
 ### Files Affected
-- `app/models/store.rb:15` - [Current role/purpose]
-- `app/services/stores/create_service.rb:10` - [Current logic]
-- `app/controllers/api/v1/accounts/stores_controller.rb:25` - [API handler]
-- `app/javascript/dashboard/components/StoreDetails.vue:5` - [UI component]
+- `src/store/inbox/inboxSlice.ts:15` - [Current role/purpose]
+- `src/store/inbox/inboxActions.ts:10` - [Current logic]
+- `src/store/inbox/inboxService.ts:25` - [API service methods]
+- `src/screens/inbox/InboxList.tsx:5` - [Screen component]
 
 ---
 
@@ -91,421 +104,446 @@ end
 
 ### Code Examples
 
-**Proposed Backend Implementation**:
-```ruby
-# app/models/store.rb - AFTER changes
-class Store < ApplicationRecord
-  belongs_to :account
-  has_many :conversations
+**Proposed Redux State Implementation**:
+```typescript
+// src/store/inbox/inboxSlice.ts - AFTER changes
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchInboxes, updateInboxPriority } from './inboxActions';
 
-  # New enum field
-  enum priority: { low: 0, medium: 1, high: 2 }
+export type InboxPriority = 'low' | 'medium' | 'high';
 
-  validates :name, presence: true
-  validates :priority, presence: true, inclusion: { in: priorities.keys }
+interface InboxState {
+  inboxes: Inbox[];
+  loading: boolean;
+  error: string | null;
+}
 
-  scope :high_priority, -> { where(priority: :high) }
-
-  # New/modified method
-  def prioritized_name
-    "[#{priority.upcase}] #{name}"
-  end
-end
-```
-
-**Proposed Frontend Implementation**:
-```vue
-<!-- app/javascript/dashboard/components/StorePrioritySelector.vue - NEW -->
-<script setup>
-import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import { useI18n } from 'vue-i18n';
-
-const store = useStore();
-const { t } = useI18n();
-
-const props = defineProps({
-  storeId: { type: String, required: true },
+const inboxSlice = createSlice({
+  name: 'inbox',
+  initialState: {
+    inboxes: [],
+    loading: false,
+    error: null,
+  } as InboxState,
+  reducers: {
+    setInboxes: (state, action: PayloadAction<Inbox[]>) => {
+      state.inboxes = action.payload;
+    },
+    updateInbox: (state, action: PayloadAction<Inbox>) => {
+      const index = state.inboxes.findIndex(i => i.id === action.payload.id);
+      if (index !== -1) {
+        state.inboxes[index] = action.payload;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchInboxes.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchInboxes.fulfilled, (state, action) => {
+        state.inboxes = action.payload;
+        state.loading = false;
+      })
+      .addCase(updateInboxPriority.fulfilled, (state, action) => {
+        const index = state.inboxes.findIndex(i => i.id === action.payload.id);
+        if (index !== -1) {
+          state.inboxes[index] = action.payload;
+        }
+      });
+  },
 });
 
-const priority = ref('medium');
-const priorities = ['low', 'medium', 'high'];
+export default inboxSlice;
+```
 
-const updatePriority = async () => {
-  await store.dispatch('stores/updatePriority', {
-    id: props.storeId,
-    priority: priority.value,
-  });
+**Proposed React Native Component**:
+```typescript
+// src/components-next/InboxPrioritySelector/InboxPrioritySelector.tsx - NEW
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { useAppDispatch } from '@/store/hooks';
+import { updateInboxPriority } from '@/store/inbox/inboxActions';
+import { tailwind } from '@/theme/tailwind';
+import I18n from '@/i18n';
+
+interface Props {
+  inboxId: number;
+  currentPriority: InboxPriority;
+}
+
+export const InboxPrioritySelector: React.FC<Props> = ({ inboxId, currentPriority }) => {
+  const dispatch = useAppDispatch();
+  const [priority, setPriority] = useState<InboxPriority>(currentPriority);
+
+  const priorities: InboxPriority[] = ['low', 'medium', 'high'];
+
+  const handleUpdate = async (value: InboxPriority) => {
+    setPriority(value);
+    await dispatch(updateInboxPriority({ id: inboxId, priority: value }));
+  };
+
+  return (
+    <View style={tailwind('flex flex-col gap-2')}>
+      <Text style={tailwind('text-sm font-medium text-gray-900')}>
+        {I18n.t('INBOX.PRIORITY')}
+      </Text>
+      <Picker
+        selectedValue={priority}
+        onValueChange={handleUpdate}
+        style={tailwind('border border-gray-300 rounded-lg')}
+      >
+        {priorities.map(p => (
+          <Picker.Item
+            key={p}
+            label={I18n.t(`INBOX.PRIORITY_${p.toUpperCase()}`)}
+            value={p}
+          />
+        ))}
+      </Picker>
+    </View>
+  );
 };
-</script>
-
-<template>
-  <div class="flex flex-col gap-2">
-    <label class="text-sm font-medium">
-      {{ t('STORE.PRIORITY') }}
-    </label>
-    <select v-model="priority" @change="updatePriority"
-            class="border rounded px-3 py-2">
-      <option v-for="p in priorities" :key="p" :value="p">
-        {{ t(`STORE.PRIORITY_${p.toUpperCase()}`) }}
-      </option>
-    </select>
-  </div>
-</template>
 ```
 
 ### Design Patterns
-- **Pattern 1**: Service Object - Encapsulates business logic for store priority updates
-- **Pattern 2**: Event Dispatcher - Notifies listeners when priority changes
-- **Pattern 3**: Vuex State Management - Centralized state for priority data
+- **Pattern 1**: Redux Toolkit Slices - Encapsulates state management with reducers and actions
+- **Pattern 2**: Redux Thunk Actions - Handles async API calls with createAsyncThunk
+- **Pattern 3**: Service Layer - Separates API logic from Redux actions
+- **Pattern 4**: Selector Pattern - Memoized state access via createSelector
+- **Pattern 5**: Redux Listeners - Event-driven reactions using createListenerMiddleware
 
 ---
 
 ## Technical Design
 
-### Models & Database Changes
-
-**Files to Modify**:
-- `app/models/store.rb`
-- `db/migrate/YYYYMMDDHHMMSS_add_priority_to_stores.rb` (NEW)
-
-**Changes**:
-1. Add `priority` integer field with enum mapping (low:0, medium:1, high:2)
-2. Add validation for priority field
-3. Add scope for filtering by priority
-4. Add helper method for display
-
-**Migration**:
-```ruby
-# db/migrate/20251006120000_add_priority_to_stores.rb
-class AddPriorityToStores < ActiveRecord::Migration[7.1]
-  def change
-    add_column :stores, :priority, :integer, default: 1, null: false
-    add_index :stores, :priority
-  end
-end
-```
-
-**Model Code**:
-```ruby
-# app/models/store.rb
-class Store < ApplicationRecord
-  belongs_to :account
-  has_many :conversations
-
-  enum priority: { low: 0, medium: 1, high: 2 }
-
-  validates :name, presence: true
-  validates :priority, presence: true, inclusion: { in: priorities.keys }
-
-  scope :high_priority, -> { where(priority: :high) }
-  scope :by_priority, -> { order(priority: :desc) }
-
-  def prioritized_name
-    "[#{priority.upcase}] #{name}"
-  end
-end
-```
-
----
-
-### Services & Business Logic Changes
-
-**Files to Modify**:
-- `app/services/stores/create_service.rb` - Add priority param
-- `app/services/stores/update_service.rb` - Add priority param
-- `app/services/stores/update_priority_service.rb` (NEW) - Dedicated service
-
-**New Service**:
-```ruby
-# app/services/stores/update_priority_service.rb
-class Stores::UpdatePriorityService
-  def initialize(store:, priority:, user: nil)
-    @store = store
-    @priority = priority
-    @user = user
-  end
-
-  def perform
-    old_priority = @store.priority
-
-    @store.update!(priority: @priority)
-
-    dispatch_priority_changed_event(old_priority, @priority)
-
-    Rails.logger.info("Store #{@store.id} priority changed: #{old_priority} -> #{@priority}")
-
-    @store
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("Priority update failed: #{e.message}")
-    raise
-  end
-
-  private
-
-  def dispatch_priority_changed_event(old_priority, new_priority)
-    Rails.configuration.dispatcher.dispatch(
-      STORE_PRIORITY_CHANGED,
-      Time.zone.now,
-      store: @store,
-      old_priority: old_priority,
-      new_priority: new_priority,
-      user: @user
-    )
-  end
-end
-```
-
----
-
-### Controllers & API Changes
-
-**Files to Modify**:
-- `app/controllers/api/v1/accounts/stores_controller.rb`
-
-**Changes**:
-1. Permit `priority` param in `store_params`
-2. Add new endpoint for priority updates (optional: can use PATCH)
-
-**Controller Code**:
-```ruby
-# app/controllers/api/v1/accounts/stores_controller.rb
-class Api::V1::Accounts::StoresController < Api::V1::Accounts::BaseController
-  before_action :set_store, only: [:show, :update, :update_priority, :destroy]
-
-  def index
-    @stores = StoresFinder.new(Current.account, params).perform
-    @stores = @stores.by_priority.page(params[:page])
-  end
-
-  def update_priority
-    Stores::UpdatePriorityService.new(
-      store: @store,
-      priority: params[:priority],
-      user: Current.user
-    ).perform
-
-    render json: @store
-  rescue ActiveRecord::RecordInvalid => e
-    render json: { error: e.record.errors.full_messages }, status: :unprocessable_entity
-  end
-
-  private
-
-  def set_store
-    @store = Current.account.stores.find(params[:id])
-  end
-
-  def store_params
-    params.permit(:name, :phone_number, :priority, :email)
-  end
-end
-```
-
-**Routes**:
-```ruby
-# config/routes.rb
-namespace :api do
-  namespace :v1 do
-    namespace :accounts do
-      resources :stores do
-        member do
-          patch :update_priority
-        end
-      end
-    end
-  end
-end
-```
-
----
-
-### Jbuilder Views Changes
-
-**Files to Modify**:
-- `app/views/api/v1/accounts/stores/show.json.jbuilder`
-- `app/views/api/v1/accounts/stores/_store.json.jbuilder`
-
-**Jbuilder Code**:
-```ruby
-# app/views/api/v1/accounts/stores/show.json.jbuilder
-json.id @store.id
-json.name @store.name
-json.phoneNumber @store.phone_number
-json.priority @store.priority  # NEW
-json.email @store.email
-json.createdAt @store.created_at
-json.updatedAt @store.updated_at
-```
-
----
-
-### Jobs & Background Processing Changes
-
-**Files to Create** (if needed):
-- `app/jobs/stores/priority_notification_job.rb` (NEW)
-
-**Job Code**:
-```ruby
-# app/jobs/stores/priority_notification_job.rb
-class Stores::PriorityNotificationJob < ApplicationJob
-  queue_as :default
-
-  def perform(store_id, old_priority, new_priority)
-    store = Store.find(store_id)
-
-    # Notify team if store priority increased to high
-    if new_priority == 'high' && old_priority != 'high'
-      store.account.users.each do |user|
-        NotificationMailer.high_priority_store(store, user).deliver_later
-      end
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    Rails.logger.error("PriorityNotificationJob: Store #{store_id} not found")
-  end
-end
-```
-
----
-
-### Listeners & Event Handling Changes
-
-**Files to Create/Modify**:
-- `app/listeners/store_listener.rb` - Add priority changed handler
-
-**Listener Code**:
-```ruby
-# app/listeners/store_listener.rb
-class StoreListener < BaseListener
-  def store_priority_changed(event)
-    store = event.data[:store]
-    old_priority = event.data[:old_priority]
-    new_priority = event.data[:new_priority]
-
-    # Trigger notification job
-    Stores::PriorityNotificationJob.perform_later(
-      store.id,
-      old_priority,
-      new_priority
-    )
-
-    # Update analytics
-    AnalyticsJob.perform_later('store_priority_changed', {
-      store_id: store.id,
-      old_priority: old_priority,
-      new_priority: new_priority
-    })
-  rescue StandardError => e
-    Rails.logger.error("StoreListener priority_changed error: #{e.message}")
-    Sentry.capture_exception(e)
-  end
-end
-```
-
----
-
-### Frontend - Vue Components Changes
+### Redux State Management
 
 **Files to Create**:
-- `app/javascript/dashboard/components/StorePrioritySelector.vue` (NEW)
+- `src/store/inbox/inboxTypes.ts` (NEW) - TypeScript interfaces
+- `src/store/inbox/inboxSlice.ts` (MODIFY) - Add priority support
+- `src/store/inbox/inboxActions.ts` (MODIFY) - Add updateInboxPriority action
+- `src/store/inbox/inboxService.ts` (MODIFY) - Add priority API call
+- `src/store/inbox/inboxSelectors.ts` (NEW) - Memoized selectors
 
-**Files to Modify**:
-- `app/javascript/dashboard/components/StoreDetails.vue` - Integrate priority selector
+**Type Definitions**:
+```typescript
+// src/store/inbox/inboxTypes.ts
+export type InboxPriority = 'low' | 'medium' | 'high';
 
-**Component Integration**:
-```vue
-<!-- app/javascript/dashboard/components/StoreDetails.vue -->
-<script setup>
-import { computed } from 'vue';
-import { useStore } from 'vuex';
-import StorePrioritySelector from './StorePrioritySelector.vue';
+export interface Inbox {
+  id: number;
+  name: string;
+  channelType: string;
+  priority?: InboxPriority; // NEW
+  avatarUrl?: string;
+  phoneNumber?: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-const store = useStore();
-const props = defineProps({ storeId: { type: String, required: true } });
-const storeData = computed(() => store.getters['stores/getStore'](props.storeId));
-</script>
-
-<template>
-  <div class="flex flex-col gap-4 p-4">
-    <h2 class="text-lg font-semibold">{{ storeData.name }}</h2>
-
-    <!-- NEW: Priority Selector -->
-    <StorePrioritySelector :store-id="storeId" />
-
-    <!-- Rest of component -->
-  </div>
-</template>
-```
-
----
-
-### Frontend - Vuex Store Changes
-
-**Files to Modify**:
-- `app/javascript/dashboard/store/modules/stores.js`
-
-**Vuex Changes**:
-```javascript
-// app/javascript/dashboard/store/modules/stores.js
-
-// Add to actions:
-async updatePriority({ commit }, { id, priority }) {
-  commit('setUpdating', true);
-  try {
-    const response = await StoresAPI.updatePriority(id, priority);
-    commit('updateStore', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Update priority failed:', error);
-    throw error;
-  } finally {
-    commit('setUpdating', false);
-  }
+export interface InboxState {
+  inboxes: Inbox[];
+  loading: boolean;
+  error: string | null;
 }
 ```
 
----
+**Slice Updates**:
+```typescript
+// src/store/inbox/inboxSlice.ts
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchInboxes, updateInboxPriority } from './inboxActions';
+import { InboxState, Inbox } from './inboxTypes';
 
-### Frontend - API Client Changes
+const initialState: InboxState = {
+  inboxes: [],
+  loading: false,
+  error: null,
+};
 
-**Files to Modify**:
-- `app/javascript/dashboard/api/stores.js`
+const inboxSlice = createSlice({
+  name: 'inbox',
+  initialState,
+  reducers: {
+    updateInbox: (state, action: PayloadAction<Inbox>) => {
+      const index = state.inboxes.findIndex(i => i.id === action.payload.id);
+      if (index !== -1) {
+        state.inboxes[index] = action.payload;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(updateInboxPriority.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateInboxPriority.fulfilled, (state, action) => {
+        const index = state.inboxes.findIndex(i => i.id === action.payload.id);
+        if (index !== -1) {
+          state.inboxes[index] = action.payload;
+        }
+        state.loading = false;
+      })
+      .addCase(updateInboxPriority.rejected, (state, action) => {
+        state.error = action.error.message || 'Failed to update priority';
+        state.loading = false;
+      });
+  },
+});
 
-**API Client Code**:
-```javascript
-// app/javascript/dashboard/api/stores.js
-import ApiClient from './ApiClient';
-
-class StoresAPI extends ApiClient {
-  constructor() {
-    super('stores', { accountScoped: true });
-  }
-
-  // ... existing methods ...
-
-  updatePriority(id, priority) {
-    return axios.patch(`${this.url}/${id}/update_priority`, { priority });
-  }
-}
-
-export default new StoresAPI();
+export const { updateInbox } = inboxSlice.actions;
+export default inboxSlice;
 ```
 
 ---
 
-### Frontend - i18n Changes
+### Redux Actions (Async Thunks)
 
 **Files to Modify**:
-- `app/javascript/dashboard/i18n/locale/en.json`
-- `app/javascript/dashboard/i18n/locale/es.json`
-- `config/locales/en.yml` (backend if needed)
-- `config/locales/es.yml` (backend if needed)
+- `src/store/inbox/inboxActions.ts` - Add updateInboxPriority action
 
-**i18n Updates**:
+**Action Implementation**:
+```typescript
+// src/store/inbox/inboxActions.ts
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import InboxService from './inboxService';
+import { Inbox, InboxPriority } from './inboxTypes';
+
+export const updateInboxPriority = createAsyncThunk<
+  Inbox,
+  { id: number; priority: InboxPriority },
+  { rejectValue: string }
+>(
+  'inbox/updatePriority',
+  async ({ id, priority }, { rejectWithValue }) => {
+    try {
+      const response = await InboxService.updatePriority(id, priority);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to update priority');
+    }
+  }
+);
+```
+
+---
+
+### Service Layer (API Calls)
+
+**Files to Modify**:
+- `src/store/inbox/inboxService.ts` - Add updatePriority method
+
+**Service Implementation**:
+```typescript
+// src/store/inbox/inboxService.ts
+import { apiService } from '@/services/APIService';
+import camelCaseKeys from '@/utils/camelCaseKeys';
+import { Inbox, InboxPriority } from './inboxTypes';
+
+class InboxService {
+  static async fetchInboxes(): Promise<Inbox[]> {
+    const response = await apiService.get('/inboxes');
+    return camelCaseKeys(response.data.payload);
+  }
+
+  static async updatePriority(id: number, priority: InboxPriority): Promise<Inbox> {
+    const response = await apiService.patch(`/inboxes/${id}`, { priority });
+    return camelCaseKeys(response.data);
+  }
+}
+
+export default InboxService;
+```
+
+---
+
+### Redux Selectors (Memoized)
+
+**Files to Create**:
+- `src/store/inbox/inboxSelectors.ts` (NEW)
+
+**Selector Implementation**:
+```typescript
+// src/store/inbox/inboxSelectors.ts
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '@/store';
+import { InboxPriority } from './inboxTypes';
+
+export const selectInboxes = (state: RootState) => state.inbox.inboxes;
+export const selectInboxLoading = (state: RootState) => state.inbox.loading;
+export const selectInboxError = (state: RootState) => state.inbox.error;
+
+export const selectInboxById = (id: number) =>
+  createSelector([selectInboxes], (inboxes) =>
+    inboxes.find(inbox => inbox.id === id)
+  );
+
+export const selectInboxesByPriority = (priority: InboxPriority) =>
+  createSelector([selectInboxes], (inboxes) =>
+    inboxes.filter(inbox => inbox.priority === priority)
+  );
+
+export const selectHighPriorityInboxes = createSelector(
+  [selectInboxes],
+  (inboxes) => inboxes.filter(inbox => inbox.priority === 'high')
+);
+```
+
+---
+
+### Redux Listeners (Event-Driven)
+
+**Files to Create/Modify**:
+- `src/store/inbox/inboxListener.ts` (NEW)
+
+**Listener Implementation**:
+```typescript
+// src/store/inbox/inboxListener.ts
+import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { updateInboxPriority } from './inboxActions';
+import { showToast } from '@/utils/toastUtils';
+import I18n from '@/i18n';
+
+export const inboxListener = createListenerMiddleware();
+
+// React to successful priority updates
+inboxListener.startListening({
+  actionCreator: updateInboxPriority.fulfilled,
+  effect: (action, listenerApi) => {
+    showToast({
+      message: I18n.t('INBOX.PRIORITY_UPDATED'),
+      type: 'success',
+    });
+
+    // Optional: Trigger analytics event
+    // Analytics.track('inbox_priority_changed', { ... });
+  },
+});
+
+// Handle priority update failures
+inboxListener.startListening({
+  actionCreator: updateInboxPriority.rejected,
+  effect: (action, listenerApi) => {
+    showToast({
+      message: action.payload || I18n.t('INBOX.PRIORITY_UPDATE_FAILED'),
+      type: 'error',
+    });
+  },
+});
+```
+
+---
+
+### UI Components
+
+**Files to Create**:
+- `src/components-next/InboxPrioritySelector/InboxPrioritySelector.tsx` (NEW)
+- `src/components-next/InboxPrioritySelector/index.ts` (NEW)
+
+**Files to Modify**:
+- `src/screens/inbox/InboxDetails.tsx` - Integrate priority selector
+
+**Component Implementation**:
+```typescript
+// src/components-next/InboxPrioritySelector/InboxPrioritySelector.tsx
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { useAppDispatch } from '@/store/hooks';
+import { updateInboxPriority } from '@/store/inbox/inboxActions';
+import { InboxPriority } from '@/store/inbox/inboxTypes';
+import { tailwind } from '@/theme/tailwind';
+import I18n from '@/i18n';
+
+interface InboxPrioritySelectorProps {
+  inboxId: number;
+  currentPriority: InboxPriority;
+}
+
+export const InboxPrioritySelector: React.FC<InboxPrioritySelectorProps> = ({
+  inboxId,
+  currentPriority,
+}) => {
+  const dispatch = useAppDispatch();
+  const [priority, setPriority] = useState<InboxPriority>(currentPriority);
+
+  const priorities: InboxPriority[] = ['low', 'medium', 'high'];
+
+  const handleUpdate = async (value: InboxPriority) => {
+    setPriority(value);
+    await dispatch(updateInboxPriority({ id: inboxId, priority: value }));
+  };
+
+  return (
+    <View style={tailwind('flex flex-col gap-2 p-4')}>
+      <Text style={tailwind('text-sm font-medium text-gray-900 dark:text-gray-100')}>
+        {I18n.t('INBOX.PRIORITY')}
+      </Text>
+      <Picker
+        selectedValue={priority}
+        onValueChange={handleUpdate}
+        style={tailwind('border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800')}
+      >
+        {priorities.map(p => (
+          <Picker.Item
+            key={p}
+            label={I18n.t(`INBOX.PRIORITY_${p.toUpperCase()}`)}
+            value={p}
+          />
+        ))}
+      </Picker>
+    </View>
+  );
+};
+```
+
+**Screen Integration**:
+```typescript
+// src/screens/inbox/InboxDetails.tsx
+import React from 'react';
+import { View } from 'react-native';
+import { useAppSelector } from '@/store/hooks';
+import { selectInboxById } from '@/store/inbox/inboxSelectors';
+import { InboxPrioritySelector } from '@/components-next/InboxPrioritySelector';
+import { tailwind } from '@/theme/tailwind';
+
+export const InboxDetails: React.FC<{ route }> = ({ route }) => {
+  const { inboxId } = route.params;
+  const inbox = useAppSelector(state => selectInboxById(inboxId)(state));
+
+  if (!inbox) return null;
+
+  return (
+    <View style={tailwind('flex-1 bg-white dark:bg-gray-900')}>
+      {/* Existing inbox details */}
+
+      {/* NEW: Priority Selector */}
+      <InboxPrioritySelector
+        inboxId={inbox.id}
+        currentPriority={inbox.priority || 'medium'}
+      />
+
+      {/* Rest of component */}
+    </View>
+  );
+};
+```
+
+---
+
+### i18n Translations
+
+**Files to Modify**:
+- `src/i18n/en.json` - English translations
+- `src/i18n/es.json` - Spanish translations
+
+**Translation Updates**:
 ```json
-// app/javascript/dashboard/i18n/locale/en.json
+// src/i18n/en.json
 {
-  "STORE": {
+  "INBOX": {
     "PRIORITY": "Priority",
     "PRIORITY_LOW": "Low",
     "PRIORITY_MEDIUM": "Medium",
@@ -514,10 +552,12 @@ export default new StoresAPI();
     "PRIORITY_UPDATE_FAILED": "Failed to update priority"
   }
 }
+```
 
-// app/javascript/dashboard/i18n/locale/es.json
+```json
+// src/i18n/es.json
 {
-  "STORE": {
+  "INBOX": {
     "PRIORITY": "Prioridad",
     "PRIORITY_LOW": "Baja",
     "PRIORITY_MEDIUM": "Media",
@@ -534,215 +574,273 @@ export default new StoresAPI();
 
 ### Files Affected
 
-#### Backend - Models (1 file, 1 new migration)
-1. `app/models/store.rb` - Add enum, validations, scopes
-2. `db/migrate/YYYYMMDDHHMMSS_add_priority_to_stores.rb` - NEW migration
+#### Redux State Management (5 files, 2 new)
+1. `src/store/inbox/inboxTypes.ts` - NEW TypeScript interfaces
+2. `src/store/inbox/inboxSlice.ts` - Add priority support in state
+3. `src/store/inbox/inboxActions.ts` - Add updateInboxPriority async thunk
+4. `src/store/inbox/inboxService.ts` - Add updatePriority API method
+5. `src/store/inbox/inboxSelectors.ts` - NEW memoized selectors
+6. `src/store/inbox/inboxListener.ts` - NEW event listener for priority updates
 
-#### Backend - Services (2 files, 1 new)
-1. `app/services/stores/create_service.rb` - Permit priority param
-2. `app/services/stores/update_service.rb` - Permit priority param
-3. `app/services/stores/update_priority_service.rb` - NEW service
+#### UI Components (2 files, 1 new)
+1. `src/components-next/InboxPrioritySelector/InboxPrioritySelector.tsx` - NEW component
+2. `src/components-next/InboxPrioritySelector/index.ts` - NEW barrel export
+3. `src/screens/inbox/InboxDetails.tsx` - Integrate priority selector
 
-#### Backend - Controllers (1 file)
-1. `app/controllers/api/v1/accounts/stores_controller.rb` - Add update_priority action
+#### i18n (2 files)
+1. `src/i18n/en.json` - Add priority translations
+2. `src/i18n/es.json` - Add priority translations (Spanish)
 
-#### Backend - Views (2 files)
-1. `app/views/api/v1/accounts/stores/show.json.jbuilder` - Add priority field
-2. `app/views/api/v1/accounts/stores/_store.json.jbuilder` - Add priority field
+#### Tests (4 new files)
+1. `src/store/inbox/specs/inboxSlice.spec.ts` - Test priority state updates
+2. `src/store/inbox/specs/inboxActions.spec.ts` - Test updateInboxPriority thunk
+3. `src/store/inbox/specs/inboxService.spec.ts` - Test API service methods
+4. `src/components-next/InboxPrioritySelector/specs/InboxPrioritySelector.spec.tsx` - NEW component tests
 
-#### Backend - Jobs (1 new file)
-1. `app/jobs/stores/priority_notification_job.rb` - NEW job
-
-#### Backend - Listeners (1 file)
-1. `app/listeners/store_listener.rb` - Add priority_changed handler
-
-#### Frontend - Components (1 new, 1 modified)
-1. `app/javascript/dashboard/components/StorePrioritySelector.vue` - NEW component
-2. `app/javascript/dashboard/components/StoreDetails.vue` - Integrate selector
-
-#### Frontend - Store (1 file)
-1. `app/javascript/dashboard/store/modules/stores.js` - Add updatePriority action
-
-#### Frontend - API (1 file)
-1. `app/javascript/dashboard/api/stores.js` - Add updatePriority method
-
-#### Frontend - i18n (2 files)
-1. `app/javascript/dashboard/i18n/locale/en.json` - Add priority translations
-2. `app/javascript/dashboard/i18n/locale/es.json` - Add priority translations
-
-#### Tests (Multiple new/modified)
-1. `spec/models/store_spec.rb` - Test enum, validations, scopes
-2. `spec/services/stores/update_priority_service_spec.rb` - NEW service spec
-3. `spec/requests/api/v1/accounts/stores_spec.rb` - Test update_priority endpoint
-4. `spec/jobs/stores/priority_notification_job_spec.rb` - NEW job spec
-5. `app/javascript/dashboard/components/__tests__/StorePrioritySelector.spec.js` - NEW
-
-**Total Files**: 8 backend files (3 new), 5 frontend files (1 new), 5 test files (3 new) = **18 files**
+**Total Files**: 6 Redux files (3 new), 3 UI files (2 new), 2 i18n files, 4 test files (1 new) = **15 files**
 
 ---
 
 ### Breaking Changes
 
-**API Breaking Changes**: No
+**Redux State Breaking Changes**: No
 
 **Backward Compatibility**:
-- New `priority` field has default value (medium), so existing stores automatically get medium priority
-- API clients can ignore priority field if not needed
-- All existing endpoints continue to work without changes
+- New `priority` field is optional in TypeScript interfaces
+- Existing Redux selectors continue to work without changes
+- Default priority value handled in component if undefined
+- All existing Redux actions remain unchanged
 
 ---
 
-### Database Migrations
+### State Migration
 
-**Migration 1**: Add priority column to stores table
-- **Type**: Schema change
-- **Risk**: Low (additive change only, has default value)
-- **Reversible**: Yes (can rollback by dropping column)
-- **Estimated Time**: ~1 second (for small tables), up to 1 minute (for large tables)
-- **Rollback Plan**: `rails db:rollback` will drop the priority column
+**Redux Persist Migration**: Not required for this change
+- **Type**: Additive change (new optional field)
+- **Risk**: Low (backward compatible)
+- **Reversible**: Yes (can remove field without breaking existing state)
+- **Impact**: Existing persisted state continues to work
 
-**Migration Script**:
-```bash
-# Generate and run migration
-rails g migration AddPriorityToStores priority:integer
-rails db:migrate
-
-# If rollback needed
-rails db:rollback
-```
+**Notes**:
+- If priority field is critical, increment Redux Persist version in `src/store/index.ts`
+- Current migration version: 2
+- Consider migration if schema changes are breaking
 
 ---
 
-### API Changes
+### API Integration Changes
 
-#### New Endpoints
-- `PATCH /api/v1/accounts/:account_id/stores/:id/update_priority` - Update store priority
+#### Backend API Expectations
 
-**Request**:
-```json
+The mobile app will call existing Chatwoot backend API endpoints:
+
+**Expected Request** (Mobile → Backend):
+```typescript
+// PATCH /api/v1/accounts/:account_id/inboxes/:id
 {
   "priority": "high"
 }
 ```
 
-**Response** (200 OK):
+**Expected Response** (Backend → Mobile):
 ```json
 {
   "id": 1,
-  "name": "Store Name",
+  "name": "Inbox Name",
+  "channel_type": "Channel::WebWidget",
+  "priority": "high",
+  "created_at": "2025-01-01T00:00:00Z",
+  "updated_at": "2025-01-06T12:00:00Z"
+}
+```
+
+**camelCase Transformation**:
+```typescript
+// After camelCaseKeys transformation in mobile app
+{
+  "id": 1,
+  "name": "Inbox Name",
+  "channelType": "Channel::WebWidget",
   "priority": "high",
   "createdAt": "2025-01-01T00:00:00Z",
   "updatedAt": "2025-01-06T12:00:00Z"
 }
 ```
 
-#### Modified Endpoints
-- `GET /api/v1/accounts/:account_id/stores` - Now includes `priority` field in response
-- `GET /api/v1/accounts/:account_id/stores/:id` - Now includes `priority` field
-- `POST /api/v1/accounts/:account_id/stores` - Now accepts optional `priority` param
-- `PATCH /api/v1/accounts/:account_id/stores/:id` - Now accepts optional `priority` param
+#### API Service Layer
 
-#### Deprecated Endpoints
-- None
+The mobile app's `apiService` singleton automatically:
+- Adds authentication headers from Redux state
+- Injects account ID into URLs
+- Transforms snake_case responses to camelCase
+- Handles 401 errors (auto-logout)
+- Shows error toasts for failed requests
+
+**No additional API configuration needed**
 
 ---
 
 ## Testing Strategy
 
-### Backend Tests
+### Redux State Tests (Jest)
 
-**Model Specs** (`spec/models/store_spec.rb`):
-```ruby
-RSpec.describe Store, type: :model do
-  describe 'enums' do
-    it { should define_enum_for(:priority).with_values(low: 0, medium: 1, high: 2) }
-  end
+**Slice Tests** (`src/store/inbox/specs/inboxSlice.spec.ts`):
+```typescript
+import inboxSlice from '../inboxSlice';
+import { updateInboxPriority } from '../inboxActions';
 
-  describe 'validations' do
-    it { should validate_presence_of(:priority) }
-    it { should validate_inclusion_of(:priority).in_array(Store.priorities.keys) }
-  end
-
-  describe 'scopes' do
-    describe '.high_priority' do
-      # Test high priority scope returns correct records
-    end
-  end
-
-  describe '#prioritized_name' do
-    # Test name formatting with priority
-  end
-end
-```
-
-**Service Specs** (`spec/services/stores/update_priority_service_spec.rb`):
-```ruby
-RSpec.describe Stores::UpdatePriorityService do
-  let(:store) { create(:store, priority: :medium) }
-  let(:service) { described_class.new(store: store, priority: 'high') }
-
-  describe '#perform' do
-    it 'updates store priority' do
-      service.perform
-      expect(store.reload.priority).to eq('high')
-    end
-
-    it 'dispatches priority changed event' do
-      # Test event dispatching
-    end
-
-    context 'with invalid priority' do
-      # Test error handling
-    end
-  end
-end
-```
-
-**Request Specs** (`spec/requests/api/v1/accounts/stores_spec.rb`):
-```ruby
-RSpec.describe 'Api::V1::Accounts::Stores', type: :request do
-  describe 'PATCH /api/v1/accounts/:account_id/stores/:id/update_priority' do
-    it 'updates store priority successfully' do
-      # Test successful priority update
-    end
-
-    it 'returns error for invalid priority' do
-      # Test validation error handling
-    end
-  end
-end
-```
-
-### Frontend Tests
-
-**Component Specs** (`app/javascript/dashboard/components/__tests__/StorePrioritySelector.spec.js`):
-```javascript
-import { describe, it, expect, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
-import StorePrioritySelector from '../StorePrioritySelector.vue';
-
-describe('StorePrioritySelector', () => {
-  const mockStore = {
-    namespaced: true,
-    actions: { updatePriority: vi.fn() },
-  };
-
-  const store = createStore({ modules: { stores: mockStore } });
-
-  it('renders priority selector', () => {
-    // Test component renders correctly
+describe('inboxSlice', () => {
+  it('should handle initial state', () => {
+    expect(inboxSlice.reducer(undefined, { type: 'unknown' })).toEqual({
+      inboxes: [],
+      loading: false,
+      error: null,
+    });
   });
 
-  it('calls updatePriority action on change', async () => {
-    // Test action is called with correct params
+  it('should handle updateInboxPriority.pending', () => {
+    const action = { type: updateInboxPriority.pending.type };
+    const state = inboxSlice.reducer(undefined, action);
+    expect(state.loading).toBe(true);
+  });
+
+  it('should handle updateInboxPriority.fulfilled', () => {
+    const inbox = { id: 1, name: 'Test Inbox', priority: 'high' };
+    const action = { type: updateInboxPriority.fulfilled.type, payload: inbox };
+    const state = inboxSlice.reducer({ inboxes: [inbox], loading: true, error: null }, action);
+    expect(state.inboxes[0].priority).toBe('high');
+    expect(state.loading).toBe(false);
+  });
+
+  it('should handle updateInboxPriority.rejected', () => {
+    const action = {
+      type: updateInboxPriority.rejected.type,
+      error: { message: 'Update failed' },
+    };
+    const state = inboxSlice.reducer(undefined, action);
+    expect(state.error).toBe('Update failed');
+    expect(state.loading).toBe(false);
+  });
+});
+```
+
+**Action Tests** (`src/store/inbox/specs/inboxActions.spec.ts`):
+```typescript
+import { updateInboxPriority } from '../inboxActions';
+import InboxService from '../inboxService';
+
+jest.mock('../inboxService');
+
+describe('inboxActions', () => {
+  describe('updateInboxPriority', () => {
+    it('should update inbox priority successfully', async () => {
+      const mockInbox = { id: 1, name: 'Test', priority: 'high' };
+      (InboxService.updatePriority as jest.Mock).mockResolvedValue(mockInbox);
+
+      const dispatch = jest.fn();
+      const thunk = updateInboxPriority({ id: 1, priority: 'high' });
+      await thunk(dispatch, () => ({}), undefined);
+
+      expect(InboxService.updatePriority).toHaveBeenCalledWith(1, 'high');
+    });
+
+    it('should handle update priority failure', async () => {
+      (InboxService.updatePriority as jest.Mock).mockRejectedValue(new Error('API error'));
+
+      const dispatch = jest.fn();
+      const thunk = updateInboxPriority({ id: 1, priority: 'high' });
+      await thunk(dispatch, () => ({}), undefined);
+
+      // Verify error handling
+    });
+  });
+});
+```
+
+**Service Tests** (`src/store/inbox/specs/inboxService.spec.ts`):
+```typescript
+import InboxService from '../inboxService';
+import { apiService } from '@/services/APIService';
+
+jest.mock('@/services/APIService');
+
+describe('InboxService', () => {
+  describe('updatePriority', () => {
+    it('should call API with correct params', async () => {
+      const mockResponse = { data: { id: 1, priority: 'high' } };
+      (apiService.patch as jest.Mock).mockResolvedValue(mockResponse);
+
+      await InboxService.updatePriority(1, 'high');
+
+      expect(apiService.patch).toHaveBeenCalledWith('/inboxes/1', { priority: 'high' });
+    });
+
+    it('should transform response to camelCase', async () => {
+      const mockResponse = {
+        data: { id: 1, channel_type: 'web', created_at: '2025-01-01' },
+      };
+      (apiService.patch as jest.Mock).mockResolvedValue(mockResponse);
+
+      const result = await InboxService.updatePriority(1, 'high');
+
+      expect(result).toHaveProperty('channelType');
+      expect(result).toHaveProperty('createdAt');
+    });
+  });
+});
+```
+
+### Component Tests (Jest + React Native Testing Library)
+
+**Component Tests** (`src/components-next/InboxPrioritySelector/specs/InboxPrioritySelector.spec.tsx`):
+```typescript
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import { InboxPrioritySelector } from '../InboxPrioritySelector';
+
+const mockStore = configureStore([]);
+
+describe('InboxPrioritySelector', () => {
+  let store: any;
+
+  beforeEach(() => {
+    store = mockStore({
+      inbox: { inboxes: [], loading: false, error: null },
+    });
+    store.dispatch = jest.fn();
+  });
+
+  it('renders priority selector with current priority', () => {
+    const { getByText } = render(
+      <Provider store={store}>
+        <InboxPrioritySelector inboxId={1} currentPriority="medium" />
+      </Provider>
+    );
+
+    expect(getByText('Priority')).toBeTruthy();
+  });
+
+  it('dispatches updateInboxPriority on selection change', async () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <InboxPrioritySelector inboxId={1} currentPriority="medium" />
+      </Provider>
+    );
+
+    const picker = getByTestId('priority-picker');
+    fireEvent(picker, 'valueChange', 'high');
+
+    expect(store.dispatch).toHaveBeenCalled();
   });
 });
 ```
 
 ### Coverage Goals
-- Backend: ≥85% for changed files
-- Frontend: ≥80% for new components
+- Redux State: ≥85% for slices, actions, services
+- Components: ≥80% for new UI components
+- Selectors: ≥90% for memoized selectors
 
 ---
 
@@ -750,56 +848,105 @@ describe('StorePrioritySelector', () => {
 
 ### Technical Risks
 
-**Risk 1**: Migration fails on large stores table
+**Risk 1**: Redux state inconsistency after updates
 - **Probability**: Low
-- **Impact**: High (blocks deployment)
-- **Mitigation**: Test migration on production-like data volume, have rollback plan ready
+- **Impact**: Medium (UI shows stale data)
+- **Mitigation**: Use Redux Toolkit immer for safe mutations, comprehensive state tests
 
-**Risk 2**: Event dispatcher performance impact
-- **Probability**: Low
-- **Impact**: Medium
-- **Mitigation**: Events are async via Sidekiq, won't block request
-
-**Risk 3**: Frontend state management bugs
+**Risk 2**: API integration failure with backend
 - **Probability**: Medium
-- **Impact**: Low (affects UI only, backend data is safe)
-- **Mitigation**: Comprehensive component tests, manual QA testing
+- **Impact**: High (feature won't work)
+- **Mitigation**: Mock API responses in tests, verify backend endpoint exists, test with staging backend
+
+**Risk 3**: Platform-specific rendering issues (iOS vs Android)
+- **Probability**: Medium
+- **Impact**: Low (cosmetic issues only)
+- **Mitigation**: Test on both iOS and Android devices, use platform-agnostic Tailwind styles
+
+**Risk 4**: AsyncStorage persistence failure
+- **Probability**: Low
+- **Impact**: Low (state resets on app restart)
+- **Mitigation**: Redux Persist handles gracefully, optional field won't break existing state
 
 ### Business Risks
 
 **Risk 1**: Users confused by new priority field
 - **Probability**: Low
 - **Impact**: Low
-- **Mitigation**: Clear labels, tooltips, documentation
+- **Mitigation**: Clear labels with i18n, tooltips if needed, optional field
 
 ---
 
 ## Deployment Plan
 
 ### Pre-Deployment Checklist
-- [ ] All tests passing (RSpec + Vitest)
+- [ ] All Jest tests passing (`pnpm test`)
 - [ ] Code review approved
-- [ ] Migration tested on staging
-- [ ] i18n verified (en + es)
+- [ ] TypeScript compilation successful (`tsc --noEmit`)
+- [ ] ESLint passing (`pnpm run lint`)
+- [ ] i18n verified (en + es translations)
+- [ ] Tested on iOS device/simulator
+- [ ] Tested on Android device/emulator
+- [ ] Backend API endpoint verified in staging
 - [ ] Documentation updated
-- [ ] Rollback plan documented
 
-### Deployment Steps
-1. Merge feature branch to `develop`
-2. Deploy to staging environment
-3. Run migrations: `rails db:migrate`
-4. Smoke test priority functionality
-5. Deploy to production
-6. Run migrations in production
-7. Monitor logs for errors
+### Deployment Steps (EAS Build)
+
+**Development Build**:
+```bash
+# 1. Merge feature branch to development
+git checkout development
+git merge feature/inbox-priority
+
+# 2. Build for development
+pnpm run build:android:dev
+pnpm run build:ios:dev
+
+# 3. Test on devices via Expo Go or dev client
+
+# 4. Monitor for errors in Expo dashboard
+```
+
+**Production Build**:
+```bash
+# 1. Merge to main branch
+git checkout main
+git merge development
+
+# 2. Push to trigger CI/CD
+git push origin main
+
+# 3. Monitor EAS Build
+eas build:list
+
+# 4. Submit to app stores (automatic on main merge)
+# Android: Google Play Console
+# iOS: App Store Connect
+
+# 5. Monitor for crashes via Sentry/Firebase Crashlytics
+```
 
 ### Rollback Plan
 ```bash
-# If issues found in production
-rails db:rollback  # Removes priority column
+# If issues found after deployment
+
+# Option 1: Revert commit
 git revert <commit-hash>
-# Redeploy previous version
+git push origin main
+
+# Option 2: Rollback to previous build
+# In Google Play Console: deactivate current release, activate previous
+# In App Store Connect: remove current build from review, resubmit previous
+
+# Option 3: Feature flag (if implemented)
+# Disable priority feature via remote config without new build
 ```
+
+### Post-Deployment Monitoring
+- Monitor Redux state in production via logging
+- Check error rates in Sentry/Firebase Crashlytics
+- Monitor API error rates for priority updates
+- Collect user feedback on new feature
 
 ---
 
@@ -818,16 +965,20 @@ git revert <commit-hash>
 ## Next Steps
 
 1. [ ] Get design approval from stakeholders
-2. [ ] Create feature branch: `feature/store-priority`
-3. [ ] Create execution tracking document from DEVELOPMENT_EXECUTION_TEMPLATE.md
-4. [ ] Begin implementation following development_process.md
-5. [ ] Schedule code review after implementation
+2. [ ] Verify backend API endpoint exists and supports priority field
+3. [ ] Create feature branch: `feature/inbox-priority` (from `development`)
+4. [ ] Create execution tracking document from DEVELOPMENT_EXECUTION_TEMPLATE.md
+5. [ ] Begin implementation following development_process.md
+6. [ ] Test on both iOS and Android
+7. [ ] Schedule code review after implementation
+8. [ ] Submit for QA testing
 
-**Estimated Timeline**: 3-4 days
-- Backend implementation: 1.5 days
-- Frontend implementation: 1 day
-- Testing: 0.5 days
-- Code review & fixes: 1 day
+**Estimated Timeline**: 2-3 days
+- Redux state implementation: 0.5 days
+- Component implementation: 0.5 days
+- API integration: 0.5 days
+- Testing (Jest + manual): 0.5 days
+- Code review & fixes: 0.5-1 day
 
 ---
 

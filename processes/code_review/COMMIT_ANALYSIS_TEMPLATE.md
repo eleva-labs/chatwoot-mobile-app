@@ -117,47 +117,45 @@ graph TD
 **Backend - Jobs** (X files, +A/-B lines):
 - `app/jobs/domain/action_job.rb` - [Change description]
 
-**Backend - Listeners** (X files, +A/-B lines):
-- `app/listeners/resource_listener.rb` - [Change description]
+**Redux - Listeners** (X files, +A/-B lines):
+- `src/store/resource/resourceListener.ts` - [Change description]
 
-**Backend - Builders/Finders** (X files, +A/-B lines):
-- `app/builders/messages/message_builder.rb` - [Change description]
-- `app/finders/conversations_finder.rb` - [Change description]
+**Redux - Selectors** (X files, +A/-B lines):
+- `src/store/resource/resourceSelectors.ts` - [Change description]
 
-**Backend - Views (Jbuilder)** (X files, +A/-B lines):
-- `app/views/api/v1/accounts/resources/show.json.jbuilder` - [Change description]
+**React Native - Components** (X files, +A/-B lines):
+- `src/components-next/ComponentName/ComponentName.tsx` - [Change description]
 
-**Frontend - Components** (X files, +A/-B lines):
-- `app/javascript/dashboard/components/ComponentName.vue` - [Change description]
+**React Native - Screens** (X files, +A/-B lines):
+- `src/screens/resource/ScreenName.tsx` - [Change description]
 
-**Frontend - Store** (X files, +A/-B lines):
-- `app/javascript/dashboard/store/modules/stores.js` - [Change description]
+**Navigation** (X files, +A/-B lines):
+- `src/navigation/stack/ResourceNavigator.tsx` - [Change description]
 
-**Frontend - i18n** (X files, +A/-B lines):
-- `app/javascript/dashboard/i18n/locale/en.json` - [Change description]
-- `app/javascript/dashboard/i18n/locale/es.json` - [Change description]
+**Hooks** (X files, +A/-B lines):
+- `src/hooks/useResource.ts` - [Change description]
 
-**Database** (X files, +A/-B lines):
-- `db/migrate/YYYYMMDDHHMMSS_migration_name.rb` - [Change description]
+**Utils** (X files, +A/-B lines):
+- `src/utils/resourceUtils.ts` - [Change description]
 
-**Backend Tests** (X files, +A/-B lines):
-- `spec/models/model_spec.rb` - [Change description]
-- `spec/services/service_spec.rb` - [Change description]
-- `spec/requests/api/v1/accounts/resources_spec.rb` - [Change description]
+**i18n** (X files, +A/-B lines):
+- `src/i18n/en.json` - [Change description]
+- `src/i18n/es.json` - [Change description]
 
-**Frontend Tests** (X files, +A/-B lines):
-- `app/javascript/dashboard/components/__tests__/ComponentName.spec.js` - [Change description]
+**Redux Tests** (X files, +A/-B lines):
+- `src/store/resource/specs/resourceSlice.spec.ts` - [Change description]
+- `src/store/resource/specs/resourceActions.spec.ts` - [Change description]
+- `src/store/resource/specs/resourceService.spec.ts` - [Change description]
+
+**Component Tests** (X files, +A/-B lines):
+- `src/components-next/ComponentName/specs/ComponentName.spec.tsx` - [Change description]
 
 **Documentation** (X files, +A/-B lines):
 - `docs/some_doc.md` - [Change description]
 
 **Configuration** (X files, +A/-B lines):
-- `Gemfile` - [Change description]
 - `package.json` - [Change description]
-
-**Enterprise** (X files, +A/-B lines):
-- `enterprise/app/models/model.rb` - [Change description]
-- `enterprise/app/services/service.rb` - [Change description]
+- `app.config.ts` - [Change description]
 
 ---
 
@@ -165,36 +163,37 @@ graph TD
 
 ```mermaid
 graph LR
-    A[Vue Component] -->|Dispatch| B[Vuex Action]
-    B -->|API Call| C[Rails Controller]
-    C -->|Calls| D[Service Object]
-    D -->|Uses| E[Model]
-    E -->|Requires| F[Migration]
-    D -->|Dispatch| G[Event]
-    G -->|Triggers| H[Listener]
-    H -->|Enqueues| I[Sidekiq Job]
+    A[React Native Component] -->|Dispatch| B[Redux Action]
+    B -->|API Call| C[Redux Service]
+    C -->|HTTP| D[Chatwoot Backend API]
+    B -->|Updates| E[Redux Slice]
+    E -->|State Change| A
+    D -->|WebSocket Event| F[ActionCable]
+    F -->|Triggers| G[Redux Listener]
+    G -->|Updates| E
 ```
 
 ---
 
 ### Files by Type
 
-**Backend Files (Ruby)** (X files):
-- Model files: X
+**Redux State Management** (X files):
+- Slice files: X
+- Action files: X
 - Service files: X
-- Controller files: X
-- Job files: X
+- Selector files: X
 - Listener files: X
-- Builder/Finder files: X
-- Jbuilder views: X
-- RSpec test files: X
+- Type files: X
+- Jest test files: X
 - Other: X
 
-**Frontend Files (JavaScript/Vue)** (X files):
-- Vue components: X
-- Vuex store modules: X
-- API clients: X
-- Vitest test files: X
+**UI Components** (X files):
+- React Native components: X
+- Screen files: X
+- Navigation files: X
+- Hook files: X
+- Util files: X
+- Jest test files: X
 - Other: X
 
 **Database Files** (X files):

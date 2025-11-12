@@ -73,57 +73,48 @@ YYYY-MM-DD HH:MM:SS
 
 #### Files Analyzed
 
-**Backend - Models** (X files):
-- `app/models/model1.rb:line_number` - [Current purpose and key functionality]
-- `app/models/model2.rb:line_number` - [Current purpose and key functionality]
-- `app/models/concerns/concern1.rb:line_number` - [Shared behavior]
+**Redux - Types** (X files):
+- `src/store/[feature]/[feature]Types.ts:line_number` - [TypeScript interfaces and types]
+- `src/types/[feature].ts:line_number` - [Shared type definitions]
 
-**Backend - Services** (X files):
-- `app/services/domain/action_service.rb:line_number` - [Business logic]
-- `app/services/domain/update_service.rb:line_number` - [Update logic]
+**Redux - Slices** (X files):
+- `src/store/[feature]/[feature]Slice.ts:line_number` - [State management, reducers]
 
-**Backend - Controllers** (X files):
-- `app/controllers/api/v1/accounts/resource_controller.rb:line_number` - [API endpoints]
-- `app/controllers/public/resource_controller.rb:line_number` - [Public endpoints]
+**Redux - Actions** (X files):
+- `src/store/[feature]/[feature]Actions.ts:line_number` - [Async actions, thunks]
 
-**Backend - Jobs** (X files):
-- `app/jobs/domain/action_job.rb:line_number` - [Background processing]
+**Redux - Services** (X files):
+- `src/store/[feature]/[feature]Service.ts:line_number` - [API calls]
 
-**Backend - Listeners** (X files):
-- `app/listeners/resource_listener.rb:line_number` - [Event handling]
+**Redux - Selectors** (X files):
+- `src/store/[feature]/[feature]Selectors.ts:line_number` - [State selectors]
 
-**Backend - Builders/Finders** (X files):
-- `app/builders/messages/message_builder.rb:line_number` - [Object construction]
-- `app/finders/conversations_finder.rb:line_number` - [Complex queries]
+**Redux - Listeners** (X files):
+- `src/store/[feature]/[feature]Listener.ts:line_number` - [Event-driven reactions]
 
-**Backend - Views (Jbuilder)** (X files):
-- `app/views/api/v1/accounts/resources/show.json.jbuilder:line_number` - [JSON responses]
+**UI - Components** (X files):
+- `src/components-next/ComponentName/ComponentName.tsx:line_number` - [Reusable UI components]
 
-**Frontend - Components** (X files):
-- `app/javascript/dashboard/components/ComponentName.vue:line_number` - [UI component]
+**UI - Screens** (X files):
+- `src/screens/[feature]/ScreenName.tsx:line_number` - [Screen components]
 
-**Frontend - Store** (X files):
-- `app/javascript/dashboard/store/modules/stores.js:line_number` - [State management]
+**Hooks** (X files):
+- `src/hooks/use[Feature].ts:line_number` - [Custom React hooks]
 
-**Frontend - i18n** (X files):
-- `app/javascript/dashboard/i18n/locale/en.json` - [English translations]
-- `app/javascript/dashboard/i18n/locale/es.json` - [Spanish translations]
+**Utils** (X files):
+- `src/utils/[feature]Utils.ts:line_number` - [Pure utility functions]
 
-**Database**:
-- `db/migrate/YYYYMMDDHHMMSS_migration_name.rb` - [Schema changes]
-- `db/schema.rb` - [Current schema]
+**i18n** (X files):
+- `src/i18n/en.json` - [English translations]
+- `src/i18n/es.json` - [Spanish translations]
 
-**Tests - Backend** (X files):
-- `spec/models/model_spec.rb:line_number` - [Model tests]
-- `spec/services/service_spec.rb:line_number` - [Service tests]
-- `spec/requests/api_spec.rb:line_number` - [Request specs]
+**Navigation** (X files):
+- `src/navigation/stack/[Feature]Navigator.tsx` - [Stack navigation]
 
-**Tests - Frontend** (X files):
-- `app/javascript/dashboard/components/__tests__/ComponentName.spec.js` - [Component tests]
-
-**Enterprise** (X files):
-- `enterprise/app/models/model.rb` - [Enterprise extensions]
-- `enterprise/app/services/service.rb` - [Enterprise overrides]
+**Tests** (X files):
+- `src/store/[feature]/specs/[feature]Slice.spec.ts:line_number` - [Redux tests]
+- `src/screens/[feature]/specs/ScreenName.spec.tsx:line_number` - [Component tests]
+- `src/hooks/specs/use[Feature].spec.ts:line_number` - [Hook tests]
 
 **Total Files Analyzed**: XX files
 
@@ -131,107 +122,123 @@ YYYY-MM-DD HH:MM:SS
 
 ### Current Implementation Patterns
 
-#### Backend Patterns
+#### Redux Patterns
 
-**Service Objects**:
-```ruby
-# app/services/stores/create_service.rb:15
-class Stores::CreateService
-  def initialize(account:, params:)
-    @account = account
-    @params = params
-  end
+**Redux Slices (createSlice)**:
+```typescript
+// src/store/conversation/conversationSlice.ts:15
+import { createSlice } from '@reduxjs/toolkit';
 
-  def perform
-    store = @account.stores.build(store_params)
-    store.save!
-    dispatch_event(store)
-    store
-  end
-
-  private
-
-  def store_params
-    @params.permit(:name, :phone_number)
-  end
-
-  def dispatch_event(store)
-    Rails.configuration.dispatcher.dispatch(
-      STORE_CREATED,
-      Time.zone.now,
-      store: store
-    )
-  end
-end
-```
-
-**Event Dispatchers**:
-```ruby
-# app/listeners/store_listener.rb:5
-class StoreListener < BaseListener
-  def store_created(event)
-    store = event.data[:store]
-    # Trigger notifications, analytics, etc.
-  end
-end
-```
-
-**Finder Objects**:
-```ruby
-# app/finders/stores_finder.rb:10
-class StoresFinder
-  def initialize(account, params)
-    @account = account
-    @params = params
-  end
-
-  def perform
-    stores = @account.stores
-    stores = filter_by_status(stores) if @params[:status]
-    stores
-  end
-end
-```
-
-#### Frontend Patterns
-
-**Vue Components (Composition API)**:
-```vue
-<!-- app/javascript/dashboard/components/StoreDetails.vue:5 -->
-<script setup>
-import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
-const storeData = computed(() => store.getters['stores/getCurrentStore']);
-</script>
-
-<template>
-  <div class="flex flex-col gap-4">
-    <!-- Tailwind CSS only -->
-  </div>
-</template>
-```
-
-**Vuex State Management**:
-```javascript
-// app/javascript/dashboard/store/modules/stores.js:20
-export default {
-  namespaced: true,
-  state: { records: [] },
-  getters: { getStores: (state) => state.records },
-  actions: {
-    async fetchStores({ commit }) {
-      const response = await StoresAPI.getAll();
-      commit('setStores', response.data.payload);
-    }
+const conversationSlice = createSlice({
+  name: 'conversation',
+  initialState: {
+    conversations: [],
+    loading: false,
+    error: null,
   },
-  mutations: {
-    setStores(state, stores) {
-      state.records = stores;
+  reducers: {
+    setConversations: (state, action) => {
+      state.conversations = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    // Handle async actions
+  },
+});
+
+export default conversationSlice;
+```
+
+**Redux Actions (createAsyncThunk)**:
+```typescript
+// src/store/conversation/conversationActions.ts:10
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import conversationService from './conversationService';
+
+export const fetchConversations = createAsyncThunk(
+  'conversation/fetchConversations',
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await conversationService.fetchConversations(params);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
     }
   }
+);
+```
+
+**Service Layer (API Calls)**:
+```typescript
+// src/store/conversation/conversationService.ts:5
+import { apiService } from '@/services/APIService';
+import camelCaseKeys from '@/utils/camelCaseKeys';
+
+class ConversationService {
+  static async fetchConversations(params) {
+    const response = await apiService.get('/conversations', { params });
+    return camelCaseKeys(response.data);
+  }
+}
+
+export default ConversationService;
+```
+
+**Redux Listeners (createListenerMiddleware)**:
+```typescript
+// src/store/conversation/conversationListener.ts:8
+import { createListenerMiddleware } from '@reduxjs/toolkit';
+
+export const conversationListener = createListenerMiddleware();
+
+conversationListener.startListening({
+  actionCreator: fetchConversations.fulfilled,
+  effect: (action, listenerApi) => {
+    // Side effects, analytics, notifications
+  },
+});
+```
+
+#### UI Patterns
+
+**React Native Components (Functional)**:
+```typescript
+// src/screens/conversations/ConversationList.tsx:10
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { tailwind } from '@/theme/tailwind';
+
+export const ConversationList = () => {
+  const dispatch = useAppDispatch();
+  const conversations = useAppSelector(state => state.conversation.conversations);
+
+  return (
+    <View style={tailwind('flex-1 bg-white')}>
+      {/* Tailwind CSS only */}
+    </View>
+  );
 };
+```
+
+**Redux Store Configuration**:
+```typescript
+// src/store/index.ts:20
+import { configureStore } from '@reduxjs/toolkit';
+import conversationSlice from './conversation/conversationSlice';
+import { conversationListener } from './conversation/conversationListener';
+
+export const store = configureStore({
+  reducer: {
+    conversation: conversationSlice.reducer,
+    // ... other slices
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(conversationListener.middleware),
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 ```
 
 ---
@@ -239,35 +246,44 @@ export default {
 ### Dependencies & Relationships
 
 **Key Dependencies**:
-- Model 1 → Model 2 (association: `has_many`, `belongs_to`)
-- Service 1 → Repository (database access via ActiveRecord)
-- Controller → Service (business logic delegation)
-- Component → Vuex Store → API Client → Backend
+- Redux Slice → Redux Actions (async thunk creators)
+- Redux Actions → Service Layer (API calls)
+- Service Layer → APIService singleton (Axios)
+- React Component → Redux Store (via hooks)
+- Component → Navigation (React Navigation)
 
 **Data Flow**:
 ```
-User Action (Vue Component)
+User Action (React Component)
   ↓
-Vuex Action (API Call)
+Redux Action Dispatch (createAsyncThunk)
   ↓
-Rails Controller (HTTP)
+Service Layer (API Call via Axios)
   ↓
-Service Object (Business Logic)
+Chatwoot Backend API (HTTP)
   ↓
-Model (ActiveRecord)
+camelCaseKeys Transformation
   ↓
-PostgreSQL Database
+Redux Slice Reducer (State Update)
+  ↓
+Component Re-render (via useAppSelector)
 ```
 
-**Event Flow** (if event-driven):
+**Event Flow** (ActionCable):
 ```
-Service Object
+Chatwoot Backend Event
   ↓
-Event Dispatcher
+ActionCable WebSocket Connection
   ↓
-Listeners (StoreListener, NotificationListener, etc.)
+Mobile ActionCable Client (src/utils/actionCable.ts)
   ↓
-Background Jobs (Sidekiq)
+camelCaseKeys Transformation
+  ↓
+Redux Listener Middleware
+  ↓
+Redux Slice State Update
+  ↓
+Component Re-render
 ```
 
 ---
@@ -295,10 +311,10 @@ Background Jobs (Sidekiq)
 **Description**: [High-level description]
 
 **Changes Required**:
-- **Backend**: Models, Services, Controllers, Jobs
-- **Frontend**: Components, Vuex Store, i18n
-- **Database**: Migrations, indexes
-- **Tests**: RSpec + Vitest specs
+- **Redux State**: Slices, Actions, Services, Selectors
+- **UI Components**: Screens, Components, Navigation
+- **Utilities**: Hooks, Utils, Helpers
+- **Tests**: Jest specs (actions, slices, components)
 
 **Pros**:
 - Pro 1: [Description]
@@ -367,46 +383,57 @@ Background Jobs (Sidekiq)
 
 ### Files to Create
 
-**Backend**:
-- [ ] `app/models/new_model.rb` - [Purpose]
-- [ ] `app/services/domain/new_service.rb` - [Purpose]
-- [ ] `app/jobs/domain/new_job.rb` - [Purpose]
-- [ ] `db/migrate/YYYYMMDDHHMMSS_migration_name.rb` - [Schema change]
+**Redux State**:
+- [ ] `src/store/[feature]/[feature]Slice.ts` - [Redux slice with reducers]
+- [ ] `src/store/[feature]/[feature]Actions.ts` - [Async actions via createAsyncThunk]
+- [ ] `src/store/[feature]/[feature]Service.ts` - [API service methods]
+- [ ] `src/store/[feature]/[feature]Selectors.ts` - [Memoized state selectors]
+- [ ] `src/store/[feature]/[feature]Types.ts` - [TypeScript interfaces]
 
-**Frontend**:
-- [ ] `app/javascript/dashboard/components/NewComponent.vue` - [Purpose]
-- [ ] `app/javascript/dashboard/store/modules/new_module.js` - [Purpose]
-- [ ] `app/javascript/dashboard/api/new_api.js` - [Purpose]
+**UI Components**:
+- [ ] `src/screens/[feature]/ScreenName.tsx` - [Screen component]
+- [ ] `src/components-next/ComponentName/ComponentName.tsx` - [Reusable component]
+- [ ] `src/navigation/stack/[Feature]Navigator.tsx` - [Navigation setup]
+
+**Utilities**:
+- [ ] `src/hooks/use[Feature].ts` - [Custom React hook]
+- [ ] `src/utils/[feature]Utils.ts` - [Pure utility functions]
+
+**i18n**:
+- [ ] `src/i18n/en.json` - [English translations]
+- [ ] `src/i18n/es.json` - [Spanish translations]
 
 **Tests**:
-- [ ] `spec/models/new_model_spec.rb` - [Coverage]
-- [ ] `spec/services/new_service_spec.rb` - [Coverage]
-- [ ] `app/javascript/dashboard/components/__tests__/NewComponent.spec.js` - [Coverage]
+- [ ] `src/store/[feature]/specs/[feature]Slice.spec.ts` - [Slice tests]
+- [ ] `src/store/[feature]/specs/[feature]Actions.spec.ts` - [Action tests]
+- [ ] `src/screens/[feature]/specs/ScreenName.spec.tsx` - [Component tests]
 
 ---
 
 ### Files to Modify
 
-**Backend**:
-- [ ] `app/models/existing_model.rb:line_number` - [Change description]
-- [ ] `app/services/domain/existing_service.rb:line_number` - [Change description]
-- [ ] `app/controllers/api/v1/accounts/resource_controller.rb:line_number` - [Change description]
+**Redux State**:
+- [ ] `src/store/[existing]/[existing]Slice.ts:line_number` - [Change description]
+- [ ] `src/store/[existing]/[existing]Service.ts:line_number` - [Change description]
+- [ ] `src/store/index.ts` - [Add new slice to store]
 
-**Frontend**:
-- [ ] `app/javascript/dashboard/components/ExistingComponent.vue:line_number` - [Change description]
-- [ ] `app/javascript/dashboard/store/modules/existing.js:line_number` - [Change description]
-- [ ] `app/javascript/dashboard/i18n/locale/en.json` - [Add translations]
-- [ ] `app/javascript/dashboard/i18n/locale/es.json` - [Add translations]
+**UI Components**:
+- [ ] `src/screens/[existing]/Screen.tsx:line_number` - [Change description]
+- [ ] `src/components-next/[existing]/Component.tsx:line_number` - [Change description]
+- [ ] `src/navigation/index.tsx` - [Update navigation routes]
 
-**Database**:
-- [ ] `db/migrate/` - Create new migration for [schema change]
+**i18n**:
+- [ ] `src/i18n/en.json` - [Add/update translations]
+- [ ] `src/i18n/es.json` - [Add/update translations]
 
 **Tests**:
-- [ ] `spec/models/existing_model_spec.rb` - [Update tests]
-- [ ] `spec/requests/api/v1/accounts/resources_spec.rb` - [Add request specs]
+- [ ] `src/store/[feature]/specs/[feature]Slice.spec.ts` - [Redux slice tests]
+- [ ] `src/store/[feature]/specs/[feature]Actions.spec.ts` - [Redux action tests]
+- [ ] `src/screens/[feature]/specs/Screen.spec.tsx` - [Component tests]
 
-**Enterprise** (if applicable):
-- [ ] `enterprise/app/models/model.rb` - [Enterprise compatibility]
+**Platform Testing** (if applicable):
+- [ ] iOS-specific behavior tested
+- [ ] Android-specific behavior tested
 
 **Total Files**: XX to create, YY to modify
 
@@ -414,38 +441,37 @@ Background Jobs (Sidekiq)
 
 ### Files to Delete
 
-- [ ] `path/to/deprecated_file.rb` - [Reason for deletion]
-- [ ] `path/to/old_file.vue` - [Replaced by new implementation]
+- [ ] `src/path/to/deprecated_file.ts` - [Reason for deletion]
+- [ ] `src/path/to/old_component.tsx` - [Replaced by new implementation]
 
 ---
 
 ## Testing Strategy
 
-### Backend Testing
+### Redux Testing (Jest)
 
 **Test Types**:
-- [ ] Model specs (`spec/models/`)
-- [ ] Service specs (`spec/services/`)
-- [ ] Controller specs (`spec/controllers/`)
-- [ ] Request specs (`spec/requests/`) - API integration tests
-- [ ] Job specs (`spec/jobs/`)
+- [ ] Slice specs (`src/store/[feature]/specs/[feature]Slice.spec.ts`)
+- [ ] Action specs (`src/store/[feature]/specs/[feature]Actions.spec.ts`)
+- [ ] Service specs (`src/store/[feature]/specs/[feature]Service.spec.ts`)
+- [ ] Selector specs (`src/store/[feature]/specs/[feature]Selectors.spec.ts`)
 
 **Coverage Goal**: ≥80% for changed files
 
 **Key Test Scenarios**:
 1. Happy path: [Description]
-2. Validation errors: [Description]
+2. API error handling: [Description]
 3. Edge cases: [Description]
-4. Error scenarios: [Description]
+4. Loading states: [Description]
 
 ---
 
-### Frontend Testing
+### UI Testing (Jest + React Native Testing Library)
 
 **Test Types**:
-- [ ] Component tests (Vitest)
-- [ ] Vuex store tests (Vitest)
-- [ ] Integration tests (user flows)
+- [ ] Component tests (src/components-next/*/specs/)
+- [ ] Screen tests (src/screens/*/specs/)
+- [ ] Hook tests (src/hooks/specs/)
 
 **Coverage Goal**: ≥80% for changed files
 
@@ -531,8 +557,10 @@ Background Jobs (Sidekiq)
 
 ### External References
 
-- [Relevant Rails guides or Vue.js docs]
-- [Similar features in other systems]
+- [React Native Documentation](https://reactnative.dev/)
+- [Redux Toolkit Documentation](https://redux-toolkit.js.org/)
+- [Expo Documentation](https://docs.expo.dev/)
+- [Similar features in other apps]
 - [Slack/GitHub discussions]
 
 ### Diagrams
@@ -540,13 +568,14 @@ Background Jobs (Sidekiq)
 **Current Architecture**:
 ```mermaid
 graph TD
-    A[User] --> B[Vue Component]
-    B --> C[Vuex Store]
-    C --> D[API Client]
-    D --> E[Rails Controller]
-    E --> F[Service Object]
-    F --> G[ActiveRecord Model]
-    G --> H[PostgreSQL]
+    A[User] --> B[React Native Component]
+    B --> C[Redux Action Dispatch]
+    C --> D[Service Layer]
+    D --> E[API Service - Axios]
+    E --> F[Chatwoot Backend API]
+    C --> G[Redux Slice Reducer]
+    G --> H[Updated State]
+    H --> B
 ```
 
 **Proposed Architecture**:
