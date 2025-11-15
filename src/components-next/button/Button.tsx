@@ -78,8 +78,7 @@ export const Button = ({
         accessibilityRole="button"
         accessibilityState={{ disabled }}
         style={({ pressed }) => getButtonStyles(isPrimary, pressed, themedTailwind, isDestructive)}
-        {...handlers}
-      >
+        {...handlers}>
         <Animated.Text style={getTextStyles(isPrimary, isDestructive, themedTailwind)}>
           {text}
         </Animated.Text>

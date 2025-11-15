@@ -24,6 +24,7 @@ import {
 } from './components';
 
 import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
+import { FloatingAIAssistant } from '@/components-next/ai-assistant';
 
 import { EmptyStateIcon } from '@/svg-icons';
 import {
@@ -146,8 +147,7 @@ const ConversationList = () => {
         style={tailwind.style(
           'flex-1 items-center justify-center pt-8',
           `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}
-      >
+        )}>
         {isAllConversationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -242,8 +242,7 @@ const ConversationList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}
-    >
+      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
       <ActivityIndicator />
     </Animated.View>
   ) : allConversations.length === 0 ? (
@@ -252,8 +251,7 @@ const ConversationList = () => {
       contentContainerStyle={tailwind.style(
         'flex-1 items-center justify-center',
         `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}
-    >
+      )}>
       <EmptyStateIcon />
       <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
         {i18n.t('CONVERSATION.EMPTY')}
@@ -339,8 +337,7 @@ const ConversationScreen = () => {
           animationConfigs={animationConfigs}
           enablePanDownToClose
           snapPoints={filterSnapPoints}
-          onDismiss={handleOnDismiss}
-        >
+          onDismiss={handleOnDismiss}>
           <BottomSheetWrapper>
             {currentBottomSheet === 'status' ? <StatusFilters /> : null}
             {currentBottomSheet === 'sort_by' ? <SortByFilters /> : null}
@@ -350,6 +347,7 @@ const ConversationScreen = () => {
         </BottomSheetModal>
         <ActionBottomSheet />
         <ActionTabs />
+        <FloatingAIAssistant />
       </ConversationListStateProvider>
     </SafeAreaView>
   );

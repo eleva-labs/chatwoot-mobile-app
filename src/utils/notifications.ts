@@ -157,5 +157,3 @@ export const runNotificationTest = async (): Promise<() => void> => {
 
   return cleanup;
 };
-
-

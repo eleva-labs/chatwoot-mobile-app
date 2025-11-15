@@ -18,11 +18,11 @@ const chatwootAppColors = {
   ...whiteA,
   ...radixUILightColors,
   ...radixUIDarkColors,
-  
+
   // Unified color system
   ...darkModeColorScales,
   ...lightModeColorScales,
-  
+
   // Semantic colors
   ...darkSemanticColors,
   ...lightSemanticColors,

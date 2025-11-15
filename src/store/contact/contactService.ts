@@ -43,10 +43,9 @@ export class ContactService {
 
   static async toggleAI(payload: ToggleAIPayload): Promise<ToggleAIResponse> {
     const { contactId, aiEnabled } = payload;
-    const response = await apiService.patch<ToggleAIResponse>(
-      `contacts/${contactId}/toggle_ai`,
-      { ai_enabled: aiEnabled },
-    );
+    const response = await apiService.patch<ToggleAIResponse>(`contacts/${contactId}/toggle_ai`, {
+      ai_enabled: aiEnabled,
+    });
     return response.data;
   }
 }

@@ -27,5 +27,3 @@ export async function loadAndClearPendingLink(): Promise<DynamicLinkContext | nu
     return null;
   }
 }
-
-

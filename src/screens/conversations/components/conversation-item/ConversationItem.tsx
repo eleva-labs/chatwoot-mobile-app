@@ -89,7 +89,7 @@ export const ConversationItem = memo(
     contactId,
   }: ConversationItemProps) => {
     const themedTailwind = useThemedStyles();
-    
+
     return (
       <NativeView style={themedTailwind.style('px-3 gap-3 flex-row justify-between bg-white')}>
         <NativeView style={tailwind.style('py-3 flex flex-row')}>

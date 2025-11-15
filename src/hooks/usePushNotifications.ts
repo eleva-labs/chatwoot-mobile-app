@@ -39,7 +39,10 @@ export const usePushNotifications = (installationUrl: string) => {
           lightColor: '#ffffff',
         });
         const channels = await Notifications.getNotificationChannelsAsync();
-        console.log('Available Android channels:', channels?.map(c => ({ id: c.id, importance: c.importance })));
+        console.log(
+          'Available Android channels:',
+          channels?.map(c => ({ id: c.id, importance: c.importance })),
+        );
       }
 
       try {
