@@ -461,6 +461,12 @@
     "CANCEL": "Cancel",
     "OK": "Ok"
   },
+  "UPDATES": {
+    "ALERT_TITLE": "Update ready",
+    "ALERT_MESSAGE": "A new version has been downloaded. Restart now to apply the changes.",
+    "ALERT_LATER": "Later",
+    "ALERT_RESTART": "Restart now"
+  },
   "BANNER": {
     "TWILIO_WHATSAPP_CAN_REPLY": "You can only reply to this conversation using a template message due to",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "24 hour message window restriction",

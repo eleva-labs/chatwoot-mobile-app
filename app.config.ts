@@ -95,17 +95,20 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   console.log('[config] IOS googleServicesFile (resolved):', resolvedIosPlist);
 
   const APP_VERSION = '4.0.22';
+  const EAS_UPDATES_URL = 'https://u.expo.dev/c388de6e-16cf-4618-b94e-a45c450845dc';
 
   return {
     ...config,
     name: getAppName(),
     slug: process.env.EXPO_PUBLIC_APP_SLUG || 'chatscommerce',
     scheme: getAppScheme(),
-    // Disable OTA updates (EAS Update)
     updates: {
-      enabled: false,
+      url: EAS_UPDATES_URL,
+      enabled: true,
+      checkAutomatically: 'ON_LOAD',
+      fallbackToCacheTimeout: 0,
     },
-    runtimeVersion: '1.0.0',
+    runtimeVersion: APP_VERSION,
     version: APP_VERSION,
     orientation: 'portrait',
     icon: getAppIcon(),
