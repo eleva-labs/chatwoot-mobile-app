@@ -26,8 +26,8 @@ export const ConversationAvatar = memo((props: ConversationAvatarProps) => {
     <AnimatedNativeView
       style={tailwind.style('')}
       layout={LinearTransition.springify().damping(28).stiffness(200)}>
-      <Avatar 
-        size="5xl" 
+      <Avatar
+        size="5xl"
         src={src}
         name={name}
         status={status as AvatarStatusType}

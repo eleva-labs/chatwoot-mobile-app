@@ -1,3 +1,4 @@
+import '@/polyfills'; // Import polyfills first for Expo compatibility
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Alert, BackHandler } from 'react-native';

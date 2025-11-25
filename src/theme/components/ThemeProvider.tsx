@@ -1,6 +1,6 @@
 /**
  * Theme Provider
- * 
+ *
  * This component provides theme context to the entire application,
  * managing theme state and providing theme-aware utilities.
  */
@@ -8,7 +8,12 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Appearance, ColorSchemeName } from 'react-native';
 import { UnifiedColorScale, darkModeColorScales, lightModeColorScales } from '../colors/unified';
-import { SemanticColors, createSemanticColors, darkSemanticColors, lightSemanticColors } from '../colors/semantic';
+import {
+  SemanticColors,
+  createSemanticColors,
+  darkSemanticColors,
+  lightSemanticColors,
+} from '../colors/semantic';
 
 // Theme context interface
 export interface ThemeContextType {
@@ -55,7 +60,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
   // Get current color scales
   const colors: UnifiedColorScale = isDark ? darkModeColorScales : lightModeColorScales;
-  
+
   // Get semantic colors
   const semanticColors: SemanticColors = isDark ? darkSemanticColors : lightSemanticColors;
 
@@ -77,21 +82,17 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     setTheme,
   };
 
-  return (
-    <ThemeContext.Provider value={contextValue}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
 
 // Custom hook to use theme context
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
-  
+
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-  
+
   return context;
 };
 

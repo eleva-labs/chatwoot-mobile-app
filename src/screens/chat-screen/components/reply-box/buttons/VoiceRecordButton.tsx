@@ -21,8 +21,7 @@ export const VoiceRecordButton = (props: VoiceRecordButtonProps) => {
         style={[
           tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
           animatedStyle,
-        ]}
-      >
+        ]}>
         <Icon icon={<VoiceNote stroke={isDark ? '#FFFFFF' : undefined} />} size={24} />
       </Animated.View>
     </Pressable>

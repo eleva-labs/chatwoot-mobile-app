@@ -281,13 +281,11 @@ export const AppNavigationContainer = () => {
       onStateChange={async () => {
         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
       }}
-      fallback={<ActivityIndicator animating />}
-    >
+      fallback={<ActivityIndicator animating />}>
       <BottomSheetModalProvider>
         <View
           style={[themedTailwind.style('bg-black'), styles.navigationLayout]}
-          onLayout={onLayoutRootView}
-        >
+          onLayout={onLayoutRootView}>
           <AppTabs />
         </View>
       </BottomSheetModalProvider>

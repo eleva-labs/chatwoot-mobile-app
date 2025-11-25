@@ -1,6 +1,6 @@
 /**
  * Example Component
- * 
+ *
  * This component demonstrates how to use the unified theme system
  * with theme-aware styling that matches the web application.
  */
@@ -16,24 +16,17 @@ export const ExampleMessageBubble: React.FC<{
   timestamp: string;
 }> = ({ isOutgoing, message, timestamp }) => {
   const { tailwind } = useTheme();
-  
+
   return (
-    <View style={tailwind(
-      'px-4 py-3 rounded-lg max-w-[80%] mb-2',
-      isOutgoing 
-        ? 'bg-primary ml-auto' 
-        : 'bg-surface border border-border'
-    )}>
-      <Text style={tailwind(
-        'text-sm',
-        isOutgoing ? 'text-white' : 'text-foreground'
+    <View
+      style={tailwind(
+        'px-4 py-3 rounded-lg max-w-[80%] mb-2',
+        isOutgoing ? 'bg-primary ml-auto' : 'bg-surface border border-border',
       )}>
+      <Text style={tailwind('text-sm', isOutgoing ? 'text-white' : 'text-foreground')}>
         {message}
       </Text>
-      <Text style={tailwind(
-        'text-xs mt-1',
-        isOutgoing ? 'text-white/70' : 'text-muted'
-      )}>
+      <Text style={tailwind('text-xs mt-1', isOutgoing ? 'text-white/70' : 'text-muted')}>
         {timestamp}
       </Text>
     </View>
@@ -47,7 +40,7 @@ export const ExampleButton: React.FC<{
   onPress: () => void;
 }> = ({ title, variant = 'primary', onPress }) => {
   const { tailwind } = useTheme();
-  
+
   const getButtonStyles = () => {
     switch (variant) {
       case 'primary':
@@ -60,7 +53,7 @@ export const ExampleButton: React.FC<{
         return 'bg-primary';
     }
   };
-  
+
   const getTextStyles = () => {
     switch (variant) {
       case 'primary':
@@ -73,18 +66,12 @@ export const ExampleButton: React.FC<{
         return 'text-white';
     }
   };
-  
+
   return (
     <TouchableOpacity
-      style={tailwind(
-        'px-4 py-3 rounded-lg items-center',
-        getButtonStyles()
-      )}
-      onPress={onPress}
-    >
-      <Text style={tailwind('text-sm font-medium', getTextStyles())}>
-        {title}
-      </Text>
+      style={tailwind('px-4 py-3 rounded-lg items-center', getButtonStyles())}
+      onPress={onPress}>
+      <Text style={tailwind('text-sm font-medium', getTextStyles())}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -96,17 +83,11 @@ export const ExampleCard: React.FC<{
   children: React.ReactNode;
 }> = ({ title, subtitle, children }) => {
   const { tailwind } = useTheme();
-  
+
   return (
     <View style={tailwind('bg-surface border border-border rounded-lg p-4 mb-4')}>
-      <Text style={tailwind('text-lg font-semibold text-foreground mb-1')}>
-        {title}
-      </Text>
-      {subtitle && (
-        <Text style={tailwind('text-sm text-muted mb-3')}>
-          {subtitle}
-        </Text>
-      )}
+      <Text style={tailwind('text-lg font-semibold text-foreground mb-1')}>{title}</Text>
+      {subtitle && <Text style={tailwind('text-sm text-muted mb-3')}>{subtitle}</Text>}
       {children}
     </View>
   );
@@ -120,13 +101,14 @@ export const ExampleInput: React.FC<{
   error?: string;
 }> = ({ placeholder, value, onChangeText, error }) => {
   const { tailwind } = useTheme();
-  
+
   return (
     <View style={tailwind('mb-4')}>
-      <View style={tailwind(
-        'bg-input border rounded-lg px-3 py-2',
-        error ? 'border-destructive' : 'border-input-border'
-      )}>
+      <View
+        style={tailwind(
+          'bg-input border rounded-lg px-3 py-2',
+          error ? 'border-destructive' : 'border-input-border',
+        )}>
         <TextInput
           style={tailwind('text-foreground text-base')}
           placeholder={placeholder}
@@ -135,11 +117,7 @@ export const ExampleInput: React.FC<{
           onChangeText={onChangeText}
         />
       </View>
-      {error && (
-        <Text style={tailwind('text-destructive text-sm mt-1')}>
-          {error}
-        </Text>
-      )}
+      {error && <Text style={tailwind('text-destructive text-sm mt-1')}>{error}</Text>}
     </View>
   );
 };
@@ -150,7 +128,7 @@ export const ExampleStatusIndicator: React.FC<{
   label: string;
 }> = ({ status, label }) => {
   const { tailwind } = useTheme();
-  
+
   const getStatusColor = () => {
     switch (status) {
       case 'online':
@@ -165,16 +143,11 @@ export const ExampleStatusIndicator: React.FC<{
         return 'bg-muted';
     }
   };
-  
+
   return (
     <View style={tailwind('flex-row items-center')}>
-      <View style={tailwind(
-        'w-3 h-3 rounded-full mr-2',
-        getStatusColor()
-      )} />
-      <Text style={tailwind('text-sm text-foreground')}>
-        {label}
-      </Text>
+      <View style={tailwind('w-3 h-3 rounded-full mr-2', getStatusColor())} />
+      <Text style={tailwind('text-sm text-foreground')}>{label}</Text>
     </View>
   );
 };

@@ -239,7 +239,17 @@
       "PRIORITY": {
         "EMPTY": "Nenhuma prioridade adicionada",
         "EDIT": "Alterar"
-      }
+      },
+      "SHARE": "Compartilhar conversa"
+    },
+    "EMAIL": {
+      "PLACEHOLDER": "E-mails separados por vírgulas"
+    },
+    "LABELS": {
+      "SEARCH_PLACEHOLDER": "Pesquisar etiquetas"
+    },
+    "MENU": {
+      "SELECT_ACTION": "Selecionar ação"
     }
   },
   "FILTER": {
@@ -454,6 +464,70 @@
     "EXECUTION_SUCCESS": "Macro executada com sucesso",
     "EXECUTION_ERROR": "Falha ao executar macro",
     "NO_MACROS": "Nenhuma macro encontrada"
+  },
+  "AI_ASSISTANT": {
+    "CHAT": {
+      "TITLE": "Assistente de IA",
+      "INPUT": {
+        "PLACEHOLDER": "Digite uma mensagem...",
+        "CANCEL": "Cancelar",
+        "SEND": "Enviar mensagem"
+      },
+      "HEADER": {
+        "NEW_CONVERSATION": "Nova",
+        "SESSIONS": "Sessões",
+        "CLOSE": "Fechar Assistente de IA"
+      },
+      "MESSAGES": {
+        "LOADING": "Carregando conversa...",
+        "EMPTY_WITH_SESSION": "Não há mensagens nesta conversa",
+        "EMPTY_NO_SESSION": "Inicie uma conversa com o assistente de IA",
+        "ERROR_RENDERING": "Erro ao renderizar mensagem: {id}"
+      },
+      "SESSIONS": {
+        "LOADING": "Carregando sessões...",
+        "EMPTY": "Não há conversas anteriores",
+        "RECENTLY": "Recentemente"
+      },
+      "THOUGHTS": {
+        "HEADER": "PENSAMENTOS...",
+        "NO_CONTENT": "[Sem conteúdo]"
+      },
+      "TOOLS": {
+        "SINGLE": "Usando ferramenta...",
+        "MULTIPLE": "Usando {count} ferramentas...",
+        "INDICATOR": "Indicador de chamada de ferramenta de IA"
+      },
+      "ACCESSIBILITY": {
+        "USER_MESSAGE": "Sua mensagem",
+        "AI_MESSAGE": "Mensagem do assistente de IA",
+        "INPUT": "Entrada de mensagem do assistente de IA",
+        "CANCEL": "Cancelar resposta de IA",
+        "SEND": "Enviar mensagem",
+        "TOGGLE_SESSIONS": "Alternar lista de sessões",
+        "NEW_CONVERSATION": "Nova conversa",
+        "CLOSE": "Fechar Assistente de IA",
+        "CLOSE_HINT": "Fecha a interface de chat do assistente de IA",
+        "OPEN": "Abrir Assistente de IA",
+        "OPEN_HINT": "Abre a interface de chat do assistente de IA"
+      }
+    },
+    "STATUS": {
+      "BUTTON_TEXT": "IA",
+      "ENABLED": "IA habilitado - toque para desabilitar",
+      "DISABLED": "IA desabilitado - toque para habilitar",
+      "ENABLED_LABEL": "IA habilitado"
+    }
+  },
+  "FILES": {
+    "PREVIEW_ERROR": "Não é possível visualizar o arquivo",
+    "LOAD_ERROR": "Erro ao carregar o arquivo"
+  },
+  "AUDIO": {
+    "RECORDING_ERROR": "Erro de gravação"
+  },
+  "CLIPBOARD": {
+    "COPIED": "{item} copiado para a área de transferência"
   },
   "NOTIFICATIONS": {
     "PERMISSION_TITLE": "Enable Notifications",
