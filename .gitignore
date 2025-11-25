@@ -47,4 +47,4 @@ android/app/google-services.json
 ios/GoogleService-Info.plist
 service-account-key.json
 
-/docs/ignore/
+/docs/ignored/
