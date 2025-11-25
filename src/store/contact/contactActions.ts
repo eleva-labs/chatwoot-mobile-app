@@ -20,7 +20,7 @@ export const contactActions = {
       return rejectWithValue(message);
     }
   }),
-  
+
   toggleAI: createAsyncThunk<
     {
       contactId: number;

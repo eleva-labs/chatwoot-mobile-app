@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { 
-  sendTestForegroundNotification, 
-  checkNotificationPermissions, 
+import {
+  sendTestForegroundNotification,
+  checkNotificationPermissions,
   getFCMToken,
-  runNotificationTest 
+  runNotificationTest,
 } from '@/utils/testNotifications';
 
 interface NotificationTesterProps {
@@ -17,8 +17,6 @@ export const NotificationTester: React.FC<NotificationTesterProps> = ({ visible 
   if (!visible) {
     return null;
   }
-
-
 
   const handleRunTest = async () => {
     setIsRunning(true);
@@ -43,52 +41,27 @@ export const NotificationTester: React.FC<NotificationTesterProps> = ({ visible 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        🧪 Notification Tester (Dev Only)
-      </Text>
-      
+      <Text style={styles.title}>🧪 Notification Tester (Dev Only)</Text>
+
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.blueButton}
-          onPress={handleRunTest}
-          disabled={isRunning}
-        >
-          <Text style={styles.buttonText}>
-            {isRunning ? 'Running Tests...' : 'Run Full Test'}
-          </Text>
+        <TouchableOpacity style={styles.blueButton} onPress={handleRunTest} disabled={isRunning}>
+          <Text style={styles.buttonText}>{isRunning ? 'Running Tests...' : 'Run Full Test'}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.greenButton}
-          onPress={handleTestForeground}
-        >
-          <Text style={styles.buttonText}>
-            Test Foreground Notification
-          </Text>
+        <TouchableOpacity style={styles.greenButton} onPress={handleTestForeground}>
+          <Text style={styles.buttonText}>Test Foreground Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.orangeButton}
-          onPress={handleCheckPermissions}
-        >
-          <Text style={styles.buttonText}>
-            Check Permissions
-          </Text>
+        <TouchableOpacity style={styles.orangeButton} onPress={handleCheckPermissions}>
+          <Text style={styles.buttonText}>Check Permissions</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.purpleButton}
-          onPress={handleGetToken}
-        >
-          <Text style={styles.buttonText}>
-            Get FCM Token
-          </Text>
+        <TouchableOpacity style={styles.purpleButton} onPress={handleGetToken}>
+          <Text style={styles.buttonText}>Get FCM Token</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.description}>
-        Check console logs for test results
-      </Text>
+      <Text style={styles.description}>Check console logs for test results</Text>
     </View>
   );
 };

@@ -1,3 +1,4 @@
+import '@/polyfills'; // Import polyfills first for Expo compatibility
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Alert, BackHandler } from 'react-native';
@@ -9,8 +10,10 @@ import ErrorBoundary from '@/components-next/common/ErrorBoundary';
 import { ThemeProvider } from '@/context/ThemeContext';
 
 import i18n from '@/i18n';
+import { useEASUpdates } from '@/hooks/useEASUpdates';
 
 const Chatwoot = () => {
+  useEASUpdates();
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
     return () => {
