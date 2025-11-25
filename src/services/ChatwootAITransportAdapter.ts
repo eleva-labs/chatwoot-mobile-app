@@ -300,8 +300,11 @@ export class ChatwootAITransportAdapter<UI_MESSAGE extends UIMessage>
   }
 
   private mapToStreamEnum(type: unknown): StreamEnums | null {
-    if (typeof type === 'string' && StreamEnumsSet.has(type)) {
-      return type as StreamEnums;
+    if (typeof type === 'string') {
+      const normalized = type === '[DONE]' ? '[DONE]' : type.replace(/-/g, '_').toLowerCase();
+      if (StreamEnumsSet.has(normalized)) {
+        return normalized as StreamEnums;
+      }
     }
     return null;
   }
@@ -942,9 +945,9 @@ export class ChatwootAITransportAdapter<UI_MESSAGE extends UIMessage>
                       });
                     }
                   } else if (
-                    parsed.type === 'reasoning-start' ||
-                    parsed.type === 'reasoning-delta' ||
-                    parsed.type === 'reasoning-end'
+                    parsed.type === StreamEnums.ReasoningStart ||
+                    parsed.type === StreamEnums.ReasoningDelta ||
+                    parsed.type === StreamEnums.ReasoningEnd
                   ) {
                     // Reasoning events are handled separately
                     // They return null and are not sent to SDK

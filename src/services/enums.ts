@@ -1,17 +1,17 @@
 export enum StreamEnums {
-  TextStart = 'text-start',
-  TextDelta = 'text-delta',
-  TextEnd = 'text-end',
+  TextStart = 'text_start',
+  TextDelta = 'text_delta',
+  TextEnd = 'text_end',
   Finish = 'finish',
   Done = '[DONE]',
   Error = 'error',
-  ReasoningStart = 'reasoning-start',
-  ReasoningDelta = 'reasoning-delta',
-  ReasoningEnd = 'reasoning-end',
-  ToolCall = 'tool-call',
-  ToolResult = 'tool-result',
-  StartStep = 'start-step',
-  FinishStep = 'finish-step',
+  ReasoningStart = 'reasoning_start',
+  ReasoningDelta = 'reasoning_delta',
+  ReasoningEnd = 'reasoning_end',
+  ToolCall = 'tool_call',
+  ToolResult = 'tool_result',
+  StartStep = 'start_step',
+  FinishStep = 'finish_step',
 }
 
 export const StreamEnumsSet = new Set<string>(Object.values(StreamEnums));
