@@ -202,7 +202,7 @@ if (typeof global !== 'undefined') {
   (global as any).__exportLogsToFile = () => logger.exportToFile();
   (global as any).__clearLogs = () => logger.clear();
   (global as any).__searchLogs = (pattern: string | RegExp) => logger.searchLogs(pattern);
-  
+
   // Helper: Print logs string directly to console (for easy copy-paste)
   (global as any).__printLogs = () => {
     const logsString = logger.getLogsAsString();

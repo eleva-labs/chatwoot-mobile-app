@@ -3,7 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import { useThemedStyles } from '@/hooks';
 import { Icon } from '@/components-next/common';
 import { CloseIcon } from '@/svg-icons';
-import type { AIChatBot } from '@/services/AIChatService';
+import type { AIChatBot } from '@/domain/ai/types';
 
 export interface AIChatHeaderProps {
   selectedBot: AIChatBot | null;
@@ -31,7 +31,8 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
           'px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex-row items-center justify-between',
         )}
         accessible
-        accessibilityRole="header">
+        accessibilityRole="header"
+      >
         <View style={themedTailwind.style('flex-row items-center flex-1')}>
           <Text
             style={themedTailwind.style(
@@ -39,7 +40,8 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             )}
             accessible
             accessibilityRole="text"
-            accessibilityLabel={selectedBot?.name || 'AI Assistant'}>
+            accessibilityLabel={selectedBot?.name || 'AI Assistant'}
+          >
             {selectedBot?.name || 'AI Assistant'}
           </Text>
           {sessionsCount > 0 && (
@@ -50,11 +52,13 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               }
               accessible
               accessibilityRole="button"
-              accessibilityLabel="Toggle sessions list">
+              accessibilityLabel="Toggle sessions list"
+            >
               <Text
                 style={themedTailwind.style(
                   'text-sm text-blue-600 dark:text-blue-400 font-inter-420-20',
-                )}>
+                )}
+              >
                 Sessions ({sessionsCount})
               </Text>
             </Pressable>
@@ -69,11 +73,13 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               }
               accessible
               accessibilityRole="button"
-              accessibilityLabel="New conversation">
+              accessibilityLabel="New conversation"
+            >
               <Text
                 style={themedTailwind.style(
                   'text-sm text-blue-600 dark:text-blue-400 font-inter-420-20',
-                )}>
+                )}
+              >
                 New
               </Text>
             </Pressable>
@@ -86,7 +92,8 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessible
             accessibilityRole="button"
             accessibilityLabel="Close AI Assistant"
-            accessibilityHint="Closes the AI assistant chat interface">
+            accessibilityHint="Closes the AI assistant chat interface"
+          >
             <Icon icon={<CloseIcon />} size={20} />
           </Pressable>
         </View>

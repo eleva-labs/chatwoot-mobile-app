@@ -58,7 +58,8 @@ const ChatWindowProvider: React.FC<
         pagerViewIndex,
         setPagerViewIndex,
         conversationId,
-      }}>
+      }}
+    >
       {children}
     </ChatWindowContext.Provider>
   );

@@ -70,7 +70,8 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
               animationConfigs={animationConfigs}
               handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
               style={tailwind.style('overflow-hidden')}
-              snapPoints={['50%']}>
+              snapPoints={['50%']}
+            >
               <BottomSheetScrollView showsVerticalScrollIndicator={false}>
                 {children}
               </BottomSheetScrollView>

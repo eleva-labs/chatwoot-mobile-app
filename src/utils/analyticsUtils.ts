@@ -1,5 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 
+import {
+  AnalyticsEventParams,
+  AnalyticsService,
+} from '@/domain/interfaces/analytics/AnalyticsService';
+import { FirebaseAnalyticsService } from '@/infrastructure/analytics/FirebaseAnalyticsService';
+
 interface User {
   id: string | number;
   email: string;
@@ -25,8 +31,9 @@ class AnalyticsHelper {
   private user: User;
   private isAnalyticsEnabled: boolean;
   private APIHelper: AxiosInstance;
+  private analyticsService: AnalyticsService;
 
-  constructor() {
+  constructor(service: AnalyticsService = new FirebaseAnalyticsService()) {
     this.analyticsToken = process.env.EXPO_PUBLIC_JUNE_SDK_KEY || '';
     this.user = {} as User;
     this.isAnalyticsEnabled = !!(!__DEV__ && this.analyticsToken);
@@ -34,6 +41,7 @@ class AnalyticsHelper {
       baseURL: BASE_URL,
       headers: { Authorization: `Basic ${this.analyticsToken}` },
     });
+    this.analyticsService = service;
   }
 
   private getCurrentAccount(): Account | undefined {
@@ -71,26 +79,43 @@ class AnalyticsHelper {
   }
 
   identify(user: User): void {
-    if (this.isAnalyticsEnabled) {
-      this.user = user;
-      this.identifyUser();
-      this.identifyGroup();
-    }
+    this.user = user;
+    this.analyticsService.setUserId(user.id);
+    this.analyticsService.setUserProperty('account_id', user.account_id);
+    this.analyticsService.setUserProperty('email', user.email);
+    this.analyticsService.setUserProperty('name', user.name);
+
+    if (!this.isAnalyticsEnabled) return;
+    this.identifyUser();
+    this.identifyGroup();
   }
 
   track(eventName: string, properties: AnalyticsProperties = {}): Promise<unknown> | void {
-    if (this.isAnalyticsEnabled) {
-      const currentAccount = this.getCurrentAccount();
-      return this.APIHelper.post('track', {
-        userId: this.user.id,
-        event: `Mobile: ${eventName}`,
-        properties,
-        timestamp: new Date(),
-        context: {
-          groupId: currentAccount ? currentAccount.id : '',
-        },
-      });
-    }
+    this.analyticsService.logEvent(eventName, {
+      ...properties,
+      screen_name: properties.screen_name,
+      screen_class: properties.screen_class,
+    });
+
+    if (!this.isAnalyticsEnabled) return;
+    const currentAccount = this.getCurrentAccount();
+    return this.APIHelper.post('track', {
+      userId: this.user.id,
+      event: `Mobile: ${eventName}`,
+      properties,
+      timestamp: new Date(),
+      context: {
+        groupId: currentAccount ? currentAccount.id : '',
+      },
+    });
+  }
+
+  logScreenView(screenName: string, screenClass?: string) {
+    this.analyticsService.logScreenView(screenName, screenClass);
+  }
+
+  setCollectionEnabled(enabled: boolean) {
+    this.analyticsService.setCollectionEnabled(enabled);
   }
 }
 

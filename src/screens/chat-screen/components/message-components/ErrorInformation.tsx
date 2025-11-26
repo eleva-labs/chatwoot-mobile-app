@@ -13,14 +13,16 @@ export const ErrorInformation = ({ errorCode, errorMessage }: ErrorInformationPr
       <Text
         style={tailwind.style(
           'text-base  text-gray-950 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
-        )}>
+        )}
+      >
         {errorCode}
       </Text>
     )}
     <Text
       style={tailwind.style(
         'text-md text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] mt-2',
-      )}>
+      )}
+    >
       {errorMessage}
     </Text>
   </Animated.View>

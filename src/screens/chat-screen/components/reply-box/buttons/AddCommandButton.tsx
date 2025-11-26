@@ -28,16 +28,19 @@ export const AddCommandButton = ({
   return (
     <Animated.View
       layout={LinearTransition.springify().damping(20).stiffness(180)}
-      style={animatedStyle}>
+      style={animatedStyle}
+    >
       <Pressable
         {...otherProps}
         style={({ pressed }) => [tailwind.style(pressed ? 'opacity-70' : '')]}
-        {...handlers}>
+        {...handlers}
+      >
         <Animated.View
           style={[
             tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
             addIconAnimation,
-          ]}>
+          ]}
+        >
           <Icon icon={<AddIcon stroke={isDark ? '#FFFFFF' : undefined} />} size={24} />
         </Animated.View>
       </Pressable>

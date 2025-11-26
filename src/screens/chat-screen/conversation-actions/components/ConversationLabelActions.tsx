@@ -14,6 +14,8 @@ import { useAppDispatch } from '@/hooks';
 import { conversationActions } from '@/store/conversation/conversationActions';
 
 import { LabelCell, LabelItem } from '@/components-next/label-section';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { LABEL_EVENTS } from '@/constants/analyticsEvents';
 
 type LabelStackProps = {
   filteredLabels: Label[];
@@ -86,7 +88,8 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
 
   const handleAddOrUpdateLabels = async (label: string) => {
     setSelectedLabels(prevLabels => {
-      const updatedLabels = prevLabels.includes(label)
+      const isRemoving = prevLabels.includes(label);
+      const updatedLabels = isRemoving
         ? prevLabels.filter(item => item !== label)
         : [...prevLabels, label];
 
@@ -97,6 +100,12 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         }),
       );
 
+      AnalyticsHelper.track(LABEL_EVENTS.APPLY_LABEL, {
+        conversationId,
+        label,
+        action: isRemoving ? 'remove' : 'add',
+      });
+
       return updatedLabels;
     });
   };
@@ -106,7 +115,8 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         <Animated.Text
           style={tailwind.style(
             'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-gray-700',
-          )}>
+          )}
+        >
           Labels
         </Animated.Text>
       </Animated.View>
@@ -122,12 +132,14 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
               'flex flex-row items-center bg-white px-3 py-[7px] rounded-lg mr-2 mt-3',
               pressed ? 'bg-blue-100' : '',
             ),
-          ]}>
+          ]}
+        >
           <Icon icon={<LabelTag />} size={16} />
           <Animated.Text
             style={tailwind.style(
               'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px] pl-1.5 text-blue-800',
-            )}>
+            )}
+          >
             Add
           </Animated.Text>
         </Pressable>
@@ -142,7 +154,8 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         snapPoints={[316]}
         keyboardBehavior="interactive"
         keyboardBlurBehavior="restore"
-        onChange={handleChange}>
+        onChange={handleChange}
+      >
         <SearchBar
           isInsideBottomSheet
           onSubmitEditing={handleOnSubmitEditing}

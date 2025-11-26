@@ -1,4 +1,4 @@
-import type { AIChatSession, AIChatMessage } from '@/services/AIChatService';
+import type { AIChatSession, AIChatMessage } from '@/domain/ai/types';
 
 /**
  * API Response types
@@ -69,4 +69,3 @@ export interface ClearSessionsPayload {
   agentBotId?: number;
   storeId?: number;
 }
-

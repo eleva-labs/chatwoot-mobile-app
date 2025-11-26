@@ -3,7 +3,7 @@ import type { UIMessage } from 'ai';
 import { useAppSelector } from '@/hooks';
 import { selectMessagesBySession } from '@/store/ai-chat';
 import { convertBackendMessagesToUIMessages } from '@/utils/ai-assistant/aiChatUtils';
-import type { AIChatMessage } from '@/services/AIChatService';
+import type { AIChatMessage } from '@/domain/ai/types';
 import { logger } from '@/utils/logger';
 import { prepareListData } from '@/utils/ai-assistant/aiChatMessageUtils';
 
@@ -86,4 +86,3 @@ export function useAIChatMessages(
     convertedMessages,
   };
 }
-

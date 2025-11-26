@@ -28,6 +28,8 @@ import { ConversationFilterBar } from '../conversation-filters';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
 
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 const getFiltersAppliedCount = (defaultState: FilterState, updatedState: FilterState): number => {
   let count = 0;
@@ -119,6 +121,7 @@ export const ConversationHeader = () => {
   const handleClearFilter = () => {
     hapticSuccess?.();
     dispatch(resetFilters());
+    AnalyticsHelper.track(CONVERSATION_EVENTS.CLEAR_FILTERS);
   };
 
   return (

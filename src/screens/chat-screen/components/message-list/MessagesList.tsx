@@ -32,7 +32,8 @@ const DateSection = ({ item }: DateSectionProps) => {
         <Animated.Text
           style={themedTailwind.style(
             'text-cxs font-inter-420-20 tracking-[0.32px] text-gray-700 leading-[15px]',
-          )}>
+          )}
+        >
           {item.date}
         </Animated.Text>
       </Animated.View>
@@ -92,7 +93,8 @@ export const MessagesList = ({
   return (
     <Animated.View
       layout={LinearTransition.springify().damping(38).stiffness(240)}
-      style={[tailwind.style('flex-1 min-h-10'), animatedFlashlistStyle]}>
+      style={[tailwind.style('flex-1 min-h-10'), animatedFlashlistStyle]}
+    >
       <AnimatedFlashlist
         layout={LinearTransition.springify().damping(38).stiffness(240)}
         onScroll={() => {

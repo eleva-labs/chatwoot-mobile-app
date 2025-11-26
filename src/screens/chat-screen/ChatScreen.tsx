@@ -17,7 +17,7 @@ import {
   selectConversationFetching,
   selectConversationError,
 } from '@/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 import { useTheme } from '@/context';
 
 import { notificationActions } from '@/store/notification/notificationAction';
@@ -26,7 +26,7 @@ import { PrimaryActorType } from '@/types/Notification';
 import { assignableAgentActions } from '@/store/assignable-agent/assignableAgentActions';
 import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
 import { conversationActions } from '@/store/conversation/conversationActions';
-import { TAB_BAR_HEIGHT } from '@/constants';
+import { SCREENS, TAB_BAR_HEIGHT } from '@/constants';
 import { ErrorIcon } from '@/svg-icons';
 import { Button } from '@/components-next';
 import { ActivityIndicator, Pressable } from 'react-native';
@@ -63,7 +63,8 @@ const ConversationPagerView = (props: ChatScreenProps) => {
       style={tailwind.style('flex-1')}
       scrollEnabled
       initialPage={0}
-      onPageSelected={onPageSelected}>
+      onPageSelected={onPageSelected}
+    >
       <ChatWindow {...props} />
       <ConversationActions />
     </PagerView>
@@ -94,6 +95,7 @@ const ChatScreenWrapper = (props: ChatScreenProps) => {
   );
 };
 const ChatScreen = (props: ChatScreenProps) => {
+  useScreenAnalytics(SCREENS.CHAT);
   const navigation = useNavigation();
   const themedTailwind = useThemedStyles();
   const { isDark } = useTheme();
@@ -178,7 +180,8 @@ const ChatScreen = (props: ChatScreenProps) => {
         style={themedTailwind.style(
           'flex-1 items-center justify-center bg-white',
           `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+        )}
+      >
         <ActivityIndicator />
       </Animated.View>
     );
@@ -191,19 +194,22 @@ const ChatScreen = (props: ChatScreenProps) => {
           style={themedTailwind.style(
             'flex-1 items-center justify-center gap-8 px-4',
             `pb-[${TAB_BAR_HEIGHT}px]`,
-          )}>
+          )}
+        >
           <ErrorIcon />
           <Animated.View style={tailwind.style('flex items-center justify-center gap-4')}>
             <Animated.Text
               style={themedTailwind.style(
                 'text-2xl font-inter-420-20 text-gray-950 font-inter-semibold-20',
-              )}>
+              )}
+            >
               {conversationError || i18n.t('CONVERSATION.NOT_FOUND.TITLE')}
             </Animated.Text>
             <Animated.Text
               style={themedTailwind.style(
                 'font-inter-normal-20 font-base leading-[18px] tracking-[0.32px] text-gray-950 text-center',
-              )}>
+              )}
+            >
               {i18n.t('CONVERSATION.NOT_FOUND.DESCRIPTION')}
             </Animated.Text>
           </Animated.View>
@@ -215,7 +221,8 @@ const ChatScreen = (props: ChatScreenProps) => {
             />
             <Pressable
               style={tailwind.style('flex-row justify-center items-center')}
-              onPress={handleBackPress}>
+              onPress={handleBackPress}
+            >
               <Animated.Text style={tailwind.style('text-base font-inter-medium-24 text-gray-900')}>
                 {i18n.t('CONVERSATION.NOT_FOUND.BACK_TO_HOME')}
               </Animated.Text>

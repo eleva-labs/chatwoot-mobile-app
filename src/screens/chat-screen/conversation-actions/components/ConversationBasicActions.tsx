@@ -112,7 +112,8 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
       style={[
         tailwind.style('flex-1', index !== conversationActionOptions.length - 1 ? 'mr-3' : ''),
         animatedStyle,
-      ]}>
+      ]}
+    >
       <Pressable
         key={index}
         style={({ pressed }) => [
@@ -124,7 +125,8 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
           ),
         ]}
         onPress={handleActionOptionPress}
-        {...handlers}>
+        {...handlers}
+      >
         <Animated.View
           style={[
             tailwind.style('absolute inset-0 border-2 rounded-xl'),
@@ -135,7 +137,8 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
         <Animated.Text
           style={tailwind.style(
             'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] text-center pt-5 capitalize text-gray-950 ',
-          )}>
+          )}
+        >
           {conversationAction.actionText}
         </Animated.Text>
       </Pressable>

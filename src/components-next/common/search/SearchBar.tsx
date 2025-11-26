@@ -41,7 +41,8 @@ export const SearchBar = (props: SearchBarProps) => {
         style={tailwind.style(
           'flex items-center justify-center absolute bg-transparent z-10 inset-y-0 left-0',
           'pl-5.5',
-        )}>
+        )}
+      >
         <Icon icon={prefix ? prefix : <SearchIcon />} size={18} />
       </Animated.View>
       <SearchTextInput
