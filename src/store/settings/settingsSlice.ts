@@ -66,7 +66,7 @@ export const settingsSlice = createSlice({
           currentEnvBaseUrl: process.env.EXPO_PUBLIC_BASE_URL,
           currentEnvInstallationUrl: process.env.EXPO_PUBLIC_INSTALLATION_URL,
           environment: process.env.ENVIRONMENT || process.env.EAS_BUILD_PROFILE || 'unknown',
-          'WARNING': 'Persisted URLs may override environment variables!'
+          WARNING: 'Persisted URLs may override environment variables!',
         });
       }
     });

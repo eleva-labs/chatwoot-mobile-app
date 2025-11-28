@@ -15,7 +15,7 @@ interface ThemeSettingsItemProps {
 
 export const ThemeSettingsItem: React.FC<ThemeSettingsItemProps> = ({ isLastItem = false }) => {
   const { theme } = useTheme();
-  
+
   const getThemeLabel = () => {
     switch (theme) {
       case 'light':

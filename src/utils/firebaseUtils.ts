@@ -5,7 +5,7 @@ export function isFirebaseInitialized(): boolean {
 }
 
 export async function waitForFirebaseInit(
-  options: { timeoutMs?: number; pollMs?: number } = {}
+  options: { timeoutMs?: number; pollMs?: number } = {},
 ): Promise<boolean> {
   const timeoutMs = options.timeoutMs ?? 5000;
   const pollMs = options.pollMs ?? 100;
@@ -25,5 +25,3 @@ export async function waitForFirebaseInit(
     }, pollMs);
   });
 }
-
-

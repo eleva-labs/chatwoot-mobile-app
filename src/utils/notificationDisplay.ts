@@ -16,12 +16,14 @@ export const displayRichNotification = async (notification: {
       ios: {
         sound: 'default',
         badge: 1,
-        attachments: notification.imageUrl ? [
-          {
-            url: notification.imageUrl,
-            thumbnailHidden: false,
-          },
-        ] : undefined,
+        attachments: notification.imageUrl
+          ? [
+              {
+                url: notification.imageUrl,
+                thumbnailHidden: false,
+              },
+            ]
+          : undefined,
         foregroundPresentationOptions: {
           badge: true,
           sound: true,
@@ -50,10 +52,12 @@ export const displayRichNotification = async (notification: {
           id: 'default',
         },
         largeIcon: notification.imageUrl,
-        style: notification.imageUrl ? {
-          type: notifee.AndroidStyle.BIGPICTURE,
-          picture: notification.imageUrl,
-        } : undefined,
+        style: notification.imageUrl
+          ? {
+              type: notifee.AndroidStyle.BIGPICTURE,
+              picture: notification.imageUrl,
+            }
+          : undefined,
       },
     });
   }

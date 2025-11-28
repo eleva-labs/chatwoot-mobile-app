@@ -39,17 +39,12 @@ export const AvatarCounter: React.FC<AvatarCounterProps> = ({
           borderColor: tailwind.color(parentsBackground),
           minWidth: avatarTheme.counter.size[size].minWidth,
           height: avatarTheme.counter.size[size].height,
-          paddingHorizontal: isLargeCount 
-            ? avatarTheme.counter.padding[size].horizontal 
-            : 0,
+          paddingHorizontal: isLargeCount ? avatarTheme.counter.padding[size].horizontal : 0,
         },
       ]}>
       <Text
         style={tailwind.style(
-          cx(
-            avatarTheme.counter.text.base,
-            avatarTheme.counter.text.size[size],
-          ),
+          cx(avatarTheme.counter.text.base, avatarTheme.counter.text.size[size]),
         )}
         adjustsFontSizeToFit
         allowFontScaling={false}>

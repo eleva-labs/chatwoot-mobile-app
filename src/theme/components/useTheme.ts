@@ -1,6 +1,6 @@
 /**
  * Theme Hook
- * 
+ *
  * This file provides a custom hook for theme-aware Tailwind styling
  * that automatically updates when the theme changes.
  */
@@ -12,7 +12,7 @@ import { createUnifiedTheme } from './createTheme';
 // Custom hook for theme-aware Tailwind
 export const useTheme = () => {
   const themeContext = useThemeContext();
-  
+
   // Create theme-aware Tailwind instance
   const tailwind = useMemo(() => {
     return createUnifiedTheme({
@@ -21,7 +21,7 @@ export const useTheme = () => {
       semanticColors: themeContext.semanticColors,
     });
   }, [themeContext.isDark, themeContext.colors, themeContext.semanticColors]);
-  
+
   return {
     ...themeContext,
     tailwind,

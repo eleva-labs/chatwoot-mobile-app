@@ -70,22 +70,19 @@ export const ChatHeader = ({
           <Pressable
             hitSlop={8}
             style={tailwind.style('h-8 w-8 flex  justify-center items-start')}
-            onPress={onBackPress}
-          >
+            onPress={onBackPress}>
             <Icon icon={<ChevronLeft stroke={isDark ? '#FFFFFF' : undefined} />} size={24} />
           </Pressable>
           <Pressable
             onPress={onContactDetailsPress}
-            style={tailwind.style('flex flex-row items-center flex-1')}
-          >
+            style={tailwind.style('flex flex-row items-center flex-1')}>
             <Avatar size="xl" src={imageSrc} name={name} />
             <Animated.View style={tailwind.style('pl-2')}>
               <Animated.Text
                 numberOfLines={1}
                 style={themedTailwind.style(
                   'text-[17px] font-inter-medium-24 tracking-[0.32px] text-gray-950',
-                )}
-              >
+                )}>
                 {name}
               </Animated.Text>
             </Animated.View>
@@ -95,8 +92,7 @@ export const ChatHeader = ({
         <Animated.View
           style={tailwind.style(
             `flex flex-row flex-1 justify-end ${Platform.OS === 'ios' ? 'gap-4' : ''}`,
-          )}
-        >
+          )}>
           <Animated.View style={tailwind.style('flex flex-row items-center gap-4')}>
             {hasSla && (
               <Pressable hitSlop={8} onPress={toggleSlaEventsSheet}>
@@ -140,8 +136,7 @@ export const ChatHeader = ({
         animationConfigs={animationConfigs}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        snapPoints={['36%']}
-      >
+        snapPoints={['36%']}>
         <BottomSheetWrapper>
           <SlaEvents slaEvents={slaEvents} statusText={statusText ?? ''} />
         </BottomSheetWrapper>
