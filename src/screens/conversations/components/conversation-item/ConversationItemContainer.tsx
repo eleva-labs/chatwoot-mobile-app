@@ -28,6 +28,8 @@ import { MarkAsUnRead, StatusIcon } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { MarkAsRead } from '@/svg-icons';
 import i18n from '@/i18n';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 type ConversationItemContainerProps = {
   conversationItem: Conversation;
@@ -114,8 +116,10 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
   const markMessageReadOrUnread = useCallback(() => {
     if (unreadCount > 0) {
       dispatch(conversationActions.markMessageRead({ conversationId: id }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MARK_AS_READ, { conversationId: id });
     } else {
       dispatch(conversationActions.markMessagesUnread({ conversationId: id }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MARK_AS_UNREAD, { conversationId: id });
     }
   }, [dispatch, id, unreadCount]);
 
@@ -185,7 +189,8 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
       handleLongPress={onLongPressAction}
       handlePress={onPressAction}
       triggerOverswipeOnFlick
-      {...{ index, openedRowIndex }}>
+      {...{ index, openedRowIndex }}
+    >
       <ConversationItem {...viewProps} />
     </Swipeable>
   );

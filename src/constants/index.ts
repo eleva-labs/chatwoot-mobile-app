@@ -321,3 +321,5 @@ export const MESSAGE_VARIANTS = {
 
 export const LAST_ACTIVE_TIMESTAMP_KEY = 'lastActiveTimestamp';
 export const LAST_ACTIVE_TIMESTAMP_THRESHOLD = 1000 * 60 * 1; // 1 minute
+
+export * from './enums';

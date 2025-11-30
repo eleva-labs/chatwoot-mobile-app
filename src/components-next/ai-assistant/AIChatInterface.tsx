@@ -76,7 +76,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
 
     // Messages management
     const { allMessages, listData } = useAIChatMessages(
-        activeSessionId,
+      activeSessionId,
       streamingMessages,
       isThoughtsVisible,
       streamingAnchorKey,
@@ -144,7 +144,8 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       <KeyboardAvoidingView
         style={tailwind.style('flex-1')}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={insets.top}>
+        keyboardVerticalOffset={insets.top}
+      >
         <View style={themedTailwind.style('flex-1 bg-white dark:bg-gray-900')}>
           <AIChatHeader
             selectedBot={selectedBot}
@@ -156,10 +157,10 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
           />
 
           <AIChatSessionPanel
-                  sessions={sessions}
-                  activeSessionId={activeSessionId}
-                  onSelectSession={handleSelectSession}
-                  isLoading={isLoadingSessions}
+            sessions={sessions}
+            activeSessionId={activeSessionId}
+            onSelectSession={handleSelectSession}
+            isLoading={isLoadingSessions}
             isVisible={showSessions}
           />
 

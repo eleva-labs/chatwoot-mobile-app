@@ -16,7 +16,8 @@ export const TelegramIcon = () => {
           y1="0"
           x2="10"
           y2="20"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#2AABEE" />
           <Stop offset="1" stopColor="#229ED9" />
         </LinearGradient>

@@ -23,14 +23,16 @@ export const SlaEvents = ({ slaEvents, statusText }: SlaEventsProps) => {
       <Text
         style={themedTailwind.style(
           'text-[17px]  text-gray-950 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
-        )}>
+        )}
+      >
         {statusText}
       </Text>
 
       <Text
         style={themedTailwind.style(
           'text-md  text-gray-900 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
-        )}>
+        )}
+      >
         {i18n.t('SLA.MISSES.TITLE')}
       </Text>
 

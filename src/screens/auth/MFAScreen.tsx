@@ -108,10 +108,12 @@ const MFAScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={tailwind.style('px-6 pt-8')}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={tailwind.style('pt-6 gap-4')}>
             <Animated.Text
-              style={tailwind.style('text-2xl text-gray-950 font-inter-semibold-20 text-center')}>
+              style={tailwind.style('text-2xl text-gray-950 font-inter-semibold-20 text-center')}
+            >
               {i18n.t('MFA.TITLE')}
             </Animated.Text>
           </View>
@@ -127,13 +129,15 @@ const MFAScreen = () => {
                 setIsCodeWrong(false);
                 dispatch(clearAuthError());
                 verificationStatus.value = 'inProgress';
-              }}>
+              }}
+            >
               <Text
                 style={tailwind.style(
                   `text-center font-inter-normal-20 ${
                     activeTab === 'authenticator' ? 'text-gray-950' : 'text-gray-600'
                   }`,
-                )}>
+                )}
+              >
                 {i18n.t('MFA.TABS.AUTHENTICATOR_APP')}
               </Text>
             </Pressable>
@@ -146,13 +150,15 @@ const MFAScreen = () => {
                 setIsCodeWrong(false);
                 dispatch(clearAuthError());
                 verificationStatus.value = 'inProgress';
-              }}>
+              }}
+            >
               <Text
                 style={tailwind.style(
                   `text-center font-inter-normal-20 ${
                     activeTab === 'backup' ? 'text-gray-950' : 'text-gray-600'
                   }`,
-                )}>
+                )}
+              >
                 {i18n.t('MFA.TABS.BACKUP_CODE')}
               </Text>
             </Pressable>
@@ -182,7 +188,8 @@ const MFAScreen = () => {
                 {/* Error message for authenticator */}
                 {error && (
                   <Animated.Text
-                    style={tailwind.style('font-inter-normal-20 text-ruby-900 mb-6 pl-2')}>
+                    style={tailwind.style('font-inter-normal-20 text-ruby-900 mb-6 pl-2')}
+                  >
                     {error}
                   </Animated.Text>
                 )}
@@ -227,7 +234,8 @@ const MFAScreen = () => {
                 {/* Error message for backup code */}
                 {error && (
                   <Animated.Text
-                    style={tailwind.style('font-inter-normal-20 text-ruby-900 mb-6 pl-2')}>
+                    style={tailwind.style('font-inter-normal-20 text-ruby-900 mb-6 pl-2')}
+                  >
                     {error}
                   </Animated.Text>
                 )}

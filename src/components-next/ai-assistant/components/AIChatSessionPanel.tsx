@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, Platform } from 'react-native';
 import { useThemedStyles } from '@/hooks';
 import { AISessionList } from './AISessionList';
-import type { AIChatSession } from '@/services/AIChatService';
+import type { AIChatSession } from '@/domain/ai/types';
 
 export interface AIChatSessionPanelProps {
   sessions: AIChatSession[];
@@ -36,11 +36,13 @@ export const AIChatSessionPanel: React.FC<AIChatSessionPanelProps> = React.memo(
             : {
                 elevation: 4,
               },
-        ]}>
+        ]}
+      >
         <ScrollView
           style={themedTailwind.style('flex-1')}
           showsVerticalScrollIndicator={true}
-          nestedScrollEnabled={true}>
+          nestedScrollEnabled={true}
+        >
           <AISessionList
             sessions={sessions}
             activeSessionId={activeSessionId}

@@ -91,7 +91,8 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
             right: 16,
           },
           fabAnimatedStyle,
-        ]}>
+        ]}
+      >
         <Animated.View style={scaleStyle}>
           <Pressable
             onPress={handlePress}
@@ -104,7 +105,8 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
             accessibilityRole="button"
             accessibilityLabel="Open AI Assistant"
             accessibilityHint="Opens the AI assistant chat interface"
-            {...handlers}>
+            {...handlers}
+          >
             <Icon icon={<AIAssisst color="white" strokeOpacity={1} />} size={24} />
           </Pressable>
         </Animated.View>

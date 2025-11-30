@@ -118,7 +118,8 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={themedTailwind.style('flex-1 items-center justify-center p-4')}
             accessible
             accessibilityRole="text"
-            accessibilityLabel="Loading messages">
+            accessibilityLabel="Loading messages"
+          >
             <Text style={themedTailwind.style('text-gray-500 dark:text-gray-400')}>
               Loading conversation...
             </Text>
@@ -128,7 +129,8 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={themedTailwind.style('flex-1 items-center justify-center p-4')}
             accessible
             accessibilityRole="text"
-            accessibilityLabel="No messages yet">
+            accessibilityLabel="No messages yet"
+          >
             <Text style={themedTailwind.style('text-gray-500 dark:text-gray-400')}>
               {activeSessionId
                 ? 'No messages in this conversation'
@@ -172,7 +174,8 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={themedTailwind.style('mx-4 mb-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg')}
             accessible
             accessibilityRole="alert"
-            accessibilityLabel="Error message">
+            accessibilityLabel="Error message"
+          >
             <Text style={themedTailwind.style('text-red-600 dark:text-red-400')}>
               {error.message || String(error)}
             </Text>

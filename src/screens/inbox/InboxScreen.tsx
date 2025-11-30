@@ -9,11 +9,11 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
-import { TAB_BAR_HEIGHT } from '@/constants';
+import { SCREENS, TAB_BAR_HEIGHT } from '@/constants';
 import { InboxListStateProvider, useTheme } from '@/context';
 import type { Notification } from '@/types/Notification';
 import { tailwind } from '@/theme';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 import { notificationActions } from '@/store/notification/notificationAction';
 import {
   selectIsAllNotificationsFetched,
@@ -63,7 +63,8 @@ const InboxList = () => {
         style={tailwind.style(
           'flex-1 items-center justify-center pt-8',
           `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+        )}
+      >
         {isAllNotificationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -136,7 +137,8 @@ const InboxList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
+      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}
+    >
       <ActivityIndicator />
     </Animated.View>
   ) : notifications.length === 0 ? (
@@ -145,7 +147,8 @@ const InboxList = () => {
       contentContainerStyle={tailwind.style(
         'flex-1 items-center justify-center',
         `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}>
+      )}
+    >
       <EmptyStateIcon />
       <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-gray-800')}>
         {i18n.t('NOTIFICATION.EMPTY')}
@@ -169,6 +172,7 @@ const InboxList = () => {
 };
 
 const InboxScreen = () => {
+  useScreenAnalytics(SCREENS.INBOX);
   const dispatch = useAppDispatch();
   const themedTailwind = useThemedStyles();
   const { isDark } = useTheme();

@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '@/store/reducers';
-import type { AIChatSession, AIChatMessage } from '@/services/AIChatService';
+import type { AIChatSession, AIChatMessage } from '@/domain/ai/types';
 
 /**
  * Select the entire AI chat state
@@ -60,7 +60,10 @@ export const selectMessagesBySession = createSelector(
 /**
  * Select the active session ID
  */
-export const selectActiveSessionId = createSelector([selectAIChatState], aiChatState => aiChatState.activeSessionId);
+export const selectActiveSessionId = createSelector(
+  [selectAIChatState],
+  aiChatState => aiChatState.activeSessionId,
+);
 
 /**
  * Select the active session
@@ -115,4 +118,3 @@ export const selectMessagesError = createSelector(
   [selectAIChatState],
   aiChatState => aiChatState.messagesError,
 );
-

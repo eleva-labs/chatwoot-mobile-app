@@ -1,6 +1,6 @@
 # Pull Request Creation Process
 
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Last Updated**: 2025-01-27
 **Status**: Active
 **Document Type**: Process Guide
@@ -13,10 +13,15 @@
 Process for creating pull requests across all workflow stages: feature development to production releases.
 
 **Scope**:
-- ✅ Feature PRs (feature → develop), Bug Fix/Hotfix PRs (bugfix → develop or hotfix → main), Release PRs (develop → main)
+- ✅ Feature PRs (feature → development), Bug Fix/Hotfix PRs (bugfix → development or hotfix → main), Release PRs (development → main)
 - ❌ Draft PRs, WIP PRs, code review process, merge strategies, deployment procedures
 
 **Repository Context**: React Native mobile app with Expo, Redux Toolkit state management, TypeScript
+
+**Branch Naming Convention**:
+- `development` - Eleva Labs development branch (our main development branch)
+- `develop` - Chatwoot upstream development branch (from the forked repository)
+- All feature and bug fix PRs should target `development` (Eleva Labs), not `develop` (Chatwoot)
 
 ---
 
@@ -24,7 +29,7 @@ Process for creating pull requests across all workflow stages: feature developme
 
 ### 1. Feature PRs 🚀
 
-**Branch Flow**: `feature/<name>` → `develop`
+**Branch Flow**: `feature/<name>` → `development` (Eleva Labs)
 
 **Purpose**: Introduce new functionality or significant enhancements
 
@@ -41,7 +46,7 @@ Process for creating pull requests across all workflow stages: feature developme
 ### 2. Bug Fix/Hotfix PRs 🐛🔥
 
 **Branch Flow**:
-- Bug fixes: `bugfix/<name>` → `develop`
+- Bug fixes: `bugfix/<name>` → `development` (Eleva Labs)
 - Hotfixes: `hotfix/<name>` → `main` (urgent production fixes)
 
 **Naming**: `fix: <What was fixed>` or `hotfix: <Critical issue>`
@@ -56,7 +61,7 @@ Process for creating pull requests across all workflow stages: feature developme
 
 ### 3. Release PRs 🎉
 
-**Branch Flow**: `develop` → `main`
+**Branch Flow**: `development` (from Eleva) → `main`
 
 **Purpose**: Promote accumulated changes to production
 
@@ -74,20 +79,20 @@ Process for creating pull requests across all workflow stages: feature developme
 
 ```
 What are you merging?
-  ├─ Production release? (develop → main) → [RELEASE PR]
+  ├─ Production release? (development → main) → [RELEASE PR]
   ├─ Critical production fix? (urgent) → [HOTFIX PR] (hotfix → main)
-  ├─ Bug fix? (non-urgent) → [BUG FIX PR] (bugfix → develop)
-  └─ New functionality? → [FEATURE PR] (feature → develop)
+  ├─ Bug fix? (non-urgent) → [BUG FIX PR] (bugfix → development)
+  └─ New functionality? → [FEATURE PR] (feature → development)
 ```
 
 ### Quick Reference
 
 | PR Type | From → To | Urgency | Scope | Doc Level | Duration |
 |---------|-----------|---------|-------|-----------|----------|
-| **Feature** | feature → develop | Normal | Single feature | Medium | 5-10 min |
-| **Bug Fix** | bugfix → develop | Normal | Single issue | Focused | 3-7 min |
+| **Feature** | feature → development | Normal | Single feature | Medium | 5-10 min |
+| **Bug Fix** | bugfix → development | Normal | Single issue | Focused | 3-7 min |
 | **Hotfix** | hotfix → main | **URGENT** | Critical issue | Focused | 3-7 min |
-| **Release** | develop → main | Scheduled | Multiple changes | Comprehensive | 15-30 min |
+| **Release** | development → main | Scheduled | Multiple changes | Comprehensive | 15-30 min |
 
 ---
 
@@ -152,8 +157,8 @@ What are you merging?
 git log BASE..HEAD --oneline --no-merges
 
 # Examples by PR type:
-git log main..develop --oneline --no-merges  # Release PR
-git log develop..feature/my-feature --oneline --no-merges  # Feature PR
+git log main..development --oneline --no-merges  # Release PR
+git log development..feature/my-feature --oneline --no-merges  # Feature PR
 git log main..hotfix/critical-fix --oneline --no-merges  # Hotfix PR
 
 # Get detailed commit messages
@@ -376,7 +381,7 @@ EOF
 **Feature PR Example**:
 ```bash
 gh pr create \
-  --base develop \
+  --base development \
   --head feature/ai-assistant \
   --title "feat: Add AI assistant chat interface" \
   --body "$(cat <<'EOF'
@@ -411,7 +416,7 @@ EOF
 **Bug Fix PR Example**:
 ```bash
 gh pr create \
-  --base develop \
+  --base development \
   --head bugfix/navigation-crash \
   --title "fix: Resolve navigation crash on Android" \
   --body "$(cat <<'EOF'
@@ -446,7 +451,7 @@ EOF
 ```bash
 gh pr create \
   --base main \
-  --head develop \
+  --head development \
   --title "Release: v4.1.0 - AI Assistant & Dark Mode" \
   --body "$(cat <<'EOF'
 ## Release: v4.1.0
@@ -611,7 +616,7 @@ gh auth login
 gh pr create --base <target> --head <source> --title "<title>" --body "<body>"
 
 # Create PR from file
-gh pr create --base develop --head feature/my-feature --title "feat: My feature" --body-file pr_description.md
+gh pr create --base development --head feature/my-feature --title "feat: My feature" --body-file pr_description.md
 
 # List PRs
 gh pr list
@@ -624,10 +629,10 @@ gh pr view <number>
 
 | From | To | PR Type | Command Example |
 |------|----|---------|-----------------|
-| feature/* | develop | Feature | `gh pr create --base develop --head feature/my-feat` |
-| bugfix/* | develop | Bug Fix | `gh pr create --base develop --head bugfix/fix-issue` |
+| feature/* | development | Feature | `gh pr create --base development --head feature/my-feat` |
+| bugfix/* | development | Bug Fix | `gh pr create --base development --head bugfix/fix-issue` |
 | hotfix/* | main | Hotfix | `gh pr create --base main --head hotfix/critical` |
-| develop | main | Release | `gh pr create --base main --head develop` |
+| development | main | Release | `gh pr create --base main --head development` |
 
 ---
 
@@ -656,6 +661,10 @@ gh pr view <number>
 ---
 
 ## Changelog
+
+### Version 1.1.0 (2025-01-27)
+**Status**: Active
+**Changes**: Updated branch naming convention - Feature and Bug Fix PRs now target `development` (Eleva Labs) instead of `develop` (Chatwoot upstream)
 
 ### Version 1.0.0 (2025-01-27)
 **Status**: Active

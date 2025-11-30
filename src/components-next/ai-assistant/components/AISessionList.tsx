@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useThemedStyles } from '@/hooks';
-import type { AIChatSession } from '@/services/AIChatService';
+import type { AIChatSession } from '@/domain/ai/types';
 import { AISessionItem } from './AISessionItem';
 
 interface AISessionListProps {

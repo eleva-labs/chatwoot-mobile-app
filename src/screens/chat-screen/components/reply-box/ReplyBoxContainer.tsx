@@ -218,6 +218,13 @@ const BottomSheetContent = () => {
     let updatedMessage = message;
     if (isPrivate) {
       const regex = /@\[([\w\s]+)\]\((\d+)\)/g;
+      const mentionMatches = message.match(regex);
+      if (mentionMatches && mentionMatches.length > 0) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.USED_MENTIONS, {
+          conversationId,
+          mentionCount: mentionMatches.length,
+        });
+      }
       updatedMessage = message.replace(
         regex,
         '[@$1](mention://user/$2/' + encodeURIComponent('$1') + ')',
@@ -243,6 +250,10 @@ const BottomSheetContent = () => {
     }
 
     if (attachedFiles && attachedFiles.length) {
+      AnalyticsHelper.track(CONVERSATION_EVENTS.SELECTED_ATTACHMENT, {
+        conversationId,
+        attachmentCount: attachedFiles.length,
+      });
       // messagePayload.files = [];
       // TODO: Implement this
       // attachedFiles.forEach(attachment => {
@@ -289,7 +300,11 @@ const BottomSheetContent = () => {
     //   isAWhatsAppCloudChannel(inbox) ||
     //   is360DialogWhatsAppChannel(inbox?.channelType);
 
-    AnalyticsHelper.track(CONVERSATION_EVENTS.SENT_MESSAGE);
+    if (isPrivate) {
+      AnalyticsHelper.track(CONVERSATION_EVENTS.SENT_PRIVATE_NOTE, { conversationId });
+    } else {
+      AnalyticsHelper.track(CONVERSATION_EVENTS.SENT_MESSAGE, { conversationId });
+    }
 
     const undefinedVariables = getAllUndefinedVariablesInMessage({
       message: messageContent,
@@ -380,7 +395,8 @@ const BottomSheetContent = () => {
 
   return (
     <AnimatedKeyboardStickyView
-      style={[themedTailwind.style('bg-white'), animatedInputWrapperStyle]}>
+      style={[themedTailwind.style('bg-white'), animatedInputWrapperStyle]}
+    >
       {!canReply && inbox && conversation && (
         <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
           <ReplyWarning inbox={inbox} conversation={conversation} />
@@ -394,7 +410,8 @@ const BottomSheetContent = () => {
         layout={LinearTransition.springify().damping(38).stiffness(240)}
         style={themedTailwind.style(
           `pb-2 border-t-[1px] border-t-gray-200 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
-        )}>
+        )}
+      >
         {quoteMessage && (
           <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
             <QuoteReply />s

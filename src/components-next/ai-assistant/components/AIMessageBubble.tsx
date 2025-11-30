@@ -110,12 +110,14 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({ message, isStr
       style={themedTailwind.style('mb-3', isUser ? 'items-end' : 'items-start')}
       accessible
       accessibilityRole="text"
-      accessibilityLabel={isUser ? 'Your message' : 'AI assistant message'}>
+      accessibilityLabel={isUser ? 'Your message' : 'AI assistant message'}
+    >
       <View
         style={themedTailwind.style(
           'px-4 py-3 rounded-2xl max-w-[80%] flex-row items-center',
           isUser ? 'bg-blue-600 rounded-tr-sm' : 'bg-gray-100 dark:bg-gray-800 rounded-tl-sm',
-        )}>
+        )}
+      >
         {showLoading ? (
           <ActivityIndicator size="small" color={Platform.OS === 'ios' ? '#4B5563' : '#9CA3AF'} />
         ) : textContent ? (
@@ -124,7 +126,8 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({ message, isStr
               style={themedTailwind.style(
                 'text-base font-inter-normal-20 leading-5',
                 isUser ? 'text-white' : 'text-gray-900 dark:text-gray-100',
-              )}>
+              )}
+            >
               {textContent}
             </Text>
             {showCursor && (
@@ -142,7 +145,8 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({ message, isStr
             style={themedTailwind.style(
               'text-base font-inter-normal-20 leading-5 italic',
               isUser ? 'text-white opacity-70' : 'text-gray-500 dark:text-gray-400',
-            )}>
+            )}
+          >
             {__DEV__ ? `[Message ${message.id || 'no-id'}]` : '...'}
           </Text>
         )}

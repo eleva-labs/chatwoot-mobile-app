@@ -2,7 +2,7 @@ import { fetch as expoFetch } from 'expo/fetch';
 import { getStore } from '@/store/storeAccessor';
 import type { ChatTransport, UIMessage, UIMessageChunk } from 'ai';
 import { logger } from '@/utils/logger';
-import { StreamEnums, StreamEnumsSet } from '@/services/enums';
+import { StreamEnums, StreamEnumsSet } from '@/constants/enums';
 
 /**
  * Custom transport that converts Vercel AI SDK format to Chatwoot backend format

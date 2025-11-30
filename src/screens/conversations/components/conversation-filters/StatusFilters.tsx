@@ -13,6 +13,8 @@ import { BottomSheetHeader, Icon } from '@/components-next';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import i18n from '@/i18n';
 import { StatusOptions } from '@/types';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 type StatusCellProps = {
   value: StatusCollection;
@@ -37,6 +39,10 @@ const StatusCell = (props: StatusCellProps) => {
   const handleStatusPress = () => {
     hapticSelection?.();
     dispatch(setFilters({ key: 'status', value: value.id }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'status',
+      filterValue: value.id,
+    });
     setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
   };
 
@@ -49,11 +55,13 @@ const StatusCell = (props: StatusCellProps) => {
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
           index !== status.length - 1 ? 'border-b-[1px] border-blackA-A3' : '',
-        )}>
+        )}
+      >
         <Animated.Text
           style={tailwind.style(
             'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
+          )}
+        >
           {i18n.t(`CONVERSATION.FILTERS.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
         {filters.status === value.id ? <Icon icon={<TickIcon />} size={20} /> : null}

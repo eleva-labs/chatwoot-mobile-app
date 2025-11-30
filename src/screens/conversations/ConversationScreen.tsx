@@ -41,7 +41,7 @@ import {
 
 import { tailwind } from '@/theme';
 import { Conversation } from '@/types';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 import { useTheme } from '@/context';
 import {
   selectBottomSheetState,
@@ -65,6 +65,8 @@ import i18n from '@/i18n';
 import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
 import { getCurrentRouteName } from '@/utils/navigationUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 // The screen list thats need to be checked for refreshing the conversations list
 const REFRESH_SCREEN_LIST = [SCREENS.CONVERSATION, SCREENS.INBOX, SCREENS.SETTINGS];
@@ -147,7 +149,8 @@ const ConversationList = () => {
         style={tailwind.style(
           'flex-1 items-center justify-center pt-8',
           `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+        )}
+      >
         {isAllConversationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -156,6 +159,7 @@ const ConversationList = () => {
   const handleRefresh = useCallback(() => {
     setFlashListReady(false);
     setIsRefreshing(true);
+    AnalyticsHelper.track(CONVERSATION_EVENTS.REFRESH_CONVERSATIONS);
     clearAndFetchConversations(filters).finally(() => {
       setIsRefreshing(false);
     });
@@ -242,7 +246,8 @@ const ConversationList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
+      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}
+    >
       <ActivityIndicator />
     </Animated.View>
   ) : allConversations.length === 0 ? (
@@ -251,7 +256,8 @@ const ConversationList = () => {
       contentContainerStyle={tailwind.style(
         'flex-1 items-center justify-center',
         `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}>
+      )}
+    >
       <EmptyStateIcon />
       <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
         {i18n.t('CONVERSATION.EMPTY')}
@@ -277,6 +283,7 @@ const ConversationList = () => {
 };
 
 const ConversationScreen = () => {
+  useScreenAnalytics(SCREENS.CONVERSATION);
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
@@ -337,7 +344,8 @@ const ConversationScreen = () => {
           animationConfigs={animationConfigs}
           enablePanDownToClose
           snapPoints={filterSnapPoints}
-          onDismiss={handleOnDismiss}>
+          onDismiss={handleOnDismiss}
+        >
           <BottomSheetWrapper>
             {currentBottomSheet === 'status' ? <StatusFilters /> : null}
             {currentBottomSheet === 'sort_by' ? <SortByFilters /> : null}

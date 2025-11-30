@@ -33,11 +33,13 @@ export const FilterButton = (props: FilterButtonProps) => {
       <Pressable
         style={tailwind.style('px-3 py-[7px] rounded-lg bg-gray-100 flex flex-row items-center')}
         onPress={onPress}
-        {...handlers}>
+        {...handlers}
+      >
         <Animated.Text
           style={tailwind.style(
             'text-sm font-inter-medium-24 leading-[16px] tracking-[0.24px] pr-1 capitalize text-gray-950',
-          )}>
+          )}
+        >
           {value}
         </Animated.Text>
         <Icon icon={<CaretBottomSmall />} size={7.5} />

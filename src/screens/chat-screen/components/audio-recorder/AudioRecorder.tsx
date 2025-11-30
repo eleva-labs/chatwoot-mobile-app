@@ -226,17 +226,20 @@ export const AudioRecorder = ({
       style={tailwind.style(
         'px-1 flex flex-row items-center overflow-hidden',
         `max-h-[${TEXT_INPUT_CONTAINER_HEIGHT}px]`,
-      )}>
+      )}
+    >
       <Pressable
         onPress={deleteRecorder}
-        style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
+        style={tailwind.style('h-10 w-10 flex items-center justify-center')}
+      >
         <Icon icon={<Trash />} size={28} />
       </Pressable>
       <Animated.View
         style={tailwind.style(
           'bg-blue-800 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
           `w-[${RecorderSegmentWidth}px]`,
-        )}>
+        )}
+      >
         <Pressable onPress={toggleRecorder} hitSlop={12}>
           {isAudioRecording ? (
             <Animated.View>
@@ -251,18 +254,21 @@ export const AudioRecorder = ({
         <Animated.Text
           style={tailwind.style(
             'text-xs leading-[14px] font-inter-420-20 tracking-[0.32px] text-whiteA-A12',
-          )}>
+          )}
+        >
           {millisecondsToTimeString(recorderData?.currentPosition)}
         </Animated.Text>
       </Animated.View>
       <Pressable
         disabled={isSending}
         onPress={sendRecordedMessage}
-        style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
+        style={tailwind.style('h-10 w-10 flex items-center justify-center')}
+      >
         <Animated.View
           style={tailwind.style(
             'flex items-center justify-center h-7 w-7 rounded-full bg-blue-800',
-          )}>
+          )}
+        >
           <Icon icon={<SendIcon />} size={16} />
         </Animated.View>
       </Pressable>

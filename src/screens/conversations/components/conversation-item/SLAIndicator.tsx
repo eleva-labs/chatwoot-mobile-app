@@ -88,7 +88,8 @@ export const SLAIndicator = ({
         style={themedTailwind.style(
           'pl-1 text-sm leading-[20px] text-center',
           slaStatus?.isSlaMissed ? 'text-ruby-800' : 'text-gray-700',
-        )}>
+        )}
+      >
         {`${sLAStatusText()}: ${slaStatus?.threshold}`}
       </Text>
     </NativeView>

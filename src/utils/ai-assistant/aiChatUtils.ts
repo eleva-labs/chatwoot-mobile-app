@@ -1,5 +1,5 @@
 import type { UIMessage } from 'ai';
-import type { AIChatMessage } from '@/services/AIChatService';
+import type { AIChatMessage } from '@/domain/ai/types';
 
 /**
  * Convert backend AIChatMessage to Vercel AI SDK UIMessage format

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import { AIChatService } from '@/services/AIChatService';
+import { AIChatService } from '@/infrastructure/ai/AIChatService';
 import type {
   FetchSessionsPayload,
   FetchMessagesPayload,
@@ -47,18 +47,24 @@ export const aiChatActions = {
     try {
       let sessions: AIChatSessionsAPIResponse['sessions'] = [];
 
-      if (payload.usePythonBackend && payload.storeId !== undefined && payload.userId !== undefined) {
+      if (
+        payload.usePythonBackend &&
+        payload.storeId !== undefined &&
+        payload.userId !== undefined
+      ) {
         // Use Python backend
         console.log('[AI Chat Actions] ===== USING PYTHON BACKEND =====');
         console.log('[AI Chat Actions] Validating required parameters...');
-        
+
         if (!payload.aiBackendUrl) {
           const error = 'AI backend URL is required for Python backend';
           console.error('[AI Chat Actions]', error);
           throw new Error(error);
         }
 
-        console.log('[AI Chat Actions] All required parameters present, calling AIChatService.fetchStoreSessions...');
+        console.log(
+          '[AI Chat Actions] All required parameters present, calling AIChatService.fetchStoreSessions...',
+        );
         const response = await AIChatService.fetchStoreSessions({
           storeId: payload.storeId,
           agentSystemId: payload.agentSystemId,
@@ -85,7 +91,8 @@ export const aiChatActions = {
         sessions = response.sessions;
         console.log('[AI Chat Actions] Sessions count:', sessions?.length || 0);
       } else {
-        const errorMsg = 'Either agentBotId (for Rails) or storeId with userId (for Python backend) is required';
+        const errorMsg =
+          'Either agentBotId (for Rails) or storeId with userId (for Python backend) is required';
         console.error('[AI Chat Actions]', errorMsg);
         throw new Error(errorMsg);
       }
@@ -99,11 +106,17 @@ export const aiChatActions = {
       console.error('[AI Chat Actions] Error type:', error?.constructor?.name);
       console.error('[AI Chat Actions] Error message:', error?.message);
       console.error('[AI Chat Actions] Error stack:', error?.stack);
-      console.error('[AI Chat Actions] Full error:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
-      
+      console.error(
+        '[AI Chat Actions] Full error:',
+        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
+      );
+
       const axiosError = error as AxiosError<ApiErrorResponse>;
       if (axiosError.response) {
-        console.error('[AI Chat Actions] Axios error response:', JSON.stringify(axiosError.response.data, null, 2));
+        console.error(
+          '[AI Chat Actions] Axios error response:',
+          JSON.stringify(axiosError.response.data, null, 2),
+        );
         return rejectWithValue(axiosError.response.data);
       }
       const errorMessage = (error as Error).message;
@@ -149,7 +162,9 @@ export const aiChatActions = {
         });
         messages = response.messages;
       } else {
-        throw new Error('Session ID is required for Rails proxy, or storeId with userId for Python backend');
+        throw new Error(
+          'Session ID is required for Rails proxy, or storeId with userId for Python backend',
+        );
       }
 
       return { messages, sessionId: payload.sessionId };
@@ -162,4 +177,3 @@ export const aiChatActions = {
     }
   }),
 };
-

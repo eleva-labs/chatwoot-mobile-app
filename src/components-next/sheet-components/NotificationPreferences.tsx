@@ -9,6 +9,8 @@ import i18n from 'i18n';
 import { selectNotificationSettings } from '@/store/settings/settingsSelectors';
 import { settingsActions } from '@/store/settings/settingsActions';
 import { NOTIFICATION_PREFERENCE_TYPES } from '@/constants';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { PROFILE_EVENTS } from '@/constants/analyticsEvents';
 
 const addOrRemoveItemFromArray = <T,>(array: T[], key: T): T[] => {
   const index = array.indexOf(key);
@@ -34,11 +36,16 @@ export const NotificationPreferences = () => {
   const [selectedPushFlags, setPushFlags] = useState(selected_push_flags);
 
   const onPushItemChange = (item: string) => {
+    const isEnabled = selectedPushFlags.includes(item);
     const pushFlags = addOrRemoveItemFromArray([...selectedPushFlags], item);
     setPushFlags(pushFlags);
     savePreferences({
       emailFlags: selectedEmailFlags,
       pushFlags: pushFlags,
+    });
+    AnalyticsHelper.track(PROFILE_EVENTS.CHANGE_PREFERENCES, {
+      preferenceType: item,
+      enabled: !isEnabled,
     });
   };
 
@@ -66,9 +73,11 @@ export const NotificationPreferences = () => {
       {typedPushFlags.map((item: NotificationPreferenceType) => (
         <Animated.View
           key={item}
-          style={tailwind.style('flex flex-row items-center justify-between ml-2 mt-2')}>
+          style={tailwind.style('flex flex-row items-center justify-between ml-2 mt-2')}
+        >
           <Animated.Text
-            style={themedTailwind.style('flex-1 leading-[17px] tracking-[0.24px] text-gray-950')}>
+            style={themedTailwind.style('flex-1 leading-[17px] tracking-[0.24px] text-gray-950')}
+          >
             {i18n.t(`NOTIFICATION_PREFERENCE.${NOTIFICATION_PREFERENCE_TYPES[item]}`)}
           </Animated.Text>
           <Switch
