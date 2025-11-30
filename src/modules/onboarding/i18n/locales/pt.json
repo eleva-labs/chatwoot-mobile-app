@@ -1,0 +1,15 @@
+{
+  "loading": "Carregando integração...",
+  "loadingError": "Falha ao carregar integração",
+  "next": "Próximo",
+  "previous": "Anterior",
+  "skip": "Pular",
+  "submit": "Enviar",
+  "retry": "Tentar novamente",
+  "errorTitle": "Erro",
+  "genericError": "Algo deu errado. Por favor, tente novamente.",
+  "offlineIndicator": "Sem conexão com a internet. Suas respostas serão salvas e enviadas quando você voltar a ficar online.",
+  "requiredField": "Este campo é obrigatório",
+  "invalidInput": "Entrada inválida",
+  "progressLabel": "Passo {{current}} de {{total}}"
+}

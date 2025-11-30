@@ -49,11 +49,13 @@ const StatusCell = (props: StatusCellProps) => {
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
           index !== status.length - 1 ? 'border-b-[1px] border-blackA-A3' : '',
-        )}>
+        )}
+      >
         <Animated.Text
           style={tailwind.style(
             'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
+          )}
+        >
           {i18n.t(`CONVERSATION.FILTERS.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
         {filters.status === value.id ? <Icon icon={<TickIcon />} size={20} /> : null}

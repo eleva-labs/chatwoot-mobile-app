@@ -18,7 +18,8 @@ export const ConversationSelect = memo((props: ConversationSelectProps) => {
   return currentState === 'Select' ? (
     <AnimatedNativeView
       layout={LinearTransition.springify().damping(28).stiffness(200)}
-      style={tailwind.style('h-full pt-[23px] pr-3')}>
+      style={tailwind.style('h-full pt-[23px] pr-3')}
+    >
       <Icon icon={isSelected ? <CheckedIcon /> : <UncheckedIcon />} size={20} />
     </AnimatedNativeView>
   ) : null;

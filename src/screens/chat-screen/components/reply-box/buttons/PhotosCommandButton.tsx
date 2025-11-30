@@ -15,14 +15,16 @@ export const PhotosCommandButton = (props: PhotosCommandButtonProps) => {
     <Pressable
       {...props}
       {...handlers}
-      style={({ pressed }) => [tailwind.style(pressed ? 'opacity-70' : '')]}>
+      style={({ pressed }) => [tailwind.style(pressed ? 'opacity-70' : '')]}
+    >
       <Animated.View
         entering={photoIconEnterAnimation}
         exiting={photoIconExitAnimation}
         style={[
           tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
           animatedStyle,
-        ]}>
+        ]}
+      >
         <Icon icon={<PhotosIcon />} size={24} />
       </Animated.View>
     </Pressable>

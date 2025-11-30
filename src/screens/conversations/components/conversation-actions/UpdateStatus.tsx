@@ -36,7 +36,8 @@ const StatusCell = (props: StatusCellProps) => {
   return (
     <Pressable
       onPress={() => onPress(value.id)}
-      style={tailwind.style('flex flex-row items-center')}>
+      style={tailwind.style('flex flex-row items-center')}
+    >
       <Animated.View>
         <Icon icon={value.icon} size={24} />
       </Animated.View>
@@ -44,11 +45,13 @@ const StatusCell = (props: StatusCellProps) => {
         style={themedTailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
           !isLastItem ? 'border-b-[1px] border-b-gray-200' : '',
-        )}>
+        )}
+      >
         <Animated.Text
           style={themedTailwind.style(
             'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
+          )}
+        >
           {i18n.t(`CONVERSATION.ASSIGNEE.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
       </Animated.View>

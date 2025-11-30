@@ -60,7 +60,10 @@ export const selectMessagesBySession = createSelector(
 /**
  * Select the active session ID
  */
-export const selectActiveSessionId = createSelector([selectAIChatState], aiChatState => aiChatState.activeSessionId);
+export const selectActiveSessionId = createSelector(
+  [selectAIChatState],
+  aiChatState => aiChatState.activeSessionId,
+);
 
 /**
  * Select the active session
@@ -115,4 +118,3 @@ export const selectMessagesError = createSelector(
   [selectAIChatState],
   aiChatState => aiChatState.messagesError,
 );
-

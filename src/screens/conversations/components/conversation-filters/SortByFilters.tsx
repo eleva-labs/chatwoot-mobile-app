@@ -37,16 +37,19 @@ const SortByCell = (props: SortByCellProps) => {
   return (
     <Pressable
       onPress={handlePreferredSortPress}
-      style={tailwind.style('flex flex-row items-center')}>
+      style={tailwind.style('flex flex-row items-center')}
+    >
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
           index !== sortByList.length - 1 ? 'border-b-[1px] border-blackA-A3' : '',
-        )}>
+        )}
+      >
         <Animated.Text
           style={tailwind.style(
             'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
+          )}
+        >
           {i18n.t(`CONVERSATION.FILTERS.SORT_BY.OPTIONS.${value.toUpperCase()}`)}
         </Animated.Text>
         {filters.sort_by === value ? <Icon icon={<TickIcon />} size={20} /> : null}

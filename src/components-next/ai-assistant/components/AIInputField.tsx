@@ -35,11 +35,13 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           'px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900',
         ),
         { paddingBottom: Math.max(insets.bottom + 32, 40) },
-      ]}>
+      ]}
+    >
       <View
         style={themedTailwind.style(
           'flex-row items-end bg-gray-100 dark:bg-gray-800 rounded-2xl px-3 py-2',
-        )}>
+        )}
+      >
         <TextInput
           ref={inputRef}
           value={text}
@@ -67,7 +69,8 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             }
             accessible
             accessibilityRole="button"
-            accessibilityLabel="Cancel AI response">
+            accessibilityLabel="Cancel AI response"
+          >
             <Text style={themedTailwind.style('text-red-600 dark:text-red-400 text-sm')}>
               Cancel
             </Text>
@@ -86,11 +89,13 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             accessible
             accessibilityRole="button"
             accessibilityLabel="Send message"
-            accessibilityState={{ disabled: !text.trim() || isLoading }}>
+            accessibilityState={{ disabled: !text.trim() || isLoading }}
+          >
             <View
               style={themedTailwind.style(
                 'w-6 h-6 bg-blue-600 rounded-full items-center justify-center',
-              )}>
+              )}
+            >
               <Icon icon={<SendIcon />} size={16} />
             </View>
           </Pressable>

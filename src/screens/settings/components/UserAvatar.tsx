@@ -41,7 +41,8 @@ const AvatarStatus = ({
           'absolute border-[1.5px] border-white bg-white rounded-full bottom-[2px] right-[2px]',
         ),
         { borderColor: tailwind.color(parentsBackground) },
-      ]}>
+      ]}
+    >
       <View style={tailwind.style(cx('rounded-full h-4 w-4', bgColor))} />
     </View>
   );
@@ -99,7 +100,8 @@ export const UserAvatar: React.FC<Partial<UserAvatarProps>> = props => {
         ),
         styleAdapter(style),
       ]}
-      {...boxProps}>
+      {...boxProps}
+    >
       {imageAvailable && src ? (
         <AvatarImage src={src} handleFallback={loadFallback} />
       ) : name ? (
@@ -110,7 +112,8 @@ export const UserAvatar: React.FC<Partial<UserAvatarProps>> = props => {
             ),
           ]}
           adjustsFontSizeToFit
-          allowFontScaling={false}>
+          allowFontScaling={false}
+        >
           {getInitials(name)}
         </Text>
       ) : null}

@@ -123,13 +123,15 @@ const MentionInput = React.forwardRef<TextInput, MentionInputProps>(
           {...textInputProps}
           ref={handleTextInputRef}
           onChangeText={onChangeInput}
-          onSelectionChange={handleSelectionChange}>
+          onSelectionChange={handleSelectionChange}
+        >
           <Text>
             {parts.map(({ text, partType, data }, index) =>
               partType ? (
                 <Text
                   key={`${index}-${data?.trigger ?? 'pattern'}`}
-                  style={partType.textStyle ?? defaultMentionTextStyle}>
+                  style={partType.textStyle ?? defaultMentionTextStyle}
+                >
                   {text}
                 </Text>
               ) : (

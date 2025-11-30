@@ -24,6 +24,7 @@ import I18n from '@/i18n';
 import { URL_TYPE } from '@/constants/url';
 import { checkValidUrl, extractDomain, handleApiError } from './settingsUtils';
 import { showToast } from '@/utils/toastUtils';
+import { setOnboardingCompleted as setOnboardingCompletedAction } from './settingsSlice';
 
 const createSettingsThunk = <TResponse, TPayload>(
   type: string,
@@ -142,4 +143,6 @@ export const settingsActions = {
     'settings/removeDevice',
     ({ pushToken }) => SettingsService.removeDevice({ push_token: pushToken }),
   ),
+
+  setOnboardingCompleted: setOnboardingCompletedAction,
 };

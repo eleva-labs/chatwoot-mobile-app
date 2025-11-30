@@ -78,29 +78,35 @@ export const useAIStreaming = (options?: UseAIStreamingOptions): UseAIStreamingR
     };
   }, []);
 
-    // Create transport instance ONCE when accountId is available
-    // We keep the same transport instance and update its agentBotId when it changes
-    // This ensures useChat always uses the same transport instance (avoiding closure issues)
-    const transport = useMemo(() => {
-      if (!accountId) {
-        console.log('[AI Streaming] Transport not created: Account ID missing');
-        return null;
-      }
-      // Create transport once with initial agentBotId (may be undefined)
-      // We'll update agentBotId later via updateAgentBotId()
-      console.log('[AI Streaming] Creating transport with agentBotId:', options?.agentBotId);
-      return new ChatwootAITransportAdapter(
-        accountId,
-        options?.agentBotId,
-        sessionIdRef.current || undefined,
-        options?.aiBackendUrl,
-        userId,
-        options?.onThoughtEvent, // Pass thought callback to transport
-        options?.onReasoningStart, // Pass reasoning-start callback to transport
-      );
-      // Only recreate transport if accountId, aiBackendUrl, userId, onThoughtEvent, or onReasoningStart changes
-      // NOT when agentBotId changes - we'll update that via updateAgentBotId()
-    }, [accountId, options?.aiBackendUrl, userId, options?.onThoughtEvent, options?.onReasoningStart]);
+  // Create transport instance ONCE when accountId is available
+  // We keep the same transport instance and update its agentBotId when it changes
+  // This ensures useChat always uses the same transport instance (avoiding closure issues)
+  const transport = useMemo(() => {
+    if (!accountId) {
+      console.log('[AI Streaming] Transport not created: Account ID missing');
+      return null;
+    }
+    // Create transport once with initial agentBotId (may be undefined)
+    // We'll update agentBotId later via updateAgentBotId()
+    console.log('[AI Streaming] Creating transport with agentBotId:', options?.agentBotId);
+    return new ChatwootAITransportAdapter(
+      accountId,
+      options?.agentBotId,
+      sessionIdRef.current || undefined,
+      options?.aiBackendUrl,
+      userId,
+      options?.onThoughtEvent, // Pass thought callback to transport
+      options?.onReasoningStart, // Pass reasoning-start callback to transport
+    );
+    // Only recreate transport if accountId, aiBackendUrl, userId, onThoughtEvent, or onReasoningStart changes
+    // NOT when agentBotId changes - we'll update that via updateAgentBotId()
+  }, [
+    accountId,
+    options?.aiBackendUrl,
+    userId,
+    options?.onThoughtEvent,
+    options?.onReasoningStart,
+  ]);
 
   // Update transport's agentBotId when it changes
   // This ensures the transport always has the latest agentBotId without creating a new instance

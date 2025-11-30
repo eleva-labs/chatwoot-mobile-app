@@ -65,7 +65,8 @@ const Title = ({ title }: { title: string }) => (
 export const AllVariants: Story = {
   render: () => (
     <ScrollView
-      contentContainerStyle={tailwind.style('flex flex-col justify-center items-center gap-2')}>
+      contentContainerStyle={tailwind.style('flex flex-col justify-center items-center gap-2')}
+    >
       <Title title="Conversation with all fields" />
       <ConversationItem
         {...conversationWithAllFields}

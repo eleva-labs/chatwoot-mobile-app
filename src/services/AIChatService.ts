@@ -137,7 +137,10 @@ export class AIChatService {
       throw new Error('Account ID is required to fetch AI chat bots');
     }
 
-    const response = await apiService.get<AIChatBotsResponse>('ai_chat/bots', {} as AxiosRequestConfig);
+    const response = await apiService.get<AIChatBotsResponse>(
+      'ai_chat/bots',
+      {} as AxiosRequestConfig,
+    );
 
     return response.data;
   }
@@ -149,9 +152,7 @@ export class AIChatService {
    * @param options - Options including agentBotId and optional limit
    * @returns List of chat sessions
    */
-  static async fetchSessions(
-    options: FetchSessionsOptions,
-  ): Promise<AIChatSessionsResponse> {
+  static async fetchSessions(options: FetchSessionsOptions): Promise<AIChatSessionsResponse> {
     const { agentBotId, limit = 25 } = options;
     const accountId = this.getAccountId();
 
@@ -164,12 +165,9 @@ export class AIChatService {
       limit: String(limit),
     };
 
-    const response = await apiService.get<AIChatSessionsResponse>(
-      'ai_chat/sessions',
-      {
-        params,
-      } as AxiosRequestConfig,
-    );
+    const response = await apiService.get<AIChatSessionsResponse>('ai_chat/sessions', {
+      params,
+    } as AxiosRequestConfig);
 
     return response.data;
   }
@@ -288,7 +286,10 @@ export class AIChatService {
     limit?: number;
     aiBackendUrl: string;
   }): Promise<AIChatSessionsResponse> {
-    console.log('[AIChat Service] fetchStoreSessions called with options:', JSON.stringify(options, null, 2));
+    console.log(
+      '[AIChat Service] fetchStoreSessions called with options:',
+      JSON.stringify(options, null, 2),
+    );
 
     const { storeId, agentSystemId, userId, limit = 25, aiBackendUrl } = options;
 
@@ -326,10 +327,17 @@ export class AIChatService {
     console.log('[AIChat Service] Agent System ID:', agentSystemId);
     console.log('[AIChat Service] Limit:', limit);
     console.log('[AIChat Service] Auth headers from Redux:', JSON.stringify(headers, null, 2));
-    console.log('[AIChat Service] Full request headers:', JSON.stringify({
-      ...headers,
-      'Content-Type': 'application/json',
-    }, null, 2));
+    console.log(
+      '[AIChat Service] Full request headers:',
+      JSON.stringify(
+        {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
+        null,
+        2,
+      ),
+    );
 
     try {
       console.log('[AIChat Service] About to call expoFetch...');
@@ -345,7 +353,10 @@ export class AIChatService {
       console.log('[AIChat Service] Response status:', response.status);
       console.log('[AIChat Service] Response statusText:', response.statusText);
       console.log('[AIChat Service] Response ok:', response.ok);
-      console.log('[AIChat Service] Response headers:', JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2));
+      console.log(
+        '[AIChat Service] Response headers:',
+        JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2),
+      );
 
       if (!response.ok) {
         console.log('[AIChat Service] ===== ERROR RESPONSE =====');
@@ -401,8 +412,11 @@ export class AIChatService {
       console.error('[AIChat Service] Error type:', error?.constructor?.name);
       console.error('[AIChat Service] Error message:', error?.message);
       console.error('[AIChat Service] Error stack:', error?.stack);
-      console.error('[AIChat Service] Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
-      
+      console.error(
+        '[AIChat Service] Full error object:',
+        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
+      );
+
       // Re-throw with more context
       if (error instanceof Error) {
         throw error;
@@ -411,4 +425,3 @@ export class AIChatService {
     }
   }
 }
-

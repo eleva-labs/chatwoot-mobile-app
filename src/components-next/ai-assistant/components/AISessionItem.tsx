@@ -32,13 +32,15 @@ export const AISessionItem: React.FC<SessionItemProps> = React.memo(
             'flex-row items-center px-4 py-3',
             !isLastItem && 'border-b border-gray-200 dark:border-gray-700',
             isActive && 'bg-blue-50 dark:bg-blue-900/20',
-          )}>
+          )}
+        >
           <View style={themedTailwind.style('flex-1')}>
             <Text
               style={themedTailwind.style(
                 'text-base font-inter-420-20 text-gray-900 dark:text-white',
                 isActive && 'font-inter-580-24',
-              )}>
+              )}
+            >
               {session.chat_session_id.slice(0, 8)}...
             </Text>
             <Text style={themedTailwind.style('text-sm text-gray-500 dark:text-gray-400 mt-1')}>
@@ -53,4 +55,3 @@ export const AISessionItem: React.FC<SessionItemProps> = React.memo(
 );
 
 AISessionItem.displayName = 'AISessionItem';
-

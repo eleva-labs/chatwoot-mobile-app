@@ -92,24 +92,28 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
     <View
       style={themedTailwind.style(
         'mx-4 mb-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50',
-      )}>
+      )}
+    >
       {/* Header */}
       <TouchableOpacity
         onPress={() => setIsExpanded(!isExpanded)}
         style={themedTailwind.style('flex-row items-center justify-between p-3')}
-        activeOpacity={0.7}>
+        activeOpacity={0.7}
+      >
         <View style={themedTailwind.style('flex-row items-center flex-1')}>
           <Text
             style={themedTailwind.style(
               'text-sm font-inter-semibold-20 text-gray-700 dark:text-gray-300',
-            )}>
+            )}
+          >
             THOUGHTS...
           </Text>
           {formattedTime && (
             <Text
               style={themedTailwind.style(
                 'ml-2 text-xs font-inter-normal-20 text-gray-500 dark:text-gray-400',
-              )}>
+              )}
+            >
               {formattedTime}
             </Text>
           )}
@@ -118,7 +122,8 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
           <Text
             style={themedTailwind.style(
               'text-lg text-gray-600 dark:text-gray-400 font-inter-medium-24',
-            )}>
+            )}
+          >
             ▼
           </Text>
         </Animated.View>
@@ -131,11 +136,13 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
             style={themedTailwind.style('max-h-80')}
             contentContainerStyle={themedTailwind.style('pr-1')}
             showsVerticalScrollIndicator={true}
-            nestedScrollEnabled={true}>
+            nestedScrollEnabled={true}
+          >
             <Text
               style={themedTailwind.style(
                 'text-sm font-inter-normal-20 text-gray-700 dark:text-gray-300 leading-5',
-              )}>
+              )}
+            >
               {textContent || '[No content]'}
             </Text>
           </ScrollView>

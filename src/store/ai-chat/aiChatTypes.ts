@@ -69,4 +69,3 @@ export interface ClearSessionsPayload {
   agentBotId?: number;
   storeId?: number;
 }
-
