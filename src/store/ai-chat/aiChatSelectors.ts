@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '@/store/reducers';
-import type { AIChatSession, AIChatMessage } from '@/services/AIChatService';
+import type { AIChatSession, AIChatMessage } from '@/domain/ai/types';
 
 /**
  * Select the entire AI chat state

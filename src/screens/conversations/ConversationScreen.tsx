@@ -41,7 +41,7 @@ import {
 
 import { tailwind } from '@/theme';
 import { Conversation } from '@/types';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 import { useTheme } from '@/context';
 import {
   selectBottomSheetState,
@@ -65,6 +65,8 @@ import i18n from '@/i18n';
 import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
 import { getCurrentRouteName } from '@/utils/navigationUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 // The screen list thats need to be checked for refreshing the conversations list
 const REFRESH_SCREEN_LIST = [SCREENS.CONVERSATION, SCREENS.INBOX, SCREENS.SETTINGS];
@@ -157,6 +159,7 @@ const ConversationList = () => {
   const handleRefresh = useCallback(() => {
     setFlashListReady(false);
     setIsRefreshing(true);
+    AnalyticsHelper.track(CONVERSATION_EVENTS.REFRESH_CONVERSATIONS);
     clearAndFetchConversations(filters).finally(() => {
       setIsRefreshing(false);
     });
@@ -280,6 +283,7 @@ const ConversationList = () => {
 };
 
 const ConversationScreen = () => {
+  useScreenAnalytics(SCREENS.CONVERSATION);
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();

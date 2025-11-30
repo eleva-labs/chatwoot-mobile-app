@@ -17,7 +17,7 @@ import {
   selectConversationFetching,
   selectConversationError,
 } from '@/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 import { useTheme } from '@/context';
 
 import { notificationActions } from '@/store/notification/notificationAction';
@@ -26,7 +26,7 @@ import { PrimaryActorType } from '@/types/Notification';
 import { assignableAgentActions } from '@/store/assignable-agent/assignableAgentActions';
 import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
 import { conversationActions } from '@/store/conversation/conversationActions';
-import { TAB_BAR_HEIGHT } from '@/constants';
+import { SCREENS, TAB_BAR_HEIGHT } from '@/constants';
 import { ErrorIcon } from '@/svg-icons';
 import { Button } from '@/components-next';
 import { ActivityIndicator, Pressable } from 'react-native';
@@ -95,6 +95,7 @@ const ChatScreenWrapper = (props: ChatScreenProps) => {
   );
 };
 const ChatScreen = (props: ChatScreenProps) => {
+  useScreenAnalytics(SCREENS.CHAT);
   const navigation = useNavigation();
   const themedTailwind = useThemedStyles();
   const { isDark } = useTheme();

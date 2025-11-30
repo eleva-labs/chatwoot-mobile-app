@@ -3,7 +3,7 @@ import { View, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import camelCase from 'camelcase';
 
-import { TAB_BAR_HEIGHT } from '@/constants';
+import { SCREENS, TAB_BAR_HEIGHT } from '@/constants';
 import {
   CallIcon,
   EmailIcon,
@@ -28,7 +28,7 @@ import { AttributeList } from '@/components-next';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TabBarExcludedScreenParamList } from '@/navigation/tabs/AppTabs';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 import { contactLabelActions } from '@/store/contact/contactLabelActions';
 import { getContactCustomAttributes } from '@/store/custom-attribute/customAttributeSlice';
 import { selectContactById } from '@/store/contact/contactSelectors';
@@ -115,6 +115,7 @@ const processContactAttributes = (
 };
 
 const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
+  useScreenAnalytics(SCREENS.DETAIL);
   const { conversationId } = props.route.params;
   const dispatch = useAppDispatch();
 

@@ -12,6 +12,8 @@ import { useAppDispatch, useAppSelector } from '@/hooks';
 import i18n from '@/i18n';
 import { SortOptions } from '@/types';
 import { selectFilters, setFilters } from '@/store/conversation/conversationFilterSlice';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 type SortByCellProps = {
   value: string;
@@ -31,6 +33,10 @@ const SortByCell = (props: SortByCellProps) => {
   const handlePreferredSortPress = () => {
     hapticSelection?.();
     dispatch(setFilters({ key: 'sort_by', value }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'sort_by',
+      filterValue: value,
+    });
     setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
   };
 

@@ -7,3 +7,4 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 // Theme-related hooks
 export * from './hooks/useThemedStyles';
+export * from './hooks/useScreenAnalytics';

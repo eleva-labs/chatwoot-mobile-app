@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { aiChatActions, selectSessionsByAgentBot, selectActiveSessionId } from '@/store/ai-chat';
 import { setActiveSession } from '@/store/ai-chat/aiChatSlice';
-import type { AIChatSession } from '@/services/AIChatService';
+import type { AIChatSession } from '@/domain/ai/types';
 
 // Stable empty array reference to prevent unnecessary rerenders
 const EMPTY_SESSIONS: AIChatSession[] = [];

@@ -14,6 +14,8 @@ import { useAppDispatch } from '@/hooks';
 import { conversationActions } from '@/store/conversation/conversationActions';
 
 import { LabelCell, LabelItem } from '@/components-next/label-section';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { LABEL_EVENTS } from '@/constants/analyticsEvents';
 
 type LabelStackProps = {
   filteredLabels: Label[];
@@ -86,7 +88,8 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
 
   const handleAddOrUpdateLabels = async (label: string) => {
     setSelectedLabels(prevLabels => {
-      const updatedLabels = prevLabels.includes(label)
+      const isRemoving = prevLabels.includes(label);
+      const updatedLabels = isRemoving
         ? prevLabels.filter(item => item !== label)
         : [...prevLabels, label];
 
@@ -96,6 +99,12 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
           labels: updatedLabels,
         }),
       );
+
+      AnalyticsHelper.track(LABEL_EVENTS.APPLY_LABEL, {
+        conversationId,
+        label,
+        action: isRemoving ? 'remove' : 'add',
+      });
 
       return updatedLabels;
     });

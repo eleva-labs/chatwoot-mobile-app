@@ -2,7 +2,7 @@ import { useChat } from '@ai-sdk/react';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import type { UIMessage } from 'ai';
-import { ChatwootAITransportAdapter } from '@/services/ChatwootAITransportAdapter';
+import { ChatwootAITransportAdapter } from '@/infrastructure/adapters/ChatwootAITransportAdapter';
 import { useAppSelector } from '@/hooks';
 import { selectUser } from '@/store/auth/authSelectors';
 import AsyncStorage from '@react-native-async-storage/async-storage';

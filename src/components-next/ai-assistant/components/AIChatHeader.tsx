@@ -3,7 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import { useThemedStyles } from '@/hooks';
 import { Icon } from '@/components-next/common';
 import { CloseIcon } from '@/svg-icons';
-import type { AIChatBot } from '@/services/AIChatService';
+import type { AIChatBot } from '@/domain/ai/types';
 
 export interface AIChatHeaderProps {
   selectedBot: AIChatBot | null;

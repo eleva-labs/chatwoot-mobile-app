@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import { AIChatService } from '@/services/AIChatService';
+import { AIChatService } from '@/infrastructure/ai/AIChatService';
 import type {
   FetchSessionsPayload,
   FetchMessagesPayload,

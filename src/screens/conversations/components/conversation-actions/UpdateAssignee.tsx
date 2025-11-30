@@ -106,16 +106,35 @@ export const UpdateAssignee = () => {
     if (isMultipleConversationsSelected) {
       const payload = { type: 'Conversation', ids: selectedIds, fields: { assignee_id: agent.id } };
       await dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
     } else {
       if (!selectedConversation?.id) return;
+      const isUnassigning = agent.id === assigneeId;
+      const isSelfAssigning = agent.id === userId;
       await dispatch(
         conversationActions.assignConversation({
           conversationId: selectedConversation?.id,
-          assigneeId: agent.id === assigneeId ? 0 : agent.id,
+          assigneeId: isUnassigning ? 0 : agent.id,
         }),
       );
-      AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED);
+      if (isUnassigning) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.UNASSIGN_CONVERSATION, {
+          conversationId: selectedConversation?.id,
+        });
+      } else if (isSelfAssigning) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.SELF_ASSIGN_CONVERSATION, {
+          conversationId: selectedConversation?.id,
+        });
+      } else {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
+          conversationId: selectedConversation?.id,
+          assigneeId: agent.id,
+        });
+      }
       showToast({
         message: i18n.t('CONVERSATION.ASSIGN_CHANGE'),
       });

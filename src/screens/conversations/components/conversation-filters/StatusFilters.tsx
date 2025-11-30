@@ -13,6 +13,8 @@ import { BottomSheetHeader, Icon } from '@/components-next';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import i18n from '@/i18n';
 import { StatusOptions } from '@/types';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 type StatusCellProps = {
   value: StatusCollection;
@@ -37,6 +39,10 @@ const StatusCell = (props: StatusCellProps) => {
   const handleStatusPress = () => {
     hapticSelection?.();
     dispatch(setFilters({ key: 'status', value: value.id }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'status',
+      filterValue: value.id,
+    });
     setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
   };
 

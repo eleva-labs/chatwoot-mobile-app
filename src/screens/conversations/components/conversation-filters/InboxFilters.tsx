@@ -13,6 +13,8 @@ import { selectAllInboxes } from '@/store/inbox/inboxSelectors';
 import { getChannelIcon } from '@/utils';
 import { Channel } from '@/types';
 import i18n from '@/i18n';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 type InboxCellProps = {
   value: { id: number; name: string; channelType: Channel; medium: string };
@@ -30,6 +32,11 @@ const InboxCell = (props: InboxCellProps) => {
   const handlePreferredAssigneeTypePress = () => {
     hapticSelection?.();
     dispatch(setFilters({ key: 'inbox_id', value: value.id.toString() }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'inbox_id',
+      filterValue: value.id.toString(),
+      inboxName: value.name,
+    });
     setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
   };
 

@@ -15,6 +15,8 @@ import { AssigneeOptions } from '@/types';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/auth/authSelectors';
 import { getUserPermissions } from '@/utils/permissionUtils';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 type AssigneeTypeCellProps = {
   value: string;
@@ -33,6 +35,10 @@ const AssigneeTypeCell = (props: AssigneeTypeCellProps) => {
   const handlePreferredAssigneeTypePress = () => {
     hapticSelection?.();
     dispatch(setFilters({ key: 'assignee_type', value }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'assignee_type',
+      filterValue: value,
+    });
     setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
   };
 

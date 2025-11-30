@@ -17,6 +17,8 @@ import { conversationActions } from '@/store/conversation/conversationActions';
 import { setCurrentState } from '@/store/conversation/conversationHeaderSlice';
 import i18n from '@/i18n';
 import { StatusOptions } from '@/types';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 type StatusCellProps = {
   value: StatusCollection;
   isLastItem: boolean;
@@ -81,10 +83,16 @@ export const UpdateStatus = () => {
     if (isMultipleConversationsSelected) {
       const payload = { type: 'Conversation', ids: selectedIds, fields: { status } };
       dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        status,
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
       dispatch(setCurrentState('none'));
     } else {
       if (!selectedConversation?.id) return;
+      const previousStatus = selectedConversation?.status;
       dispatch(
         conversationActions.toggleConversationStatus({
           conversationId: selectedConversation?.id,
@@ -94,6 +102,16 @@ export const UpdateStatus = () => {
           },
         }),
       );
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        conversationId: selectedConversation?.id,
+        from: previousStatus,
+        to: status,
+      });
+      if (status === 'resolved') {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.RESOLVE_CONVERSATION_STATUS, {
+          conversationId: selectedConversation?.id,
+        });
+      }
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
     }
   };

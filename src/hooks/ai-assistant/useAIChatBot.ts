@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import type { AIChatBot } from '@/services/AIChatService';
-import { AIChatService } from '@/services/AIChatService';
+import type { AIChatBot } from '@/domain/ai/types';
+import { AIChatService } from '@/infrastructure/ai/AIChatService';
 
 export interface UseAIChatBotReturn {
   selectedBotId: number | undefined;

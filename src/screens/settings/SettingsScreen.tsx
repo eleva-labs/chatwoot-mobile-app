@@ -38,7 +38,7 @@ import {
 import { UserAvatar } from './components/UserAvatar';
 import { BuildInfo } from '@/components-next/common';
 
-import { LANGUAGES, TAB_BAR_HEIGHT } from '@/constants';
+import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@/constants';
 import { useRefsContext, useTheme } from '@/context';
 import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
 import { GenericListType } from '@/types';
@@ -62,10 +62,10 @@ import { settingsActions } from '@/store/settings/settingsActions';
 import { setLocale } from '@/store/settings/settingsSlice';
 
 import AnalyticsHelper from '@/utils/analyticsUtils';
-import { PROFILE_EVENTS } from '@/constants/analyticsEvents';
+import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@/constants/analyticsEvents';
 import { getUserPermissions } from '@/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from '@/constants/permissions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 const appName = Application.applicationName;
 const appVersion = Application.nativeApplicationVersion;
@@ -76,6 +76,7 @@ const appVersionDetails = buildNumber
   : `Version: ${appVersion}`;
 
 const SettingsScreen = () => {
+  useScreenAnalytics(SCREENS.SETTINGS);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const availabilityStatus =
@@ -170,10 +171,18 @@ const SettingsScreen = () => {
   };
 
   const onChangeLanguage = (locale: string) => {
+    AnalyticsHelper.track(ACCOUNT_EVENTS.CHANGE_LANGUAGE, {
+      from: activeLocale,
+      to: locale,
+    });
     dispatch(setLocale(locale));
   };
 
   const changeAccount = (accountId: number) => {
+    AnalyticsHelper.track(ACCOUNT_EVENTS.CHANGE_ACCOUNT, {
+      from: activeAccountId,
+      to: accountId,
+    });
     dispatch(clearAllContacts());
     dispatch(clearAllConversations());
     dispatch(resetNotifications());

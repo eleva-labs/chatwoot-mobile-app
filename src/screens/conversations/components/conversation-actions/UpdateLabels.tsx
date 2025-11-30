@@ -11,6 +11,8 @@ import { selectSelectedIds } from '@/store/conversation/conversationSelectedSlic
 import { conversationActions } from '@/store/conversation/conversationActions';
 import { LabelCell } from '@/components-next/label-section';
 import i18n from '@/i18n';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { LABEL_EVENTS } from '@/constants/analyticsEvents';
 
 type LabelStackProps = {
   labelList: Label[];
@@ -80,6 +82,11 @@ export const UpdateLabels = () => {
         labels: { add: [_selectedLabel] },
       };
       dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(LABEL_EVENTS.APPLY_LABEL, {
+        label: _selectedLabel,
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
       // actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
       // dispatch(setCurrentState('none'));
       return updatedLabels;

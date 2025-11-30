@@ -28,6 +28,8 @@ import { selectAllTeams } from '@/store/team/teamSelectors';
 import { selectInstallationUrl } from '@/store/settings/settingsSelectors';
 import { ConversationMetaInformation } from './components/ConversationMetaInformation';
 import { selectConversationParticipantsByConversationId } from '@/store/conversation-participant/conversationParticipantSelectors';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -71,10 +73,16 @@ export const ConversationActions = () => {
 
       const message = Platform.OS === 'android' ? url : '';
 
-      await Share.share({
+      const result = await Share.share({
         message,
         url,
       });
+
+      if (result.action === Share.sharedAction) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.CONVERSATION_SHARE, {
+          conversationId,
+        });
+      }
     } catch (error) {
       Alert.alert((error as Error).message);
     }
@@ -83,8 +91,10 @@ export const ConversationActions = () => {
   const updateConversationStatus = (type: ConversationActionType, status?: ConversationStatus) => {
     if (type === 'mute') {
       dispatch(conversationActions.muteConversation({ conversationId }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MUTE_CONVERSATION, { conversationId });
     } else if (type === 'unmute') {
       dispatch(conversationActions.unmuteConversation({ conversationId }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.UN_MUTE_CONVERSATION, { conversationId });
     } else {
       dispatch(
         conversationActions.toggleConversationStatus({
@@ -92,6 +102,15 @@ export const ConversationActions = () => {
           payload: { status: status as ConversationStatus, snoozed_until: null },
         }),
       );
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        conversationId,
+        status,
+      });
+      if (status === 'resolved') {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.RESOLVE_CONVERSATION_STATUS, {
+          conversationId,
+        });
+      }
     }
   };
 

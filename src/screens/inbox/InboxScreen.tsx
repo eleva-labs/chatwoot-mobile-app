@@ -9,11 +9,11 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
-import { TAB_BAR_HEIGHT } from '@/constants';
+import { SCREENS, TAB_BAR_HEIGHT } from '@/constants';
 import { InboxListStateProvider, useTheme } from '@/context';
 import type { Notification } from '@/types/Notification';
 import { tailwind } from '@/theme';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 import { notificationActions } from '@/store/notification/notificationAction';
 import {
   selectIsAllNotificationsFetched,
@@ -172,6 +172,7 @@ const InboxList = () => {
 };
 
 const InboxScreen = () => {
+  useScreenAnalytics(SCREENS.INBOX);
   const dispatch = useAppDispatch();
   const themedTailwind = useThemedStyles();
   const { isDark } = useTheme();
