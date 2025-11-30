@@ -1,3 +1,14 @@
+// Generic analytics event type - can represent any event with unknown properties
+export type AnalyticsEvent = Record<string, unknown>;
+
+// Specific event types for type safety and documentation
+export type FlowStartedEvent = AnalyticsEvent;
+export type QuestionAnsweredEvent = AnalyticsEvent;
+export type ScreenChangedEvent = AnalyticsEvent;
+export type FlowCompletedEvent = AnalyticsEvent;
+export type FlowSkippedEvent = AnalyticsEvent;
+export type ErrorEvent = AnalyticsEvent;
+
 export const CONVERSATION_EVENTS = Object.freeze({
   SENT_MESSAGE: 'Sent a message',
   SENT_PRIVATE_NOTE: 'Sent a private note',
@@ -45,4 +56,17 @@ export const LABEL_EVENTS = Object.freeze({
 export const PROFILE_EVENTS = Object.freeze({
   TOGGLE_AVAILABILITY_STATUS: 'Changed availability status',
   CHANGE_PREFERENCES: 'Changed notification preferences',
+});
+
+export const ONBOARDING_EVENTS = Object.freeze({
+  FLOW_STARTED: 'Onboarding flow started',
+  FLOW_COMPLETED: 'Onboarding flow completed',
+  FLOW_SKIPPED: 'Onboarding flow skipped',
+  QUESTION_ANSWERED: 'Onboarding question answered',
+  SCREEN_CHANGED: 'Onboarding screen changed',
+  STEP_COMPLETED: 'Onboarding step completed',
+  ERROR_OCCURRED: 'Onboarding error occurred',
+  BACK_BUTTON_PRESSED: 'Onboarding back button pressed',
+  FLOW_ABANDONED: 'Onboarding flow abandoned',
+  RETRY_ATTEMPTED: 'Onboarding retry attempted',
 });

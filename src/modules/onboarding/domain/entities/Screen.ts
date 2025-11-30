@@ -58,7 +58,7 @@ export class Screen {
    * Check if this screen can be skipped
    */
   isSkippable(): boolean {
-    return this.validation?.skippable ?? (false || !this.isRequired());
+    return this.validation?.skippable ?? !this.isRequired();
   }
 
   /**

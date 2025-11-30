@@ -1,17 +1,56 @@
-import type { ConditionalLogic, Answers } from '../common';
+import type { ConditionalLogic, Answers, SelectOption } from '../common';
 import { Screen } from '../entities/Screen';
 
 /**
  * Conditional Logic Service
  *
  * Evaluates conditional logic to determine if a screen should be shown.
+ * Supports nested AND/OR operators and recursive evaluation.
  * Pure domain logic with no external dependencies.
  */
 export class ConditionalLogicService {
   /**
-   * Evaluate a conditional logic rule
+   * Evaluate a conditional logic rule (supports nested conditions)
    */
   static evaluate(condition: ConditionalLogic, answers: Answers): boolean {
+    // Handle logical operators (AND/OR) with nested conditions
+    if (condition.operator === 'and' || condition.operator === 'or') {
+      return this.evaluateLogicalOperator(condition, answers);
+    }
+
+    // Handle comparison operators
+    return this.evaluateComparison(condition, answers);
+  }
+
+  /**
+   * Evaluate logical operators (AND/OR) with recursive conditions
+   */
+  private static evaluateLogicalOperator(condition: ConditionalLogic, answers: Answers): boolean {
+    if (!condition.conditions || condition.conditions.length === 0) {
+      return true; // Empty conditions array defaults to true
+    }
+
+    if (condition.operator === 'and') {
+      // All conditions must be true
+      return condition.conditions.every(nestedCondition => this.evaluate(nestedCondition, answers));
+    }
+
+    if (condition.operator === 'or') {
+      // At least one condition must be true
+      return condition.conditions.some(nestedCondition => this.evaluate(nestedCondition, answers));
+    }
+
+    return false;
+  }
+
+  /**
+   * Evaluate comparison operators
+   */
+  private static evaluateComparison(condition: ConditionalLogic, answers: Answers): boolean {
+    if (!condition.question_id) {
+      return false; // Comparison operators require question_id
+    }
+
     const answerValue: unknown = answers[condition.question_id];
 
     switch (condition.operator) {
@@ -20,6 +59,18 @@ export class ConditionalLogicService {
 
       case 'not_equals':
         return answerValue !== condition.value;
+
+      case 'in':
+        if (Array.isArray(condition.value)) {
+          return condition.value.includes(answerValue);
+        }
+        return false;
+
+      case 'not_in':
+        if (Array.isArray(condition.value)) {
+          return !condition.value.includes(answerValue);
+        }
+        return true; // If not an array, treat as not_in
 
       case 'contains':
         if (Array.isArray(answerValue)) {
@@ -31,7 +82,7 @@ export class ConditionalLogicService {
         return false;
 
       case 'not_contains':
-        return !this.evaluate({ ...condition, operator: 'contains' }, answers);
+        return !this.evaluateComparison({ ...condition, operator: 'contains' }, answers);
 
       case 'greater_than':
         if (typeof answerValue === 'number' && typeof condition.value === 'number') {
@@ -54,7 +105,7 @@ export class ConditionalLogicService {
         );
 
       case 'is_not_empty':
-        return !this.evaluate({ ...condition, operator: 'is_empty' }, answers);
+        return !this.evaluateComparison({ ...condition, operator: 'is_empty' }, answers);
 
       default:
         return false;
@@ -70,5 +121,19 @@ export class ConditionalLogicService {
     }
 
     return this.evaluate(screen.conditionalLogic, answers);
+  }
+
+  /**
+   * Filter options based on conditional_show logic
+   * Returns only options that should be visible based on current answers
+   */
+  static filterVisibleOptions(options: SelectOption[], answers: Answers): SelectOption[] {
+    return options.filter(option => {
+      if (!option.conditional_show) {
+        return true; // No conditional logic means always show
+      }
+
+      return this.evaluate(option.conditional_show, answers);
+    });
   }
 }

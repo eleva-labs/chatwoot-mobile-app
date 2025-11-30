@@ -77,8 +77,12 @@ export class OnboardingFlow {
    */
   calculateProgress(currentIndex: number): number {
     if (currentIndex < 0) return 0;
-    if (currentIndex >= this.screens.length) return 100;
-    return Math.round((currentIndex / this.screens.length) * 100);
+    if (this.screens.length === 0) return 0;
+    if (this.screens.length === 1) return currentIndex >= 0 ? 100 : 0;
+    // Calculate progress: currentIndex / (totalScreens - 1) * 100
+    // This ensures: first screen (0) = 0%, last screen (length-1) = 100%
+    if (currentIndex >= this.screens.length - 1) return 100;
+    return Math.round((currentIndex / (this.screens.length - 1)) * 100);
   }
 
   /**

@@ -1,3 +1,4 @@
+import { injectable } from 'tsyringe';
 import { apiService } from '@/services/APIService';
 import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
 import { Locale } from '../../domain/entities/Locale';
@@ -14,6 +15,7 @@ import { AxiosError, AxiosResponse } from 'axios';
  *
  * Uses the existing APIService to fetch and submit onboarding data.
  */
+@injectable()
 export class AxiosOnboardingRepository implements IOnboardingRepository {
   private readonly BASE_URL = 'onboarding/flows';
 

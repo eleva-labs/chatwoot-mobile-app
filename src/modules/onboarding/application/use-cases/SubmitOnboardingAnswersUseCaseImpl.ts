@@ -1,8 +1,11 @@
+import { injectable, inject } from 'tsyringe';
 import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
 import { OfflineQueue } from '../../infrastructure/queue/OfflineQueue';
 import type { Answers } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
 import { NetworkError } from '../../domain/entities/Errors';
+import { DI_TOKENS } from '../../di/tokens';
+import type { ISubmitOnboardingAnswersUseCase } from '../../domain/use-cases/ISubmitOnboardingAnswersUseCase';
 
 /**
  * Submit Onboarding Answers Use Case
@@ -10,10 +13,12 @@ import { NetworkError } from '../../domain/entities/Errors';
  * Orchestrates submitting answers to the server.
  * Handles retry logic, error recovery, and offline queueing.
  */
-export class SubmitOnboardingAnswersUseCase {
+@injectable()
+export class SubmitOnboardingAnswersUseCaseImpl implements ISubmitOnboardingAnswersUseCase {
   constructor(
+    @inject(DI_TOKENS.IOnboardingRepository)
     private readonly onboardingRepository: IOnboardingRepository,
-    private readonly offlineQueue?: OfflineQueue,
+    @inject(DI_TOKENS.OfflineQueue) private readonly offlineQueue?: OfflineQueue,
   ) {}
 
   async execute(flowId: string, answers: Answers): Promise<Result<void, Error>> {

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { ValidateAnswerUseCase } from '../../application/use-cases/ValidateAnswer';
+import type { IValidateAnswerUseCase } from '../../domain/use-cases/IValidateAnswerUseCase';
 import type { ValidationRule } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
 
@@ -20,7 +20,7 @@ export interface UseValidationReturn {
 /**
  * Hook for validating answers
  */
-export function useValidation(validateAnswerUseCase: ValidateAnswerUseCase): UseValidationReturn {
+export function useValidation(validateAnswerUseCase: IValidateAnswerUseCase): UseValidationReturn {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const validate: (

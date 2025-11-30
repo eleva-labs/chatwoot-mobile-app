@@ -10,7 +10,8 @@ import { MultiSelectChips } from './inputs/MultiSelectChips';
 import { DatePicker } from './inputs/DatePicker';
 import { Rating } from './inputs/Rating';
 import { SliderInput } from './inputs/Slider';
-import type { AnswerValue } from '../../domain/common';
+import type { AnswerValue, Answers } from '../../domain/common';
+import { ConditionalLogicService } from '../../domain/services/ConditionalLogicService';
 
 const DEFAULT_INPUT_CONTAINER_STYLE =
   'w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50';
@@ -20,6 +21,7 @@ interface QuestionRendererProps {
   value: AnswerValue;
   onChange: (value: AnswerValue) => void;
   error?: string;
+  answers?: Answers; // All answers for conditional option filtering
 }
 
 /**
@@ -28,9 +30,21 @@ interface QuestionRendererProps {
  * Dynamically renders the appropriate input component based on question type.
  * Memoized for performance optimization.
  */
-function QuestionRendererComponent({ screen, value, onChange, error }: QuestionRendererProps) {
+function QuestionRendererComponent({
+  screen,
+  value,
+  onChange,
+  error,
+  answers = {},
+}: QuestionRendererProps) {
   const themedStyles = useThemedStyles();
   const { entering, exiting } = useScreenTransition('forward', screen.uiConfig);
+
+  // Filter options based on conditional_show logic
+  const visibleOptions = useMemo(() => {
+    if (!screen.options) return [];
+    return ConditionalLogicService.filterVisibleOptions(screen.options, answers);
+  }, [screen.options, answers]);
 
   const renderInput = useMemo(() => {
     switch (screen.type) {
@@ -42,24 +56,28 @@ function QuestionRendererComponent({ screen, value, onChange, error }: QuestionR
             placeholder={screen.placeholder}
             error={error}
             required={screen.isRequired()}
-            multiline={screen.uiConfig?.layout === 'grid'}
+            multiline={screen.uiConfig?.multiline ?? false}
+            numberOfLines={screen.uiConfig?.rows ?? 1}
+            maxLength={screen.validation?.max_length}
+            showCharacterCount={screen.uiConfig?.show_character_count ?? false}
+            warningThreshold={screen.uiConfig?.character_count_warning_threshold ?? 0.9}
           />
         );
 
       case 'single_select':
         return (
           <SingleSelectChips
-            options={screen.options || []}
+            options={visibleOptions}
             value={(value as string | number) || null}
             onChange={val => onChange(val)}
             error={error}
-            allowCustomInput={screen.options?.some(opt => opt.allow_custom_input)}
+            allowCustomInput={visibleOptions.some(opt => opt.allow_custom_input)}
             customInputPlaceholder={
-              screen.options?.find(opt => opt.allow_custom_input)?.custom_input_placeholder
+              visibleOptions.find(opt => opt.allow_custom_input)?.custom_input_placeholder
             }
             onCustomInput={customValue => {
               // Find the "other" option and use its value
-              const otherOption = screen.options?.find(opt => opt.allow_custom_input);
+              const otherOption = visibleOptions.find(opt => opt.allow_custom_input);
               if (otherOption) {
                 onChange(customValue);
               }
@@ -70,7 +88,7 @@ function QuestionRendererComponent({ screen, value, onChange, error }: QuestionR
       case 'multi_select':
         return (
           <MultiSelectChips
-            options={screen.options || []}
+            options={visibleOptions}
             value={(value as (string | number)[]) || []}
             onChange={vals => onChange(vals as AnswerValue)}
             error={error}

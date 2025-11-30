@@ -1,3 +1,4 @@
+import { injectable } from 'tsyringe';
 import { Answer } from '../entities/Answer';
 import type { ValidationRule } from '../common';
 import { Result } from '../entities/Result';
@@ -10,6 +11,7 @@ import type { IValidationService, ValidationResult } from './IValidationService'
  * Validates answers against validation rules.
  * Pure domain logic with no external dependencies.
  */
+@injectable()
 export class ValidationService implements IValidationService {
   validate(answer: Answer, rule: ValidationRule): Result<ValidationResult, Error> {
     try {

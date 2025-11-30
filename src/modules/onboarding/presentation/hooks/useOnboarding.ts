@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { OnboardingFlow } from '../../domain/entities/OnboardingFlow';
 import { Screen } from '../../domain/entities/Screen';
 import { QuestionId } from '../../domain/entities/QuestionId';
-import { FetchOnboardingFlowUseCase } from '../../application/use-cases/FetchOnboardingFlow';
-import { SubmitOnboardingAnswersUseCase } from '../../application/use-cases/SubmitOnboardingAnswers';
-import { SaveProgressUseCase } from '../../application/use-cases/SaveProgress';
+import type { IFetchOnboardingFlowUseCase } from '../../domain/use-cases/IFetchOnboardingFlowUseCase';
+import type { ISubmitOnboardingAnswersUseCase } from '../../domain/use-cases/ISubmitOnboardingAnswersUseCase';
+import type { ISaveProgressUseCase } from '../../domain/use-cases/ISaveProgressUseCase';
 import { ConditionalLogicService } from '../../domain/services/ConditionalLogicService';
 import type { AnswerValue, Answers } from '../../domain/common';
 import type { OnboardingEventCallbacks } from '../events/OnboardingEvents';
@@ -44,9 +44,9 @@ export interface UseOnboardingReturn {
  * Main hook for onboarding flow management
  */
 export function useOnboarding(
-  fetchFlowUseCase: FetchOnboardingFlowUseCase,
-  submitAnswersUseCase: SubmitOnboardingAnswersUseCase,
-  saveProgressUseCase: SaveProgressUseCase,
+  fetchFlowUseCase: IFetchOnboardingFlowUseCase,
+  submitAnswersUseCase: ISubmitOnboardingAnswersUseCase,
+  saveProgressUseCase: ISaveProgressUseCase,
   options: UseOnboardingOptions = {},
 ): UseOnboardingReturn {
   const { locale = 'en', flowId, autoLoad = true, onEvent } = options;
@@ -81,6 +81,9 @@ export function useOnboarding(
           setAnswers({});
           setLoading(false);
 
+          // Update flowId ref
+          flowIdRef.current = loadedFlow.id;
+
           // Emit flow started event
           onEvent?.onFlowStarted?.({
             flowId: loadedFlow.id,
@@ -90,15 +93,13 @@ export function useOnboarding(
           });
 
           // Try to load saved progress
-          if (flowIdRef.current) {
-            saveProgressUseCase.loadProgress(flowIdRef.current).then(progressResult => {
-              if (progressResult.isSuccess && progressResult.getValue()) {
-                const progress = progressResult.getValue()!;
-                setCurrentStep(progress.currentStep);
-                setAnswers(progress.answers);
-              }
-            });
-          }
+          saveProgressUseCase.loadProgress(loadedFlow.id).then(progressResult => {
+            if (progressResult.isSuccess && progressResult.getValue()) {
+              const progress = progressResult.getValue()!;
+              setCurrentStep(progress.currentStep);
+              setAnswers(progress.answers);
+            }
+          });
         },
         err => {
           setError(err);

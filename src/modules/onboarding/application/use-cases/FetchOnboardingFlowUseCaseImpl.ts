@@ -1,3 +1,4 @@
+import { injectable, inject } from 'tsyringe';
 import { Locale } from '../../domain/entities/Locale';
 import { OnboardingFlow } from '../../domain/entities/OnboardingFlow';
 import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
@@ -6,6 +7,8 @@ import { Result } from '../../domain/entities/Result';
 import { NetworkError } from '../../domain/entities/Errors';
 import { OnboardingFlowMapper } from '../mappers/OnboardingFlowMapper';
 import type { OnboardingFlowDTO } from '../dto/OnboardingFlowDTO';
+import { DI_TOKENS } from '../../di/tokens';
+import type { IFetchOnboardingFlowUseCase } from '../../domain/use-cases/IFetchOnboardingFlowUseCase';
 
 /**
  * Fetch Onboarding Flow Use Case
@@ -13,13 +16,15 @@ import type { OnboardingFlowDTO } from '../dto/OnboardingFlowDTO';
  * Orchestrates fetching an onboarding flow with caching support.
  * This is the main use case for loading onboarding configuration.
  */
-export class FetchOnboardingFlowUseCase {
+@injectable()
+export class FetchOnboardingFlowUseCaseImpl implements IFetchOnboardingFlowUseCase {
   private readonly CACHE_TTL = 3600000; // 1 hour in milliseconds
   private readonly CACHE_KEY_PREFIX = 'onboarding_flow_';
 
   constructor(
+    @inject(DI_TOKENS.IOnboardingRepository)
     private readonly onboardingRepository: IOnboardingRepository,
-    private readonly storageRepository: IStorageRepository,
+    @inject(DI_TOKENS.IStorageRepository) private readonly storageRepository: IStorageRepository,
   ) {}
 
   async execute(locale: string): Promise<Result<OnboardingFlow, Error>> {
@@ -30,8 +35,9 @@ export class FetchOnboardingFlowUseCase {
       // Try cache first
       const cachedResult: Result<{ flow: OnboardingFlow; cachedAt: number } | null, Error> =
         await this.getCachedFlow(cacheKey);
+      let cached: { flow: OnboardingFlow; cachedAt: number } | null = null;
       if (cachedResult.isSuccess) {
-        const cached = cachedResult.getValue();
+        cached = cachedResult.getValue();
         if (cached && !this.isCacheExpired(cached)) {
           return Result.ok(cached.flow);
         }
@@ -41,9 +47,8 @@ export class FetchOnboardingFlowUseCase {
       const fetchResult: Result<OnboardingFlow, Error> =
         await this.onboardingRepository.fetchFlow(localeVO);
       if (fetchResult.isFailure) {
-        // If network error, try to serve cached version
+        // If network error, try to serve cached version (even if expired)
         if (fetchResult.getError() instanceof NetworkError) {
-          const cached = cachedResult.isSuccess ? cachedResult.getValue() : null;
           if (cached) {
             return Result.ok(cached.flow);
           }

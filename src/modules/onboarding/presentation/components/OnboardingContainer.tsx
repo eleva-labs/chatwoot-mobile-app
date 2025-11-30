@@ -9,19 +9,19 @@ import { useNetworkState } from '../hooks/useNetworkState';
 import { ProgressBar } from './ProgressBar';
 import { QuestionRenderer } from './QuestionRenderer';
 import { NavigationFooter } from './NavigationFooter';
-import { FetchOnboardingFlowUseCase } from '../../application/use-cases/FetchOnboardingFlow';
-import { SubmitOnboardingAnswersUseCase } from '../../application/use-cases/SubmitOnboardingAnswers';
-import { SaveProgressUseCase } from '../../application/use-cases/SaveProgress';
-import { ValidateAnswerUseCase } from '../../application/use-cases/ValidateAnswer';
-import { ProcessOfflineQueueUseCase } from '../../application/use-cases/ProcessOfflineQueue';
+import type { IFetchOnboardingFlowUseCase } from '../../domain/use-cases/IFetchOnboardingFlowUseCase';
+import type { ISubmitOnboardingAnswersUseCase } from '../../domain/use-cases/ISubmitOnboardingAnswersUseCase';
+import type { ISaveProgressUseCase } from '../../domain/use-cases/ISaveProgressUseCase';
+import type { IValidateAnswerUseCase } from '../../domain/use-cases/IValidateAnswerUseCase';
+import type { IProcessOfflineQueueUseCase } from '../../domain/use-cases/IProcessOfflineQueueUseCase';
 import type { UseOnboardingOptions } from '../hooks/useOnboarding';
 
 interface OnboardingContainerProps extends UseOnboardingOptions {
-  fetchFlowUseCase: FetchOnboardingFlowUseCase;
-  submitAnswersUseCase: SubmitOnboardingAnswersUseCase;
-  saveProgressUseCase: SaveProgressUseCase;
-  validateAnswerUseCase: ValidateAnswerUseCase;
-  processOfflineQueueUseCase?: ProcessOfflineQueueUseCase;
+  fetchFlowUseCase: IFetchOnboardingFlowUseCase;
+  submitAnswersUseCase: ISubmitOnboardingAnswersUseCase;
+  saveProgressUseCase: ISaveProgressUseCase;
+  validateAnswerUseCase: IValidateAnswerUseCase;
+  processOfflineQueueUseCase?: IProcessOfflineQueueUseCase;
   onComplete?: () => void;
   onSkip?: () => void;
 }
@@ -206,6 +206,7 @@ export function OnboardingContainer({
             validation.clearError(onboarding.currentScreen!.id.toString());
           }}
           error={error}
+          answers={onboarding.answers}
         />
 
         {/* Navigation Footer */}

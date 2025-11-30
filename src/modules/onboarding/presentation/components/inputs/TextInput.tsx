@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TextInput as RNTextInput } from 'react-native';
 import { useThemedStyles } from '@/hooks/useThemedStyles';
 
@@ -11,6 +11,9 @@ interface TextInputProps {
   multiline?: boolean;
   numberOfLines?: number;
   autoFocus?: boolean;
+  maxLength?: number;
+  showCharacterCount?: boolean;
+  warningThreshold?: number; // 0.0-1.0, default 0.9
 }
 
 /**
@@ -25,9 +28,30 @@ export function TextInput({
   multiline = false,
   numberOfLines = 1,
   autoFocus = false,
+  maxLength,
+  showCharacterCount = false,
+  warningThreshold = 0.9,
 }: TextInputProps) {
   const themedStyles = useThemedStyles();
   const [isFocused, setIsFocused] = useState(false);
+
+  // Calculate character count status
+  const characterCountStatus = useMemo(() => {
+    if (!maxLength || !showCharacterCount) return null;
+
+    const currentLength = value.length;
+    const remaining = maxLength - currentLength;
+    const percentage = currentLength / maxLength;
+    const isWarning = percentage >= warningThreshold;
+    const isError = currentLength >= maxLength;
+
+    return {
+      remaining,
+      percentage,
+      isWarning,
+      isError,
+    };
+  }, [value, maxLength, showCharacterCount, warningThreshold]);
 
   return (
     <View style={themedStyles.style('w-full')}>
@@ -39,6 +63,7 @@ export function TextInput({
         multiline={multiline}
         numberOfLines={numberOfLines}
         autoFocus={autoFocus}
+        maxLength={maxLength}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         style={themedStyles.style(
@@ -55,6 +80,27 @@ export function TextInput({
         accessibilityHint={required ? 'Required field' : 'Optional field'}
         accessibilityState={{ invalid: !!error }}
       />
+
+      {/* Character counter */}
+      {characterCountStatus && (
+        <Text
+          style={themedStyles.style(
+            'text-xs mt-1 text-right',
+            characterCountStatus.isError
+              ? 'text-ruby-500 font-semibold'
+              : characterCountStatus.isWarning
+                ? 'text-orange-500 font-medium'
+                : 'text-gray-500',
+          )}
+          accessible
+          accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}
+        >
+          {characterCountStatus.remaining} character
+          {characterCountStatus.remaining !== 1 ? 's' : ''} remaining
+        </Text>
+      )}
+
+      {/* Error message */}
       {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-1')}>{error}</Text>}
     </View>
   );

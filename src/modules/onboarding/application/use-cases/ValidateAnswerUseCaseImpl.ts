@@ -1,3 +1,4 @@
+import { injectable, inject } from 'tsyringe';
 import { Answer } from '../../domain/entities/Answer';
 import { QuestionId } from '../../domain/entities/QuestionId';
 import type {
@@ -6,14 +7,19 @@ import type {
 } from '../../domain/services/IValidationService';
 import type { AnswerValue, ValidationRule } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
+import { DI_TOKENS } from '../../di/tokens';
+import type { IValidateAnswerUseCase } from '../../domain/use-cases/IValidateAnswerUseCase';
 
 /**
  * Validate Answer Use Case
  *
  * Orchestrates answer validation against validation rules.
  */
-export class ValidateAnswerUseCase {
-  constructor(private readonly validationService: IValidationService) {}
+@injectable()
+export class ValidateAnswerUseCaseImpl implements IValidateAnswerUseCase {
+  constructor(
+    @inject(DI_TOKENS.ValidationService) private readonly validationService: IValidationService,
+  ) {}
 
   async execute(
     questionId: string,

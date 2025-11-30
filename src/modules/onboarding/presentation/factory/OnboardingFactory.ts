@@ -1,95 +1,55 @@
 /**
  * Onboarding Factory
  *
- * Creates and wires up all dependencies for the onboarding module.
- * This factory handles all the complexity of creating repositories, services, and use cases.
+ * Creates and wires up all dependencies for the onboarding module using TSyringe DI container.
+ * This factory provides a simple API over the DI container.
  */
 
-import { AxiosOnboardingRepository } from '../../infrastructure/api/AxiosOnboardingRepository';
-import { MockOnboardingRepository } from '../../infrastructure/api/MockOnboardingRepository';
-import { AsyncStorageRepository } from '../../infrastructure/storage/AsyncStorageRepository';
-import { ValidationService } from '../../domain/services/ValidationService';
-import { FetchOnboardingFlowUseCase } from '../../application/use-cases/FetchOnboardingFlow';
-import { SubmitOnboardingAnswersUseCase } from '../../application/use-cases/SubmitOnboardingAnswers';
-import { SaveProgressUseCase } from '../../application/use-cases/SaveProgress';
-import { ValidateAnswerUseCase } from '../../application/use-cases/ValidateAnswer';
-import { OfflineQueue } from '../../infrastructure/queue/OfflineQueue';
-import { ProcessOfflineQueueUseCase } from '../../application/use-cases/ProcessOfflineQueue';
-import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
-import type { IStorageRepository } from '../../domain/repositories/IStorageRepository';
+import { container } from 'tsyringe';
+import { configureOnboardingContainer, type OnboardingContainerOptions } from '../../di/container';
+import { FetchOnboardingFlowUseCaseImpl } from '../../application/use-cases/FetchOnboardingFlowUseCaseImpl';
+import { SubmitOnboardingAnswersUseCaseImpl } from '../../application/use-cases/SubmitOnboardingAnswersUseCaseImpl';
+import { SaveProgressUseCaseImpl } from '../../application/use-cases/SaveProgressUseCaseImpl';
+import { ValidateAnswerUseCaseImpl } from '../../application/use-cases/ValidateAnswerUseCaseImpl';
+import { ProcessOfflineQueueUseCaseImpl } from '../../application/use-cases/ProcessOfflineQueueUseCaseImpl';
+import type { IFetchOnboardingFlowUseCase } from '../../domain/use-cases/IFetchOnboardingFlowUseCase';
+import type { ISubmitOnboardingAnswersUseCase } from '../../domain/use-cases/ISubmitOnboardingAnswersUseCase';
+import type { ISaveProgressUseCase } from '../../domain/use-cases/ISaveProgressUseCase';
+import type { IValidateAnswerUseCase } from '../../domain/use-cases/IValidateAnswerUseCase';
+import type { IProcessOfflineQueueUseCase } from '../../domain/use-cases/IProcessOfflineQueueUseCase';
 
 export interface OnboardingDependencies {
-  fetchFlowUseCase: FetchOnboardingFlowUseCase;
-  submitAnswersUseCase: SubmitOnboardingAnswersUseCase;
-  saveProgressUseCase: SaveProgressUseCase;
-  validateAnswerUseCase: ValidateAnswerUseCase;
-  processOfflineQueueUseCase?: ProcessOfflineQueueUseCase;
+  fetchFlowUseCase: IFetchOnboardingFlowUseCase;
+  submitAnswersUseCase: ISubmitOnboardingAnswersUseCase;
+  saveProgressUseCase: ISaveProgressUseCase;
+  validateAnswerUseCase: IValidateAnswerUseCase;
+  processOfflineQueueUseCase?: IProcessOfflineQueueUseCase;
 }
 
-export interface OnboardingFactoryOptions {
-  /**
-   * Custom onboarding repository (optional)
-   * If not provided, uses MockOnboardingRepository
-   */
-  onboardingRepository?: IOnboardingRepository;
-
-  /**
-   * Custom storage repository (optional)
-   * If not provided, uses AsyncStorageRepository
-   */
-  storageRepository?: IStorageRepository;
-
-  /**
-   * Enable offline queue (default: true)
-   */
-  enableOfflineQueue?: boolean;
-
-  /**
-   * Use mock repository instead of real API (default: true)
-   * Set to false when backend is ready
-   */
-  useMock?: boolean;
-}
+export type OnboardingFactoryOptions = OnboardingContainerOptions;
 
 /**
- * Factory function to create all onboarding dependencies
+ * Factory function to create all onboarding dependencies using DI container
  *
- * This handles all the complexity of wiring up repositories, services, and use cases.
- * Users don't need to know about these internal details.
+ * This configures the DI container and resolves all use cases.
+ * Users don't need to know about the internal wiring.
  */
 export function createOnboardingDependencies(
   options: OnboardingFactoryOptions = {},
 ): OnboardingDependencies {
-  // Create repositories with defaults
-  // Use mock repository by default until backend is ready
-  const useMock = options.useMock !== false; // Default: true
-  const onboardingRepository =
-    options.onboardingRepository ||
-    (useMock ? new MockOnboardingRepository() : new AxiosOnboardingRepository());
-  const storageRepository = options.storageRepository || new AsyncStorageRepository();
+  // Configure the DI container
+  configureOnboardingContainer(options);
 
-  // Create domain services
-  const validationService = new ValidationService();
+  // Resolve use cases from the container by class (auto-injection)
+  const fetchFlowUseCase = container.resolve(FetchOnboardingFlowUseCaseImpl);
+  const submitAnswersUseCase = container.resolve(SubmitOnboardingAnswersUseCaseImpl);
+  const saveProgressUseCase = container.resolve(SaveProgressUseCaseImpl);
+  const validateAnswerUseCase = container.resolve(ValidateAnswerUseCaseImpl);
 
-  // Create offline queue if enabled
-  const enableOfflineQueue = options.enableOfflineQueue !== false; // Default: true
-  const offlineQueue = enableOfflineQueue ? new OfflineQueue(storageRepository) : undefined;
-
-  // Create use cases
-  const fetchFlowUseCase = new FetchOnboardingFlowUseCase(onboardingRepository, storageRepository);
-
-  const submitAnswersUseCase = new SubmitOnboardingAnswersUseCase(
-    onboardingRepository,
-    offlineQueue, // Pass offline queue if enabled
-  );
-
-  const saveProgressUseCase = new SaveProgressUseCase(storageRepository);
-
-  const validateAnswerUseCase = new ValidateAnswerUseCase(validationService);
-
-  const processOfflineQueueUseCase = offlineQueue
-    ? new ProcessOfflineQueueUseCase(onboardingRepository, offlineQueue)
-    : undefined;
+  const processOfflineQueueUseCase =
+    options.enableOfflineQueue !== false
+      ? container.resolve(ProcessOfflineQueueUseCaseImpl)
+      : undefined;
 
   return {
     fetchFlowUseCase,
@@ -124,4 +84,5 @@ export function getDefaultOnboardingDependencies(
  */
 export function resetDefaultOnboardingDependencies(): void {
   defaultDependencies = null;
+  container.clearInstances();
 }

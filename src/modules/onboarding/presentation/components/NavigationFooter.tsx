@@ -55,7 +55,9 @@ export function NavigationFooter({
   };
 
   const isSkippable: boolean = Boolean(currentScreen?.isSkippable()) ?? false;
-  const skipButtonText: string = currentScreen?.getSkipButtonText() || t(TranslationKeys.SKIP);
+  // Use custom translation if provided, otherwise use screen's skip text, otherwise use default
+  const skipButtonText: string =
+    customTranslations?.skip || currentScreen?.getSkipButtonText() || t(TranslationKeys.SKIP);
 
   return (
     <View style={themedStyles.style('w-full px-4 py-4 border-t border-gray-200 bg-white')}>

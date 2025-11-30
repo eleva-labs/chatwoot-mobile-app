@@ -1,3 +1,4 @@
+import { injectable } from 'tsyringe';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { IStorageRepository } from '../../domain/repositories/IStorageRepository';
 import { Result } from '../../domain/entities/Result';
@@ -8,6 +9,7 @@ import { StorageError } from '../../domain/entities/Errors';
  *
  * Uses React Native's AsyncStorage for local persistence.
  */
+@injectable()
 export class AsyncStorageRepository implements IStorageRepository {
   async save(key: string, value: unknown): Promise<Result<void, Error>> {
     try {
@@ -17,8 +19,8 @@ export class AsyncStorageRepository implements IStorageRepository {
     } catch (error) {
       return Result.fail(
         error instanceof Error
-          ? error
-          : new StorageError('Failed to save to storage', error as Error),
+          ? new StorageError('Failed to save', error)
+          : new StorageError('Failed to save', error as Error),
       );
     }
   }
@@ -33,15 +35,15 @@ export class AsyncStorageRepository implements IStorageRepository {
       const parsed: T = JSON.parse(value) as T;
       return Result.ok(parsed);
     } catch (error) {
-      // If JSON parse fails, return null (key doesn't exist or corrupted)
+      // If JSON parse fails, return failure with error message
       if (error instanceof SyntaxError) {
-        return Result.ok(null);
+        return Result.fail(new StorageError('Failed to get', error));
       }
 
       return Result.fail(
         error instanceof Error
-          ? error
-          : new StorageError('Failed to get from storage', error as Error),
+          ? new StorageError('Failed to get', error)
+          : new StorageError('Failed to get', error as Error),
       );
     }
   }
@@ -53,8 +55,8 @@ export class AsyncStorageRepository implements IStorageRepository {
     } catch (error) {
       return Result.fail(
         error instanceof Error
-          ? error
-          : new StorageError('Failed to remove from storage', error as Error),
+          ? new StorageError('Failed to remove', error)
+          : new StorageError('Failed to remove', error as Error),
       );
     }
   }
@@ -79,8 +81,8 @@ export class AsyncStorageRepository implements IStorageRepository {
     } catch (error) {
       return Result.fail(
         error instanceof Error
-          ? error
-          : new StorageError('Failed to clear storage', error as Error),
+          ? new StorageError('Failed to clear', error)
+          : new StorageError('Failed to clear', error as Error),
       );
     }
   }

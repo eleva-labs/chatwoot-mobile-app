@@ -322,10 +322,7 @@ export function OnboardingModule({
           isLastStep={isLastStep}
           onNext={handleNext}
           onPrevious={onboarding.goToPrevious}
-          onSkip={() => {
-            onboarding.skipQuestion();
-            onSkip?.();
-          }}
+          onSkip={onboarding.skipQuestion}
           onSubmit={handleSubmit}
           loading={onboarding.loading}
           locale={locale}

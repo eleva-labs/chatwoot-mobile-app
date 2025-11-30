@@ -92,16 +92,20 @@ export function addTranslations(locale: string, translations: Record<string, str
  * Check if a locale is supported
  */
 export function isLocaleSupported(locale: string): boolean {
-  return locale in onboardingI18n.translations && 'onboarding' in (onboardingI18n.translations[locale] || {});
+  return (
+    locale in onboardingI18n.translations &&
+    'onboarding' in (onboardingI18n.translations[locale] || {})
+  );
 }
 
 /**
  * Get all available locales
  */
 export function getAvailableLocales(): string[] {
-  return Object.keys(onboardingI18n.translations).filter(
-    locale => onboardingI18n.translations[locale]?.onboarding
-  );
+  return Object.keys(onboardingI18n.translations).filter(locale => {
+    const translation = onboardingI18n.translations[locale] as Record<string, unknown> | undefined;
+    return translation && 'onboarding' in translation;
+  });
 }
 
 // Export translation keys for type safety

@@ -1,18 +1,23 @@
+import { injectable, inject } from 'tsyringe';
 import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
 import { OfflineQueue, QueuedSubmission } from '../../infrastructure/queue/OfflineQueue';
 import { Result } from '../../domain/entities/Result';
 import { NetworkError } from '../../domain/entities/Errors';
 import { logger } from '../../shared/utils/logger';
+import { DI_TOKENS } from '../../di/tokens';
+import type { IProcessOfflineQueueUseCase } from '../../domain/use-cases/IProcessOfflineQueueUseCase';
 
 /**
  * Process Offline Queue Use Case
  *
  * Processes queued submissions when the device comes online.
  */
-export class ProcessOfflineQueueUseCase {
+@injectable()
+export class ProcessOfflineQueueUseCaseImpl implements IProcessOfflineQueueUseCase {
   constructor(
+    @inject(DI_TOKENS.IOnboardingRepository)
     private readonly onboardingRepository: IOnboardingRepository,
-    private readonly offlineQueue: OfflineQueue,
+    @inject(DI_TOKENS.OfflineQueue) private readonly offlineQueue: OfflineQueue,
   ) {}
 
   /**

@@ -1,16 +1,22 @@
+import { injectable, inject } from 'tsyringe';
 import type { IStorageRepository } from '../../domain/repositories/IStorageRepository';
 import type { Answers } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
+import { DI_TOKENS } from '../../di/tokens';
+import type { ISaveProgressUseCase } from '../../domain/use-cases/ISaveProgressUseCase';
 
 /**
  * Save Progress Use Case
  *
  * Saves onboarding progress locally so users can resume later.
  */
-export class SaveProgressUseCase {
+@injectable()
+export class SaveProgressUseCaseImpl implements ISaveProgressUseCase {
   private readonly PROGRESS_KEY_PREFIX = 'onboarding_progress_';
 
-  constructor(private readonly storageRepository: IStorageRepository) {}
+  constructor(
+    @inject(DI_TOKENS.IStorageRepository) private readonly storageRepository: IStorageRepository,
+  ) {}
 
   async execute(
     flowId: string,

@@ -1,7 +1,9 @@
+import { injectable, inject } from 'tsyringe';
 import type { IStorageRepository } from '../../domain/repositories/IStorageRepository';
 import type { Answers } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
 import { StorageError } from '../../domain/entities/Errors';
+import { DI_TOKENS } from '../../di/tokens';
 
 /**
  * Offline Queue Item
@@ -18,38 +20,59 @@ export interface QueuedSubmission {
  *
  * Manages a queue of answers to be submitted when the device comes online.
  */
+@injectable()
 export class OfflineQueue {
   private readonly QUEUE_KEY = 'onboarding_offline_queue';
   private readonly MAX_RETRIES = 3;
+  private enqueueLock: Promise<Result<void, Error>> = Promise.resolve(Result.ok(undefined));
 
-  constructor(private readonly storageRepository: IStorageRepository) {}
+  constructor(
+    @inject(DI_TOKENS.IStorageRepository) private readonly storageRepository: IStorageRepository,
+  ) {}
 
   /**
    * Add answers to the offline queue
    */
   async enqueue(flowId: string, answers: Answers): Promise<Result<void, Error>> {
-    try {
-      const queueResult: Result<QueuedSubmission[], Error> = await this.getQueue();
-      if (queueResult.isFailure) {
-        return Result.fail(queueResult.getError());
+    // Use a lock to prevent race conditions in concurrent enqueue operations
+    const previousLock = this.enqueueLock;
+    let resolveLock: (value: Result<void, Error>) => void;
+    const newLock = new Promise<Result<void, Error>>(resolve => {
+      resolveLock = resolve;
+    });
+
+    this.enqueueLock = previousLock.then(async (): Promise<Result<void, Error>> => {
+      try {
+        const queueResult: Result<QueuedSubmission[], Error> = await this.getQueue();
+        if (queueResult.isFailure) {
+          const result = Result.fail(queueResult.getError());
+          resolveLock!(result);
+          return result;
+        }
+
+        const queue: QueuedSubmission[] = queueResult.getValue() || [];
+        const newItem: QueuedSubmission = {
+          flowId,
+          answers,
+          timestamp: Date.now(),
+          retryCount: 0,
+        };
+
+        queue.push(newItem);
+
+        const result = await this.saveQueue(queue);
+        resolveLock!(result);
+        return result;
+      } catch (error) {
+        const result = Result.fail(
+          error instanceof Error ? error : new StorageError('Failed to enqueue submission'),
+        );
+        resolveLock!(result);
+        return result;
       }
+    });
 
-      const queue: QueuedSubmission[] = queueResult.getValue() || [];
-      const newItem: QueuedSubmission = {
-        flowId,
-        answers,
-        timestamp: Date.now(),
-        retryCount: 0,
-      };
-
-      queue.push(newItem);
-
-      return this.saveQueue(queue);
-    } catch (error) {
-      return Result.fail(
-        error instanceof Error ? error : new StorageError('Failed to enqueue submission'),
-      );
-    }
+    return newLock;
   }
 
   /**
