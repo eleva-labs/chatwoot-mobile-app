@@ -1,5 +1,14 @@
 import { Alert, Platform } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
+import { getApp } from '@react-native-firebase/app';
+import {
+  getMessaging,
+  AuthorizationStatus,
+  hasPermission,
+  getToken,
+  onMessage,
+  onNotificationOpenedApp,
+  getInitialNotification,
+} from '@react-native-firebase/messaging';
 import { getApps } from '@react-native-firebase/app';
 
 /**
@@ -33,13 +42,14 @@ export const checkNotificationPermissions = async (): Promise<number | null> => 
       return null;
     }
 
-    const authStatus = await messaging().hasPermission();
+    const messaging = getMessaging(getApp());
+    const authStatus = await hasPermission(messaging);
 
     const permissionStatus: Record<number, string> = {
-      [messaging.AuthorizationStatus.NOT_DETERMINED]: 'Not Determined',
-      [messaging.AuthorizationStatus.DENIED]: 'Denied',
-      [messaging.AuthorizationStatus.AUTHORIZED]: 'Authorized',
-      [messaging.AuthorizationStatus.PROVISIONAL]: 'Provisional',
+      [AuthorizationStatus.NOT_DETERMINED]: 'Not Determined',
+      [AuthorizationStatus.DENIED]: 'Denied',
+      [AuthorizationStatus.AUTHORIZED]: 'Authorized',
+      [AuthorizationStatus.PROVISIONAL]: 'Provisional',
     };
 
     const label = permissionStatus[Number(authStatus)] ?? 'Unknown';
@@ -70,7 +80,8 @@ export const getFCMToken = async (): Promise<string | null> => {
       return null;
     }
 
-    const token = await messaging().getToken();
+    const messaging = getMessaging(getApp());
+    const token = await getToken(messaging);
     // eslint-disable-next-line no-console
     console.log('=== FCM Token ===');
     // eslint-disable-next-line no-console
@@ -97,18 +108,18 @@ export const logNotificationListeners = (): (() => void) => {
   }
 
   try {
-    const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+    const messaging = getMessaging(getApp());
+    const unsubscribeForeground = onMessage(messaging, async remoteMessage => {
       // eslint-disable-next-line no-console
       console.log('Foreground notification received:', remoteMessage);
     });
 
-    const unsubscribeBackground = messaging().onNotificationOpenedApp(remoteMessage => {
+    const unsubscribeBackground = onNotificationOpenedApp(messaging, remoteMessage => {
       // eslint-disable-next-line no-console
       console.log('App opened from background notification:', remoteMessage);
     });
 
-    messaging()
-      .getInitialNotification()
+    getInitialNotification(messaging)
       .then(remoteMessage => {
         if (remoteMessage) {
           // eslint-disable-next-line no-console
