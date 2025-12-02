@@ -1,7 +1,7 @@
 /**
  * Tests for AxiosOnboardingRepository
  *
- * Tests the repository implementation using Axios/APIService.
+ * Tests the repository implementation using fetch for S3 and APIService for API calls.
  */
 
 import { AxiosOnboardingRepository } from '../../../infrastructure/api/AxiosOnboardingRepository';
@@ -27,7 +27,10 @@ function createAxiosError(message: string, status?: number): AxiosError {
   return error;
 }
 
-// Mock APIService
+// Mock global fetch
+global.fetch = jest.fn();
+
+// Mock APIService (still used for submitAnswers and validateField)
 jest.mock('@/services/APIService', () => ({
   apiService: {
     get: jest.fn(),
@@ -35,69 +38,97 @@ jest.mock('@/services/APIService', () => ({
   },
 }));
 
-// Mock OnboardingFlowMapper - use a simpler mock that returns a basic flow object
-jest.mock('../../../application/mappers/OnboardingFlowMapper', () => ({
-  OnboardingFlowMapper: {
-    toDomain: jest.fn((dto: any) => {
-      // Return a minimal OnboardingFlow-like object
-      // The actual mapper will be tested separately
-      return {
-        id: { toString: () => dto.onboarding_flow.id },
-        version: { toString: () => dto.onboarding_flow.version },
-        locale: { toString: () => dto.onboarding_flow.locale },
-        title: dto.onboarding_flow.title,
-        screens: dto.onboarding_flow.screens || [],
-      };
-    }),
-  },
-}));
+// Don't mock OnboardingFlowMapper - use the actual implementation
+// This ensures we're testing the real mapping logic
 
 describe('AxiosOnboardingRepository', () => {
   let repository: AxiosOnboardingRepository;
   const mockApiService = apiService as jest.Mocked<typeof apiService>;
+  const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
 
   beforeEach(() => {
+    // Set up environment variable for S3_BASE_URL
+    process.env.EXPO_PUBLIC_S3_BASE_URL = 'https://s3.example.com';
     repository = new AxiosOnboardingRepository();
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    delete process.env.EXPO_PUBLIC_S3_BASE_URL;
+    delete process.env.S3_BASE_URL;
   });
 
   describe('fetchFlow()', () => {
     it('should fetch flow successfully', async () => {
       const locale = Locale.create('en');
+      // Use the exact same structure as MockOnboardingRepository to ensure it works
       const mockFlowDTO = {
         onboarding_flow: {
-          id: 'flow-1',
+          id: 'store-onboarding-v1',
           version: '1.0.0',
           locale: 'en',
-          title: 'Test Flow',
-          screens: [],
+          title: 'Store Onboarding',
+          skip_config: {
+            allow_skip_entire_flow: false,
+            track_skip_reasons: true,
+          },
+          screens: [
+            {
+              id: 'store_type',
+              type: 'single_select',
+              title: 'What type of store do you have?',
+              description: 'This helps us customize your AI assistant',
+              options: [
+                {
+                  id: 'appointment',
+                  label: 'Appointment/Service-based',
+                  value: 'appointment',
+                },
+                {
+                  id: 'product',
+                  label: 'Product/E-commerce',
+                  value: 'product',
+                },
+              ],
+              validation: {
+                required: true,
+                error_message: 'Please select your store type',
+              },
+              ui_config: {
+                layout: 'list',
+              },
+            },
+          ],
         },
       };
 
-      mockApiService.get.mockResolvedValue({
-        data: mockFlowDTO,
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
         status: 200,
         statusText: 'OK',
-        headers: {},
-        config: {} as any,
-      });
+        json: async () => mockFlowDTO,
+      } as Response);
 
       const result = await repository.fetchFlow(locale);
 
       expect(result.isSuccess).toBe(true);
-      expect(mockApiService.get).toHaveBeenCalledWith('onboarding/flows/en');
+      if (result.isSuccess) {
+        expect(result.getValue()).toBeDefined();
+        expect(result.getValue().id).toBe('store-onboarding-v1');
+      }
+      expect(mockFetch).toHaveBeenCalledWith('https://s3.example.com/onboarding/en.json');
     });
 
     it('should return NotFoundError when response has no data', async () => {
       const locale = Locale.create('en');
 
-      mockApiService.get.mockResolvedValue({
-        data: null,
+      // When json() returns null or falsy, the code should return NotFoundError
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
         status: 200,
         statusText: 'OK',
-        headers: {},
-        config: {} as any,
-      });
+        json: async () => null as any,
+      } as Response);
 
       const result = await repository.fetchFlow(locale);
 
@@ -107,9 +138,16 @@ describe('AxiosOnboardingRepository', () => {
 
     it('should return NotFoundError for 404 status', async () => {
       const locale = Locale.create('en');
-      const axiosError = createAxiosError('Not Found', 404);
 
-      mockApiService.get.mockRejectedValue(axiosError);
+      // For 404, the code checks response.ok before calling json()
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        json: async () => {
+          throw new Error('Should not call json() on 404');
+        },
+      } as Response);
 
       const result = await repository.fetchFlow(locale);
 
@@ -118,11 +156,15 @@ describe('AxiosOnboardingRepository', () => {
       expect(result.getError().message).toContain('en');
     });
 
-    it('should return NetworkError for other Axios errors', async () => {
+    it('should return NetworkError for other HTTP errors', async () => {
       const locale = Locale.create('en');
-      const axiosError = createAxiosError('Network Error', 500);
 
-      mockApiService.get.mockRejectedValue(axiosError);
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: async () => ({}),
+      } as Response);
 
       const result = await repository.fetchFlow(locale);
 
@@ -130,29 +172,28 @@ describe('AxiosOnboardingRepository', () => {
       expect(result.getError()).toBeInstanceOf(NetworkError);
     });
 
-    it('should return NetworkError for non-Axios errors', async () => {
+    it('should return NetworkError for fetch errors', async () => {
       const locale = Locale.create('en');
 
-      mockApiService.get.mockRejectedValue(new Error('Generic error'));
-
-      const result = await repository.fetchFlow(locale);
-
-      expect(result.isFailure).toBe(true);
-      // The code returns the Error directly if it's an Error instance, not wrapped in NetworkError
-      expect(result.getError()).toBeInstanceOf(Error);
-      expect(result.getError().message).toBe('Generic error');
-    });
-
-    it('should handle errors without response object', async () => {
-      const locale = Locale.create('en');
-      const axiosError = createAxiosError('Network Error');
-
-      mockApiService.get.mockRejectedValue(axiosError);
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
       const result = await repository.fetchFlow(locale);
 
       expect(result.isFailure).toBe(true);
       expect(result.getError()).toBeInstanceOf(NetworkError);
+      expect(result.getError().message).toContain('Failed to fetch onboarding flow');
+    });
+
+    it('should handle errors when S3_BASE_URL is not set', async () => {
+      delete process.env.EXPO_PUBLIC_S3_BASE_URL;
+      delete process.env.S3_BASE_URL;
+      const locale = Locale.create('en');
+
+      const result = await repository.fetchFlow(locale);
+
+      expect(result.isFailure).toBe(true);
+      expect(result.getError()).toBeInstanceOf(NetworkError);
+      expect(result.getError().message).toContain('S3_BASE_URL environment variable is not set');
     });
   });
 

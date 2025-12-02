@@ -22,8 +22,8 @@ import { OfflineQueue } from '../infrastructure/queue/OfflineQueue';
 
 export interface OnboardingContainerOptions {
   /**
-   * Use mock repository instead of real API (default: true)
-   * Set to false when backend is ready
+   * Use mock repository instead of real API (default: false)
+   * Set to true for testing or when backend is not available
    */
   useMock?: boolean;
 
@@ -39,7 +39,7 @@ export interface OnboardingContainerOptions {
 export function configureOnboardingContainer(
   options: OnboardingContainerOptions = {},
 ): typeof container {
-  const useMock = options.useMock !== false; // Default: true
+  const useMock = options.useMock === true; // Default: false (use AxiosOnboardingRepository)
   const enableOfflineQueue = options.enableOfflineQueue !== false; // Default: true
 
   // Register repositories

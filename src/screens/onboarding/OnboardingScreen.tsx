@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { OnboardingModule } from '@/modules/onboarding';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectLocale } from '@/store/settings/settingsSelectors';
+import { selectLocale, selectIsLocaleSet } from '@/store/settings/settingsSelectors';
 import { setOnboardingCompleted } from '@/store/settings/settingsSlice';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { TabBarExcludedScreenParamList } from '@/navigation/tabs/AppTabs';
 import { AppDispatch } from '@/store';
 import { useOnboardingAnalytics } from '@/hooks/useOnboardingAnalytics';
+import { getLocaleFromDevice } from '@/utils/localeUtils';
 
 type OnboardingScreenNavigationProp = NativeStackNavigationProp<TabBarExcludedScreenParamList>;
 
@@ -15,7 +16,21 @@ export const OnboardingScreen: React.FC = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigation: OnboardingScreenNavigationProp =
     useNavigation<OnboardingScreenNavigationProp>();
-  const locale: string = useAppSelector(selectLocale) || 'en';
+  const reduxLocale = useAppSelector(selectLocale);
+  const isLocaleSet = useAppSelector(selectIsLocaleSet);
+
+  // Use device locale if Redux locale hasn't been explicitly set by user
+  // Otherwise use the Redux locale (user's preference)
+  const locale: string = useMemo(() => {
+    if (isLocaleSet && reduxLocale) {
+      // User has explicitly set a locale preference
+      return reduxLocale;
+    }
+    // Use device locale for first-time onboarding
+    const deviceLocale = getLocaleFromDevice();
+    return deviceLocale;
+  }, [reduxLocale, isLocaleSet]);
+
   const analyticsCallbacks = useOnboardingAnalytics(locale);
 
   const handleComplete: () => void = () => {

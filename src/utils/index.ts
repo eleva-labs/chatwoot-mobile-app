@@ -17,3 +17,4 @@ export * from './customAnimations';
 export * from './priorityIcon';
 export * from './logger';
 export * from './normalizeEventName';
+export * from './localeUtils';

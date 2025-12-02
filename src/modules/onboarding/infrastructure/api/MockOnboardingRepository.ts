@@ -220,6 +220,409 @@ export class MockOnboardingRepository implements IOnboardingRepository {
         ],
       },
     },
+    es: {
+      onboarding_flow: {
+        id: 'store-onboarding-v1',
+        version: '1.0.0',
+        locale: 'es',
+        title: 'Configuración de Tienda',
+        skip_config: {
+          allow_skip_entire_flow: false,
+          track_skip_reasons: true,
+        },
+        screens: [
+          {
+            id: 'store_type',
+            type: 'single_select',
+            title: '¿Qué tipo de tienda tienes?',
+            description: 'Esto nos ayuda a personalizar tu asistente de IA',
+            options: [
+              {
+                id: 'appointment',
+                label: 'Citas/Servicios',
+                value: 'appointment',
+              },
+              {
+                id: 'product',
+                label: 'Productos/Comercio electrónico',
+                value: 'product',
+              },
+              {
+                id: 'hybrid',
+                label: 'Híbrida (Ambas)',
+                value: 'hybrid',
+              },
+            ],
+            validation: {
+              required: true,
+              error_message: 'Por favor selecciona el tipo de tienda',
+            },
+            ui_config: {
+              layout: 'list',
+            },
+          },
+          {
+            id: 'store_info',
+            type: 'text',
+            title: 'Cuéntanos sobre tu tienda y qué ofreces',
+            description: 'Describe tu tienda y los productos o servicios que ofreces',
+            placeholder:
+              'ej. Black Gold Coffee - Granos de café especiales, suscripciones y equipos para preparar café',
+            validation: {
+              required: true,
+              min_length: 10,
+              max_length: 500,
+              error_message: 'Por favor proporciona información sobre tu tienda y ofertas',
+            },
+            ui_config: {
+              multiline: true,
+              rows: 4,
+              show_value: true,
+              show_character_count: true,
+              character_count_warning_threshold: 0.85,
+            },
+          },
+          {
+            id: 'ai_assistant_objective',
+            type: 'multi_select',
+            title: '¿Qué debería hacer tu asistente de IA?',
+            description: 'Selecciona todas las funciones que apliquen',
+            options: [
+              {
+                id: 'answer_faq',
+                label: 'Responder preguntas de clientes (FAQ)',
+                value: 'answer_faq',
+              },
+              {
+                id: 'appointment_setting',
+                label: 'Reservar citas/consultas',
+                value: 'appointment_setting',
+                conditional_show: {
+                  operator: 'in',
+                  question_id: 'store_type',
+                  value: ['appointment', 'hybrid'],
+                },
+              },
+              {
+                id: 'process_orders',
+                label: 'Procesar pedidos de productos',
+                value: 'process_orders',
+                conditional_show: {
+                  operator: 'in',
+                  question_id: 'store_type',
+                  value: ['product', 'hybrid'],
+                },
+              },
+              {
+                id: 'qualify_leads',
+                label: 'Calificar leads y recopilar información',
+                value: 'qualify_leads',
+              },
+            ],
+            validation: {
+              required: true,
+              error_message: 'Por favor selecciona qué debería hacer tu asistente de IA',
+            },
+            ui_config: {
+              layout: 'list',
+            },
+          },
+          {
+            id: 'communication_tone',
+            type: 'multi_select',
+            title:
+              '¿Cómo debería comunicarse tu asistente de IA con tus clientes en cuanto al tono?',
+            description:
+              'Selecciona los tonos de comunicación que mejor se adapten a tu marca (puedes seleccionar varios)',
+            options: [
+              {
+                id: 'friendly',
+                label: 'Amigable',
+                value: 'friendly',
+              },
+              {
+                id: 'professional',
+                label: 'Profesional',
+                value: 'professional',
+              },
+              {
+                id: 'casual',
+                label: 'Casual',
+                value: 'casual',
+              },
+              {
+                id: 'formal',
+                label: 'Formal',
+                value: 'formal',
+              },
+              {
+                id: 'conversational',
+                label: 'Conversacional',
+                value: 'conversational',
+              },
+              {
+                id: 'empathetic',
+                label: 'Empático',
+                value: 'empathetic',
+              },
+            ],
+            validation: {
+              required: false,
+              skippable: true,
+              skip_button_text: 'Omitir',
+              error_message: 'Por favor selecciona al menos un tono de comunicación',
+            },
+            ui_config: {
+              layout: 'list',
+            },
+          },
+          {
+            id: 'customer_questions',
+            type: 'text',
+            title: '¿Qué preguntas suelen hacer tus clientes?',
+            description: 'Lista preguntas comunes que hacen tus clientes (opcional)',
+            placeholder:
+              'ej. ¿Cuáles son sus tiempos de envío? ¿Ofrecen reembolsos? ¿Qué métodos de pago aceptan?',
+            validation: {
+              required: false,
+              skippable: true,
+              skip_button_text: 'Omitir',
+              min_length: 10,
+              max_length: 500,
+              error_message: 'Por favor proporciona al menos 10 caracteres si respondes',
+            },
+            ui_config: {
+              multiline: true,
+              rows: 3,
+              show_value: true,
+            },
+          },
+          {
+            id: 'escalation_scenarios',
+            type: 'text',
+            title: '¿En qué escenario debería el asistente de IA contactarte?',
+            description:
+              'Describe cuándo el asistente de IA debería escalar contigo o contactarte directamente',
+            placeholder:
+              'ej. Cuando los clientes solicitan reembolsos, tienen problemas de pago o necesitan soporte técnico complejo',
+            validation: {
+              required: true,
+              min_length: 10,
+              max_length: 500,
+              error_message: 'Por favor describe cuándo el asistente de IA debería contactarte',
+            },
+            ui_config: {
+              multiline: true,
+              rows: 4,
+              show_value: true,
+              show_character_count: true,
+            },
+          },
+        ],
+      },
+    },
+    pt: {
+      onboarding_flow: {
+        id: 'store-onboarding-v1',
+        version: '1.0.0',
+        locale: 'pt',
+        title: 'Configuração da Loja',
+        skip_config: {
+          allow_skip_entire_flow: false,
+          track_skip_reasons: true,
+        },
+        screens: [
+          {
+            id: 'store_type',
+            type: 'single_select',
+            title: 'Que tipo de loja você tem?',
+            description: 'Isso nos ajuda a personalizar seu assistente de IA',
+            options: [
+              {
+                id: 'appointment',
+                label: 'Agendamento/Baseado em serviços',
+                value: 'appointment',
+              },
+              {
+                id: 'product',
+                label: 'Produtos/E-commerce',
+                value: 'product',
+              },
+              {
+                id: 'hybrid',
+                label: 'Híbrida (Ambos)',
+                value: 'hybrid',
+              },
+            ],
+            validation: {
+              required: true,
+              error_message: 'Por favor selecione o tipo de loja',
+            },
+            ui_config: {
+              layout: 'list',
+            },
+          },
+          {
+            id: 'store_info',
+            type: 'text',
+            title: 'Conte-nos sobre sua loja e o que você oferece?',
+            description: 'Descreva sua loja e os produtos ou serviços que você oferece',
+            placeholder:
+              'ex. Black Gold Coffee - Grãos de café especiais, assinaturas e equipamentos para preparar café',
+            validation: {
+              required: true,
+              min_length: 10,
+              max_length: 500,
+              error_message: 'Por favor forneça informações sobre sua loja e ofertas',
+            },
+            ui_config: {
+              multiline: true,
+              rows: 4,
+              show_value: true,
+              show_character_count: true,
+              character_count_warning_threshold: 0.85,
+            },
+          },
+          {
+            id: 'ai_assistant_objective',
+            type: 'multi_select',
+            title: 'O que seu assistente de IA deve fazer?',
+            description: 'Selecione todas as funções que se aplicam',
+            options: [
+              {
+                id: 'answer_faq',
+                label: 'Responder perguntas de clientes (FAQ)',
+                value: 'answer_faq',
+              },
+              {
+                id: 'appointment_setting',
+                label: 'Agendar consultas/agendamentos',
+                value: 'appointment_setting',
+                conditional_show: {
+                  operator: 'in',
+                  question_id: 'store_type',
+                  value: ['appointment', 'hybrid'],
+                },
+              },
+              {
+                id: 'process_orders',
+                label: 'Processar pedidos de produtos',
+                value: 'process_orders',
+                conditional_show: {
+                  operator: 'in',
+                  question_id: 'store_type',
+                  value: ['product', 'hybrid'],
+                },
+              },
+              {
+                id: 'qualify_leads',
+                label: 'Qualificar leads e coletar informações',
+                value: 'qualify_leads',
+              },
+            ],
+            validation: {
+              required: true,
+              error_message: 'Por favor selecione o que seu assistente de IA deve fazer',
+            },
+            ui_config: {
+              layout: 'list',
+            },
+          },
+          {
+            id: 'communication_tone',
+            type: 'multi_select',
+            title:
+              'Como seu assistente de IA deve se comunicar com seus clientes em termos de tom?',
+            description:
+              'Selecione os tons de comunicação que melhor se adequam à sua marca (você pode selecionar vários)',
+            options: [
+              {
+                id: 'friendly',
+                label: 'Amigável',
+                value: 'friendly',
+              },
+              {
+                id: 'professional',
+                label: 'Profissional',
+                value: 'professional',
+              },
+              {
+                id: 'casual',
+                label: 'Casual',
+                value: 'casual',
+              },
+              {
+                id: 'formal',
+                label: 'Formal',
+                value: 'formal',
+              },
+              {
+                id: 'conversational',
+                label: 'Conversacional',
+                value: 'conversational',
+              },
+              {
+                id: 'empathetic',
+                label: 'Empático',
+                value: 'empathetic',
+              },
+            ],
+            validation: {
+              required: false,
+              skippable: true,
+              skip_button_text: 'Pular',
+              error_message: 'Por favor selecione pelo menos um tom de comunicação',
+            },
+            ui_config: {
+              layout: 'list',
+            },
+          },
+          {
+            id: 'customer_questions',
+            type: 'text',
+            title: 'Quais perguntas seus clientes geralmente fazem?',
+            description: 'Liste perguntas comuns que seus clientes fazem (opcional)',
+            placeholder:
+              'ex. Quais são seus prazos de entrega? Você oferece reembolsos? Quais métodos de pagamento você aceita?',
+            validation: {
+              required: false,
+              skippable: true,
+              skip_button_text: 'Pular',
+              min_length: 10,
+              max_length: 500,
+              error_message: 'Por favor forneça pelo menos 10 caracteres se responder',
+            },
+            ui_config: {
+              multiline: true,
+              rows: 3,
+              show_value: true,
+            },
+          },
+          {
+            id: 'escalation_scenarios',
+            type: 'text',
+            title: 'Em qual cenário o assistente de IA deve entrar em contato com você?',
+            description:
+              'Descreva quando o assistente de IA deve escalar para você ou entrar em contato diretamente',
+            placeholder:
+              'ex. Quando clientes solicitam reembolsos, têm problemas de pagamento ou precisam de suporte técnico complexo',
+            validation: {
+              required: true,
+              min_length: 10,
+              max_length: 500,
+              error_message:
+                'Por favor descreva quando o assistente de IA deve entrar em contato com você',
+            },
+            ui_config: {
+              multiline: true,
+              rows: 4,
+              show_value: true,
+              show_character_count: true,
+            },
+          },
+        ],
+      },
+    },
   };
 
   async fetchFlow(locale: Locale): Promise<Result<OnboardingFlow, Error>> {
