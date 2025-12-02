@@ -7,7 +7,7 @@ import type {
 } from '../../domain/services/IValidationService';
 import type { AnswerValue, ValidationRule } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
-import { DI_TOKENS } from '../../di/tokens';
+import { DI_TOKENS } from '../../dependency_injection/tokens';
 import type { IValidateAnswerUseCase } from '../../domain/use-cases/IValidateAnswerUseCase';
 
 /**

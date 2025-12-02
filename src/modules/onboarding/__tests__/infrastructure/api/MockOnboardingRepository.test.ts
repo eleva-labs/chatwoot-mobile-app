@@ -4,7 +4,7 @@
  * Tests the mock repository implementation used for testing.
  */
 
-import { MockOnboardingRepository } from '../../../infrastructure/api/MockOnboardingRepository';
+import { MockOnboardingRepository } from '../../../infrastructure/repositories/MockOnboardingRepository';
 import { Locale } from '../../../domain/entities/Locale';
 import { NotFoundError } from '../../../domain/entities/Errors';
 import { Result } from '../../../domain/entities/Result';

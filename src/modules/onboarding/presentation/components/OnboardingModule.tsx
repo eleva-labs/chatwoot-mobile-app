@@ -27,7 +27,7 @@ import {
   t as translateOnboarding,
   setLocale as setOnboardingLocale,
   TranslationKeys,
-} from '../../i18n';
+} from '../i18n';
 
 export interface OnboardingModuleProps {
   /**

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Button } from '@/components-next/button/Button';
 import { useThemedStyles } from '@/hooks/useThemedStyles';
 import { Screen } from '../../domain/entities/Screen';
-import { t as translateOnboarding, TranslationKeys } from '../../i18n';
+import { t as translateOnboarding, TranslationKeys } from '../i18n';
 
 interface NavigationFooterProps {
   currentScreen: Screen | null;

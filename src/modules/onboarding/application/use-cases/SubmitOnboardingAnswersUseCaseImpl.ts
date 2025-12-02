@@ -1,10 +1,10 @@
 import { injectable, inject } from 'tsyringe';
 import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
-import { OfflineQueue } from '../../infrastructure/queue/OfflineQueue';
+import type { IOfflineQueueRepository } from '../../domain/repositories/IOfflineQueueRepository';
 import type { Answers } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
 import { NetworkError } from '../../domain/entities/Errors';
-import { DI_TOKENS } from '../../di/tokens';
+import { DI_TOKENS } from '../../dependency_injection/tokens';
 import type { ISubmitOnboardingAnswersUseCase } from '../../domain/use-cases/ISubmitOnboardingAnswersUseCase';
 
 /**
@@ -18,7 +18,8 @@ export class SubmitOnboardingAnswersUseCaseImpl implements ISubmitOnboardingAnsw
   constructor(
     @inject(DI_TOKENS.IOnboardingRepository)
     private readonly onboardingRepository: IOnboardingRepository,
-    @inject(DI_TOKENS.OfflineQueue) private readonly offlineQueue?: OfflineQueue,
+    @inject(DI_TOKENS.IOfflineQueueRepository)
+    private readonly offlineQueue?: IOfflineQueueRepository,
   ) {}
 
   async execute(flowId: string, answers: Answers): Promise<Result<void, Error>> {

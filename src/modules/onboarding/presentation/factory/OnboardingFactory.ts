@@ -6,7 +6,10 @@
  */
 
 import { container } from 'tsyringe';
-import { configureOnboardingContainer, type OnboardingContainerOptions } from '../../di/container';
+import {
+  configureOnboardingContainer,
+  type OnboardingContainerOptions,
+} from '../../dependency_injection/container';
 import { FetchOnboardingFlowUseCaseImpl } from '../../application/use-cases/FetchOnboardingFlowUseCaseImpl';
 import { SubmitOnboardingAnswersUseCaseImpl } from '../../application/use-cases/SubmitOnboardingAnswersUseCaseImpl';
 import { SaveProgressUseCaseImpl } from '../../application/use-cases/SaveProgressUseCaseImpl';

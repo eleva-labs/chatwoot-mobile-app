@@ -10,15 +10,15 @@ import { container } from 'tsyringe';
 import { DI_TOKENS } from './tokens';
 
 // Repositories
-import { MockOnboardingRepository } from '../infrastructure/api/MockOnboardingRepository';
-import { AxiosOnboardingRepository } from '../infrastructure/api/AxiosOnboardingRepository';
-import { AsyncStorageRepository } from '../infrastructure/storage/AsyncStorageRepository';
+import { MockOnboardingRepository } from '../infrastructure/repositories/MockOnboardingRepository';
+import { AxiosOnboardingRepository } from '../infrastructure/repositories/AxiosOnboardingRepository';
+import { AsyncStorageRepository } from '../infrastructure/repositories/AsyncStorageRepository';
 
 // Services
 import { ValidationService } from '../domain/services/ValidationService';
 
-// Queue
-import { OfflineQueue } from '../infrastructure/queue/OfflineQueue';
+// Repositories
+import { OfflineQueueRepository } from '../infrastructure/repositories/OfflineQueueRepository';
 
 export interface OnboardingContainerOptions {
   /**
@@ -54,9 +54,11 @@ export function configureOnboardingContainer(
   // Register services
   container.register(DI_TOKENS.ValidationService, { useClass: ValidationService });
 
-  // Register offline queue if enabled
+  // Register offline queue repository if enabled
   if (enableOfflineQueue) {
-    container.register(DI_TOKENS.OfflineQueue, { useClass: OfflineQueue });
+    container.register(DI_TOKENS.IOfflineQueueRepository, {
+      useClass: OfflineQueueRepository,
+    });
   }
 
   // Use cases are @injectable and will auto-resolve their dependencies

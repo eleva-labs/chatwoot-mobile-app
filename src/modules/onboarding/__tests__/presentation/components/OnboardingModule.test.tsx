@@ -19,7 +19,7 @@ import type { OnboardingEventCallbacks } from '../../../presentation/events/Onbo
 import type { UseOnboardingReturn } from '../../../presentation/hooks/useOnboarding';
 import type { UseValidationReturn } from '../../../presentation/hooks/useValidation';
 import type { OnboardingDependencies } from '../../../presentation/factory/OnboardingFactory';
-import type { OnboardingContainerOptions } from '../../../di/container';
+import type { OnboardingContainerOptions } from '../../../dependency_injection/container';
 
 // Mock all hooks and dependencies
 jest.mock('../../../presentation/hooks/useOnboarding');

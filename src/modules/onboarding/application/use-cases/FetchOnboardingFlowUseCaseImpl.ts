@@ -7,7 +7,7 @@ import { Result } from '../../domain/entities/Result';
 import { NetworkError } from '../../domain/entities/Errors';
 import { OnboardingFlowMapper } from '../mappers/OnboardingFlowMapper';
 import type { OnboardingFlowDTO } from '../dto/OnboardingFlowDTO';
-import { DI_TOKENS } from '../../di/tokens';
+import { DI_TOKENS } from '../../dependency_injection/tokens';
 import type { IFetchOnboardingFlowUseCase } from '../../domain/use-cases/IFetchOnboardingFlowUseCase';
 
 /**

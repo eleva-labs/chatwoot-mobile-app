@@ -18,8 +18,8 @@ export {
   isLocaleSupported as isOnboardingLocaleSupported,
   getAvailableLocales as getOnboardingAvailableLocales,
   TranslationKeys,
-} from './i18n';
-export type { TranslationKey } from './i18n';
+} from './presentation/i18n';
+export type { TranslationKey } from './presentation/i18n';
 
 // Theme
 export {

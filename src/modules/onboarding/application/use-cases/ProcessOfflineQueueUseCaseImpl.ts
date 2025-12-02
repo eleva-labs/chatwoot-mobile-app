@@ -1,10 +1,13 @@
 import { injectable, inject } from 'tsyringe';
 import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
-import { OfflineQueue, QueuedSubmission } from '../../infrastructure/queue/OfflineQueue';
+import type {
+  IOfflineQueueRepository,
+  QueuedSubmission,
+} from '../../domain/repositories/IOfflineQueueRepository';
 import { Result } from '../../domain/entities/Result';
 import { NetworkError } from '../../domain/entities/Errors';
 import { logger } from '../../shared/utils/logger';
-import { DI_TOKENS } from '../../di/tokens';
+import { DI_TOKENS } from '../../dependency_injection/tokens';
 import type { IProcessOfflineQueueUseCase } from '../../domain/use-cases/IProcessOfflineQueueUseCase';
 
 /**
@@ -17,7 +20,8 @@ export class ProcessOfflineQueueUseCaseImpl implements IProcessOfflineQueueUseCa
   constructor(
     @inject(DI_TOKENS.IOnboardingRepository)
     private readonly onboardingRepository: IOnboardingRepository,
-    @inject(DI_TOKENS.OfflineQueue) private readonly offlineQueue: OfflineQueue,
+    @inject(DI_TOKENS.IOfflineQueueRepository)
+    private readonly offlineQueue: IOfflineQueueRepository,
   ) {}
 
   /**
@@ -59,7 +63,7 @@ export class ProcessOfflineQueueUseCaseImpl implements IProcessOfflineQueueUseCa
             await this.offlineQueue.incrementRetry(item);
             failedItems.push(item);
             logger.warn(
-              `Failed to process queued submission (retry ${item.retryCount + 1}/${this.offlineQueue['MAX_RETRIES']}): ${error.message}`,
+              `Failed to process queued submission (retry ${item.retryCount + 1}): ${error.message}`,
             );
           } else {
             // Non-network error, remove from queue (won't succeed on retry)

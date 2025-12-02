@@ -13,8 +13,8 @@ export const DI_TOKENS = {
   // Services
   ValidationService: Symbol.for('ValidationService'),
 
-  // Queue
-  OfflineQueue: Symbol.for('OfflineQueue'),
+  // Repositories
+  IOfflineQueueRepository: Symbol.for('IOfflineQueueRepository'),
 
   // Use Cases
   FetchOnboardingFlowUseCase: Symbol.for('FetchOnboardingFlowUseCase'),

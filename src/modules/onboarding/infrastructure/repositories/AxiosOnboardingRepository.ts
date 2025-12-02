@@ -7,13 +7,13 @@ import { OnboardingFlowMapper } from '../../application/mappers/OnboardingFlowMa
 import type { OnboardingFlowDTO } from '../../application/dto/OnboardingFlowDTO';
 import type { Answers } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
-import { NetworkError, NotFoundError } from '../../domain/entities/Errors';
+import { NetworkError, NotFoundError, DomainError } from '../../domain/entities/Errors';
 import { AxiosError, AxiosResponse } from 'axios';
 
 /**
  * Axios Onboarding Repository Implementation
  *
- * Fetches onboarding flows from S3 buckets and submits answers via API.
+ * Fetches onboarding flows from any URL given.
  */
 @injectable()
 export class AxiosOnboardingRepository implements IOnboardingRepository {
@@ -41,32 +41,84 @@ export class AxiosOnboardingRepository implements IOnboardingRepository {
   async fetchFlow(locale: Locale): Promise<Result<OnboardingFlow, Error>> {
     try {
       const localeStr = locale.toString();
-      const s3Url = `${this.getS3BaseUrl()}/onboarding/${localeStr}.json`;
+      let s3Url: string | undefined;
+      try {
+        s3Url = `${this.getS3BaseUrl()}/onboarding/${localeStr}.json`;
+      } catch (urlError) {
+        return Result.fail(
+          new NetworkError(
+            urlError instanceof Error
+              ? urlError.message
+              : 'S3_BASE_URL environment variable is not set',
+            urlError instanceof Error ? urlError : undefined,
+          ),
+        );
+      }
 
-      const response = await fetch(s3Url);
+      let response: Response;
+      try {
+        response = await fetch(s3Url);
+      } catch (fetchError) {
+        // Handle fetch errors (network failures, etc.)
+        return Result.fail(
+          new NetworkError(
+            `Failed to fetch onboarding flow: ${fetchError instanceof Error ? fetchError.message : 'Network error'}`,
+            fetchError instanceof Error ? fetchError : undefined,
+          ),
+        );
+      }
 
+      // Check response status
+      // Response interface has ok and status properties
+      // Access them directly - Jest mocks should set these properties
       if (!response.ok) {
-        if (response.status === 404) {
+        const status = response.status;
+        if (status === 404) {
           return Result.fail(
             new NotFoundError(`Onboarding flow not found for locale: ${localeStr}`),
           );
         }
         return Result.fail(
           new NetworkError(
-            `Failed to fetch onboarding flow: HTTP ${response.status} ${response.statusText}`,
+            `Failed to fetch onboarding flow: HTTP ${status} ${response.statusText || ''}`,
           ),
         );
       }
 
-      const data: OnboardingFlowDTO = await response.json();
-
-      if (!data) {
+      let data: OnboardingFlowDTO;
+      try {
+        data = await response.json();
+      } catch {
+        // If json parsing fails, treat as not found
         return Result.fail(new NotFoundError(`Onboarding flow not found for locale: ${localeStr}`));
       }
 
-      const flow: OnboardingFlow = OnboardingFlowMapper.toDomain(data);
-      return Result.ok(flow);
+      if (!data || !data.onboarding_flow) {
+        return Result.fail(new NotFoundError(`Onboarding flow not found for locale: ${localeStr}`));
+      }
+
+      try {
+        const flow: OnboardingFlow = OnboardingFlowMapper.toDomain(data);
+        return Result.ok(flow);
+      } catch (mapperError) {
+        // If mapper throws DomainError, preserve it
+        if (mapperError instanceof DomainError) {
+          return Result.fail(mapperError);
+        }
+        // Otherwise wrap in NetworkError
+        return Result.fail(
+          new NetworkError(
+            `Failed to map onboarding flow: ${mapperError instanceof Error ? mapperError.message : 'Unknown error'}`,
+            mapperError instanceof Error ? mapperError : undefined,
+          ),
+        );
+      }
     } catch (error) {
+      // Preserve specific error types
+      if (error instanceof NotFoundError || error instanceof DomainError) {
+        return Result.fail(error);
+      }
+
       if (error instanceof Error) {
         // Check if it's a network error (fetch failures)
         if (error.message.includes('fetch') || error.message.includes('network')) {

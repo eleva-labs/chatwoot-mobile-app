@@ -1,27 +1,21 @@
 import { injectable, inject } from 'tsyringe';
 import type { IStorageRepository } from '../../domain/repositories/IStorageRepository';
+import type {
+  IOfflineQueueRepository,
+  QueuedSubmission,
+} from '../../domain/repositories/IOfflineQueueRepository';
 import type { Answers } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
 import { StorageError } from '../../domain/entities/Errors';
-import { DI_TOKENS } from '../../di/tokens';
+import { DI_TOKENS } from '../../dependency_injection/tokens';
 
 /**
- * Offline Queue Item
- */
-export interface QueuedSubmission {
-  flowId: string;
-  answers: Answers;
-  timestamp: number;
-  retryCount: number;
-}
-
-/**
- * Offline Queue Manager
+ * Offline Queue Repository Implementation
  *
  * Manages a queue of answers to be submitted when the device comes online.
  */
 @injectable()
-export class OfflineQueue {
+export class OfflineQueueRepository implements IOfflineQueueRepository {
   private readonly QUEUE_KEY = 'onboarding_offline_queue';
   private readonly MAX_RETRIES = 3;
   private enqueueLock: Promise<Result<void, Error>> = Promise.resolve(Result.ok(undefined));

@@ -4,7 +4,7 @@
  * Tests the repository implementation using fetch for S3 and APIService for API calls.
  */
 
-import { AxiosOnboardingRepository } from '../../../infrastructure/api/AxiosOnboardingRepository';
+import { AxiosOnboardingRepository } from '../../../infrastructure/repositories/AxiosOnboardingRepository';
 import { Locale } from '../../../domain/entities/Locale';
 import { NetworkError, NotFoundError } from '../../../domain/entities/Errors';
 import { Result } from '../../../domain/entities/Result';
@@ -48,7 +48,18 @@ describe('AxiosOnboardingRepository', () => {
 
   beforeEach(() => {
     // Set up environment variable for S3_BASE_URL
-    process.env.EXPO_PUBLIC_S3_BASE_URL = 'https://s3.example.com';
+    // Use Object.defineProperty to ensure it's properly set
+    Object.defineProperty(process.env, 'EXPO_PUBLIC_S3_BASE_URL', {
+      value: 'https://s3.example.com',
+      writable: true,
+      configurable: true,
+    });
+    // Also set S3_BASE_URL as fallback
+    Object.defineProperty(process.env, 'S3_BASE_URL', {
+      value: 'https://s3.example.com',
+      writable: true,
+      configurable: true,
+    });
     repository = new AxiosOnboardingRepository();
     jest.clearAllMocks();
   });
@@ -102,12 +113,19 @@ describe('AxiosOnboardingRepository', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
+      const mockResponse = {
         ok: true,
         status: 200,
         statusText: 'OK',
         json: async () => mockFlowDTO,
-      } as Response);
+      } as Response;
+
+      // Ensure the response object has the correct properties that the implementation checks
+      Object.defineProperty(mockResponse, 'ok', { value: true, writable: false });
+      Object.defineProperty(mockResponse, 'status', { value: 200, writable: false });
+      Object.defineProperty(mockResponse, 'statusText', { value: 'OK', writable: false });
+
+      mockFetch.mockResolvedValueOnce(mockResponse);
 
       const result = await repository.fetchFlow(locale);
 
@@ -123,6 +141,7 @@ describe('AxiosOnboardingRepository', () => {
       const locale = Locale.create('en');
 
       // When json() returns null or falsy, the code should return NotFoundError
+      // The implementation checks if (!data || !data.onboarding_flow)
       mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
@@ -133,6 +152,7 @@ describe('AxiosOnboardingRepository', () => {
       const result = await repository.fetchFlow(locale);
 
       expect(result.isFailure).toBe(true);
+      // When json() returns null, the code checks if (!data || !data.onboarding_flow) and returns NotFoundError
       expect(result.getError()).toBeInstanceOf(NotFoundError);
     });
 
@@ -140,14 +160,22 @@ describe('AxiosOnboardingRepository', () => {
       const locale = Locale.create('en');
 
       // For 404, the code checks response.ok before calling json()
-      mockFetch.mockResolvedValueOnce({
+      // The implementation checks if (!response.ok) and then if (status === 404)
+      const mockResponse = {
         ok: false,
         status: 404,
         statusText: 'Not Found',
         json: async () => {
           throw new Error('Should not call json() on 404');
         },
-      } as Response);
+      } as Response;
+
+      // Ensure the response object has the correct properties
+      Object.defineProperty(mockResponse, 'ok', { value: false, writable: false });
+      Object.defineProperty(mockResponse, 'status', { value: 404, writable: false });
+      Object.defineProperty(mockResponse, 'statusText', { value: 'Not Found', writable: false });
+
+      mockFetch.mockResolvedValueOnce(mockResponse);
 
       const result = await repository.fetchFlow(locale);
 
@@ -174,6 +202,15 @@ describe('AxiosOnboardingRepository', () => {
 
     it('should return NetworkError for fetch errors', async () => {
       const locale = Locale.create('en');
+
+      // Ensure environment variable is set (it should be from beforeEach, but make sure)
+      Object.defineProperty(process.env, 'EXPO_PUBLIC_S3_BASE_URL', {
+        value: 'https://s3.example.com',
+        writable: true,
+        configurable: true,
+      });
+      // Recreate repository to ensure it picks up the environment variable
+      repository = new AxiosOnboardingRepository();
 
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 

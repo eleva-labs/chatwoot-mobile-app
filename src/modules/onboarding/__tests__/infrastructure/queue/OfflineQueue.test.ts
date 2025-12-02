@@ -5,8 +5,8 @@
  * Supports enqueue, dequeue, retry tracking (max 3 attempts).
  */
 
-import { OfflineQueue } from '../../../infrastructure/queue/OfflineQueue';
-import type { QueuedSubmission } from '../../../infrastructure/queue/OfflineQueue';
+import { OfflineQueueRepository } from '../../../infrastructure/repositories/OfflineQueueRepository';
+import type { QueuedSubmission } from '../../../domain/repositories/IOfflineQueueRepository';
 import { createMockStorageRepository } from '../../helpers/mocks';
 import { anAnswer } from '../../helpers/builders';
 import { freezeTime, unfreezeTime } from '../../helpers/testHelpers';
@@ -22,8 +22,8 @@ function answersToMap(answers: ReturnType<typeof anAnswer>[]): Answers {
   return result;
 }
 
-describe('OfflineQueue', () => {
-  let queue: OfflineQueue;
+describe('OfflineQueueRepository', () => {
+  let queue: OfflineQueueRepository;
   let mockStorage: ReturnType<typeof createMockStorageRepository>;
 
   const createAnswers = (answerId: string): Answers => {
@@ -32,7 +32,7 @@ describe('OfflineQueue', () => {
 
   beforeEach(() => {
     mockStorage = createMockStorageRepository();
-    queue = new OfflineQueue(mockStorage);
+    queue = new OfflineQueueRepository(mockStorage);
     freezeTime(new Date('2024-01-01T12:00:00Z'));
   });
 
@@ -403,7 +403,7 @@ describe('OfflineQueue', () => {
       await queue.enqueue('flow-2', createAnswers('q2'));
 
       // Create new queue instance with same storage
-      const newQueue = new OfflineQueue(mockStorage);
+      const newQueue = new OfflineQueueRepository(mockStorage);
       const pending = await newQueue.getQueue();
 
       expect(pending.getValue()).toHaveLength(2);
@@ -427,7 +427,7 @@ describe('OfflineQueue', () => {
       }
 
       // Create new queue instance
-      const newQueue = new OfflineQueue(mockStorage);
+      const newQueue = new OfflineQueueRepository(mockStorage);
       const pending = await newQueue.getQueue();
 
       expect(pending.getValue()?.[0].retryCount).toBe(2);

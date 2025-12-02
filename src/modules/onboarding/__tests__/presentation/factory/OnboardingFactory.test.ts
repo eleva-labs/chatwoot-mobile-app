@@ -10,7 +10,10 @@ import {
   resetDefaultOnboardingDependencies,
 } from '../../../presentation/factory/OnboardingFactory';
 import { container } from 'tsyringe';
-import { configureOnboardingContainer, resetOnboardingContainer } from '../../../di/container';
+import {
+  configureOnboardingContainer,
+  resetOnboardingContainer,
+} from '../../../dependency_injection/container';
 import { FetchOnboardingFlowUseCaseImpl } from '../../../application/use-cases/FetchOnboardingFlowUseCaseImpl';
 import { SubmitOnboardingAnswersUseCaseImpl } from '../../../application/use-cases/SubmitOnboardingAnswersUseCaseImpl';
 import { SaveProgressUseCaseImpl } from '../../../application/use-cases/SaveProgressUseCaseImpl';
@@ -22,8 +25,8 @@ import { ProcessOfflineQueueUseCaseImpl } from '../../../application/use-cases/P
 jest.unmock('tsyringe');
 
 // Mock the container configuration - use actual implementation but spy on it
-jest.mock('../../../di/container', () => {
-  const actualModule = jest.requireActual('../../../di/container');
+jest.mock('../../../dependency_injection/container', () => {
+  const actualModule = jest.requireActual('../../../dependency_injection/container');
   return {
     ...actualModule,
     configureOnboardingContainer: jest.fn(options => {

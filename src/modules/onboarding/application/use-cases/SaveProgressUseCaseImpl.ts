@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import type { IStorageRepository } from '../../domain/repositories/IStorageRepository';
 import type { Answers } from '../../domain/common';
 import { Result } from '../../domain/entities/Result';
-import { DI_TOKENS } from '../../di/tokens';
+import { DI_TOKENS } from '../../dependency_injection/tokens';
 import type { ISaveProgressUseCase } from '../../domain/use-cases/ISaveProgressUseCase';
 
 /**

@@ -6,7 +6,8 @@
 
 import { ProcessOfflineQueueUseCaseImpl } from '../../../application/use-cases/ProcessOfflineQueueUseCaseImpl';
 import { createMockOnboardingRepository, createMockStorageRepository } from '../../helpers/mocks';
-import { OfflineQueue } from '../../../infrastructure/queue/OfflineQueue';
+import { OfflineQueueRepository } from '../../../infrastructure/repositories/OfflineQueueRepository';
+import type { IOfflineQueueRepository } from '../../../domain/repositories/IOfflineQueueRepository';
 import { NetworkError } from '../../../domain/entities/Errors';
 import { Result } from '../../../domain/entities/Result';
 
@@ -14,12 +15,12 @@ describe('ProcessOfflineQueueUseCaseImpl', () => {
   let useCase: ProcessOfflineQueueUseCaseImpl;
   let mockOnboardingRepo: ReturnType<typeof createMockOnboardingRepository>;
   let mockStorageRepo: ReturnType<typeof createMockStorageRepository>;
-  let offlineQueue: OfflineQueue;
+  let offlineQueue: IOfflineQueueRepository;
 
   beforeEach(() => {
     mockOnboardingRepo = createMockOnboardingRepository();
     mockStorageRepo = createMockStorageRepository();
-    offlineQueue = new OfflineQueue(mockStorageRepo);
+    offlineQueue = new OfflineQueueRepository(mockStorageRepo);
     useCase = new ProcessOfflineQueueUseCaseImpl(mockOnboardingRepo, offlineQueue);
   });
 

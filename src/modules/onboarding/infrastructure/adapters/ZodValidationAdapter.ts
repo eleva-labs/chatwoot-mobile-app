@@ -1,4 +1,4 @@
-import { onboardingFlowSchema } from './schemas/OnboardingFlowSchema';
+import { onboardingFlowSchema } from '../models/schemas/OnboardingFlowSchema';
 import type { OnboardingFlowDTO } from '../../application/dto/OnboardingFlowDTO';
 import { Result } from '../../domain/entities/Result';
 import { ValidationError } from '../../domain/entities/Errors';

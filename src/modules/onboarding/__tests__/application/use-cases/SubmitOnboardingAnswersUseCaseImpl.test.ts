@@ -6,7 +6,8 @@
 
 import { SubmitOnboardingAnswersUseCaseImpl } from '../../../application/use-cases/SubmitOnboardingAnswersUseCaseImpl';
 import { createMockOnboardingRepository, createMockStorageRepository } from '../../helpers/mocks';
-import { OfflineQueue } from '../../../infrastructure/queue/OfflineQueue';
+import { OfflineQueueRepository } from '../../../infrastructure/repositories/OfflineQueueRepository';
+import type { IOfflineQueueRepository } from '../../../domain/repositories/IOfflineQueueRepository';
 import { NetworkError } from '../../../domain/entities/Errors';
 import { Result } from '../../../domain/entities/Result';
 
@@ -14,12 +15,12 @@ describe('SubmitOnboardingAnswersUseCaseImpl', () => {
   let useCase: SubmitOnboardingAnswersUseCaseImpl;
   let mockOnboardingRepo: ReturnType<typeof createMockOnboardingRepository>;
   let mockStorageRepo: ReturnType<typeof createMockStorageRepository>;
-  let offlineQueue: OfflineQueue | undefined;
+  let offlineQueue: IOfflineQueueRepository | undefined;
 
   beforeEach(() => {
     mockOnboardingRepo = createMockOnboardingRepository();
     mockStorageRepo = createMockStorageRepository();
-    offlineQueue = new OfflineQueue(mockStorageRepo);
+    offlineQueue = new OfflineQueueRepository(mockStorageRepo);
     useCase = new SubmitOnboardingAnswersUseCaseImpl(mockOnboardingRepo, offlineQueue);
   });
 
