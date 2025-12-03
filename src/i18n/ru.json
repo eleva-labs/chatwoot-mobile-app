@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "URL установки",
-    "DESCRIPTION": "Если вы используете установку Chatwoot, введите URL вашего сервера. В противном случае используйте app.chatwoot.com.",
+    "DESCRIPTION": "Если вы используете установку Chatscommerce, введите URL вашего сервера. В противном случае используйте app.chatscommerce.com.",
     "URL_ERROR": "Введите правильный URL",
     "URL_REQUIRED": "Необходимо указать URL",
     "CONNECT": "Подключиться",
@@ -399,19 +399,19 @@
     "CHANGE_TEAMS": "Команда назначенная в беседу изменена"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Не удалось подключиться к серверу Chatwoot. Пожалуйста, попробуйте позже.",
+    "COMMON_ERROR": "Пожалуйста, попробуйте позже...",
     "OfFLINE": "Вы должны подключиться к Wi-fi или сотовой сети, чтобы снова подключиться к сети",
     "CANNOT_FETCH": "При получении информации произошла ошибка. Повторите попытку",
     "AUTH": "Неверное имя пользователя / пароль. Пожалуйста, попробуйте еще раз",
-    "NO_ACCOUNTS_MESSAGE": "У вас нет доступа ни к одной учетной записи chatwoot"
+    "NO_ACCOUNTS_MESSAGE": "У вас нет доступа ни к одной учетной записи Chatscommerce"
   },
   "SUCCESS": {
     "AUTH": "Вход выполнен"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Требуется обновить сервер",
-    "WARNING_FOR_AGENT": "Похоже, вы используете неподдерживаемый сервер Chatwoot для своего мобильного приложения. Обратитесь к администратору, чтобы обновить сервер Chatwoot.",
-    "WARNING_FOR_ADMIN": "Похоже, вы используете неподдерживаемый сервер Chatwoot для своего мобильного приложения. Требуется обновление до версии сервера %{minimumVersion} или новее."
+    "WARNING_FOR_AGENT": "Похоже, вы используете неподдерживаемый сервер Chatscommerce для своего мобильного приложения. Обратитесь к администратору, чтобы обновить сервер Chatscommerce.",
+    "WARNING_FOR_ADMIN": "Похоже, вы используете неподдерживаемый сервер Chatscommerce для своего мобильного приложения. Требуется обновление до версии сервера %{minimumVersion} или новее."
   },
   "EXIT": {
     "TITLE": "Выйти",
@@ -454,5 +454,16 @@
     "EXECUTION_SUCCESS": "Макрос успешно выполнен",
     "EXECUTION_ERROR": "Выполнение макроса не удалось",
     "NO_MACROS": "Макросы не найдены"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Enable Notifications",
+    "PERMISSION_MESSAGE": "Allow notifications to stay updated with new messages",
+    "PERMISSION_ASK_LATER": "Ask Later",
+    "PERMISSION_CANCEL": "Don't Allow",
+    "PERMISSION_OK": "Allow",
+    "RATIONALE_TITLE": "Notifications Disabled",
+    "RATIONALE_MESSAGE": "Enable notifications in settings to receive message alerts",
+    "RATIONALE_CANCEL": "Cancel",
+    "RATIONALE_SETTINGS": "Open Settings"
   }
 }

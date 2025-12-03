@@ -21,13 +21,15 @@ export const ReplyEmailHead = (props: EmailMetaProps) => {
   return (
     <Animated.View style={tailwind.style('flex flex-col mb-2')}>
       <Animated.View
-        style={tailwind.style('flex flex-col gap-1 px-3 py-1 border-b border-b-blackA-A3')}>
+        style={tailwind.style('flex flex-col gap-1 px-3 py-1 border-b border-b-blackA-A3')}
+      >
         {toEmails && (
           <Animated.View style={tailwind.style('flex flex-row items-center gap-1 ')}>
             <Text
               style={tailwind.style(
                 'text-md text-gray-950 font-inter-normal-20 tracking-[0.16px] min-w-[30px]',
-              )}>
+              )}
+            >
               {i18n.t('CONVERSATION.EMAIL_HEAD.TO')}
             </Text>
             <TextInput
@@ -43,11 +45,13 @@ export const ReplyEmailHead = (props: EmailMetaProps) => {
       <Animated.View
         style={tailwind.style(
           'flex flex-row items-center gap-1 py-1 px-3 border-b border-b-blackA-A3',
-        )}>
+        )}
+      >
         <Text
           style={tailwind.style(
             'text-md text-gray-950 font-inter-normal-20 tracking-[0.16px] min-w-[30px]',
-          )}>
+          )}
+        >
           {i18n.t('CONVERSATION.EMAIL_HEAD.CC')}
         </Text>
         <TextInput
@@ -67,11 +71,13 @@ export const ReplyEmailHead = (props: EmailMetaProps) => {
         <Animated.View
           style={tailwind.style(
             'flex flex-row items-center gap-1 px-3 border-b py-1 border-b-blackA-A3',
-          )}>
+          )}
+        >
           <Text
             style={tailwind.style(
               'text-md text-gray-950 font-inter-normal-20 tracking-[0.16px] min-w-[30px]',
-            )}>
+            )}
+          >
             {i18n.t('CONVERSATION.EMAIL_HEAD.BCC')}
           </Text>
           <TextInput

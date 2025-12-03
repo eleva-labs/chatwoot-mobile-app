@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "Installations URL",
-    "DESCRIPTION": "Wenn Sie eine selbst gehostete Chatwoot-Installation verwenden, geben Sie Ihre Server-URL ein. Andernfalls verwenden Sie app.chatwoot.com.",
+    "DESCRIPTION": "Wenn Sie eine selbst gehostete Chatscommerce-Installation verwenden, geben Sie Ihre Server-URL ein. Andernfalls verwenden Sie app.chatscommerce.com.",
     "URL_ERROR": "Geben Sie eine gültige URL ein",
     "URL_REQUIRED": "URL ist erforderlich",
     "CONNECT": "Verbinden",
@@ -399,19 +399,19 @@
     "CHANGE_TEAMS": "Das Konversationsteam hat sich geändert"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Could not connect to Chatwoot Server, Please try again later",
+    "COMMON_ERROR": "Bitte versuchen Sie es später erneut...",
     "OfFLINE": "Sie müssen eine Verbindung zu einem Wlan- oder Mobilfunknetz herstellen, um wieder online zu gehen",
     "CANNOT_FETCH": "Beim Abrufen der Informationen ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut",
     "AUTH": "Benutzername / Passwort falsch. Bitte versuchen Sie es erneut",
-    "NO_ACCOUNTS_MESSAGE": "Sie haben keinen Zugriff auf Chatwoot-Konten"
+    "NO_ACCOUNTS_MESSAGE": "Sie haben keinen Zugriff auf Chatscommerce-Konten"
   },
   "SUCCESS": {
     "AUTH": "Anmeldung erfolgreich"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Server-Upgrade erforderlich",
-    "WARNING_FOR_AGENT": "Anscheinend verwenden Sie einen nicht unterstützten Chatwoot-Server für Ihre mobile App. Bitte wenden Sie sich an Ihren Administrator, um Ihren Chatwoot-Server zu aktualisieren.",
-    "WARNING_FOR_ADMIN": "Anscheinend verwenden Sie einen nicht unterstützten Chatwoot-Server für Ihre mobile App. Ein Upgrade auf die Serverversion %{minimumVersion} oder höher ist erforderlich."
+    "WARNING_FOR_AGENT": "Anscheinend verwenden Sie einen nicht unterstützten Chatscommerce-Server für Ihre mobile App. Bitte wenden Sie sich an Ihren Administrator, um Ihren Chatscommerce-Server zu aktualisieren.",
+    "WARNING_FOR_ADMIN": "Anscheinend verwenden Sie einen nicht unterstützten Chatscommerce-Server für Ihre mobile App. Ein Upgrade auf die Serverversion %{minimumVersion} oder höher ist erforderlich."
   },
   "EXIT": {
     "TITLE": "Beenden",
@@ -454,5 +454,16 @@
     "EXECUTION_SUCCESS": "Makro erfolgreich ausgeführt",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "Keine Makros gefunden"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Enable Notifications",
+    "PERMISSION_MESSAGE": "Allow notifications to stay updated with new messages",
+    "PERMISSION_ASK_LATER": "Ask Later",
+    "PERMISSION_CANCEL": "Don't Allow",
+    "PERMISSION_OK": "Allow",
+    "RATIONALE_TITLE": "Notifications Disabled",
+    "RATIONALE_MESSAGE": "Enable notifications in settings to receive message alerts",
+    "RATIONALE_CANCEL": "Cancel",
+    "RATIONALE_SETTINGS": "Open Settings"
   }
 }

@@ -44,7 +44,6 @@ type MessageComponentProps = {
   item: Message;
   index: number;
   isEmailInbox: boolean;
-  currentUserId: number;
 };
 
 type MessageWrapperProps = {
@@ -72,9 +71,9 @@ const variantTextMap = {
 const variantBaseMap = {
   [MESSAGE_VARIANTS.AGENT]: 'bg-gray-100',
   [MESSAGE_VARIANTS.PRIVATE]: 'bg-amber-100',
-  [MESSAGE_VARIANTS.USER]: 'bg-blue-700',
-  [MESSAGE_VARIANTS.BOT]: 'bg-blue-100',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'bg-blue-100',
+  [MESSAGE_VARIANTS.USER]: 'bg-brand-600',
+  [MESSAGE_VARIANTS.BOT]: 'bg-brand-100',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'bg-brand-100',
   [MESSAGE_VARIANTS.ERROR]: 'bg-ruby-700',
   [MESSAGE_VARIANTS.EMAIL]: 'bg-gray-100',
   [MESSAGE_VARIANTS.UNSUPPORTED]: 'bg-amber-100 border border-dashed border-amber-700',
@@ -123,12 +122,14 @@ const MessageWrapper = ({
           'my-[1px]',
           flexOrientationClass(),
           shouldGroupWithPrevious && orientation === ORIENTATION.LEFT ? 'ml-7' : '',
+          shouldGroupWithPrevious && orientation === ORIENTATION.RIGHT ? 'pr-7' : '',
           !shouldGroupWithPrevious && !shouldGroupWithNext ? 'mb-2' : 'mb-1',
           item.private ? 'my-1' : '',
         ),
-      ]}>
+      ]}
+    >
       <Animated.View style={tailwind.style('flex flex-row')}>
-        {!shouldGroupWithPrevious && shouldShowAvatar ? (
+        {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.LEFT ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
             <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
           </Animated.View>
@@ -157,18 +158,21 @@ const MessageWrapper = ({
                     : 'rounded-br-none'
                   : '',
               ),
-            ]}>
+            ]}
+          >
             {children}
             {!shouldGroupWithPrevious && (
               <Animated.View
                 style={tailwind.style(
                   'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center justify-end',
-                )}>
+                )}
+              >
                 <Animated.Text
                   style={tailwind.style(
                     'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
                     variantTextMap[variant],
-                  )}>
+                  )}
+                >
                   {unixTimestampToReadableTime(item.createdAt)}
                 </Animated.Text>
                 <DeliveryStatus
@@ -185,6 +189,11 @@ const MessageWrapper = ({
             )}
           </Animated.View>
         </MessageMenu>
+        {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (
+          <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
+            <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
+          </Animated.View>
+        ) : null}
       </Animated.View>
     </Animated.View>
   );
@@ -193,17 +202,8 @@ const MessageWrapper = ({
 export const MessageComponent = (props: MessageComponentProps) => {
   const dispatch = useAppDispatch();
   const { conversationId } = useChatWindowContext();
-  const { item, currentUserId, isEmailInbox } = props;
-  const {
-    messageType,
-    contentType,
-    status,
-    sender,
-    groupWithNext,
-    groupWithPrevious,
-    senderId,
-    senderType,
-  } = item;
+  const { item, isEmailInbox } = props;
+  const { messageType, contentType, status, sender, groupWithNext, groupWithPrevious } = item;
 
   const hapticSelection = useHaptic();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
@@ -285,34 +285,14 @@ export const MessageComponent = (props: MessageComponentProps) => {
 
   const shouldShowAvatar = () => {
     if (messageType === MESSAGE_TYPES.ACTIVITY) return false;
-    if (orientation() === ORIENTATION.RIGHT) return false;
     return true;
   };
 
-  const isMyMessage = () => {
-    if (status === MESSAGE_STATUS.PROGRESS && messageType === MESSAGE_TYPES.OUTGOING) {
-      return true;
-    }
-
-    const senderIdentifier = senderId ?? sender?.id;
-    const senderTypeValue = senderType ?? sender?.type;
-
-    if (!senderTypeValue || !senderIdentifier) {
-      return false;
-    }
-
-    return (
-      senderTypeValue.toLowerCase() === SENDER_TYPES.USER.toLowerCase() &&
-      currentUserId === senderIdentifier
-    );
-  };
-
   const orientation = () => {
-    if (isMyMessage()) {
-      return ORIENTATION.RIGHT;
-    }
     if (messageType === MESSAGE_TYPES.ACTIVITY) return ORIENTATION.CENTER;
-    return ORIENTATION.LEFT;
+    if (messageType === MESSAGE_TYPES.INCOMING) return ORIENTATION.LEFT;
+    // All non-incoming (outgoing, template, bot, other agents) on the right
+    return ORIENTATION.RIGHT;
   };
 
   const shouldGroupWithNext = () => {
@@ -404,7 +384,8 @@ export const MessageComponent = (props: MessageComponentProps) => {
         avatarInfo={avatarInfo()}
         getMenuOptions={getMenuOptions}
         variant={variant()}
-        channel={channel}>
+        channel={channel}
+      >
         {messageContent}
       </MessageWrapper>
     );

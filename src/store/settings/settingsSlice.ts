@@ -19,9 +19,10 @@ interface SettingsState {
   version: string;
   pushToken: string;
 }
+
 const initialState: SettingsState = {
-  baseUrl: 'app.chatwoot.com',
-  installationUrl: 'https://app.chatwoot.com/',
+  baseUrl: process.env.EXPO_PUBLIC_BASE_URL as string,
+  installationUrl: process.env.EXPO_PUBLIC_INSTALLATION_URL as string,
   uiFlags: {
     isSettingUrl: false,
     isUpdating: false,
@@ -56,6 +57,20 @@ export const settingsSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // Log when Redux Persist rehydrates the state
+    builder.addCase('persist/REHYDRATE', (state, action: any) => {
+      if (action.payload?.settings) {
+        console.log('🔄 Redux Persist REHYDRATE - Settings restored from storage:', {
+          persistedBaseUrl: action.payload.settings.baseUrl,
+          persistedInstallationUrl: action.payload.settings.installationUrl,
+          currentEnvBaseUrl: process.env.EXPO_PUBLIC_BASE_URL,
+          currentEnvInstallationUrl: process.env.EXPO_PUBLIC_INSTALLATION_URL,
+          environment: process.env.ENVIRONMENT || process.env.EAS_BUILD_PROFILE || 'unknown',
+          WARNING: 'Persisted URLs may override environment variables!',
+        });
+      }
+    });
+
     builder
       .addCase(settingsActions.setInstallationUrl.pending, state => {
         state.uiFlags.isSettingUrl = true;

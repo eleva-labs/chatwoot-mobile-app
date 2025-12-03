@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "URL cài đặt",
-    "DESCRIPTION": "Nếu bạn đang dùng Chatwoot tự chủ, điền URL máy chủ của bạn. Nếu không, dùng app.chatwoot.com.",
+    "DESCRIPTION": "Nếu bạn đang dùng Chatscommerce tự chủ, điền URL máy chủ của bạn. Nếu không, dùng app.chatscommerce.com.",
     "URL_ERROR": "Điền URL hợp lệ",
     "URL_REQUIRED": "URL bắt buộc có",
     "CONNECT": "Kết nối",
@@ -399,19 +399,19 @@
     "CHANGE_TEAMS": "Nhóm của cuộc trò chuyện đã được thay đổi"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Could not connect to Chatwoot Server, Please try again later",
+    "COMMON_ERROR": "Vui lòng thử lại sau...",
     "OfFLINE": "Bạn phải kết nối với Wi-fi hoặc mạng di động để trực tuyến trở lại",
     "CANNOT_FETCH": "Đã xảy ra lỗi khi lấy thông tin, vui lòng thử lại",
     "AUTH": "Tài khoản/Mật khẩu không đúng. Vui lòng thử lại",
-    "NO_ACCOUNTS_MESSAGE": "Bạn không có quyền truy cập vào bất kỳ tài khoản chatwoot nào"
+    "NO_ACCOUNTS_MESSAGE": "Bạn không có quyền truy cập vào bất kỳ tài khoản Chatscommerce nào"
   },
   "SUCCESS": {
     "AUTH": "Đăng nhập thành công"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Cần nâng cấp máy chủ",
-    "WARNING_FOR_AGENT": "Có vẻ như bạn đang dùng máy chủ Chatwoot không hỗ trợ ứng dụng di động. Vui lòng liên hệ với quản trị viên để nâng cấp server Chatwoot của bạn.",
-    "WARNING_FOR_ADMIN": "Có vẻ như bạn đang dùng máy chủ Chatwoot không hỗ trợ ứng dụng di động. Cần nâng cấp máy chủ lên phiên bản %{minimumVersion} hoặc lớn hơn."
+    "WARNING_FOR_AGENT": "Có vẻ như bạn đang dùng máy chủ Chatscommerce không hỗ trợ ứng dụng di động. Vui lòng liên hệ với quản trị viên để nâng cấp server Chatscommerce của bạn.",
+    "WARNING_FOR_ADMIN": "Có vẻ như bạn đang dùng máy chủ Chatscommerce không hỗ trợ ứng dụng di động. Cần nâng cấp máy chủ lên phiên bản %{minimumVersion} hoặc lớn hơn."
   },
   "EXIT": {
     "TITLE": "Lối ra",
@@ -454,5 +454,16 @@
     "EXECUTION_SUCCESS": "Macro được thực thi thành công",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "Không tìm thấy macro"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Enable Notifications",
+    "PERMISSION_MESSAGE": "Allow notifications to stay updated with new messages",
+    "PERMISSION_ASK_LATER": "Ask Later",
+    "PERMISSION_CANCEL": "Don't Allow",
+    "PERMISSION_OK": "Allow",
+    "RATIONALE_TITLE": "Notifications Disabled",
+    "RATIONALE_MESSAGE": "Enable notifications in settings to receive message alerts",
+    "RATIONALE_CANCEL": "Cancel",
+    "RATIONALE_SETTINGS": "Open Settings"
   }
 }

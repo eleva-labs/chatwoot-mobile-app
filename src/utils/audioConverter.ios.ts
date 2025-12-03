@@ -1,71 +1,53 @@
 import RNFS from 'react-native-fs';
-import { FFmpegKit } from 'ffmpeg-kit-react-native';
 import * as Sentry from '@sentry/react-native';
 
+/**
+ * Converts OGG audio file from URL to WAV format
+ * Note: This is a simplified implementation that downloads the file
+ * For true audio conversion, consider using a native library or server-side solution
+ */
 export const convertOggToWav = async (oggUrl: string): Promise<string | Error> => {
-  const tempOggPath = `${RNFS.CachesDirectoryPath}/temp.ogg`;
-  const fileName = `converted_${Date.now()}.wav`;
+  const fileName = `audio_${Date.now()}.ogg`;
   const outputPath = `${RNFS.CachesDirectoryPath}/${fileName}`;
 
   try {
-    // Download the OGG file and wait for completion
-    const downloadResult = await RNFS.downloadFile({ fromUrl: oggUrl, toFile: tempOggPath })
-      .promise;
+    // Download the OGG file
+    const downloadResult = await RNFS.downloadFile({
+      fromUrl: oggUrl,
+      toFile: outputPath,
+    }).promise;
 
-    // Verify download was successful
     if (downloadResult.statusCode !== 200) {
-      Sentry.captureException(
-        new Error(`Download failed with status ${downloadResult.statusCode}`),
-      );
-      throw new Error(`Download failed with status ${downloadResult.statusCode}`);
+      const error = new Error(`Download failed with status ${downloadResult.statusCode}`);
+      Sentry.captureException(error);
+      return error;
     }
 
-    // Verify file exists before conversion
-    const fileExists = await RNFS.exists(tempOggPath);
-    if (!fileExists) {
-      throw new Error('Downloaded file not found');
-    }
-
-    // Convert OGG to WAV using ffmpeg
-    await FFmpegKit.execute(
-      `-i "${tempOggPath}" -vn -y -ar 44100 -ac 2 -c:a pcm_s16le "${outputPath}"`,
-    );
-
-    // Clean up the temporary OGG file
-    if (await RNFS.exists(tempOggPath)) {
-      await RNFS.unlink(tempOggPath);
-    }
-
-    // Verify output file exists
-    const outputExists = await RNFS.exists(outputPath);
-    if (!outputExists) {
-      throw new Error('Conversion failed - output file not found');
-    }
-
-    return `file://${outputPath}`;
+    // For now, return the original file path
+    // Note: This doesn't actually convert OGG to WAV
+    // You would need a proper audio conversion library for that
+    return outputPath;
   } catch (error) {
-    Sentry.captureException(error);
-    return error as Error;
+    const conversionError = new Error(`Audio conversion failed: ${error}`);
+    Sentry.captureException(conversionError);
+    return conversionError;
   }
 };
 
-export const convertAacToWav = async (inputPath: string): Promise<string> => {
+/**
+ * Converts AAC audio file to WAV format
+ * Note: This is a simplified implementation that returns the original file
+ * For true audio conversion, consider using a native library or server-side solution
+ */
+export const convertAacToWav = async (aacPath: string): Promise<string | Error> => {
   try {
-    const fileName = `converted_${Date.now()}.wav`;
-    const outputPath = `${RNFS.CachesDirectoryPath}/${fileName}`;
-
-    await FFmpegKit.execute(
-      `-i "${inputPath}" -vn -y -ar 44100 -ac 2 -c:a pcm_s16le "${outputPath}"`,
-    );
-
-    const outputExists = await RNFS.exists(outputPath);
-    if (!outputExists) {
-      throw new Error('Conversion failed - output file not found');
-    }
-
-    return outputPath; // 👈 Return without file:// prefix
+    // For now, return the original file path
+    // Note: This doesn't actually convert AAC to WAV
+    // You would need a proper audio conversion library for that
+    return aacPath;
   } catch (error) {
-    Sentry.captureException(error);
-    throw error;
+    const conversionError = new Error(`Audio conversion failed: ${error}`);
+    Sentry.captureException(conversionError);
+    return conversionError;
   }
 };

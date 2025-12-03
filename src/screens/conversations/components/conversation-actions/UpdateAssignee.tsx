@@ -42,13 +42,15 @@ const AssigneeCell = (props: AssigneeCellProps) => {
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
           !lastItem ? 'border-b-[1px] border-blackA-A3' : '',
-        )}>
+        )}
+      >
         <Animated.Text
           style={[
             tailwind.style(
               'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
             ),
-          ]}>
+          ]}
+        >
           {agent.name}
         </Animated.Text>
         {assigneeId === agent.id ? <Icon icon={<TickIcon />} size={20} /> : null}
@@ -104,16 +106,35 @@ export const UpdateAssignee = () => {
     if (isMultipleConversationsSelected) {
       const payload = { type: 'Conversation', ids: selectedIds, fields: { assignee_id: agent.id } };
       await dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
     } else {
       if (!selectedConversation?.id) return;
+      const isUnassigning = agent.id === assigneeId;
+      const isSelfAssigning = agent.id === userId;
       await dispatch(
         conversationActions.assignConversation({
           conversationId: selectedConversation?.id,
-          assigneeId: agent.id === assigneeId ? 0 : agent.id,
+          assigneeId: isUnassigning ? 0 : agent.id,
         }),
       );
-      AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED);
+      if (isUnassigning) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.UNASSIGN_CONVERSATION, {
+          conversationId: selectedConversation?.id,
+        });
+      } else if (isSelfAssigning) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.SELF_ASSIGN_CONVERSATION, {
+          conversationId: selectedConversation?.id,
+        });
+      } else {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
+          conversationId: selectedConversation?.id,
+          assigneeId: agent.id,
+        });
+      }
       showToast({
         message: i18n.t('CONVERSATION.ASSIGN_CHANGE'),
       });
@@ -135,7 +156,8 @@ export const UpdateAssignee = () => {
 
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
-        style={tailwind.style('my-1 pl-3')}>
+        style={tailwind.style('my-1 pl-3')}
+      >
         {isFetching ? (
           <ActivityIndicator />
         ) : (
@@ -143,20 +165,23 @@ export const UpdateAssignee = () => {
             {!isSelfAssign && (
               <Pressable
                 style={tailwind.style('flex flex-row items-center')}
-                onPress={() => handleAssigneePress(selfAgent as Agent)}>
+                onPress={() => handleAssigneePress(selfAgent as Agent)}
+              >
                 <Animated.View style={tailwind.style('p-0.5')}>
                   <Icon icon={<SelfAssign />} size={24} />
                 </Animated.View>
                 <Animated.View
                   style={tailwind.style(
                     'flex-1 ml-3 flex-row justify-between py-[11px] pr-3 border-b-[1px] border-blackA-A3',
-                  )}>
+                  )}
+                >
                   <Animated.Text
                     style={[
                       tailwind.style(
                         'text-base text-blue-800 font-inter-420-20 leading-[21px] tracking-[0.16px]',
                       ),
-                    ]}>
+                    ]}
+                  >
                     {i18n.t('CONVERSATION.SELF_ASSIGN')}
                   </Animated.Text>
                 </Animated.View>

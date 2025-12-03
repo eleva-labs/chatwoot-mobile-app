@@ -18,8 +18,7 @@ import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../a
 import { MESSAGE_VARIANTS } from '@/constants';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/hooks';
-// eslint-disable-next-line import/no-unresolved
-import { convertOggToWav } from '@/utils/audioConverter';
+import { convertOggToWav } from '@/utils';
 
 // eslint-disable-next-line react/display-name
 const PlayIcon = React.memo(({ fill, fillOpacity }: IconProps) => {
@@ -150,8 +149,8 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
   const sliderProps = useMemo(
     () => ({
       trackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-whiteA-A9' : 'bg-gray-500',
-      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-white' : 'bg-blue-700',
-      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-blue-300' : 'border-blue-700',
+      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-white' : 'bg-brand-600',
+      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-brand-300' : 'border-brand-600',
       manualSeekTo,
       currentPosition,
       totalDuration,
@@ -171,7 +170,8 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
           <Animated.View
             style={tailwind.style('pl-0.5 pr-0.5')}
             entering={FadeIn}
-            exiting={FadeOut}>
+            exiting={FadeOut}
+          >
             <Icon
               icon={
                 <PauseIcon
@@ -186,7 +186,8 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
           <Animated.View
             style={tailwind.style('pl-0.5 pr-0.5')}
             entering={FadeIn}
-            exiting={FadeOut}>
+            exiting={FadeOut}
+          >
             <PlayIcon
               fillOpacity={variant === MESSAGE_VARIANTS.USER ? '1' : '0.565'}
               fill={variant === MESSAGE_VARIANTS.USER ? 'white' : 'black'}

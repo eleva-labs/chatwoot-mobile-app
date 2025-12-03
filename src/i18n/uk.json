@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "URL-адреса встановлення",
-    "DESCRIPTION": "Якщо ви використовуєте власну установку Chatwoot, введіть URL-адресу свого сервера. В іншому випадку використовуйте app.chatwoot.com.",
+    "DESCRIPTION": "Якщо ви використовуєте власну установку Chatscommerce, введіть URL-адресу свого сервера. В іншому випадку використовуйте app.chatscommerce.com.",
     "URL_ERROR": "Введіть дійсну URL-адресу домену",
     "URL_REQUIRED": "URL-адреса обов'язкова",
     "CONNECT": "Під'єднатися",
@@ -399,19 +399,19 @@
     "CHANGE_TEAMS": "Команда змінена"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Could not connect to Chatwoot Server, Please try again later",
+    "COMMON_ERROR": "Будь ласка, спробуйте ще раз пізніше...",
     "OfFLINE": "Ви повинні під'єднатися до Wi-Fi або до стільникового зв'язку, щоб бути онлайн",
     "CANNOT_FETCH": "Помилка при отриманні інформації, будь ласка, спробуйте ще раз",
     "AUTH": "Неправильне ім'я користувача / пароль. Будь ласка, спробуйте ще раз",
-    "NO_ACCOUNTS_MESSAGE": "Ви не маєте доступу до жодних облікових записів chatwoot"
+    "NO_ACCOUNTS_MESSAGE": "Ви не маєте доступу до жодних облікових записів Chatscommerce"
   },
   "SUCCESS": {
     "AUTH": "Вхід успішно здійснено"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Необхідно оновити сервер",
-    "WARNING_FOR_AGENT": "Схоже, ви використовуєте непідтримуваний сервер Chatwoot для вашого мобільного додатку. Будь ласка, зверніться до адміністратора, щоб оновити ваш сервер Chatwoot.",
-    "WARNING_FOR_ADMIN": "Схоже, ви використовуєте непідтримуваний сервер Chatwoot для вашого мобільного додатку. Потрібне оновлення до версії сервера %{minimumVersion} або вище."
+    "WARNING_FOR_AGENT": "Схоже, ви використовуєте непідтримуваний сервер Chatscommerce для вашого мобільного додатку. Будь ласка, зверніться до адміністратора, щоб оновити ваш сервер Chatscommerce.",
+    "WARNING_FOR_ADMIN": "Схоже, ви використовуєте непідтримуваний сервер Chatscommerce для вашого мобільного додатку. Потрібне оновлення до версії сервера %{minimumVersion} або вище."
   },
   "EXIT": {
     "TITLE": "Вийти",
@@ -454,5 +454,16 @@
     "EXECUTION_SUCCESS": "Макрос успішно виконано",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "Макросів не знайдено"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Enable Notifications",
+    "PERMISSION_MESSAGE": "Allow notifications to stay updated with new messages",
+    "PERMISSION_ASK_LATER": "Ask Later",
+    "PERMISSION_CANCEL": "Don't Allow",
+    "PERMISSION_OK": "Allow",
+    "RATIONALE_TITLE": "Notifications Disabled",
+    "RATIONALE_MESSAGE": "Enable notifications in settings to receive message alerts",
+    "RATIONALE_CANCEL": "Cancel",
+    "RATIONALE_SETTINGS": "Open Settings"
   }
 }

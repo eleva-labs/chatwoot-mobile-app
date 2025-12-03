@@ -10,6 +10,7 @@ import { useConversationListStateContext } from '@/context';
 import { tailwind } from '@/theme';
 import { useHaptic } from '@/utils';
 import { getFilteredConversations } from '@/store/conversation/conversationSelectors';
+import { useThemedStyles } from '@/hooks';
 import { selectUserId } from '@/store/auth/authSelectors';
 import {
   resetFilters,
@@ -27,6 +28,8 @@ import { ConversationFilterBar } from '../conversation-filters';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
 
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 const getFiltersAppliedCount = (defaultState: FilterState, updatedState: FilterState): number => {
   let count = 0;
@@ -41,6 +44,7 @@ const getFiltersAppliedCount = (defaultState: FilterState, updatedState: FilterS
 
 export const ConversationHeader = () => {
   const currentState = useAppSelector(selectCurrentState);
+  const themedTailwind = useThemedStyles();
 
   const filters = useAppSelector(selectFilters);
   const dispatch = useAppDispatch();
@@ -117,10 +121,11 @@ export const ConversationHeader = () => {
   const handleClearFilter = () => {
     hapticSuccess?.();
     dispatch(resetFilters());
+    AnalyticsHelper.track(CONVERSATION_EVENTS.CLEAR_FILTERS);
   };
 
   return (
-    <Animated.View style={[tailwind.style('border-b-[1px]'), headerBorderAnimation]}>
+    <Animated.View style={[themedTailwind.style('border-b-[1px] bg-white'), headerBorderAnimation]}>
       <ConversationHeaderPresenter
         currentState={currentState}
         isSelectedAll={isSelectedAll}

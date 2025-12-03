@@ -4,6 +4,7 @@ import { ImageURISource } from 'react-native';
 
 import { NativeView } from '@/components-next/native-components';
 import { tailwind } from '@/theme';
+import { useThemedStyles } from '@/hooks';
 import {
   Agent,
   AvailabilityStatus,
@@ -57,6 +58,8 @@ export type ConversationItemProps = {
   allLabels: Label[];
 
   typingText?: string;
+  isAIEnabled?: boolean;
+  contactId?: number;
 };
 
 export const ConversationItem = memo(
@@ -82,15 +85,20 @@ export const ConversationItem = memo(
     additionalAttributes,
     allLabels,
     typingText,
+    isAIEnabled = false,
+    contactId,
   }: ConversationItemProps) => {
+    const themedTailwind = useThemedStyles();
+
     return (
-      <NativeView style={tailwind.style('px-3 gap-3 flex-row justify-between')}>
+      <NativeView style={themedTailwind.style('px-3 gap-3 flex-row justify-between bg-white')}>
         <NativeView style={tailwind.style('py-3 flex flex-row')}>
           <ConversationSelect {...{ isSelected, currentState }} />
           <ConversationAvatar
             src={{ uri: senderThumbnail } as ImageURISource}
             name={senderName || ''}
             status={isTyping ? 'typing' : availabilityStatus || 'offline'}
+            unreadCount={unreadCount}
           />
         </NativeView>
 
@@ -113,6 +121,8 @@ export const ConversationItem = memo(
             currentState,
             allLabels,
             typingText,
+            isAIEnabled,
+            contactId,
           }}
         />
       </NativeView>

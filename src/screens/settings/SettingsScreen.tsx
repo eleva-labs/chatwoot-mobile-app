@@ -12,7 +12,6 @@ import {
   useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
 import DeviceInfo from 'react-native-device-info';
-import * as WebBrowser from 'expo-web-browser';
 import ChatWootWidget from '@chatwoot/react-native-widget';
 import { useSelector } from 'react-redux';
 import * as Application from 'expo-application';
@@ -22,8 +21,8 @@ import { resetNotifications } from '@/store/notification/notificationSlice';
 import { clearAllContacts } from '@/store/contact/contactSlice';
 
 import i18n from 'i18n';
-import { HELP_URL } from '@/constants/url';
 import { tailwind } from '@/theme';
+import { useThemedStyles } from '@/hooks';
 
 import {
   BottomSheetBackdrop,
@@ -37,10 +36,11 @@ import {
   SettingsList,
 } from '@/components-next';
 import { UserAvatar } from './components/UserAvatar';
+import { BuildInfo } from '@/components-next/common';
 
-import { LANGUAGES, TAB_BAR_HEIGHT } from '@/constants';
-import { useRefsContext } from '@/context';
-import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
+import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@/constants';
+import { useRefsContext, useTheme } from '@/context';
+import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
 import { GenericListType } from '@/types';
 
 import { useHaptic } from '@/utils';
@@ -55,25 +55,28 @@ import { logout, setAccount } from '@/store/auth/authSlice';
 import { authActions } from '@/store/auth/authActions';
 import {
   selectLocale,
-  selectIsChatwootCloud,
+  //selectIsChatwootCloud,
   selectPushToken,
 } from '@/store/settings/settingsSelectors';
 import { settingsActions } from '@/store/settings/settingsActions';
 import { setLocale } from '@/store/settings/settingsSlice';
 
 import AnalyticsHelper from '@/utils/analyticsUtils';
-import { PROFILE_EVENTS } from '@/constants/analyticsEvents';
+import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@/constants/analyticsEvents';
 import { getUserPermissions } from '@/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from '@/constants/permissions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 const appName = Application.applicationName;
 const appVersion = Application.nativeApplicationVersion;
 
 const buildNumber = Application.nativeBuildVersion;
-const appVersionDetails = buildNumber ? `${appVersion} (${buildNumber})` : appVersion;
+const appVersionDetails = buildNumber
+  ? `Version: ${appVersion} \n Build Number: ${buildNumber}`
+  : `Version: ${appVersion}`;
 
 const SettingsScreen = () => {
+  useScreenAnalytics(SCREENS.SETTINGS);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const availabilityStatus =
@@ -97,7 +100,7 @@ const SettingsScreen = () => {
 
   const pushToken = useAppSelector(selectPushToken);
 
-  const userPermissions = getUserPermissions(user, activeAccountId);
+  const userPermissions = user ? getUserPermissions(user, activeAccountId) : [];
 
   const hasConversationPermission = CONVERSATION_PERMISSIONS.some(permission =>
     userPermissions.includes(permission),
@@ -120,9 +123,9 @@ const SettingsScreen = () => {
     operatingSystem: Platform.OS, // android/ios
   };
 
-  const isChatwootCloud = useAppSelector(selectIsChatwootCloud);
+  // `const isChatwootCloud = useAppSelector(selectIsChatwootCloud);
 
-  const chatwootInstance = isChatwootCloud ? `${appName} cloud` : `${appName} self-hosted`;
+  // const chatwootInstance = isChatwootCloud ? `${appName} cloud` : `${appName} self-hosted`;
 
   const accounts = useSelector(selectAccounts) || [];
 
@@ -141,6 +144,8 @@ const SettingsScreen = () => {
     debugActionsSheetRef,
   } = useRefsContext();
 
+  const { theme, setTheme, isDark } = useTheme();
+  const themedTailwind = useThemedStyles();
   const hapticSelection = useHaptic();
 
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -166,10 +171,18 @@ const SettingsScreen = () => {
   };
 
   const onChangeLanguage = (locale: string) => {
+    AnalyticsHelper.track(ACCOUNT_EVENTS.CHANGE_LANGUAGE, {
+      from: activeLocale,
+      to: locale,
+    });
     dispatch(setLocale(locale));
   };
 
   const changeAccount = (accountId: number) => {
+    AnalyticsHelper.track(ACCOUNT_EVENTS.CHANGE_ACCOUNT, {
+      from: activeAccountId,
+      to: accountId,
+    });
     dispatch(clearAllContacts());
     dispatch(clearAllConversations());
     dispatch(resetNotifications());
@@ -192,9 +205,9 @@ const SettingsScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLocale]);
 
-  const openURL = async () => {
-    await WebBrowser.openBrowserAsync(HELP_URL);
-  };
+  //  const openURL = async () => {
+  //    await WebBrowser.openBrowserAsync(HELP_URL);
+  //    };
 
   // const openSystemSettings = () => {
   //   if (Platform.OS === 'ios') {
@@ -210,11 +223,24 @@ const SettingsScreen = () => {
     dispatch(logout());
   }, [dispatch, pushToken]);
 
+  const getThemeLabel = () => {
+    switch (theme) {
+      case 'light':
+        return i18n.t('SETTINGS.THEME_LIGHT');
+      case 'dark':
+        return i18n.t('SETTINGS.THEME_DARK');
+      case 'system':
+        return i18n.t('SETTINGS.THEME_SYSTEM');
+      default:
+        return i18n.t('SETTINGS.THEME_SYSTEM');
+    }
+  };
+
   const preferencesList: GenericListType[] = [
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_AVAILABILITY'),
-      icon: <SwitchIcon />,
+      icon: <SwitchIcon stroke={isDark ? '#FFFFFF' : undefined} />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => openSheet(),
@@ -222,7 +248,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.NOTIFICATIONS'),
-      icon: <NotificationIcon />,
+      icon: <NotificationIcon stroke={isDark ? '#FFFFFF' : undefined} />,
       subtitle: '',
       subtitleType: 'light',
       disabled: !hasConversationPermission,
@@ -232,15 +258,30 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_LANGUAGE'),
-      icon: <TranslateIcon />,
+      icon: <TranslateIcon stroke={isDark ? '#FFFFFF' : undefined} />,
       subtitle: LANGUAGES[activeLocale as keyof typeof LANGUAGES],
       subtitleType: 'light',
       onPressListItem: () => languagesModalSheetRef.current?.present(),
     },
     {
+      hasChevron: true,
+      title: i18n.t('SETTINGS.THEME'),
+      icon: <ThemeIcon color={isDark ? '#FFFFFF' : undefined} />,
+      subtitle: getThemeLabel(),
+      subtitleType: 'light',
+      onPressListItem: () => {
+        // We'll create a simple action sheet for theme selection
+        // For now, cycle through themes
+        const themes = ['system', 'light', 'dark'] as const;
+        const currentIndex = themes.indexOf(theme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        setTheme(themes[nextIndex]);
+      },
+    },
+    {
       hasChevron: enableAccountSwitch,
       title: i18n.t('SETTINGS.SWITCH_ACCOUNT'),
-      icon: <SwitchIcon />,
+      icon: <SwitchIcon stroke={isDark ? '#FFFFFF' : undefined} />,
       subtitle: activeAccountName,
       subtitleType: 'light',
       onPressListItem: () => {
@@ -251,7 +292,7 @@ const SettingsScreen = () => {
     },
   ];
 
-  const supportList: GenericListType[] = [
+  /* const supportList: GenericListType[] = [
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.READ_DOCS'),
@@ -263,40 +304,50 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHAT_WITH_US'),
-      icon: <ChatwootIcon />,
+      icon: <ChatwootIcon stroke={isDark ? '#FFFFFF' : undefined} />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => toggleWidget(true),
     },
-  ];
+  ]; */
 
   return (
-    <SafeAreaView style={tailwind.style('flex-1 bg-white font-inter-normal-20')}>
+    <SafeAreaView
+      edges={['top', 'bottom']}
+      style={themedTailwind.style('flex-1 bg-white font-inter-normal-20')}
+    >
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
-        barStyle={'dark-content'}
+        backgroundColor={themedTailwind.color('bg-white')}
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        navigationBarColor={themedTailwind.color('bg-white')}
+        navigationBarHidden={false}
       />
       <SettingsHeader />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}>
+        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
+      >
         <Animated.View style={tailwind.style('flex justify-center items-center pt-4 gap-4')}>
           <Animated.View>
             <UserAvatar src={avatarUrl} name={name} status={availabilityStatus} />
             <Animated.View
-              style={tailwind.style(
+              style={themedTailwind.style(
                 'absolute border-[2px] border-white rounded-full -bottom-[2px] right-[10px]',
-              )}></Animated.View>
+              )}
+            ></Animated.View>
           </Animated.View>
           <Animated.View style={tailwind.style('flex flex-col items-center gap-1')}>
-            <Animated.Text style={tailwind.style('text-[22px] font-inter-580-24 text-gray-950')}>
+            <Animated.Text
+              style={themedTailwind.style('text-[22px] font-inter-580-24 text-gray-950')}
+            >
               {name}
             </Animated.Text>
             <Animated.Text
-              style={tailwind.style(
+              style={themedTailwind.style(
                 'text-[15px] font-inter-420-20 leading-[17.25px] text-gray-900',
-              )}>
+              )}
+            >
               {email}
             </Animated.Text>
           </Animated.View>
@@ -304,9 +355,9 @@ const SettingsScreen = () => {
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
-        <Animated.View style={tailwind.style('pt-6')}>
+        {/* <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
-        </Animated.View>
+        </Animated.View> */}
         <Animated.View style={tailwind.style('pt-6 mx-4')}>
           <Button
             variant="secondary"
@@ -317,10 +368,9 @@ const SettingsScreen = () => {
         </Animated.View>
         <Pressable
           style={tailwind.style('p-4 items-center')}
-          onLongPress={() => debugActionsSheetRef.current?.present()}>
-          <Text style={tailwind.style('text-sm text-gray-700 ')}>
-            {`${chatwootInstance} ${appVersionDetails}`}
-          </Text>
+          onLongPress={() => debugActionsSheetRef.current?.present()}
+        >
+          <BuildInfo />
         </Pressable>
       </Animated.ScrollView>
       <BottomSheetModal
@@ -333,7 +383,9 @@ const SettingsScreen = () => {
         // bottomInset={bottom === 0 ? 12 : bottom}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        snapPoints={[190]}>
+        backgroundStyle={themedTailwind.style('bg-white')}
+        snapPoints={[190]}
+      >
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_AVAILABILITY')} />
           <AvailabilityStatusList
@@ -352,7 +404,9 @@ const SettingsScreen = () => {
         animationConfigs={animationConfigs}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        snapPoints={['70%']}>
+        backgroundStyle={themedTailwind.style('bg-white')}
+        snapPoints={['70%']}
+      >
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />
           <LanguageList onChangeLanguage={onChangeLanguage} currentLanguage={activeLocale} />
@@ -368,7 +422,9 @@ const SettingsScreen = () => {
         animationConfigs={animationConfigs}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        snapPoints={['52%']}>
+        backgroundStyle={themedTailwind.style('bg-white')}
+        snapPoints={['52%']}
+      >
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.NOTIFICATION_PREFERENCES')} />
           <NotificationPreferences />
@@ -384,7 +440,9 @@ const SettingsScreen = () => {
         animationConfigs={animationConfigs}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        snapPoints={['50%']}>
+        backgroundStyle={themedTailwind.style('bg-white')}
+        snapPoints={['50%']}
+      >
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SWITCH_ACCOUNT')} />
           <SwitchAccount
@@ -402,7 +460,9 @@ const SettingsScreen = () => {
         animationConfigs={animationConfigs}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        snapPoints={['36%']}>
+        backgroundStyle={themedTailwind.style('bg-white')}
+        snapPoints={['36%']}
+      >
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.DEBUG_ACTIONS')} />
           <DebugActions />

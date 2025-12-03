@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "Installation URL",
-    "DESCRIPTION": "If you are using a self-hosted Chatwoot installation, input your server URL. Otherwise, use app.chatwoot.com.",
+    "DESCRIPTION": "If you are using a self-hosted Chatscommerce installation, input your server URL. Otherwise, use app.chatscommerce.com.",
     "URL_ERROR": "Enter a valid URL",
     "URL_REQUIRED": "URL is required",
     "CONNECT": "Connect",
@@ -261,7 +261,17 @@
       "PRIORITY": {
         "EMPTY": "No priority added",
         "EDIT": "Edit"
-      }
+      },
+      "SHARE": "Share conversation"
+    },
+    "EMAIL": {
+      "PLACEHOLDER": "Emails separated by commas"
+    },
+    "LABELS": {
+      "SEARCH_PLACEHOLDER": "Search labels"
+    },
+    "MENU": {
+      "SELECT_ACTION": "Select action"
     }
   },
 
@@ -290,6 +300,11 @@
     "SUPPORT": "Support",
     "SWITCH_ACCOUNT": "Switch Account",
     "CHANGE_LANGUAGE": "Change Language",
+    "THEME": "Theme",
+    "THEME_DESCRIPTION": "Choose your preferred appearance",
+    "THEME_LIGHT": "Light",
+    "THEME_DARK": "Dark",
+    "THEME_SYSTEM": "System",
     "NOTIFICATIONS": "Notifications",
     "NOTIFICATION_PREFERENCES": "Notification Preferences",
     "READ_DOCS": "Read Docs",
@@ -354,6 +369,17 @@
     "CONVERSATION_SLA_MISSED_FIRST_RESPONSE": "A conversation misses first response SLA",
     "CONVERSATION_SLA_MISSED_NEXT_RESPONSE": "A conversation misses next response SLA",
     "CONVERSATION_SLA_MISSED_RESOLUTION": "A conversation misses resolution SLA"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Enable Notifications",
+    "PERMISSION_MESSAGE": "Allow notifications to stay updated with new messages",
+    "PERMISSION_ASK_LATER": "Ask Later",
+    "PERMISSION_CANCEL": "Don't Allow",
+    "PERMISSION_OK": "Allow",
+    "RATIONALE_TITLE": "Notifications Disabled",
+    "RATIONALE_MESSAGE": "Enable notifications in settings to receive message alerts",
+    "RATIONALE_CANCEL": "Cancel",
+    "RATIONALE_SETTINGS": "Open Settings"
   },
   "CONVERSATION_DETAILS": {
     "TITLE": "Attributes",
@@ -422,25 +448,34 @@
     "CHANGE_TEAMS": "Conversation team changed"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Could not connect to Chatwoot Server, Please try again later",
+    "COMMON_ERROR": "Please try again later...",
     "OfFLINE": "You must connect to Wi-fi or a cellular network to get online again",
     "CANNOT_FETCH": "There was an error fetching the information, please try again",
     "AUTH": "Username / Password Incorrect. Please try again",
-    "NO_ACCOUNTS_MESSAGE": "You don't have access to any chatwoot accounts"
+    "NO_ACCOUNTS_MESSAGE": "You don't have access to any Chatscommerce accounts",
+    "AI_TOGGLE_ERROR": "Failed to toggle AI status. Please try again."
   },
   "SUCCESS": {
-    "AUTH": "Login Successful"
+    "AUTH": "Login Successful",
+    "AI_ENABLED_SUCCESS": "AI bot enabled successfully",
+    "AI_DISABLED_SUCCESS": "AI bot disabled successfully"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Server upgrade required",
-    "WARNING_FOR_AGENT": "It seems like you are using unsupported Chatwoot server for your mobile app. Please contact your admin to upgrade your Chatwoot server.",
-    "WARNING_FOR_ADMIN": "It seems like you are using unsupported Chatwoot server for your mobile app. Upgrading to server version %{minimumVersion} or later is required."
+    "WARNING_FOR_AGENT": "It seems like you are using unsupported Chatscommerce server for your mobile app. Please contact your admin to upgrade your Chatscommerce server.",
+    "WARNING_FOR_ADMIN": "It seems like you are using unsupported Chatscommerce server for your mobile app. Upgrading to server version %{minimumVersion} or later is required."
   },
   "EXIT": {
     "TITLE": "Exit",
     "SUBTITLE": "Are you sure you want to quit?",
     "CANCEL": "Cancel",
     "OK": "Ok"
+  },
+  "UPDATES": {
+    "ALERT_TITLE": "Update ready",
+    "ALERT_MESSAGE": "A new version has been downloaded. Restart now to apply the changes.",
+    "ALERT_LATER": "Later",
+    "ALERT_RESTART": "Restart now"
   },
   "BANNER": {
     "TWILIO_WHATSAPP_CAN_REPLY": "You can only reply to this conversation using a template message due to",
@@ -477,5 +512,69 @@
     "EXECUTION_SUCCESS": "Macro executed successfully",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "No macros found"
+  },
+  "AI_ASSISTANT": {
+    "CHAT": {
+      "TITLE": "AI Assistant",
+      "INPUT": {
+        "PLACEHOLDER": "Type a message...",
+        "CANCEL": "Cancel",
+        "SEND": "Send message"
+      },
+      "HEADER": {
+        "NEW_CONVERSATION": "New",
+        "SESSIONS": "Sessions",
+        "CLOSE": "Close AI Assistant"
+      },
+      "MESSAGES": {
+        "LOADING": "Loading conversation...",
+        "EMPTY_WITH_SESSION": "No messages in this conversation",
+        "EMPTY_NO_SESSION": "Start a conversation with the AI assistant",
+        "ERROR_RENDERING": "Error rendering message: {id}"
+      },
+      "SESSIONS": {
+        "LOADING": "Loading sessions...",
+        "EMPTY": "No previous conversations",
+        "RECENTLY": "Recently"
+      },
+      "THOUGHTS": {
+        "HEADER": "THOUGHTS...",
+        "NO_CONTENT": "[No content]"
+      },
+      "TOOLS": {
+        "SINGLE": "Using tool...",
+        "MULTIPLE": "Using {count} tools...",
+        "INDICATOR": "AI tool call indicator"
+      },
+      "ACCESSIBILITY": {
+        "USER_MESSAGE": "Your message",
+        "AI_MESSAGE": "AI assistant message",
+        "INPUT": "AI assistant message input",
+        "CANCEL": "Cancel AI response",
+        "SEND": "Send message",
+        "TOGGLE_SESSIONS": "Toggle sessions list",
+        "NEW_CONVERSATION": "New conversation",
+        "CLOSE": "Close AI Assistant",
+        "CLOSE_HINT": "Closes the AI assistant chat interface",
+        "OPEN": "Open AI Assistant",
+        "OPEN_HINT": "Opens the AI assistant chat interface"
+      }
+    },
+    "STATUS": {
+      "BUTTON_TEXT": "AI",
+      "ENABLED": "AI enabled - tap to disable",
+      "DISABLED": "AI disabled - tap to enable",
+      "ENABLED_LABEL": "AI enabled"
+    }
+  },
+  "FILES": {
+    "PREVIEW_ERROR": "Not able to preview file",
+    "LOAD_ERROR": "File load error"
+  },
+  "AUDIO": {
+    "RECORDING_ERROR": "Recording Error"
+  },
+  "CLIPBOARD": {
+    "COPIED": "{item} copied to clipboard"
   }
 }

@@ -1,0 +1,44 @@
+diff --git a/node_modules/ai/dist/internal/index.js b/node_modules/ai/dist/internal/index.js
+index 0000000..1111111 100644
+--- a/node_modules/ai/dist/internal/index.js
++++ b/node_modules/ai/dist/internal/index.js
+@@ -342,7 +342,7 @@ function convertMessageToLanguageModelMessage(message, downloadedAssets) {
+       return {
+         role: "user",
+-        content: message.content.map((part) => convertPartToLanguageModelPart(part, downloadedAssets)).filter((part) => part.type !== "text" || part.text !== ""),
++        content: message.content.map((part) => convertPartToLanguageModelPart(part, downloadedAssets)).filter((part) => part != null && (part.type !== "text" || part.text !== "")),
+         providerOptions: message.providerOptions
+       };
+     }
+@@ -467,6 +467,9 @@ function convertPartToLanguageModelPart(part, downloadedAssets) {
+ function convertPartToLanguageModelPart(part, downloadedAssets) {
+   var _a5;
++  if (!part) {
++    return null;
++  }
+   if (part.type === "text") {
+     return {
+       type: "text",
+-      text: part.text,
++      text: part.text || "",
+       providerOptions: part.providerOptions
+     };
+   }
+@@ -377,13 +380,13 @@ function convertMessageToLanguageModelMessage(message, downloadedAssets) {
+             case "reasoning": {
+               return {
+                 type: "reasoning",
+-                text: part.text,
++                text: part.text || "",
+                 providerOptions
+               };
+             }
+             case "text": {
+               return {
+                 type: "text",
+-                text: part.text || "",
++                text: part.text || "",
+                 providerOptions
+               };
+             }
+

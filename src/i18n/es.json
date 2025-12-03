@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "URL de instalación",
-    "DESCRIPTION": "Si estás usando una instalación de Chatwoot autoalojada, introduce la URL de tu servidor. De lo contrario, usa app.chatwoot.com.",
+    "DESCRIPTION": "Si estás usando una instalación de Chatscommerce autoalojada, introduce la URL de tu servidor. De lo contrario, usa app.chatscommerce.com.",
     "URL_ERROR": "Introduzca una URL válida",
     "URL_REQUIRED": "La URL es requerida",
     "CONNECT": "Conectar",
@@ -239,7 +239,17 @@
       "PRIORITY": {
         "EMPTY": "No priority added",
         "EDIT": "Editar"
-      }
+      },
+      "SHARE": "Compartir conversación"
+    },
+    "EMAIL": {
+      "PLACEHOLDER": "Correos electrónicos separados por comas"
+    },
+    "LABELS": {
+      "SEARCH_PLACEHOLDER": "Buscar etiquetas"
+    },
+    "MENU": {
+      "SELECT_ACTION": "Seleccionar acción"
     }
   },
   "FILTER": {
@@ -267,6 +277,11 @@
     "SUPPORT": "Soporte",
     "SWITCH_ACCOUNT": "Cambiar de cuenta",
     "CHANGE_LANGUAGE": "Cambiar idioma",
+    "THEME": "Tema",
+    "THEME_DESCRIPTION": "Elige tu apariencia preferida",
+    "THEME_LIGHT": "Claro",
+    "THEME_DARK": "Oscuro",
+    "THEME_SYSTEM": "Sistema",
     "NOTIFICATIONS": "Notificaciones",
     "NOTIFICATION_PREFERENCES": "Preferencias de Notificación",
     "READ_DOCS": "Leer documentación",
@@ -331,6 +346,17 @@
     "CONVERSATION_SLA_MISSED_FIRST_RESPONSE": "Una conversación falla la primera respuesta SLA",
     "CONVERSATION_SLA_MISSED_NEXT_RESPONSE": "Una conversación falta la siguiente respuesta SLA",
     "CONVERSATION_SLA_MISSED_RESOLUTION": "Una conversación carece de resolución SLA"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Habilitar Notificaciones",
+    "PERMISSION_MESSAGE": "Permitir notificaciones para mantenerse actualizado con nuevos mensajes",
+    "PERMISSION_ASK_LATER": "Preguntar Después",
+    "PERMISSION_CANCEL": "No Permitir",
+    "PERMISSION_OK": "Permitir",
+    "RATIONALE_TITLE": "Notificaciones Deshabilitadas",
+    "RATIONALE_MESSAGE": "Habilita las notificaciones en configuración para recibir alertas de mensajes",
+    "RATIONALE_CANCEL": "Cancelar",
+    "RATIONALE_SETTINGS": "Abrir Configuración"
   },
   "CONVERSATION_DETAILS": {
     "TITLE": "Attributes",
@@ -399,25 +425,34 @@
     "CHANGE_TEAMS": "Equipo de conversación cambiado"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Could not connect to Chatwoot Server, Please try again later",
+    "COMMON_ERROR": "Por favor, inténtalo de nuevo más tarde...",
     "OfFLINE": "Debe conectarse a Wi-Fi o a una red móvil para conectarse de nuevo",
     "CANNOT_FETCH": "Hubo un error al recuperar la información, por favor inténtalo de nuevo",
     "AUTH": "Nombre de usuario / Contraseña incorrecto. Inténtalo de nuevo",
-    "NO_ACCOUNTS_MESSAGE": "No tienes acceso a ninguna cuenta de chatwoot"
+    "NO_ACCOUNTS_MESSAGE": "No tienes acceso a ninguna cuenta de Chatscommerce",
+    "AI_TOGGLE_ERROR": "Error al cambiar el estado de la IA. Por favor, inténtalo de nuevo."
   },
   "SUCCESS": {
-    "AUTH": "Inicio de sesión exitoso"
+    "AUTH": "Inicio de sesión exitoso",
+    "AI_ENABLED_SUCCESS": "Bot de IA habilitado exitosamente",
+    "AI_DISABLED_SUCCESS": "Bot de IA deshabilitado exitosamente"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Actualización de servidor necesaria",
-    "WARNING_FOR_AGENT": "Parece que estás usando un servidor de Chatwoot no soportado para tu aplicación móvil. Por favor, contacta con tu administrador para actualizar tu servidor de Chatwoot.",
-    "WARNING_FOR_ADMIN": "Parece que estás usando un servidor de Chatwoot no compatible para tu aplicación móvil. Se requiere actualizar a la versión del servidor %{minimumVersion} o posterior."
+    "WARNING_FOR_AGENT": "Parece que estás usando un servidor de Chatscommerce no soportado para tu aplicación móvil. Por favor, contacta con tu administrador para actualizar tu servidor de Chatscommerce.",
+    "WARNING_FOR_ADMIN": "Parece que estás usando un servidor de Chatscommerce no compatible para tu aplicación móvil. Se requiere actualizar a la versión del servidor %{minimumVersion} o posterior."
   },
   "EXIT": {
     "TITLE": "Salir",
     "SUBTITLE": "¿Estás seguro que quieres salir?",
     "CANCEL": "Cancelar",
     "OK": "De acuerdo"
+  },
+  "UPDATES": {
+    "ALERT_TITLE": "Actualización lista",
+    "ALERT_MESSAGE": "Se ha descargado una nueva versión. Reinicia ahora para aplicar los cambios.",
+    "ALERT_LATER": "Más tarde",
+    "ALERT_RESTART": "Reiniciar ahora"
   },
   "BANNER": {
     "TWILIO_WHATSAPP_CAN_REPLY": "Sólo puede responder a esta conversación usando una plantilla de mensaje debido a",
@@ -454,5 +489,69 @@
     "EXECUTION_SUCCESS": "Macro ejecutado correctamente",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "No se encontraron macros"
+  },
+  "AI_ASSISTANT": {
+    "CHAT": {
+      "TITLE": "Asistente de IA",
+      "INPUT": {
+        "PLACEHOLDER": "Escribe un mensaje...",
+        "CANCEL": "Cancelar",
+        "SEND": "Enviar mensaje"
+      },
+      "HEADER": {
+        "NEW_CONVERSATION": "Nuevo",
+        "SESSIONS": "Sesiones",
+        "CLOSE": "Cerrar Asistente de IA"
+      },
+      "MESSAGES": {
+        "LOADING": "Cargando conversación...",
+        "EMPTY_WITH_SESSION": "No hay mensajes en esta conversación",
+        "EMPTY_NO_SESSION": "Inicia una conversación con el asistente de IA",
+        "ERROR_RENDERING": "Error al renderizar mensaje: {id}"
+      },
+      "SESSIONS": {
+        "LOADING": "Cargando sesiones...",
+        "EMPTY": "No hay conversaciones anteriores",
+        "RECENTLY": "Recientemente"
+      },
+      "THOUGHTS": {
+        "HEADER": "PENSAMIENTOS...",
+        "NO_CONTENT": "[Sin contenido]"
+      },
+      "TOOLS": {
+        "SINGLE": "Usando herramienta...",
+        "MULTIPLE": "Usando {count} herramientas...",
+        "INDICATOR": "Indicador de llamada de herramienta de IA"
+      },
+      "ACCESSIBILITY": {
+        "USER_MESSAGE": "Tu mensaje",
+        "AI_MESSAGE": "Mensaje del asistente de IA",
+        "INPUT": "Entrada de mensaje del asistente de IA",
+        "CANCEL": "Cancelar respuesta de IA",
+        "SEND": "Enviar mensaje",
+        "TOGGLE_SESSIONS": "Alternar lista de sesiones",
+        "NEW_CONVERSATION": "Nueva conversación",
+        "CLOSE": "Cerrar Asistente de IA",
+        "CLOSE_HINT": "Cierra la interfaz de chat del asistente de IA",
+        "OPEN": "Abrir Asistente de IA",
+        "OPEN_HINT": "Abre la interfaz de chat del asistente de IA"
+      }
+    },
+    "STATUS": {
+      "BUTTON_TEXT": "IA",
+      "ENABLED": "IA habilitado - toca para deshabilitar",
+      "DISABLED": "IA deshabilitado - toca para habilitar",
+      "ENABLED_LABEL": "IA habilitado"
+    }
+  },
+  "FILES": {
+    "PREVIEW_ERROR": "No se puede previsualizar el archivo",
+    "LOAD_ERROR": "Error al cargar el archivo"
+  },
+  "AUDIO": {
+    "RECORDING_ERROR": "Error de grabación"
+  },
+  "CLIPBOARD": {
+    "COPIED": "{item} copiado al portapapeles"
   }
 }

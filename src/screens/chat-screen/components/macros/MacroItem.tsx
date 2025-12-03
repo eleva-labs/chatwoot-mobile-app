@@ -38,7 +38,8 @@ const MacroItem = (props: MacroItemProps) => {
       key={index}
       style={({ pressed }) => [
         tailwind.style(index === 0 && !isInsideBottomSheet ? 'rounded-t-[13px]' : ''),
-      ]}>
+      ]}
+    >
       <Animated.View style={tailwind.style('flex flex-row items-center pl-1')}>
         <Animated.View style={tailwind.style('w-[20px] h-[20px] flex items-center justify-center')}>
           {isThisMacroExecuting ? <Spinner size={16} /> : <Icon icon={<MacroIcon />} size={20} />}
@@ -48,17 +49,20 @@ const MacroItem = (props: MacroItemProps) => {
           style={tailwind.style(
             'flex-1 ml-3 flex-row items-center justify-between py-[11px]',
             !isLastItem ? ' border-b-[1px] border-b-blackA-A3' : '',
-          )}>
+          )}
+        >
           <Animated.View>
             <Animated.Text
-              style={tailwind.style('font-inter-420-20 leading-[22px] tracking-[0.16px] ')}>
+              style={tailwind.style('font-inter-420-20 leading-[22px] tracking-[0.16px] ')}
+            >
               {macro.name}
             </Animated.Text>
           </Animated.View>
           <Pressable
             onPress={handleOnPress}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            style={tailwind.style('flex flex-row items-center pr-3')}>
+            style={tailwind.style('flex flex-row items-center pr-3')}
+          >
             {macro.hasChevron ? (
               <Icon icon={<CaretRight />} size={20} />
             ) : (

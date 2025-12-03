@@ -2,6 +2,7 @@ import React from 'react';
 import { Animated, Text, Dimensions } from 'react-native';
 
 import { tailwind } from '@/theme';
+import { useThemedStyles } from '@/hooks';
 import { Channel, Message, MessageStatus, MessageType } from '@/types';
 import { unixTimestampToReadableTime } from '@/utils';
 
@@ -28,6 +29,7 @@ type MessageTextCellProps = {
 };
 
 export const MessageTextCell = (props: MessageTextCellProps) => {
+  const themedTailwind = useThemedStyles();
   const {
     text,
     timeStamp,
@@ -86,10 +88,10 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
   return (
     <Animated.View
       style={[
-        tailwind.style(
+        themedTailwind.style(
           'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
           isEmailMessage ? `max-w-[${EMAIL_MESSAGE_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`,
-          isIncoming ? 'bg-blue-700' : '',
+          isIncoming ? 'bg-brand-600' : '',
           isOutgoing ? 'bg-gray-100' : '',
           isMessageFailed ? 'bg-ruby-700' : '',
           isAvatarRendered
@@ -100,7 +102,8 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
                 : ''
             : '',
         ),
-      ]}>
+      ]}
+    >
       {contentAttributes && <EmailMeta {...{ contentAttributes, sender }} />}
       <MarkdownDisplay {...{ isIncoming, isOutgoing, isMessageFailed }} messageContent={text} />
       {/* <Text
@@ -121,14 +124,16 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
           // singleLineShortText ? "pl-1.5" : "",
           // singleLineLongText || isMultiLine ? "justify-end" : "",
           // multiLineShortText ? " absolute bottom-0.5 right-2.5" : "",
-        )}>
+        )}
+      >
         <Text
           style={tailwind.style(
             'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
             isIncoming ? 'text-whiteA-A11' : '',
             isOutgoing ? 'text-gray-700' : '',
             isMessageFailed ? 'text-whiteA-A11' : '',
-          )}>
+          )}
+        >
           {unixTimestampToReadableTime(timeStamp)}
         </Text>
         <DeliveryStatus

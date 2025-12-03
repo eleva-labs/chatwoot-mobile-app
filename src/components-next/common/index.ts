@@ -5,3 +5,5 @@ export * from './icon';
 export * from './search';
 export * from './slider';
 export * from './swipeable';
+export * from './BuildInfo';
+export * from './ThemeToggle';

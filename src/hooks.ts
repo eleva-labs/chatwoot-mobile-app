@@ -4,3 +4,7 @@ import type { RootState, AppDispatch } from './store';
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+// Theme-related hooks
+export * from './hooks/useThemedStyles';
+export * from './hooks/useScreenAnalytics';

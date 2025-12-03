@@ -9,6 +9,7 @@ import Animated, {
 import { FlashList } from '@shopify/flash-list';
 import { useAppKeyboardAnimation } from '@/utils';
 import { tailwind } from '@/theme';
+import { useThemedStyles } from '@/hooks';
 import { Message } from '@/types';
 import { MessageComponent } from '../message-item/Message';
 // import { MessageItemContainer } from '../message-item/MessageItemContainer';
@@ -24,13 +25,15 @@ const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Message | {
 type DateSectionProps = { item: { date: string } };
 
 const DateSection = ({ item }: DateSectionProps) => {
+  const themedTailwind = useThemedStyles();
   return (
     <Animated.View style={tailwind.style('flex flex-row justify-center items-center py-4')}>
-      <Animated.View style={tailwind.style('rounded-lg py-1 px-[7px] bg-blackA-A3')}>
+      <Animated.View style={themedTailwind.style('rounded-lg py-1 px-[7px] bg-gray-100')}>
         <Animated.Text
-          style={tailwind.style(
-            'text-cxs font-inter-420-20 tracking-[0.32px] text-blackA-A11 leading-[15px]',
-          )}>
+          style={themedTailwind.style(
+            'text-cxs font-inter-420-20 tracking-[0.32px] text-gray-700 leading-[15px]',
+          )}
+        >
           {item.date}
         </Animated.Text>
       </Animated.View>
@@ -90,7 +93,8 @@ export const MessagesList = ({
   return (
     <Animated.View
       layout={LinearTransition.springify().damping(38).stiffness(240)}
-      style={[tailwind.style('flex-1 min-h-10'), animatedFlashlistStyle]}>
+      style={[tailwind.style('flex-1 min-h-10'), animatedFlashlistStyle]}
+    >
       <AnimatedFlashlist
         layout={LinearTransition.springify().damping(38).stiffness(240)}
         onScroll={() => {

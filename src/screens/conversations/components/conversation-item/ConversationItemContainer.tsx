@@ -28,6 +28,8 @@ import { MarkAsUnRead, StatusIcon } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { MarkAsRead } from '@/svg-icons';
 import i18n from '@/i18n';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 type ConversationItemContainerProps = {
   conversationItem: Conversation;
@@ -97,18 +99,27 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
   const selected = useAppSelector(selectSelected);
   const currentState = useAppSelector(selectCurrentState);
 
-  const { availabilityStatus, name: contactName, thumbnail: contactThumbnail } = contact || {};
+  const {
+    availabilityStatus,
+    name: contactName,
+    thumbnail: contactThumbnail,
+    customAttributes,
+  } = contact || {};
   const isSelected = useMemo(() => id in selected, [selected, id]);
   const isTyping = useMemo(() => isContactTyping(typingUsers, contactId), [typingUsers, contactId]);
   const typingText = useMemo(() => getTypingUsersText({ users: typingUsers }), [typingUsers]);
+  // @ts-expect-error - customAttributes is not typed
+  const isAIEnabled = useMemo(() => customAttributes?.aiEnabled === true, [customAttributes]);
 
   const lastMessage = getLastMessage(conversationItem);
 
   const markMessageReadOrUnread = useCallback(() => {
     if (unreadCount > 0) {
       dispatch(conversationActions.markMessageRead({ conversationId: id }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MARK_AS_READ, { conversationId: id });
     } else {
       dispatch(conversationActions.markMessagesUnread({ conversationId: id }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MARK_AS_UNREAD, { conversationId: id });
     }
   }, [dispatch, id, unreadCount]);
 
@@ -162,6 +173,8 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
     additionalAttributes,
     allLabels,
     typingText: typingText as string | undefined,
+    isAIEnabled,
+    contactId,
   };
 
   return (
@@ -176,7 +189,8 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
       handleLongPress={onLongPressAction}
       handlePress={onPressAction}
       triggerOverswipeOnFlick
-      {...{ index, openedRowIndex }}>
+      {...{ index, openedRowIndex }}
+    >
       <ConversationItem {...viewProps} />
     </Swipeable>
   );

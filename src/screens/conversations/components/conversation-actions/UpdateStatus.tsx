@@ -8,7 +8,7 @@ import { tailwind } from '@/theme';
 import { ConversationStatus, StatusCollection } from '@/types';
 import { getStatusTypeIcon, useHaptic } from '@/utils';
 import { BottomSheetHeader, Icon } from '@/components-next';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import {
   selectSelectedConversation,
   selectSelectedIds,
@@ -17,6 +17,8 @@ import { conversationActions } from '@/store/conversation/conversationActions';
 import { setCurrentState } from '@/store/conversation/conversationHeaderSlice';
 import i18n from '@/i18n';
 import { StatusOptions } from '@/types';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 type StatusCellProps = {
   value: StatusCollection;
   isLastItem: boolean;
@@ -32,22 +34,26 @@ const StatusList: StatusCollection[] = [
 
 const StatusCell = (props: StatusCellProps) => {
   const { value, isLastItem, onPress } = props;
+  const themedTailwind = useThemedStyles();
   return (
     <Pressable
       onPress={() => onPress(value.id)}
-      style={tailwind.style('flex flex-row items-center')}>
+      style={tailwind.style('flex flex-row items-center')}
+    >
       <Animated.View>
         <Icon icon={value.icon} size={24} />
       </Animated.View>
       <Animated.View
-        style={tailwind.style(
+        style={themedTailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !isLastItem ? 'border-b-[1px] border-blackA-A3' : '',
-        )}>
+          !isLastItem ? 'border-b-[1px] border-b-gray-200' : '',
+        )}
+      >
         <Animated.Text
-          style={tailwind.style(
+          style={themedTailwind.style(
             'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
+          )}
+        >
           {i18n.t(`CONVERSATION.ASSIGNEE.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
       </Animated.View>
@@ -77,10 +83,16 @@ export const UpdateStatus = () => {
     if (isMultipleConversationsSelected) {
       const payload = { type: 'Conversation', ids: selectedIds, fields: { status } };
       dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        status,
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
       dispatch(setCurrentState('none'));
     } else {
       if (!selectedConversation?.id) return;
+      const previousStatus = selectedConversation?.status;
       dispatch(
         conversationActions.toggleConversationStatus({
           conversationId: selectedConversation?.id,
@@ -90,6 +102,16 @@ export const UpdateStatus = () => {
           },
         }),
       );
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        conversationId: selectedConversation?.id,
+        from: previousStatus,
+        to: status,
+      });
+      if (status === 'resolved') {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.RESOLVE_CONVERSATION_STATUS, {
+          conversationId: selectedConversation?.id,
+        });
+      }
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
     }
   };

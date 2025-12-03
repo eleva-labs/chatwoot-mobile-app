@@ -50,7 +50,8 @@ export const AnimatedCodeNumber: React.FC<AnimatedCodeNumberProps> = ({
               // I want the animation to start fast, then decelerate at the end (opposite of the previous one)
               .easing(Easing.bezier(0.6, 0.1, 0.4, 0.8).factory())
               .build()}
-            style={[styles.text, { color: 'hsl(0, 0%, 39.3%)' }]}>
+            style={[styles.text, { color: 'hsl(0, 0%, 39.3%)' }]}
+          >
             {code}
           </Animated.Text>
         </Animated.View>

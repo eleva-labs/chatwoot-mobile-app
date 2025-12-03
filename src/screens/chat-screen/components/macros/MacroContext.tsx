@@ -58,7 +58,8 @@ export const MacroProvider: React.FC<{
         isExecuting,
         conversationId,
         executingMacroId,
-      }}>
+      }}
+    >
       {children}
     </MacroContext.Provider>
   );

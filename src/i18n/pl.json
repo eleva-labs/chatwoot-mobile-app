@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "URL instalacji",
-    "DESCRIPTION": "Jeśli korzystasz z własnej instalacji Chatwoot, wprowadź adres URL serwera. W przeciwnym razie użyj app.chatwoot.com.",
+    "DESCRIPTION": "Jeśli korzystasz z własnej instalacji Chatscommerce, wprowadź adres URL serwera. W przeciwnym razie użyj app.chatscommerce.com.",
     "URL_ERROR": "Wprowadź prawidłowy URL",
     "URL_REQUIRED": "URL jest wymagany",
     "CONNECT": "Połącz",
@@ -399,19 +399,19 @@
     "CHANGE_TEAMS": "Zmieniono zespół rozmowy"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Could not connect to Chatwoot Server, Please try again later",
+    "COMMON_ERROR": "Spróbuj ponownie później...",
     "OfFLINE": "Musisz połączyć się z siecią Wi-Fi lub siecią komórkową, aby wrócić online",
     "CANNOT_FETCH": "Wystąpił błąd podczas pobierania informacji, spróbuj ponownie",
     "AUTH": "Nieprawidłowa nazwa użytkownika / hasło. Spróbuj ponownie",
-    "NO_ACCOUNTS_MESSAGE": "Nie masz dostępu do żadnych kont chatwoot"
+    "NO_ACCOUNTS_MESSAGE": "Nie masz dostępu do żadnych kont Chatscommerce"
   },
   "SUCCESS": {
     "AUTH": "Logowanie udane"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Wymagana aktualizacja serwera",
-    "WARNING_FOR_AGENT": "Wygląda na to, że używasz nieobsługiwanej wersji serwera Chatwoot dla swojej aplikacji mobilnej. Skontaktuj się z administratorem, aby zaktualizować serwer Chatwoot.",
-    "WARNING_FOR_ADMIN": "Wygląda na to, że używasz nieobsługiwanej wersji serwera Chatwoot dla swojej aplikacji mobilnej. Wymagana jest aktualizacja do wersji serwera %{minimumVersion} lub nowszej."
+    "WARNING_FOR_AGENT": "Wygląda na to, że używasz nieobsługiwanej wersji serwera Chatscommerce dla swojej aplikacji mobilnej. Skontaktuj się z administratorem, aby zaktualizować serwer Chatscommerce.",
+    "WARNING_FOR_ADMIN": "Wygląda na to, że używasz nieobsługiwanej wersji serwera Chatscommerce dla swojej aplikacji mobilnej. Wymagana jest aktualizacja do wersji serwera %{minimumVersion} lub nowszej."
   },
   "EXIT": {
     "TITLE": "Wyjście",
@@ -454,5 +454,16 @@
     "EXECUTION_SUCCESS": "Makro pomyślnie wykonane",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "Nie znaleziono makr"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Enable Notifications",
+    "PERMISSION_MESSAGE": "Allow notifications to stay updated with new messages",
+    "PERMISSION_ASK_LATER": "Ask Later",
+    "PERMISSION_CANCEL": "Don't Allow",
+    "PERMISSION_OK": "Allow",
+    "RATIONALE_TITLE": "Notifications Disabled",
+    "RATIONALE_MESSAGE": "Enable notifications in settings to receive message alerts",
+    "RATIONALE_CANCEL": "Cancel",
+    "RATIONALE_SETTINGS": "Open Settings"
   }
 }

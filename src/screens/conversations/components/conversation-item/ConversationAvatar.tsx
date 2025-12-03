@@ -12,6 +12,7 @@ type ConversationAvatarProps = {
   src: ImageURISource;
   name: string;
   status: AvailabilityStatus;
+  unreadCount?: number;
 };
 
 const checkIfPropsAreSame = (prev: ConversationAvatarProps, next: ConversationAvatarProps) => {
@@ -20,12 +21,19 @@ const checkIfPropsAreSame = (prev: ConversationAvatarProps, next: ConversationAv
 };
 
 export const ConversationAvatar = memo((props: ConversationAvatarProps) => {
-  const { src, name, status } = props;
+  const { src, name, status, unreadCount } = props;
   return (
     <AnimatedNativeView
       style={tailwind.style('')}
-      layout={LinearTransition.springify().damping(28).stiffness(200)}>
-      <Avatar size="4xl" {...{ src, name, status: status as AvatarStatusType }} />
+      layout={LinearTransition.springify().damping(28).stiffness(200)}
+    >
+      <Avatar
+        size="5xl"
+        src={src}
+        name={name}
+        status={status as AvatarStatusType}
+        counter={unreadCount && unreadCount > 0 ? { count: unreadCount } : undefined}
+      />
     </AnimatedNativeView>
   );
 }, checkIfPropsAreSame);

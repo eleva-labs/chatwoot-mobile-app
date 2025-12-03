@@ -15,8 +15,8 @@ import {
 import { TAB_BAR_HEIGHT } from '@/constants';
 import { tailwind } from '@/theme';
 import { ConversationStatus } from '@/types';
-import { useChatWindowContext } from '@/context';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useChatWindowContext, useTheme } from '@/context';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
 import { conversationActions } from '@/store/conversation/conversationActions';
 
@@ -28,6 +28,8 @@ import { selectAllTeams } from '@/store/team/teamSelectors';
 import { selectInstallationUrl } from '@/store/settings/settingsSelectors';
 import { ConversationMetaInformation } from './components/ConversationMetaInformation';
 import { selectConversationParticipantsByConversationId } from '@/store/conversation-participant/conversationParticipantSelectors';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -35,6 +37,8 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
+  const { isDark } = useTheme();
+  const themedTailwind = useThemedStyles();
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
@@ -69,10 +73,16 @@ export const ConversationActions = () => {
 
       const message = Platform.OS === 'android' ? url : '';
 
-      await Share.share({
+      const result = await Share.share({
         message,
         url,
       });
+
+      if (result.action === Share.sharedAction) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.CONVERSATION_SHARE, {
+          conversationId,
+        });
+      }
     } catch (error) {
       Alert.alert((error as Error).message);
     }
@@ -81,8 +91,10 @@ export const ConversationActions = () => {
   const updateConversationStatus = (type: ConversationActionType, status?: ConversationStatus) => {
     if (type === 'mute') {
       dispatch(conversationActions.muteConversation({ conversationId }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MUTE_CONVERSATION, { conversationId });
     } else if (type === 'unmute') {
       dispatch(conversationActions.unmuteConversation({ conversationId }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.UN_MUTE_CONVERSATION, { conversationId });
     } else {
       dispatch(
         conversationActions.toggleConversationStatus({
@@ -90,6 +102,15 @@ export const ConversationActions = () => {
           payload: { status: status as ConversationStatus, snoozed_until: null },
         }),
       );
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        conversationId,
+        status,
+      });
+      if (status === 'resolved') {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.RESOLVE_CONVERSATION_STATUS, {
+          conversationId,
+        });
+      }
     }
   };
 
@@ -124,7 +145,8 @@ export const ConversationActions = () => {
     <Animated.View style={tailwind.style('', `w-[${SCREEN_WIDTH}px]`)}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
+        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}
+      >
         <ConversationBasicActions
           status={status}
           updateConversationStatus={updateConversationStatus}
@@ -162,9 +184,11 @@ export const ConversationActions = () => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
+        backgroundStyle={themedTailwind.style('bg-black')}
         animationConfigs={animationConfigs}
         enablePanDownToClose
-        snapPoints={['50%']}>
+        snapPoints={['50%']}
+      >
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />
       </BottomSheetModal>
     </Animated.View>

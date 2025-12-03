@@ -70,7 +70,8 @@ export const Basic: Story = {
                 <ScrollView contentContainerStyle={tailwind.style('flex')}>
                   <PlatformSpecificKeyboardWrapperComponent
                     style={tailwind.style('flex-1 bg-white')}
-                    interpolator="linear">
+                    interpolator="linear"
+                  >
                     <MessagesList
                       currentUserId={1}
                       isEmailInbox={false}

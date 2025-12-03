@@ -14,7 +14,7 @@
   },
   "CONFIGURE_URL": {
     "ENTER_URL": "Instalare URL",
-    "DESCRIPTION": "Dacă folosiți o instalare de Chatwoot auto-găzduită, introduceți URL-ul serverului. Altfel, folosiți app.chatwoot.com.",
+    "DESCRIPTION": "Dacă folosiți o instalare de Chatscommerce auto-găzduită, introduceți URL-ul serverului. Altfel, folosiți app.chatscommerce.com.",
     "URL_ERROR": "Introduceți o adresă URL validă",
     "URL_REQUIRED": "URL-ul este necesar",
     "CONNECT": "Conectează-te",
@@ -399,19 +399,19 @@
     "CHANGE_TEAMS": "Echipa de conversație schimbată"
   },
   "ERRORS": {
-    "COMMON_ERROR": "Could not connect to Chatwoot Server, Please try again later",
+    "COMMON_ERROR": "Vă rugăm să încercați din nou mai târziu...",
     "OfFLINE": "Trebuie să vă conectați la Wi-Fi sau la o rețea celulară pentru a intra din nou online",
     "CANNOT_FETCH": "A existat o eroare la preluarea informațiilor, vă rugăm să încercați din nou",
     "AUTH": "Nume utilizator / parolă incorectă. Vă rugăm să încercaţi din nou",
-    "NO_ACCOUNTS_MESSAGE": "Nu aveți acces la niciun cont de chatwoot"
+    "NO_ACCOUNTS_MESSAGE": "Nu aveți acces la niciun cont de Chatscommerce"
   },
   "SUCCESS": {
     "AUTH": "Autentificare reușită"
   },
   "SERVER_UPGRADE": {
     "TITLE": "Este necesar upgrade-ul serverului",
-    "WARNING_FOR_AGENT": "Se pare că utilizați serverul Chatwoot neacceptat pentru aplicația mobilă. Vă rugăm să contactați administratorul pentru a vă actualiza serverul Chatwoot.",
-    "WARNING_FOR_ADMIN": "Se pare că utilizați serverul Chatwoot neacceptat pentru aplicația mobilă. Este necesar upgrade-ul la versiunea de server %{minimumVersion} sau o versiune ulterioară."
+    "WARNING_FOR_AGENT": "Se pare că utilizați serverul Chatscommerce neacceptat pentru aplicația mobilă. Vă rugăm să contactați administratorul pentru a vă actualiza serverul Chatscommerce.",
+    "WARNING_FOR_ADMIN": "Se pare că utilizați serverul Chatscommerce neacceptat pentru aplicația mobilă. Este necesar upgrade-ul la versiunea de server %{minimumVersion} sau o versiune ulterioară."
   },
   "EXIT": {
     "TITLE": "Ieșire",
@@ -454,5 +454,16 @@
     "EXECUTION_SUCCESS": "Macrocomandă executată cu succes",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "Nu s-au găsit macrocomenzi"
+  },
+  "NOTIFICATIONS": {
+    "PERMISSION_TITLE": "Enable Notifications",
+    "PERMISSION_MESSAGE": "Allow notifications to stay updated with new messages",
+    "PERMISSION_ASK_LATER": "Ask Later",
+    "PERMISSION_CANCEL": "Don't Allow",
+    "PERMISSION_OK": "Allow",
+    "RATIONALE_TITLE": "Notifications Disabled",
+    "RATIONALE_MESSAGE": "Enable notifications in settings to receive message alerts",
+    "RATIONALE_CANCEL": "Cancel",
+    "RATIONALE_SETTINGS": "Open Settings"
   }
 }

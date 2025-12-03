@@ -1,21 +1,68 @@
 {
   "cli": {
-    "version": ">= 12.3.0",
+    "version": ">= 14.2.0",
     "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "store",
+      "env": {
+        "ENVIRONMENT": "dev",
+        "EAS_BUILD_PROFILE": "development",
+        "SENTRY_ORG": "eleva-labs",
+        "SENTRY_PROJECT": "chatscommerce",
+        "EXPO_DEBUG": "1"
+      },
+      "environment": "development",
+      "channel": "development",
+      "android": {
+        "image": "latest",
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleDebug",
+        "env": {
+          "ENVIRONMENT": "dev"
+        }
+      },
+      "ios": {
+        "image": "latest"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "ENVIRONMENT": "prod",
+        "SENTRY_ORG": "eleva-labs",
+        "SENTRY_PROJECT": "chatscommerce",
+        "EXPO_DEBUG": "1"
+      },
+      "environment": "production",
+      "channel": "production",
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "image": "latest"
+      }
     }
   },
   "submit": {
+    "development": {
+      "android": {
+        "serviceAccountKeyPath": "./credentials/android/service-account-key.json",
+        "track": "internal"
+      },
+      "ios": {
+        "ascAppId": "6749920971",
+        "appleTeamId": "TGB3VRK9LR"
+      }
+    },
     "production": {
       "android": {
-        "track": "internal" // (enum: production, beta, alpha, internal)
+        "serviceAccountKeyPath": "./credentials/android/service-account-key.json",
+        "track": "internal"
+      },
+      "ios": {
+        "ascAppId": "6749920971"
       }
     }
   }

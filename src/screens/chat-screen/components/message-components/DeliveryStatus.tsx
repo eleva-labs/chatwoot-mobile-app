@@ -153,7 +153,8 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
           animationConfigs={animationConfigs}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
-          snapPoints={['15']}>
+          snapPoints={['15']}
+        >
           <BottomSheetWrapper>
             <ErrorInformation errorMessage={errorMessage} />
           </BottomSheetWrapper>
@@ -165,7 +166,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   if (showReadIndicator()) {
     return (
       <Icon
-        icon={<DoubleCheckIcon renderSecondTick stroke={tailwind.color('text-blue-800')} />}
+        icon={<DoubleCheckIcon renderSecondTick stroke={tailwind.color('text-brand-600')} />}
         size={14}
       />
     );

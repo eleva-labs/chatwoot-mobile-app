@@ -1,5 +1,7 @@
-import React, { useCallback, useRef } from 'react';
-import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
+/* eslint-disable @typescript-eslint/no-var-requires */
+import React, { useCallback, useRef, useEffect } from 'react';
+import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
+import firebase, { getApps } from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
 import { getStateFromPath } from '@react-navigation/native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
@@ -7,18 +9,24 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { AppTabs } from './tabs/AppTabs';
 import i18n from 'i18n';
 import { navigationRef } from '@/utils/navigationUtils';
-import { findConversationLinkFromPush, findNotificationFromFCM } from '@/utils/pushUtils';
+import { useTheme } from '@/context';
+import {
+  findConversationLinkFromPush,
+  findNotificationFromFCM,
+  updateBadgeCount,
+} from '@/utils/pushUtils';
 import { extractConversationIdFromUrl } from '@/utils/conversationUtils';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector, useThemedStyles } from '@/hooks';
 import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSelectors';
 import { SSO_CALLBACK_URL } from '@/constants';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RefsProvider } from '@/context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { waitForFirebaseInit } from '@/utils/firebaseUtils';
 import { transformNotification } from '@/utils/camelCaseKeys';
 import { SsoUtils } from '@/utils/ssoUtils';
 import { useAppDispatch } from '@/hooks';
@@ -28,11 +36,60 @@ import Inter50024 from '@/assets/fonts/Inter-500-24.ttf';
 import Inter58024 from '@/assets/fonts/Inter-580-24.ttf';
 import Inter60020 from '@/assets/fonts/Inter-600-20.ttf';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
+// Initialize Firebase messaging handlers after app starts
+const initializeFirebaseMessaging = () => {
+  try {
+    // Ensure Firebase is initialized (should be auto-initialized by plugin, but let's be explicit)
+    const apps = getApps();
+    if (!apps.length) {
+      console.log('Firebase not initialized, skipping messaging setup...');
+      return;
+    }
+
+    console.log('Firebase already initialized, setting up messaging...');
+
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+
+      // Handle notification data
+      const notification = findNotificationFromFCM({ message: remoteMessage });
+      const camelCaseNotification = transformNotification(notification);
+
+      // Update badge count for iOS
+      if (Platform.OS === 'ios') {
+        updateBadgeCount({ count: 1 }); // You might want to track actual count
+      }
+
+      // TODO: Process camelCaseNotification data for background tasks
+      console.log('Processed notification:', camelCaseNotification.id);
+    });
+  } catch (error) {
+    console.log('Firebase messaging initialization failed:', error);
+  }
+};
+
+const buildConversationsState = () => ({
+  routes: [
+    {
+      name: 'Tab',
+      state: {
+        routes: [
+          {
+            name: 'Conversations',
+          },
+        ],
+      },
+    },
+  ],
 });
 
+const hasConversationIdInPath = (path: string) => /\/conversations\/\d+/.test(path);
+
+const normalizePath = (path: string) => path.split('?')[0].replace(/^\/+/, '');
+
 export const AppNavigationContainer = () => {
+  const { isDark } = useTheme();
+  const themedTailwind = useThemedStyles();
   const [fontsLoaded] = useFonts({
     'Inter-400-20': Inter40020,
     'Inter-420-20': Inter42020,
@@ -47,16 +104,43 @@ export const AppNavigationContainer = () => {
   const installationUrl = useAppSelector(selectInstallationUrl);
   const locale = useAppSelector(selectLocale);
 
+  // Initialize Firebase messaging when component mounts
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      const ready = await waitForFirebaseInit({ timeoutMs: 5000, pollMs: 100 });
+      if (!isMounted) return;
+      console.log('Navigation: Firebase ready?', ready, 'apps:', getApps().length);
+      initializeFirebaseMessaging();
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const normalizedInstallationUrl = installationUrl?.replace(/\/+$/, '');
   const linking = {
-    prefixes: [installationUrl, SSO_CALLBACK_URL],
+    prefixes: [
+      installationUrl,
+      normalizedInstallationUrl,
+      SSO_CALLBACK_URL,
+      'chatwootapp://',
+    ].filter(Boolean),
     config: {
       screens: {
+        Tab: {
+          screens: {
+            Conversations: 'app/accounts/:accountId/conversations',
+          },
+        },
         ChatScreen: {
           path: 'app/accounts/:accountId/conversations/:conversationId/:primaryActorId?/:primaryActorType?',
           parse: {
-            conversationId: (conversationId: string) => parseInt(conversationId),
-            primaryActorId: (primaryActorId: string) => parseInt(primaryActorId),
-            primaryActorType: (primaryActorType: string) => decodeURIComponent(primaryActorType),
+            conversationId: (conversationId: string) => Number(conversationId),
+            primaryActorId: (primaryActorId: string) =>
+              primaryActorId ? Number(primaryActorId) : undefined,
+            primaryActorType: (primaryActorType: string) =>
+              primaryActorType ? decodeURIComponent(primaryActorType) : undefined,
           },
         },
       },
@@ -64,41 +148,58 @@ export const AppNavigationContainer = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // getStateFromPath: App running, receives deep link - handles SSO callbacks and conversation navigation
     getStateFromPath: (path: string, config: any) => {
+      const incomingPath = path;
       // Handle SSO callback - App running, receives deep link
-      if (path.includes(SSO_CALLBACK_URL) || path.includes('auth/saml')) {
-        const ssoParams = SsoUtils.parseCallbackUrl(`chatwootapp://${path}`);
+      const sanitizedPath = normalizePath(incomingPath);
+
+      if (incomingPath.includes(SSO_CALLBACK_URL) || incomingPath.includes('auth/saml')) {
+        const ssoParams = SsoUtils.parseCallbackUrl(`chatwootapp://${incomingPath}`);
         // Handle both success and error cases
         SsoUtils.handleSsoCallback(ssoParams, dispatch);
         // Return undefined to prevent navigation change for SSO callback
         return undefined;
       }
 
-      let primaryActorId = null;
-      let primaryActorType = null;
+      if (
+        sanitizedPath === 'inbox' ||
+        sanitizedPath.includes('inbox') ||
+        (sanitizedPath.includes('/conversations') && !hasConversationIdInPath(sanitizedPath))
+      ) {
+        return buildConversationsState();
+      }
+
+      let primaryActorId = null as number | null;
+      let primaryActorType = null as string | null;
       const state = getStateFromPath(path, config);
       const { routes } = state || {};
 
-      const conversationId = extractConversationIdFromUrl({
-        url: path,
-      });
+      // Extract optional query params (e.g., ?ref=whatsapp)
+      const queryString = path.includes('?') ? path.split('?')[1] : '';
+      const searchParams = new URLSearchParams(queryString);
+      const ref = searchParams.get('ref') || undefined;
+
+      const conversationId = extractConversationIdFromUrl({ url: path });
 
       if (!conversationId) {
+        if (sanitizedPath.includes('/conversations')) {
+          return buildConversationsState();
+        }
         return;
       }
-
       if (routes && routes[0]) {
         const { params } = routes[0];
-        primaryActorId = (params as { primaryActorId?: number })?.primaryActorId;
-        primaryActorType = (params as { primaryActorType?: string })?.primaryActorType;
+        primaryActorId = (params as { primaryActorId?: number })?.primaryActorId ?? null;
+        primaryActorType = (params as { primaryActorType?: string })?.primaryActorType ?? null;
       }
       return {
         routes: [
           {
             name: 'ChatScreen',
             params: {
-              conversationId: conversationId,
-              primaryActorId,
-              primaryActorType,
+              conversationId,
+              primaryActorId: primaryActorId ?? undefined,
+              primaryActorType: primaryActorType ?? undefined,
+              ref,
             },
           },
         ],
@@ -151,25 +252,41 @@ export const AppNavigationContainer = () => {
       // Listen to incoming links from deep linking
       const subscription = Linking.addEventListener('url', onReceiveURL);
 
-      //onNotificationOpenedApp: When the application is running, but in the background.
-      const unsubscribeNotification = messaging().onNotificationOpenedApp(message => {
-        if (message) {
-          const notification = findNotificationFromFCM({ message });
-          const camelCaseNotification = transformNotification(notification);
+      // Only setup Firebase messaging if Firebase is initialized
+      let unsubscribeNotification: (() => void) | undefined;
 
-          const conversationLink = findConversationLinkFromPush({
-            notification: camelCaseNotification,
-            installationUrl,
-          });
-          if (conversationLink) {
-            listener(conversationLink);
+      (async () => {
+        const ready = await waitForFirebaseInit({ timeoutMs: 5000, pollMs: 100 });
+        if (ready) {
+          try {
+            //onNotificationOpenedApp: When the application is running, but in the background.
+            unsubscribeNotification = messaging().onNotificationOpenedApp(message => {
+              if (message) {
+                const notification = findNotificationFromFCM({ message });
+                const camelCaseNotification = transformNotification(notification);
+
+                const conversationLink = findConversationLinkFromPush({
+                  notification: camelCaseNotification,
+                  installationUrl,
+                });
+                if (conversationLink) {
+                  listener(conversationLink);
+                }
+              }
+            });
+          } catch (error) {
+            console.log('Failed to setup notification listener in linking:', error);
           }
+        } else {
+          console.log('Firebase not initialized, skipping notification listener in linking');
         }
-      });
+      })();
 
       return () => {
         subscription.remove();
-        unsubscribeNotification();
+        if (unsubscribeNotification) {
+          unsubscribeNotification();
+        }
       };
     },
   };
@@ -186,8 +303,22 @@ export const AppNavigationContainer = () => {
     return null;
   }
 
+  // Create a custom dark theme with pure black colors
+  const customDarkTheme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      background: '#000000', // Pure black background
+      card: '#111827', // gray-900 - card backgrounds
+      text: '#ffffff', // Pure white text
+      border: '#374151', // gray-700 - borders
+      notification: '#3b82f6', // blue-500 - notifications
+    },
+  };
+
   return (
     <NavigationContainer
+      theme={isDark ? customDarkTheme : DefaultTheme}
       linking={linking}
       ref={navigationRef}
       onReady={() => {
@@ -196,9 +327,13 @@ export const AppNavigationContainer = () => {
       onStateChange={async () => {
         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
       }}
-      fallback={<ActivityIndicator animating />}>
+      fallback={<ActivityIndicator animating />}
+    >
       <BottomSheetModalProvider>
-        <View style={styles.navigationLayout} onLayout={onLayoutRootView}>
+        <View
+          style={[themedTailwind.style('bg-black'), styles.navigationLayout]}
+          onLayout={onLayoutRootView}
+        >
           <AppTabs />
         </View>
       </BottomSheetModalProvider>
@@ -206,11 +341,13 @@ export const AppNavigationContainer = () => {
   );
 };
 export const AppNavigator = () => {
+  const themedTailwind = useThemedStyles();
+
   return (
-    <GestureHandlerRootView style={styles.navigationLayout}>
+    <GestureHandlerRootView style={[themedTailwind.style('bg-black'), styles.navigationLayout]}>
       <KeyboardProvider>
         <RefsProvider>
-          <SafeAreaProvider>
+          <SafeAreaProvider style={themedTailwind.style('bg-black')}>
             <AppNavigationContainer />
           </SafeAreaProvider>
         </RefsProvider>
