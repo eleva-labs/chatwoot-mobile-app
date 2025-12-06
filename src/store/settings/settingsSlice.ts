@@ -18,6 +18,7 @@ interface SettingsState {
   theme: Theme;
   version: string;
   pushToken: string;
+  onboardingCompleted: boolean;
 }
 
 const initialState: SettingsState = {
@@ -42,6 +43,7 @@ const initialState: SettingsState = {
   theme: 'system',
   version: '',
   pushToken: '',
+  onboardingCompleted: false,
 };
 export const settingsSlice = createSlice({
   name: 'settings',
@@ -54,6 +56,9 @@ export const settingsSlice = createSlice({
     setLocale: (state, action) => {
       state.localeValue = action.payload;
       state.uiFlags.isLocaleSet = true;
+    },
+    setOnboardingCompleted: state => {
+      state.onboardingCompleted = true;
     },
   },
   extraReducers: builder => {
@@ -114,5 +119,5 @@ export const settingsSlice = createSlice({
       });
   },
 });
-export const { resetSettings, setLocale } = settingsSlice.actions;
+export const { resetSettings, setLocale, setOnboardingCompleted } = settingsSlice.actions;
 export default settingsSlice.reducer;

@@ -1,6 +1,11 @@
 import { Alert, Platform, Linking } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
+import { getApp } from '@react-native-firebase/app';
+import {
+  getMessaging,
+  AuthorizationStatus,
+  requestPermission,
+} from '@react-native-firebase/messaging';
 import { getApiLevel } from 'react-native-device-info';
 import i18n from '@/i18n';
 
@@ -29,10 +34,11 @@ export const requestNotificationPermissions = async (): Promise<boolean> => {
     }
 
     // Request FCM permission
-    const authStatus = await messaging().requestPermission();
+    const messaging = getMessaging(getApp());
+    const authStatus = await requestPermission(messaging);
     const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      authStatus === AuthorizationStatus.AUTHORIZED ||
+      authStatus === AuthorizationStatus.PROVISIONAL;
 
     return enabled;
   } catch (error) {

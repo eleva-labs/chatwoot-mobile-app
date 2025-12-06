@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
+import { getApp } from '@react-native-firebase/app';
+import { getMessaging, onMessage } from '@react-native-firebase/messaging';
 import { getApps } from '@react-native-firebase/app';
 import * as Notifications from 'expo-notifications';
 import { AndroidImportance } from 'expo-notifications';
@@ -47,7 +48,8 @@ export const usePushNotifications = (installationUrl: string) => {
 
       try {
         // Foreground message handler
-        unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+        const messaging = getMessaging(getApp());
+        unsubscribeForeground = onMessage(messaging, async remoteMessage => {
           console.log('🔔 Foreground notification received:', {
             title: remoteMessage.notification?.title,
             body: remoteMessage.notification?.body,

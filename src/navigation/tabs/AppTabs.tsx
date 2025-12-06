@@ -19,12 +19,16 @@ import { selectWebSocketUrl } from '@/store/settings/settingsSelectors';
 import { getUserPermissions } from '@/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from 'constants/permissions';
 
-import { AuthStack, ConversationStack, SettingsStack, InboxStack } from '../stack';
+import { AuthStack, ConversationStack, SettingsStack } from '../stack';
 import ChatScreen from '@/screens/chat-screen/ChatScreen';
 import ContactDetailsScreen from '@/screens/contact-details/ContactDetailsScreen';
 import DashboardScreen from '@/screens/dashboard/DashboardScreen';
+import { OnboardingScreen } from '@/screens/onboarding/OnboardingScreen';
 
-import { selectInstallationUrl } from '@/store/settings/settingsSelectors';
+import {
+  selectInstallationUrl,
+  selectOnboardingCompleted,
+} from '@/store/settings/settingsSelectors';
 import { BottomTabBar } from './BottomTabBar';
 import { settingsActions } from '@/store/settings/settingsActions';
 import { selectChatwootVersion } from '@/store/settings/settingsSelectors';
@@ -55,6 +59,7 @@ export type TabParamList = {
 
 export type TabBarExcludedScreenParamList = {
   Tab: undefined;
+  Onboarding: undefined;
   ChatScreen: {
     conversationId: number;
     primaryActorId?: number;
@@ -181,10 +186,18 @@ const Tabs = () => {
 
 export const AppTabs = () => {
   const isLoggedIn = useAppSelector(selectLoggedIn);
+  const onboardingCompleted = useAppSelector(selectOnboardingCompleted);
 
   if (isLoggedIn) {
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {!onboardingCompleted ? (
+          <Stack.Screen
+            name="Onboarding"
+            component={OnboardingScreen}
+            options={{ gestureEnabled: false }}
+          />
+        ) : null}
         <Stack.Screen name="Tab" component={Tabs} />
         <Stack.Screen
           options={{ animation: 'slide_from_right' }}

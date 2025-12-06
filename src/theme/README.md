@@ -5,6 +5,7 @@ This directory contains the unified theme system for the Chatwoot mobile applica
 ## Overview
 
 The unified theme system provides:
+
 - **Visual Consistency**: Identical appearance across web and mobile platforms
 - **Theme Switching**: Seamless light/dark mode transitions
 - **Semantic Colors**: Meaningful color names that adapt to themes
@@ -39,11 +40,11 @@ The unified theme system uses a 12-step color scale that matches the web applica
 
 ```typescript
 interface ColorScale1to12 {
-  1: string;   // Darkest
+  1: string; // Darkest
   2: string;
   3: string;
-  // ... 
-  12: string;  // Lightest
+  // ...
+  12: string; // Lightest
 }
 ```
 
@@ -64,26 +65,26 @@ Semantic colors provide meaningful names that automatically adapt to the current
 ```typescript
 interface SemanticColors {
   // Backgrounds
-  background: string;           // Main app background
-  surface: string;              // Card/container backgrounds
-  surfaceElevated: string;      // Elevated surfaces
-  
+  background: string; // Main app background
+  surface: string; // Card/container backgrounds
+  surfaceElevated: string; // Elevated surfaces
+
   // Text
-  textPrimary: string;         // Primary text
-  textSecondary: string;       // Secondary text
-  textMuted: string;           // Muted text
-  
+  textPrimary: string; // Primary text
+  textSecondary: string; // Secondary text
+  textMuted: string; // Muted text
+
   // Interactive
-  primary: string;             // Primary brand color
-  accent: string;              // Accent color
-  success: string;             // Success state
-  warning: string;             // Warning state
-  error: string;               // Error state
-  
+  primary: string; // Primary brand color
+  accent: string; // Accent color
+  success: string; // Success state
+  warning: string; // Warning state
+  error: string; // Error state
+
   // Borders
-  border: string;              // Default borders
-  borderStrong: string;        // Strong borders
-  borderWeak: string;          // Subtle borders
+  border: string; // Default borders
+  borderStrong: string; // Strong borders
+  borderWeak: string; // Subtle borders
 }
 ```
 
@@ -96,13 +97,13 @@ import { useTheme } from '@/context';
 
 const MyComponent = () => {
   const { tailwind, isDark, toggleTheme } = useTheme();
-  
+
   return (
     <View style={tailwind.style('bg-background p-4')}>
       <Text style={tailwind.style('text-foreground')}>
         Hello World
       </Text>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={tailwind.style('bg-primary px-4 py-2 rounded')}
         onPress={toggleTheme}
       >
@@ -122,17 +123,17 @@ import { useTheme } from '@/context';
 
 const AdvancedComponent = () => {
   const { tailwind, colors, semanticColors, isDark } = useTheme();
-  
+
   // Access raw color values
   const primaryColor = colors.iris[9];
   const backgroundColor = semanticColors.background;
-  
+
   // Use theme-aware styling
   const containerStyle = tailwind.style(
     'bg-surface border border-border rounded-lg p-4',
     isDark ? 'shadow-lg' : 'shadow-sm'
   );
-  
+
   return (
     <View style={containerStyle}>
       <Text style={tailwind.style('text-foreground text-lg font-semibold')}>
@@ -166,35 +167,35 @@ export default function App() {
 
 ```typescript
 // Primary backgrounds
-'bg-background'     // Main app background
-'bg-surface'        // Card/container backgrounds
-'bg-surface-elevated' // Elevated surfaces (modals, dropdowns)
+'bg-background'; // Main app background
+'bg-surface'; // Card/container backgrounds
+'bg-surface-elevated'; // Elevated surfaces (modals, dropdowns)
 
 // Interactive backgrounds
-'bg-primary'        // Primary actions
-'bg-accent'         // Secondary actions
-'bg-destructive'    // Destructive actions
+'bg-primary'; // Primary actions
+'bg-accent'; // Secondary actions
+'bg-destructive'; // Destructive actions
 ```
 
 ### Text Hierarchy
 
 ```typescript
 // Text colors
-'text-foreground'   // Primary text
-'text-secondary'    // Secondary text
-'text-muted'        // Muted/disabled text
-'text-primary'      // Brand text
-'text-accent'       // Accent text
+'text-foreground'; // Primary text
+'text-secondary'; // Secondary text
+'text-muted'; // Muted/disabled text
+'text-primary'; // Brand text
+'text-accent'; // Accent text
 ```
 
 ### Border Usage
 
 ```typescript
 // Border colors
-'border-border'     // Default borders
-'border-strong'     // Strong borders
-'border-primary'    // Primary borders
-'border-destructive' // Error borders
+'border-border'; // Default borders
+'border-strong'; // Strong borders
+'border-primary'; // Primary borders
+'border-destructive'; // Error borders
 ```
 
 ## Component Examples
@@ -204,12 +205,12 @@ export default function App() {
 ```typescript
 const MessageBubble = ({ isOutgoing, message }) => {
   const { tailwind } = useTheme();
-  
+
   return (
     <View style={tailwind.style(
       'px-4 py-3 rounded-lg max-w-[80%] mb-2',
-      isOutgoing 
-        ? 'bg-primary ml-auto' 
+      isOutgoing
+        ? 'bg-primary ml-auto'
         : 'bg-surface border border-border'
     )}>
       <Text style={tailwind.style(
@@ -228,7 +229,7 @@ const MessageBubble = ({ isOutgoing, message }) => {
 ```typescript
 const Button = ({ title, variant = 'primary', onPress }) => {
   const { tailwind } = useTheme();
-  
+
   const getButtonStyles = () => {
     switch (variant) {
       case 'primary':
@@ -241,7 +242,7 @@ const Button = ({ title, variant = 'primary', onPress }) => {
         return 'bg-primary';
     }
   };
-  
+
   return (
     <TouchableOpacity
       style={tailwind.style('px-4 py-3 rounded-lg items-center', getButtonStyles())}
@@ -260,31 +261,34 @@ const Button = ({ title, variant = 'primary', onPress }) => {
 ### From Legacy Theme System
 
 1. **Replace color references**:
+
    ```typescript
    // Old
-   'text-gray-950'
-   'bg-gray-100'
-   
+   'text-gray-950';
+   'bg-gray-100';
+
    // New
-   'text-foreground'
-   'bg-surface'
+   'text-foreground';
+   'bg-surface';
    ```
 
 2. **Update theme hooks**:
+
    ```typescript
    // Old
    const themedTailwind = useThemedStyles();
    const { isDark } = useTheme();
-   
+
    // New
    const { tailwind, isDark } = useTheme();
    ```
 
 3. **Use semantic colors**:
+
    ```typescript
    // Old
    stroke={isDark ? '#FFFFFF' : '#000000'}
-   
+
    // New
    stroke={tailwind.color('text-foreground')}
    ```

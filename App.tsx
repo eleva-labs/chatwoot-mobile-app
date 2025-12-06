@@ -1,3 +1,4 @@
+import 'reflect-metadata'; // Must be first import for TSyringe decorators
 import * as Sentry from '@sentry/react-native';
 import { getApps } from '@react-native-firebase/app';
 import { waitForFirebaseInit } from './src/utils/firebaseUtils';

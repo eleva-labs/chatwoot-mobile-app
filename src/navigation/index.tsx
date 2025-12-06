@@ -2,7 +2,13 @@
 import React, { useCallback, useRef, useEffect } from 'react';
 import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
 import firebase, { getApps } from '@react-native-firebase/app';
-import messaging from '@react-native-firebase/messaging';
+import { getApp } from '@react-native-firebase/app';
+import {
+  getMessaging,
+  setBackgroundMessageHandler,
+  onNotificationOpenedApp,
+  getInitialNotification,
+} from '@react-native-firebase/messaging';
 import { getStateFromPath } from '@react-navigation/native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useFonts } from 'expo-font';
@@ -48,7 +54,8 @@ const initializeFirebaseMessaging = () => {
 
     console.log('Firebase already initialized, setting up messaging...');
 
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
+    const messaging = getMessaging(getApp());
+    setBackgroundMessageHandler(messaging, async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
 
       // Handle notification data
@@ -222,7 +229,8 @@ export const AppNavigationContainer = () => {
       }
 
       // getInitialNotification: When the application is opened from a quit state.
-      const message = await messaging().getInitialNotification();
+      const messaging = getMessaging(getApp());
+      const message = await getInitialNotification(messaging);
       if (message) {
         const notification = findNotificationFromFCM({ message });
         const camelCaseNotification = transformNotification(notification);
@@ -260,7 +268,8 @@ export const AppNavigationContainer = () => {
         if (ready) {
           try {
             //onNotificationOpenedApp: When the application is running, but in the background.
-            unsubscribeNotification = messaging().onNotificationOpenedApp(message => {
+            const messaging = getMessaging(getApp());
+            unsubscribeNotification = onNotificationOpenedApp(messaging, message => {
               if (message) {
                 const notification = findNotificationFromFCM({ message });
                 const camelCaseNotification = transformNotification(notification);

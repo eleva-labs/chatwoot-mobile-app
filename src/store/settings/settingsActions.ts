@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import * as Sentry from '@sentry/react-native';
 
-import messaging from '@react-native-firebase/messaging';
-import { Platform, PermissionsAndroid } from 'react-native';
+import { getApp } from '@react-native-firebase/app';
+import { getMessaging, hasPermission, getToken } from '@react-native-firebase/messaging';
 import {
   getSystemName,
   getManufacturer,
@@ -24,6 +24,7 @@ import I18n from '@/i18n';
 import { URL_TYPE } from '@/constants/url';
 import { checkValidUrl, extractDomain, handleApiError } from './settingsUtils';
 import { showToast } from '@/utils/toastUtils';
+import { requestNotificationPermissions } from '@/utils/permissionManager';
 
 const createSettingsThunk = <TResponse, TPayload>(
   type: string,
@@ -89,7 +90,8 @@ export const settingsActions = {
     'settings/saveDeviceDetails',
     async (_, { rejectWithValue }) => {
       try {
-        const permissionEnabled = await messaging().hasPermission();
+        const messaging = getMessaging(getApp());
+        const permissionEnabled = await hasPermission(messaging);
         const deviceId = await getUniqueId();
         const devicePlatform = getSystemName();
         const manufacturer = await getManufacturer();
@@ -97,12 +99,10 @@ export const settingsActions = {
         const apiLevel = await getApiLevel();
         const deviceName = `${manufacturer} ${model}`;
 
-        const isAndroidAPILevelGreater32 = apiLevel > 32 && Platform.OS === 'android';
         const brandName = await getBrand();
         const buildNumber = await getBuildNumber();
 
         if (!permissionEnabled || permissionEnabled === -1) {
-          const { requestNotificationPermissions } = await import('@/utils/permissionManager');
           const permissionGranted = await requestNotificationPermissions();
           if (!permissionGranted) {
             return rejectWithValue('Notification permission denied');
@@ -111,9 +111,9 @@ export const settingsActions = {
 
         const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         // https://github.com/invertase/react-native-firebase/issues/6893#issuecomment-1427998691
-        // await messaging().registerDeviceForRemoteMessages();
+        // await registerDeviceForRemoteMessages(messaging);
         await sleep(1000);
-        const fcmToken = await messaging().getToken();
+        const fcmToken = await getToken(messaging);
 
         const pushData: PushPayload = {
           subscription_type: 'fcm',

@@ -1,0 +1,15 @@
+{
+  "loading": "Cargando bienvenida...",
+  "loadingError": "Error al cargar la bienvenida",
+  "next": "Siguiente",
+  "previous": "Anterior",
+  "skip": "Omitir",
+  "submit": "Enviar",
+  "retry": "Reintentar",
+  "errorTitle": "Error",
+  "genericError": "Algo salió mal. Por favor, inténtalo de nuevo.",
+  "offlineIndicator": "Sin conexión a Internet. Tus respuestas se guardarán y enviarán cuando vuelvas a estar en línea.",
+  "requiredField": "Este campo es obligatorio",
+  "invalidInput": "Entrada inválida",
+  "progressLabel": "Paso {{current}} de {{total}}"
+}

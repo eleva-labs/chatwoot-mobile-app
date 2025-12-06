@@ -1,9 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-import {
-  AnalyticsEventParams,
-  AnalyticsService,
-} from '@/domain/interfaces/analytics/AnalyticsService';
+import { AnalyticsService } from '@/domain/interfaces/analytics/AnalyticsService';
 import { FirebaseAnalyticsService } from '@/infrastructure/analytics/FirebaseAnalyticsService';
 
 interface User {
@@ -24,6 +21,30 @@ interface AnalyticsProperties {
   [key: string]: string | number | boolean | undefined;
 }
 
+/**
+ * Converts unknown values to analytics-compatible primitive types.
+ * Handles Error objects, null, undefined, and other non-primitive types.
+ *
+ * @param value - The value to convert
+ * @returns A string, number, boolean, or undefined suitable for analytics tracking
+ */
+export function toAnalyticsValue(value: unknown): string | number | boolean | undefined {
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value === undefined ||
+    value === null
+  ) {
+    return value ?? undefined;
+  }
+  if (value instanceof Error) {
+    return value.message;
+  }
+  return String(value);
+}
+
+// We're not using the June SDK anymore, but we're keeping the code for reference.
 const BASE_URL = 'https://api.june.so/api/';
 
 class AnalyticsHelper {
@@ -81,7 +102,7 @@ class AnalyticsHelper {
   identify(user: User): void {
     this.user = user;
     this.analyticsService.setUserId(user.id);
-    this.analyticsService.setUserProperty('account_id', user.account_id);
+    this.analyticsService.setUserProperty('account_id', toAnalyticsValue(user.account_id));
     this.analyticsService.setUserProperty('email', user.email);
     this.analyticsService.setUserProperty('name', user.name);
 
