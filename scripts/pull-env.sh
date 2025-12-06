@@ -20,7 +20,7 @@ fi
 
 echo "🔄 Pulling environment variables from EAS ($ENVIRONMENT)..."
 
-eas env:pull --environment "$ENVIRONMENT" --non-interactive --path .env
+pnpm exec eas env:pull --environment "$ENVIRONMENT" --non-interactive --path .env
 
 if [ $? -eq 0 ]; then
     echo "✅ Environment variables updated successfully!"
@@ -28,3 +28,7 @@ else
     echo "❌ Failed to pull environment variables"
     exit 1
 fi
+
+# Setup Firebase credentials (creates placeholders if real ones don't exist)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+"$SCRIPT_DIR/setup-credentials.sh"

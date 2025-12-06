@@ -192,6 +192,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
       // Note: @react-native-firebase/analytics doesn't have an Expo plugin - it's a JS-only module
+      // Firebase safety plugin - MUST be after @react-native-firebase/app to modify [FIRApp configure]
+      './plugins/with-firebase-safety',
       'expo-notifications',
       [
         'expo-build-properties',
