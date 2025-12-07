@@ -3,11 +3,11 @@
  *
  * Tests the mock repository implementation used for testing.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports */
 
 import { MockOnboardingRepository } from '../../../infrastructure/repositories/MockOnboardingRepository';
 import { Locale } from '../../../domain/entities/Locale';
 import { NotFoundError } from '../../../domain/entities/Errors';
-import { Result } from '../../../domain/entities/Result';
 
 // Mock console.log to avoid noise in tests
 const originalConsoleLog = console.log;

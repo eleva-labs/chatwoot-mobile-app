@@ -102,8 +102,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
                     : '',
               ),
               style.androidTextOnlyStyle,
-            ]}
-          >
+            ]}>
             {fileName}
           </Animated.Text>
           <Animated.View

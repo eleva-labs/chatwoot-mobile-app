@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { CaretRight } from '@/svg-icons';
-import { tailwind } from '@/theme';
 import { GenericListType } from '@/types';
 import { Icon } from '@/components-next/common/icon';
 import { useThemedStyles } from '@/hooks';
@@ -35,8 +34,7 @@ const ListItem = (props: ListItemProps) => {
           index === 0 ? 'rounded-t-[13px]' : '',
           isLastItem ? 'rounded-b-[13px]' : '',
         ),
-      ]}
-    >
+      ]}>
       <Animated.View style={themedTailwind.style('flex flex-row items-center pl-3')}>
         {listItem.icon ? (
           <Animated.View>
@@ -48,14 +46,12 @@ const ListItem = (props: ListItemProps) => {
             'flex-1 flex-row items-center justify-between py-[11px]',
             listItem.icon ? 'ml-3' : '',
             !isLastItem ? 'border-b-[1px] border-b-blackA-A3' : '',
-          )}
-        >
+          )}>
           <Animated.View>
             <Animated.Text
               style={themedTailwind.style(
                 'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-gray-950',
-              )}
-            >
+              )}>
               {listItem.title}
             </Animated.Text>
           </Animated.View>
@@ -64,8 +60,7 @@ const ListItem = (props: ListItemProps) => {
               style={themedTailwind.style(
                 'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px]',
                 listItem.subtitleType === 'light' ? 'text-gray-900' : 'text-gray-950',
-              )}
-            >
+              )}>
               {listItem.subtitle}
             </Animated.Text>
             {listItem.hasChevron ? (
@@ -98,15 +93,13 @@ export const SettingsList = (props: GenericListProps) => {
           <Animated.Text
             style={themedTailwind.style(
               'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-gray-700',
-            )}
-          >
+            )}>
             {sectionTitle}
           </Animated.Text>
         </Animated.View>
       ) : null}
       <Animated.View
-        style={[themedTailwind.style('rounded-[13px] mx-4 bg-white'), themedShadowStyles]}
-      >
+        style={[themedTailwind.style('rounded-[13px] mx-4 bg-white'), themedShadowStyles]}>
         {list.map(
           (listItem, index) =>
             !listItem.disabled && (

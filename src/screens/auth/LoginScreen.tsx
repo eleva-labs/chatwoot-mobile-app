@@ -196,8 +196,7 @@ const LoginScreen = () => {
       <View style={tailwind.style(`flex-1 ${backgroundColor}`)}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={tailwind.style('px-6 pt-24')}
-        >
+          contentContainerStyle={tailwind.style('px-6 pt-24')}>
           <Image source={appLogo} style={tailwind.style('w-10 h-10')} resizeMode="contain" />
           {/* <View style={tailwind.style('pt-6 gap-4')}>
             <Animated.Text style={tailwind.style('text-2xl text-gray-950 font-inter-semibold-20')}>
@@ -302,8 +301,7 @@ const LoginScreen = () => {
                   />
                   <Pressable
                     style={tailwind.style('absolute right-4 top-2.5')}
-                    onPress={() => setShowPassword(!showPassword)}
-                  >
+                    onPress={() => setShowPassword(!showPassword)}>
                     <Icon size={20} icon={showPassword ? <EyeIcon /> : <EyeSlash />} />
                   </Pressable>
                 </View>
@@ -319,8 +317,7 @@ const LoginScreen = () => {
 
           <Pressable style={tailwind.style('pt-1 mb-8')} onPress={openResetPassword}>
             <Animated.Text
-              style={tailwind.style(`${linkTextColor} font-inter-medium-24 text-right`)}
-            >
+              style={tailwind.style(`${linkTextColor} font-inter-medium-24 text-right`)}>
               {i18n.t('LOGIN.FORGOT_PASSWORD')}
             </Animated.Text>
           </Pressable>
@@ -339,8 +336,7 @@ const LoginScreen = () => {
           </Pressable> */}
           <Pressable
             style={tailwind.style('flex-row justify-center items-center mt-4')}
-            onPress={() => languagesModalSheetRef.current?.present()}
-          >
+            onPress={() => languagesModalSheetRef.current?.present()}>
             <Animated.Text style={tailwind.style(`text-sm ${secondaryTextColor}`)}>
               {i18n.t('LOGIN.CHANGE_LANGUAGE')}
             </Animated.Text>
@@ -363,8 +359,7 @@ const LoginScreen = () => {
         handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
         style={themedTailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-white')}
-        snapPoints={['70%']}
-      >
+        snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />
           <LanguageList onChangeLanguage={onChangeLanguage} currentLanguage={activeLocale} />

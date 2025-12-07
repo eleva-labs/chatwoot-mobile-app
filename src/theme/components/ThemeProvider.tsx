@@ -6,14 +6,9 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Appearance, ColorSchemeName } from 'react-native';
+import { Appearance } from 'react-native';
 import { UnifiedColorScale, darkModeColorScales, lightModeColorScales } from '../colors/unified';
-import {
-  SemanticColors,
-  createSemanticColors,
-  darkSemanticColors,
-  lightSemanticColors,
-} from '../colors/semantic';
+import { SemanticColors, darkSemanticColors, lightSemanticColors } from '../colors/semantic';
 
 // Theme context interface
 export interface ThemeContextType {

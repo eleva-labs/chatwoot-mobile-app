@@ -33,25 +33,6 @@ export const useThemedStyles = () => {
             .replace(/border-b-blackA-A3/g, 'border-b-gray-700') // BlackA borders to gray
             .replace(/border-blackA-A3/g, 'border-gray-700') // BlackA borders to gray (without -b)
             .replace(/border-b-gray-200/g, 'border-b-gray-700'); // More border transformations
-
-          // Debug log to see what's happening
-          console.log('Dark mode transformation:', {
-            original: allClasses,
-            transformed: themedClasses,
-            isDark: true,
-          });
-        } else {
-          // Light mode - keep original styling, no transformations needed for blackA borders
-          // The original blackA-A3 borders should remain as-is for the subtle original look
-
-          // Debug log to see what's happening in light mode
-          if (allClasses.includes('blackA')) {
-            console.log('Light mode - keeping original styling:', {
-              original: allClasses,
-              transformed: themedClasses,
-              isDark: false,
-            });
-          }
         }
 
         return tailwind.style(themedClasses);

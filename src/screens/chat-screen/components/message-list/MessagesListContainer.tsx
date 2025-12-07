@@ -16,7 +16,6 @@ import { selectAttachments } from '@/store/conversation/sendMessageSlice';
 import { Animated } from 'react-native';
 import { getGroupedMessages, isAnEmailChannel } from '@/utils';
 import { MessagesList } from './MessagesList';
-import tailwind from 'twrnc';
 import { conversationParticipantActions } from '@/store/conversation-participant/conversationParticipantActions';
 import { MESSAGE_TYPES, SCREENS } from '@/constants';
 import { Message } from '@/types';
@@ -172,8 +171,7 @@ export const MessagesListContainer = () => {
   return (
     <PlatformSpecificKeyboardWrapperComponent
       style={themedTailwind.style('flex-1 bg-white')}
-      interpolator="linear"
-    >
+      interpolator="linear">
       <MessagesList
         messages={messagesWithGrouping}
         isFlashListReady={isFlashListReady}

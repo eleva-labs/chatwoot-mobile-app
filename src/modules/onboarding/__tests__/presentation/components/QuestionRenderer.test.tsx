@@ -4,6 +4,7 @@
  * QuestionRenderer dynamically renders the appropriate input component
  * based on the question type (text, select, date, rating, slider, etc.).
  */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports */
 
 import React from 'react';
 // @ts-expect-error - Testing library types are available at runtime

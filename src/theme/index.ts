@@ -6,6 +6,9 @@ export { tailwind, createThemedTailwind } from './tailwind';
 export * from './colors/unified';
 export * from './colors/semantic';
 
+// Token system (base types for feature tokens)
+export * from './colors/tokens';
+
 // Theme components (with specific exports to avoid conflicts)
 export {
   ThemeProvider,

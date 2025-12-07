@@ -124,8 +124,7 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
           animationConfigs={animationConfigs}
           enablePanDownToClose
           snapPoints={[menuOptions.length * 44 + 4 + 37]}
-          onDismiss={handleOnDismiss}
-        >
+          onDismiss={handleOnDismiss}>
           <BottomSheetWrapper>
             <BottomSheetHeader headerText="Select action" />
             <Animated.View style={tailwind.style('py-1 pl-3')}>
@@ -137,8 +136,7 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
                       handleOnDismiss();
                       option.handleOnPressMenuOption();
                     }}
-                    style={tailwind.style('flex flex-row items-center')}
-                  >
+                    style={tailwind.style('flex flex-row items-center')}>
                     <Animated.View>
                       <Icon icon={option.icon} size={24} />
                     </Animated.View>
@@ -146,13 +144,11 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
                       style={tailwind.style(
                         'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
                         index !== menuOptions.length - 1 ? 'border-b-[1px] border-blackA-A3' : '',
-                      )}
-                    >
+                      )}>
                       <Animated.Text
                         style={tailwind.style(
                           'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-                        )}
-                      >
+                        )}>
                         {option.title}
                       </Animated.Text>
                     </Animated.View>
@@ -175,8 +171,7 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
             <ContextMenuItem
               key={option.title}
               onSelect={option.handleOnPressMenuOption}
-              destructive={option.destructive}
-            >
+              destructive={option.destructive}>
               {option.icon}
               <ContextMenu.ItemTitle>{option.title}</ContextMenu.ItemTitle>
             </ContextMenuItem>

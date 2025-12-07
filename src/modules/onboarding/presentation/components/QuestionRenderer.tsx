@@ -153,18 +153,16 @@ function QuestionRendererComponent({
           </View>
         );
     }
-  }, [screen, value, onChange, error, themedStyles]);
+  }, [screen, value, onChange, error, themedStyles, visibleOptions]);
   return (
     <Animated.View
       key={screen.id.toString()}
       entering={entering}
       exiting={exiting}
-      style={themedStyles.style('flex-1')}
-    >
+      style={themedStyles.style('flex-1')}>
       <ScrollView
         style={themedStyles.style('flex-1')}
-        contentContainerStyle={themedStyles.style('p-4')}
-      >
+        contentContainerStyle={themedStyles.style('p-4')}>
         <View style={themedStyles.style('mb-6')}>
           <Text style={themedStyles.style('text-2xl font-semibold text-gray-900 mb-2')}>
             {screen.title}

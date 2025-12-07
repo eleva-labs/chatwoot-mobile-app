@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet } from 'react-native';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const colors = require('@/theme/colors/light');
 
 interface AIHeaderButtonProps {
@@ -20,16 +21,14 @@ export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPre
       accessible={true}
       accessibilityLabel={isEnabled ? 'AI enabled - tap to disable' : 'AI disabled - tap to enable'}
       accessibilityRole="button"
-      hitSlop={8}
-    >
+      hitSlop={8}>
       <Text
         style={[
           styles.text,
           {
             color: isEnabled ? '#FFFFFF' : colors.gray[600],
           },
-        ]}
-      >
+        ]}>
         AI
       </Text>
     </Pressable>

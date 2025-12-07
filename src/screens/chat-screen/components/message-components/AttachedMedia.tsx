@@ -72,15 +72,13 @@ const AttachedImage = (props: AttachedImageProps) => {
     <Animated.View
       entering={SlideInDown.springify().damping(20).stiffness(120)}
       exiting={SlideOutDown.springify().damping(20).stiffness(120)}
-      style={tailwind.style('pr-3 relative')}
-    >
+      style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={LinearTransition.springify()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
-        )}
-      >
+        )}>
         <Image source={{ uri: item.uri }} style={tailwind.style('h-full w-full rounded-lg')} />
         <Animated.View
           style={[
@@ -94,8 +92,7 @@ const AttachedImage = (props: AttachedImageProps) => {
               'absolute h-[19px] w-[19px] border-[1px] border-blackA-A6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
             ),
             animatedStyle,
-          ]}
-        >
+          ]}>
           <Pressable onPress={handleOnDelete} hitSlop={8} {...handlers}>
             <Icon icon={<DeleteIcon />} size={12} />
           </Pressable>
@@ -122,15 +119,13 @@ const AttachedVideo = (props: AttachedVideoProps) => {
     <Animated.View
       entering={SlideInDown.springify().damping(20).stiffness(120)}
       exiting={SlideOutDown.springify().damping(20).stiffness(120)}
-      style={tailwind.style('pr-3 relative')}
-    >
+      style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={LinearTransition.springify()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
-        )}
-      >
+        )}>
         {item.uri ? (
           <Video
             shouldPlay={false}
@@ -151,8 +146,7 @@ const AttachedVideo = (props: AttachedVideoProps) => {
               'absolute h-[19px] w-[19px] border-[1px] border-blackA-A6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
             ),
             animatedStyle,
-          ]}
-        >
+          ]}>
           <Pressable onPress={handleOnDelete} hitSlop={8} {...handlers}>
             <Icon icon={<DeleteIcon />} size={12} />
           </Pressable>
@@ -167,14 +161,12 @@ const AttachedVideo = (props: AttachedVideoProps) => {
           source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
         />
         <Animated.View
-          style={tailwind.style('absolute z-50 left-2 bottom-2 flex flex-row items-center')}
-        >
+          style={tailwind.style('absolute z-50 left-2 bottom-2 flex flex-row items-center')}>
           <PlayIcon />
           <Animated.Text
             style={tailwind.style(
               'text-whiteA-A12 text-xs font-inter-420-20 leading-[14px] tracking-[0.32px] pl-1',
-            )}
-          >
+            )}>
             {typeof item.duration === 'number'
               ? formatSecondsToMinutes(Math.round(item.duration))
               : null}
@@ -201,15 +193,13 @@ const AttachedFile = (props: AttachedFileProps) => {
     <Animated.View
       entering={SlideInDown.springify().damping(20).stiffness(120)}
       exiting={SlideOutDown.springify().damping(20).stiffness(120)}
-      style={tailwind.style('pr-3 relative')}
-    >
+      style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={LinearTransition.springify()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg items-center justify-center',
           index === attachmentsLength - 1 ? 'mr-4' : '',
-        )}
-      >
+        )}>
         <Animated.View style={tailwind.style('items-center justify-center px-4')}>
           <Icon size={24} icon={<AttachFileIcon />} />
           <Animated.Text
@@ -219,8 +209,7 @@ const AttachedFile = (props: AttachedFileProps) => {
               tailwind.style(
                 'text-base tracking-[0.32px] leading-[22px] font-inter-normal-20 pt-1 text-gray-950',
               ),
-            ]}
-          >
+            ]}>
             {item.fileName}
           </Animated.Text>
         </Animated.View>
@@ -236,8 +225,7 @@ const AttachedFile = (props: AttachedFileProps) => {
               'absolute h-[19px] w-[19px] border-[1px] border-blackA-A6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
             ),
             animatedStyle,
-          ]}
-        >
+          ]}>
           <Pressable onPress={handleOnDelete} hitSlop={8} {...handlers}>
             <Icon icon={<DeleteIcon />} size={12} />
           </Pressable>

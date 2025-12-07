@@ -1,25 +1,25 @@
 declare module '*.png' {
-  const src: any;
+  const src: number;
   export default src;
 }
 
 declare module '*.jpg' {
-  const src: any;
+  const src: number;
   export default src;
 }
 
 declare module '*.jpeg' {
-  const src: any;
+  const src: number;
   export default src;
 }
 
 declare module '*.gif' {
-  const src: any;
+  const src: number;
   export default src;
 }
 
 declare module '*.webp' {
-  const src: any;
+  const src: number;
   export default src;
 }
 

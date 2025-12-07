@@ -211,8 +211,7 @@ export const MessageTextInput = ({
               Platform.OS === 'ios' ? 'absolute bottom-full' : 'relative h-[150px]',
             ),
             styles.listShadow,
-          ]}
-        >
+          ]}>
           <ScrollView keyboardShouldPersistTaps="always">
             {filteredSuggestions.map(agent => {
               const agentSuggestion: AgentSuggestion = {
@@ -239,8 +238,7 @@ export const MessageTextInput = ({
     <LayoutAnimationConfig skipEntering={true}>
       <Animated.View
         layout={LinearTransition.springify().damping(20).stiffness(120)}
-        style={[tailwind.style('flex-1 my-0.5')]}
-      >
+        style={[tailwind.style('flex-1 my-0.5')]}>
         <MentionInput
           // @ts-expect-error MentionInput ref typing issue with forwardRef
           ref={textInputRef}
@@ -288,8 +286,7 @@ export const MessageTextInput = ({
           // Pre calculated value to position the lock
           tailwind.style('absolute right-13px]'),
           lockIconAnimatedPosition,
-        ]}
-      >
+        ]}>
         <Pressable hitSlop={5} onPress={toggleReplyMode}>
           {isPrivateMessage ? (
             <Icon

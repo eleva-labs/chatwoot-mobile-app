@@ -15,7 +15,7 @@ import {
 import { TAB_BAR_HEIGHT } from '@/constants';
 import { tailwind } from '@/theme';
 import { ConversationStatus } from '@/types';
-import { useChatWindowContext, useTheme } from '@/context';
+import { useChatWindowContext } from '@/context';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
 import { conversationActions } from '@/store/conversation/conversationActions';
@@ -37,7 +37,6 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
-  const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
@@ -145,8 +144,7 @@ export const ConversationActions = () => {
     <Animated.View style={tailwind.style('', `w-[${SCREEN_WIDTH}px]`)}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}
-      >
+        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
         <ConversationBasicActions
           status={status}
           updateConversationStatus={updateConversationStatus}
@@ -187,8 +185,7 @@ export const ConversationActions = () => {
         backgroundStyle={themedTailwind.style('bg-black')}
         animationConfigs={animationConfigs}
         enablePanDownToClose
-        snapPoints={['50%']}
-      >
+        snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />
       </BottomSheetModal>
     </Animated.View>

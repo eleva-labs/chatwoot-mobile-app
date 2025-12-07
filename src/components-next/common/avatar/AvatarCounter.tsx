@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import { avatarTheme, tailwind } from '@/theme';
 import { cx } from '@/utils';
 
-import { AvatarProps, AvatarSizes } from './Avatar';
+import { AvatarProps } from './Avatar';
 
 export interface AvatarCounterProps extends Pick<AvatarProps, 'size' | 'parentsBackground'> {
   /**
@@ -41,15 +41,13 @@ export const AvatarCounter: React.FC<AvatarCounterProps> = ({
           height: avatarTheme.counter.size[size].height,
           paddingHorizontal: isLargeCount ? avatarTheme.counter.padding[size].horizontal : 0,
         },
-      ]}
-    >
+      ]}>
       <Text
         style={tailwind.style(
           cx(avatarTheme.counter.text.base, avatarTheme.counter.text.size[size]),
         )}
         adjustsFontSizeToFit
-        allowFontScaling={false}
-      >
+        allowFontScaling={false}>
         {displayCount}
       </Text>
     </View>

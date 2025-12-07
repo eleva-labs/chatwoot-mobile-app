@@ -34,8 +34,7 @@ export function ErrorBoundaryScreen({ error, onRetry }: ErrorBoundaryScreenProps
         {errorMessage ? (
           <ScrollView
             style={tailwind.style('max-h-40 w-full mb-4')}
-            contentContainerStyle={tailwind.style('p-3')}
-          >
+            contentContainerStyle={tailwind.style('p-3')}>
             <Text selectable style={tailwind.style('text-xs text-red-700')}>
               {errorMessage}
             </Text>
@@ -45,16 +44,14 @@ export function ErrorBoundaryScreen({ error, onRetry }: ErrorBoundaryScreenProps
           <Pressable
             accessibilityRole="button"
             onPress={handleRestart}
-            style={tailwind.style('bg-blue-600 rounded-lg px-4 py-2')}
-          >
+            style={tailwind.style('bg-blue-600 rounded-lg px-4 py-2')}>
             <Text style={tailwind.style('text-white font-inter-medium-24')}>Restart app</Text>
           </Pressable>
           {onRetry ? (
             <Pressable
               accessibilityRole="button"
               onPress={onRetry}
-              style={tailwind.style('bg-slate-200 rounded-lg px-4 py-2')}
-            >
+              style={tailwind.style('bg-slate-200 rounded-lg px-4 py-2')}>
               <Text style={tailwind.style('text-slate-900')}>Try again</Text>
             </Pressable>
           ) : null}

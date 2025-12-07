@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Application from 'expo-application';
 import Animated from 'react-native-reanimated';
-import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
 
 export const BuildInfo: React.FC = () => {

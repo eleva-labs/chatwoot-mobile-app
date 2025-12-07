@@ -73,8 +73,7 @@ export const BotTextCell = (props: BotTextCellProps) => {
           // singleLineShortText ? "flex flex-row" : "",
           isAvatarRendered ? 'rounded-br-none' : '',
         ),
-      ]}
-    >
+      ]}>
       {/* <Text
         // onTextLayout={handleTextLayout}
         style={tailwind.style(
@@ -91,11 +90,9 @@ export const BotTextCell = (props: BotTextCellProps) => {
           // singleLineShortText ? "pl-1.5" : "",
           // singleLineLongText || isMultiLine ? "justify-end" : "",
           // multiLineShortText ? " absolute bottom-0.5 right-2.5" : "",
-        )}
-      >
+        )}>
         <Text
-          style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-gray-700')}
-        >
+          style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-gray-700')}>
           {unixTimestampToReadableTime(timeStamp)}
         </Text>
         <DeliveryStatus

@@ -73,8 +73,7 @@ export const MarkdownDisplay = (props: MarkdownDisplayProps) => {
         typographer: true,
       })}
       onLinkPress={handleURL}
-      style={styles}
-    >
+      style={styles}>
       {messageContent}
     </Markdown>
   );

@@ -1,11 +1,10 @@
 import { Platform } from 'react-native';
 // Deprecated Notifee helpers are removed. This module left intentionally empty for now.
-import { Notification } from '@/types/Notification';
 
 export const displayRichNotification = async (notification: {
   title: string;
   body: string;
-  data?: any;
+  data?: Record<string, unknown>;
   imageUrl?: string;
 }) => {
   if (Platform.OS === 'ios') {

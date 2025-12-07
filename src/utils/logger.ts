@@ -124,6 +124,7 @@ class Logger {
    */
   async exportToClipboard(): Promise<void> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { Clipboard } = require('@react-native-clipboard/clipboard');
       const logsString = this.getLogsAsString();
       await Clipboard.setString(logsString);
@@ -141,6 +142,7 @@ class Logger {
    */
   async exportToFile(): Promise<string | null> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const RNFS = require('react-native-fs');
       const logsString = this.getLogsAsString();
       const fileName = `chatwoot-logs-${Date.now()}.txt`;
@@ -193,6 +195,7 @@ export const debug = logger.debug.bind(logger);
 export const info = logger.info.bind(logger);
 
 // Expose logger globally for easy access from console/debugger
+/* eslint-disable @typescript-eslint/no-explicit-any */
 if (typeof global !== 'undefined') {
   (global as any).__logger = logger;
   (global as any).__getLogs = () => logger.getLogs();
@@ -212,3 +215,4 @@ if (typeof global !== 'undefined') {
     return logsString;
   };
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */

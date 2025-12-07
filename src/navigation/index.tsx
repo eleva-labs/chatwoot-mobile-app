@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useCallback, useRef, useEffect } from 'react';
 import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
-import firebase, { getApps } from '@react-native-firebase/app';
+import { getApps } from '@react-native-firebase/app';
 import { getApp } from '@react-native-firebase/app';
 import {
   getMessaging,
@@ -152,8 +152,8 @@ export const AppNavigationContainer = () => {
         },
       },
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // getStateFromPath: App running, receives deep link - handles SSO callbacks and conversation navigation
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStateFromPath: (path: string, config: any) => {
       const incomingPath = path;
       // Handle SSO callback - App running, receives deep link
@@ -336,13 +336,11 @@ export const AppNavigationContainer = () => {
       onStateChange={async () => {
         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
       }}
-      fallback={<ActivityIndicator animating />}
-    >
+      fallback={<ActivityIndicator animating />}>
       <BottomSheetModalProvider>
         <View
           style={[themedTailwind.style('bg-black'), styles.navigationLayout]}
-          onLayout={onLayoutRootView}
-        >
+          onLayout={onLayoutRootView}>
           <AppTabs />
         </View>
       </BottomSheetModalProvider>

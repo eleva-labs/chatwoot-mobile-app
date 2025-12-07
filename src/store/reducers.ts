@@ -26,7 +26,7 @@ import localRecordedAudioCacheSlice from '@/store/conversation/localRecordedAudi
 
 import cannedResponseSlice from '@/store/canned-response/cannedResponseSlice';
 import macroSlice from '@/store/macro/macroSlice';
-import aiChatSlice from '@/store/ai-chat/aiChatSlice';
+import aiChatSlice from '@/infrastructure/state/ai-assistant/aiChatSlice';
 
 export const appReducer = combineReducers({
   auth: authSlice,

@@ -3,12 +3,12 @@
  *
  * Tests the repository implementation using fetch for S3 and APIService for API calls.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { AxiosOnboardingRepository } from '../../../infrastructure/repositories/AxiosOnboardingRepository';
 import { Locale } from '../../../domain/entities/Locale';
 import { NetworkError, NotFoundError } from '../../../domain/entities/Errors';
-import { Result } from '../../../domain/entities/Result';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { apiService } from '@/services/APIService';
 
 // Helper function to create AxiosError instances that pass instanceof checks

@@ -8,7 +8,7 @@ import {
   selectCurrentActionState,
 } from '@/store/conversation/conversationActionSlice';
 
-import { useRefsContext, useTheme } from '@/context';
+import { useRefsContext } from '@/context';
 import { useThemedStyles } from '@/hooks';
 import {
   UpdateAssignee,
@@ -21,7 +21,6 @@ import {
 const ActionBottomSheet = () => {
   const dispatch = useAppDispatch();
   const currentActionState = useAppSelector(selectCurrentActionState);
-  const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
 
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -64,8 +63,7 @@ const ActionBottomSheet = () => {
       animationConfigs={animationConfigs}
       enablePanDownToClose
       snapPoints={actionSnapPoints}
-      onDismiss={handleOnDismiss}
-    >
+      onDismiss={handleOnDismiss}>
       {currentActionState === 'Assign' ? <UpdateAssignee /> : null}
       {currentActionState === 'TeamAssign' ? <UpdateTeam /> : null}
       {currentActionState === 'Status' ? <UpdateStatus /> : null}

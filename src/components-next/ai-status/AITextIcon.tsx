@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const colors = require('@/theme/colors/light');
 
 interface AITextIconProps {
@@ -24,8 +25,7 @@ export const AITextIcon: React.FC<AITextIconProps> = ({ isEnabled, size = 16, on
       accessible={true}
       accessibilityLabel="AI enabled"
       accessibilityRole={onPress ? 'button' : 'image'}
-      activeOpacity={0.7}
-    >
+      activeOpacity={0.7}>
       <Text
         style={[
           styles.text,
@@ -33,8 +33,7 @@ export const AITextIcon: React.FC<AITextIconProps> = ({ isEnabled, size = 16, on
             fontSize: textSize,
             color: colors.brand[600], // Always use purple color when visible
           },
-        ]}
-      >
+        ]}>
         AI
       </Text>
     </IconComponent>

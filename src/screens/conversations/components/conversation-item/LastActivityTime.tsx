@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 
-import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
 import { NativeView } from '@/components-next/native-components';
 import { formatTimeToShortForm, formatRelativeTime } from '@/utils/dateTimeUtils';
@@ -48,8 +47,7 @@ export const LastActivityTime = ({ timestamp }: LastActivityTimeProps) => {
       <Text
         style={themedTailwind.style(
           'text-xs font-inter-420-20 leading-[14px] tracking-[0.24px] text-gray-700',
-        )}
-      >
+        )}>
         {lastActivityTime}
       </Text>
     </NativeView>

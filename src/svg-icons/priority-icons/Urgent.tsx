@@ -11,8 +11,7 @@ export const UrgentIcon = () => {
         x="0"
         y="0"
         width="24"
-        height="24"
-      >
+        height="24">
         <Rect width="24" height="24" fill="#ED8A5C" />
       </Mask>
       <G mask="url(#mask0_2323_83959)">

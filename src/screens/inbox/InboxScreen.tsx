@@ -63,8 +63,7 @@ const InboxList = () => {
         style={tailwind.style(
           'flex-1 items-center justify-center pt-8',
           `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}
-      >
+        )}>
         {isAllNotificationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -137,8 +136,7 @@ const InboxList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}
-    >
+      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
       <ActivityIndicator />
     </Animated.View>
   ) : notifications.length === 0 ? (
@@ -147,8 +145,7 @@ const InboxList = () => {
       contentContainerStyle={tailwind.style(
         'flex-1 items-center justify-center',
         `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}
-    >
+      )}>
       <EmptyStateIcon />
       <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-gray-800')}>
         {i18n.t('NOTIFICATION.EMPTY')}

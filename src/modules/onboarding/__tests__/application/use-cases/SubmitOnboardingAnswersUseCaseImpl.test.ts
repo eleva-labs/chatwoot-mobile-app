@@ -9,7 +9,6 @@ import { createMockOnboardingRepository, createMockStorageRepository } from '../
 import { OfflineQueueRepository } from '../../../infrastructure/repositories/OfflineQueueRepository';
 import type { IOfflineQueueRepository } from '../../../domain/repositories/IOfflineQueueRepository';
 import { NetworkError } from '../../../domain/entities/Errors';
-import { Result } from '../../../domain/entities/Result';
 
 describe('SubmitOnboardingAnswersUseCaseImpl', () => {
   let useCase: SubmitOnboardingAnswersUseCaseImpl;

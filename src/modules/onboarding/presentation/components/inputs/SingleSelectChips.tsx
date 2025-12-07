@@ -54,14 +54,12 @@ function SingleSelectChipsComponent({
             accessible
             accessibilityRole="button"
             accessibilityState={{ selected: isSelected }}
-            accessibilityLabel={option.label}
-          >
+            accessibilityLabel={option.label}>
             <Text
               style={themedStyles.style(
                 'text-sm font-medium',
                 isSelected ? 'text-white' : 'text-gray-900',
-              )}
-            >
+              )}>
               {option.label}
             </Text>
           </TouchableOpacity>

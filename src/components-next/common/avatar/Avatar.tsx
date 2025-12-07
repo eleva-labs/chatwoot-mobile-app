@@ -127,8 +127,7 @@ export const Avatar: React.FC<Partial<AvatarProps>> = props => {
         ),
         styleAdapter(style),
       ]}
-      {...boxProps}
-    >
+      {...boxProps}>
       {imageAvailable && src ? (
         <AvatarImage
           size={size}
@@ -149,8 +148,7 @@ export const Avatar: React.FC<Partial<AvatarProps>> = props => {
             ),
           ]}
           adjustsFontSizeToFit
-          allowFontScaling={false}
-        >
+          allowFontScaling={false}>
           {getInitials(name, size)}
         </Text>
       ) : null}
