@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 import { AnalyticsService } from '@/domain/interfaces/analytics/AnalyticsService';
-import { FirebaseAnalyticsService } from '@/infrastructure/analytics/FirebaseAnalyticsService';
+import { FirebaseAnalyticsService } from '@/infrastructure/services/shared';
 
 interface User {
   id: string | number;

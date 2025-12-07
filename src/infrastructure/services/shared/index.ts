@@ -8,6 +8,9 @@ export { ApiClient, ApiError } from './ApiClient';
 
 export type { ApiResponse, RequestOptions } from './ApiClient';
 
+// Analytics service
+export { FirebaseAnalyticsService } from './FirebaseAnalyticsService';
+
 // Re-export buildQueryString from endpoints for convenience
 export { buildQueryString } from '@/infrastructure/services/ai-assistant/endpoints';
 
