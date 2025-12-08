@@ -5,7 +5,9 @@ import type {
   NotificationRemovedResponse,
   MarkAsReadPayload,
 } from './notificationTypes';
-import { Notification } from '@/types/Notification';
+// Using domain entity type for new operations
+// Keeping @/types/Notification for backward compatibility with existing code
+import type { Notification } from '@/domain/notifications/entities/Notification';
 import { notificationActions } from './notificationAction';
 import { updateBadgeCount } from '@/utils/pushUtils';
 
@@ -58,6 +60,15 @@ const notificationsSlice = createSlice({
       state.unreadCount = unreadCount;
       updateBadgeCount({ count: unreadCount });
     },
+    // Minimal operations following Clean Architecture pattern
+    // Save operation: Add or update notifications in store
+    addNotificationsToStore(state, action: PayloadAction<Notification[]>) {
+      notificationsAdapter.upsertMany(state, action.payload);
+    },
+    // Delete operation: Remove notifications from store
+    deleteNotificationsFromStore(state, action: PayloadAction<number[]>) {
+      notificationsAdapter.removeMany(state, action.payload);
+    },
   },
   extraReducers: builder => {
     builder
@@ -70,16 +81,22 @@ const notificationsSlice = createSlice({
         notificationActions.fetchNotifications.fulfilled,
         (state, action: PayloadAction<NotificationResponse>) => {
           const { meta, payload } = action.payload;
+          // Update metadata and handle pagination logic
+          // Repository dispatches addNotificationsToStore (upsertMany)
+          // For page 1, we need to replace all (setAll) to handle refresh/reset scenarios
+          // For subsequent pages, upsertMany from repository is sufficient
+          if (meta.currentPage === '1') {
+            // Page 1: Replace all notifications (handles refresh without reset)
+            notificationsAdapter.setAll(state, payload);
+          }
+          // For page > 1, notifications are already added via repository's addNotificationsToStore
+
+          // Update metadata
           state.unreadCount = meta.unreadCount;
           state.totalCount = meta.count;
           state.currentPage = meta.currentPage;
           state.uiFlags.isLoading = false;
           updateBadgeCount({ count: meta.unreadCount });
-          if (meta.currentPage === '1') {
-            notificationsAdapter.setAll(state, payload);
-          } else {
-            notificationsAdapter.upsertMany(state, payload);
-          }
           state.uiFlags.isAllNotificationsFetched = payload.length <= 15;
         },
       )
@@ -89,7 +106,10 @@ const notificationsSlice = createSlice({
         state.error = (action.payload as string) ?? 'Failed to fetch notifications';
       })
       .addCase(notificationActions.delete.fulfilled, (state, action: PayloadAction<number>) => {
-        notificationsAdapter.removeOne(state, action.payload);
+        // Notification already removed by repository's optimistic update
+        // This is idempotent - safe to call again if needed
+        // Repository handles: store.dispatch(deleteNotificationsFromStore([notificationId]))
+        // No additional action needed here, but keeping for backward compatibility
       })
       .addCase(
         notificationActions.markAsRead.fulfilled,
@@ -136,6 +156,11 @@ const notificationsSlice = createSlice({
   },
 });
 
-export const { resetNotifications, addNotification, removeNotification } =
-  notificationsSlice.actions;
+export const {
+  resetNotifications,
+  addNotification,
+  removeNotification,
+  addNotificationsToStore,
+  deleteNotificationsFromStore,
+} = notificationsSlice.actions;
 export default notificationsSlice.reducer;
