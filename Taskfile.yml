@@ -37,6 +37,14 @@ tasks:
     desc: Run on iOS (uses SIMULATOR env from .env)
     cmd: pnpm run ios
 
+  stop-ios:
+    desc: Stop iOS Simulator and free resources
+    cmds:
+      - echo "🛑 Shutting down iOS Simulator..."
+      - xcrun simctl shutdown all 2>/dev/null || true
+      - killall Simulator 2>/dev/null || true
+      - echo "✅ iOS Simulator stopped"
+
   # ====================
   # Android
   # ====================
