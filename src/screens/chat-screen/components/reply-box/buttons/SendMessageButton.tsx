@@ -21,12 +21,14 @@ export const SendMessageButton = (props: SendMessageButtonProps) => {
         layout={LinearTransition.springify().damping(20).stiffness(180)}
         entering={sendIconEnterAnimation}
         exiting={sendIconExitAnimation}
-        style={[tailwind.style('flex items-center justify-center h-10 w-10'), animatedStyle]}>
+        style={[tailwind.style('flex items-center justify-center h-10 w-10'), animatedStyle]}
+      >
         <Animated.View
           style={themedTailwind.style(
             'flex items-center justify-center h-7 w-7 rounded-full',
             isPrivateMessage ? 'bg-amber-700' : 'bg-gray-950',
-          )}>
+          )}
+        >
           <Icon icon={<SendIcon />} size={16} />
         </Animated.View>
       </Animated.View>

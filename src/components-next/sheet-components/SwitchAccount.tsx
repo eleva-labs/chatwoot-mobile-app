@@ -39,18 +39,21 @@ const AccountCell = ({
           style={themedTailwind.style(
             'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
             !isLastItem && 'border-b-[1px] border-blackA-A3',
-          )}>
+          )}
+        >
           <View>
             <Text
               style={themedTailwind.style(
                 'text-base capitalize text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
-              )}>
+              )}
+            >
               {item.name}
             </Text>
             <Text
               style={themedTailwind.style(
                 'text-sm text-gray-900 font-inter-420-20 leading-[18px] tracking-[0.16px] capitalize',
-              )}>
+              )}
+            >
               {item.role}
             </Text>
           </View>

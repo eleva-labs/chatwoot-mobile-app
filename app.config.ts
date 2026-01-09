@@ -7,6 +7,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   console.log('[app.config] ENVIRONMENT:', process.env.ENVIRONMENT);
   console.log('[app.config] EAS_BUILD_PROFILE:', process.env.EAS_BUILD_PROFILE);
 
+  // Check if building for simulator (set SIMULATOR=1 to skip entitlements that require signing)
+  const isSimulator = process.env.SIMULATOR === '1' || process.env.SIMULATOR === 'true';
+  console.log('[app.config] isSimulator:', isSimulator);
+
   const isProd =
     process.env.ENVIRONMENT === 'prod' || process.env.EAS_BUILD_PROFILE === 'production';
   console.log('[app.config] isProd:', isProd);
@@ -137,8 +141,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
       // Prefer EAS Secret File env var; fallback to repo path for local builds
       googleServicesFile: resolvedIosPlist,
-      entitlements: { 'aps-environment': 'production' },
-      associatedDomains: getAppLinkDomains(),
+      // Only include entitlements that require code signing when NOT building for simulator
+      ...(isSimulator
+        ? {}
+        : {
+            entitlements: { 'aps-environment': 'production' },
+            associatedDomains: getAppLinkDomains(),
+          }),
     },
     android: {
       adaptiveIcon: {

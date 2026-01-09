@@ -72,12 +72,14 @@ function MultiSelectChipsComponent({
               checked: isSelected,
               disabled: isDisabled,
             }}
-            accessibilityLabel={option.label}>
+            accessibilityLabel={option.label}
+          >
             <Text
               style={themedStyles.style(
                 'text-sm font-medium',
                 isSelected ? 'text-white' : 'text-gray-900',
-              )}>
+              )}
+            >
               {option.label}
             </Text>
           </TouchableOpacity>

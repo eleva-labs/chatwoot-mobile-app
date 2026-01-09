@@ -147,7 +147,8 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       <KeyboardAvoidingView
         style={tailwind.style('flex-1')}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={insets.top}>
+        keyboardVerticalOffset={insets.top}
+      >
         <View style={style('flex-1', tokens.session.background)}>
           <AIChatHeader
             selectedBot={selectedBot}

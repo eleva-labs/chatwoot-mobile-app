@@ -63,7 +63,8 @@ const ActionBottomSheet = () => {
       animationConfigs={animationConfigs}
       enablePanDownToClose
       snapPoints={actionSnapPoints}
-      onDismiss={handleOnDismiss}>
+      onDismiss={handleOnDismiss}
+    >
       {currentActionState === 'Assign' ? <UpdateAssignee /> : null}
       {currentActionState === 'TeamAssign' ? <UpdateTeam /> : null}
       {currentActionState === 'Status' ? <UpdateStatus /> : null}

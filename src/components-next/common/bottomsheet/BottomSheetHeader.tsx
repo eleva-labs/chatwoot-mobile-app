@@ -16,7 +16,8 @@ export const BottomSheetHeader = (props: BottomSheetHeaderProps) => {
       <Animated.Text
         style={themedTailwind.style(
           'text-gray-700 text-md font-inter-medium-24 leading-[17px] tracking-[0.32px]',
-        )}>
+        )}
+      >
         {headerText}
       </Animated.Text>
     </Animated.View>

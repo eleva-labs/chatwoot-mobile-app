@@ -49,7 +49,8 @@ export const Spinner = (props: SpinnerProps) => {
     <Animated.View
       entering={FadeIn}
       exiting={FadeOut}
-      style={[tailwind.style('flex items-center justify-center'), animatedStyle, style]}>
+      style={[tailwind.style('flex items-center justify-center'), animatedStyle, style]}
+    >
       <Icon icon={<LoadingIcon stroke={stroke} />} size={size} />
     </Animated.View>
   );

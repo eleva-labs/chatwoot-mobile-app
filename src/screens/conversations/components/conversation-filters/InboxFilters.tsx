@@ -43,12 +43,14 @@ const InboxCell = (props: InboxCellProps) => {
   return (
     <Pressable
       onPress={handlePreferredAssigneeTypePress}
-      style={tailwind.style('flex flex-row items-center')}>
+      style={tailwind.style('flex flex-row items-center')}
+    >
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
           !isLastItem ? 'border-b-[1px] border-blackA-A3' : '',
-        )}>
+        )}
+      >
         <Animated.View style={tailwind.style('flex-row items-center')}>
           <Icon
             icon={getChannelIcon(value.channelType, value.medium, '')}
@@ -59,7 +61,8 @@ const InboxCell = (props: InboxCellProps) => {
           <Animated.Text
             style={tailwind.style(
               'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize ml-2',
-            )}>
+            )}
+          >
             {value.name}
           </Animated.Text>
         </Animated.View>
@@ -81,7 +84,8 @@ const InboxStack = (props: InboxStackProps) => {
       bounces={false}
       showsVerticalScrollIndicator={true}
       scrollEventThrottle={16}
-      nestedScrollEnabled={true}>
+      nestedScrollEnabled={true}
+    >
       {list.map((value, index) => (
         <InboxCell key={index} {...{ value, index, isLastItem: index === list.length - 1 }} />
       ))}
@@ -115,7 +119,8 @@ export const InboxFilters = () => {
       bounces={false}
       showsVerticalScrollIndicator={true}
       scrollEventThrottle={16}
-      nestedScrollEnabled={true}>
+      nestedScrollEnabled={true}
+    >
       <BottomSheetHeader headerText={i18n.t('CONVERSATION.FILTERS.INBOX.TITLE')} />
       <InboxStack list={inboxList} />
     </Animated.ScrollView>

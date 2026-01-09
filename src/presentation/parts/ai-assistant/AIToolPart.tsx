@@ -189,11 +189,13 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
       accentColor={config.accentColor}
       isStreaming={isStreaming && state === 'running'}
       defaultExpanded={defaultExpanded}
-      icon={<Text>{config.icon}</Text>}>
+      icon={<Text>{config.icon}</Text>}
+    >
       <View>
         {/* Content label using slate colors */}
         <Text
-          style={style('text-xs font-inter-semibold-20 mb-2 uppercase', tokens.tool.sectionLabel)}>
+          style={style('text-xs font-inter-semibold-20 mb-2 uppercase', tokens.tool.sectionLabel)}
+        >
           {content.label}
         </Text>
 
@@ -202,7 +204,8 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
           style={style('max-h-48')}
           horizontal={false}
           showsVerticalScrollIndicator={true}
-          nestedScrollEnabled={true}>
+          nestedScrollEnabled={true}
+        >
           <View style={style('p-2 rounded-md', tokens.tool.jsonBackground)}>
             <Text style={style('text-xs font-mono', tokens.tool.jsonText)} selectable>
               {formatJson(content.data)}

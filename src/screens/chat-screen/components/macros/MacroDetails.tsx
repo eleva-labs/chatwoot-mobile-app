@@ -92,14 +92,16 @@ const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
               'px-3 py-[7px] rounded-lg bg-gray-100 flex flex-row items-center justify-center min-w-[60px] min-h-[32px]',
             )}
             onPress={onPress}
-            {...handlers}>
+            {...handlers}
+          >
             {isThisMacroExecuting ? (
               <Spinner size={16} />
             ) : (
               <Animated.Text
                 style={tailwind.style(
                   'text-sm font-inter-580-24 leading-[16px] tracking-[0.24px] capitalize text-gray-900',
-                )}>
+                )}
+              >
                 {i18n.t('MACRO.ACTIONS.RUN')}
               </Animated.Text>
             )}
@@ -109,7 +111,8 @@ const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
       {macro.actions && (
         <BottomSheetScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={tailwind.style('px-4')}>
+          contentContainerStyle={tailwind.style('px-4')}
+        >
           {resolvedMacro().map((action, index) => (
             <View key={index} style={tailwind.style('relative pl-6 pb-4')}>
               {macro.actions && index !== macro.actions.length - 1 && (

@@ -395,7 +395,8 @@ const BottomSheetContent = () => {
 
   return (
     <AnimatedKeyboardStickyView
-      style={[themedTailwind.style('bg-white'), animatedInputWrapperStyle]}>
+      style={[themedTailwind.style('bg-white'), animatedInputWrapperStyle]}
+    >
       {!canReply && inbox && conversation && (
         <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
           <ReplyWarning inbox={inbox} conversation={conversation} />
@@ -409,7 +410,8 @@ const BottomSheetContent = () => {
         layout={LinearTransition.springify().damping(38).stiffness(240)}
         style={themedTailwind.style(
           `pb-2 border-t-[1px] border-t-gray-200 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
-        )}>
+        )}
+      >
         {quoteMessage && (
           <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
             <QuoteReply />s

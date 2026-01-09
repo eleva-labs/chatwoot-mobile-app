@@ -48,7 +48,8 @@ const HeaderTitle = () => {
       <Text
         style={themedTailwind.style(
           'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[17px] text-center text-gray-950',
-        )}>
+        )}
+      >
         {i18n.t('CONVERSATION.HEADER.TITLE')}
       </Text>
     </Animated.View>
@@ -103,13 +104,15 @@ const FilterSection = ({
     <Animated.View
       style={[tailwind.style('flex-1'), animatedStyle]}
       exiting={exiting}
-      entering={entering}>
+      entering={entering}
+    >
       <Pressable onPress={onClearFilter} disabled={filtersAppliedCount === 0} {...handlers}>
         <Text
           style={themedTailwind.style(
             'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px]',
             filtersAppliedCount === 0 ? 'text-gray-700' : 'text-blue-800',
-          )}>
+          )}
+        >
           {i18n.t('CONVERSATION.HEADER.CLEAR_FILTER')}
           {filtersAppliedCount > 0 ? ` (${filtersAppliedCount})` : ''}
         </Text>
@@ -162,7 +165,8 @@ export const ConversationHeaderPresenter = ({
 
   return (
     <Animated.View
-      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-2 pb-[12px]')]}>
+      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-2 pb-[12px]')]}
+    >
       <LeftSection
         currentState={currentState}
         isSelectedAll={isSelectedAll}

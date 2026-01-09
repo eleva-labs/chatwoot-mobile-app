@@ -116,13 +116,15 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({ message, isStr
       style={style('mb-3', isUser ? 'items-end' : 'items-start')}
       accessible
       accessibilityRole="text"
-      accessibilityLabel={isUser ? 'Your message' : 'AI assistant message'}>
+      accessibilityLabel={isUser ? 'Your message' : 'AI assistant message'}
+    >
       <View
         style={style(
           'px-4 py-3 rounded-2xl max-w-[80%] flex-row items-center',
           messageTokens.background,
           isUser ? 'rounded-tr-sm' : 'rounded-tl-sm',
-        )}>
+        )}
+      >
         {showLoading ? (
           <ActivityIndicator size="small" color={Platform.OS === 'ios' ? '#4B5563' : '#9CA3AF'} />
         ) : textContent ? (
@@ -140,7 +142,8 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({ message, isStr
             style={style(
               'text-base font-inter-normal-20 leading-5 italic opacity-70',
               messageTokens.text,
-            )}>
+            )}
+          >
             {__DEV__ ? `[Message ${message.id || 'no-id'}]` : '...'}
           </Text>
         )}

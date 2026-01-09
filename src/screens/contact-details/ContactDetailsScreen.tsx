@@ -209,9 +209,8 @@ const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
 
   return (
     <View
-      style={tailwind.style(
-        `flex-1 bg-white pt-6 ${Platform.OS === 'android' ? 'pt-12' : 'pt-6'}`,
-      )}>
+      style={tailwind.style(`flex-1 bg-white pt-6 ${Platform.OS === 'android' ? 'pt-12' : 'pt-6'}`)}
+    >
       <ContactDetailsScreenHeader
         name={name || contactName || ''}
         thumbnail={thumbnail || contactThumbnail || ''}
@@ -219,7 +218,8 @@ const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
       />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
+        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}
+      >
         {email || phoneNumber ? (
           <Animated.View style={tailwind.style('mt-[23px] px-4')}>
             <ContactBasicActions phoneNumber={phoneNumber || ''} email={email || ''} />

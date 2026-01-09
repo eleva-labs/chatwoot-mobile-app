@@ -43,6 +43,8 @@ yarn-error.*
 
 .env
 .env.local
+.env.development
+.env.production
 dev.env
 prod.env
 android/app/google-services.json

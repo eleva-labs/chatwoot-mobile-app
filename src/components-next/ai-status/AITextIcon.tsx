@@ -25,7 +25,8 @@ export const AITextIcon: React.FC<AITextIconProps> = ({ isEnabled, size = 16, on
       accessible={true}
       accessibilityLabel="AI enabled"
       accessibilityRole={onPress ? 'button' : 'image'}
-      activeOpacity={0.7}>
+      activeOpacity={0.7}
+    >
       <Text
         style={[
           styles.text,
@@ -33,7 +34,8 @@ export const AITextIcon: React.FC<AITextIconProps> = ({ isEnabled, size = 16, on
             fontSize: textSize,
             color: colors.brand[600], // Always use purple color when visible
           },
-        ]}>
+        ]}
+      >
         AI
       </Text>
     </IconComponent>

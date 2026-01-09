@@ -84,7 +84,8 @@ export const AIPartRenderer: React.FC<AIPartRendererProps> = ({
     return (
       <View style={themedTailwind.style('p-2 rounded-md bg-yellow-100 dark:bg-yellow-900/30 my-1')}>
         <Text
-          style={themedTailwind.style('text-xs font-mono text-yellow-700 dark:text-yellow-300')}>
+          style={themedTailwind.style('text-xs font-mono text-yellow-700 dark:text-yellow-300')}
+        >
           Unknown part type: {part.type}
         </Text>
       </View>

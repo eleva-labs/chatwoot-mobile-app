@@ -99,12 +99,14 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
         irisTokens.border,
         irisTokens.borderAccent,
         irisTokens.background,
-      )}>
+      )}
+    >
       {/* Header */}
       <TouchableOpacity
         onPress={() => setIsExpanded(!isExpanded)}
         style={style('flex-row items-center justify-between p-3')}
-        activeOpacity={0.7}>
+        activeOpacity={0.7}
+      >
         <View style={style('flex-row items-center flex-1')}>
           <Text style={style('text-sm font-inter-semibold-20', irisTokens.labelActive)}>
             THOUGHTS...
@@ -127,7 +129,8 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
             style={style('max-h-80')}
             contentContainerStyle={style('pr-1')}
             showsVerticalScrollIndicator={true}
-            nestedScrollEnabled={true}>
+            nestedScrollEnabled={true}
+          >
             <Text style={style('text-sm font-inter-normal-20 leading-5', tokens.text.secondary)}>
               {textContent || '[No content]'}
             </Text>

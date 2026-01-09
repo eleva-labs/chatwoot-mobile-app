@@ -45,7 +45,8 @@ const Chatwoot = () => {
             <ErrorBoundary
               fallbackRender={({ error, resetErrorBoundary }) => (
                 <ErrorBoundaryScreen error={error} onRetry={resetErrorBoundary} />
-              )}>
+              )}
+            >
               <AppNavigator />
             </ErrorBoundary>
           </React.Suspense>

@@ -22,7 +22,8 @@ export const ExampleMessageBubble: React.FC<{
       style={tailwind(
         'px-4 py-3 rounded-lg max-w-[80%] mb-2',
         isOutgoing ? 'bg-primary ml-auto' : 'bg-surface border border-border',
-      )}>
+      )}
+    >
       <Text style={tailwind('text-sm', isOutgoing ? 'text-white' : 'text-foreground')}>
         {message}
       </Text>
@@ -70,7 +71,8 @@ export const ExampleButton: React.FC<{
   return (
     <TouchableOpacity
       style={tailwind('px-4 py-3 rounded-lg items-center', getButtonStyles())}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       <Text style={tailwind('text-sm font-medium', getTextStyles())}>{title}</Text>
     </TouchableOpacity>
   );
@@ -108,7 +110,8 @@ export const ExampleInput: React.FC<{
         style={tailwind(
           'bg-input border rounded-lg px-3 py-2',
           error ? 'border-destructive' : 'border-input-border',
-        )}>
+        )}
+      >
         <TextInput
           style={tailwind('text-foreground text-base')}
           placeholder={placeholder}

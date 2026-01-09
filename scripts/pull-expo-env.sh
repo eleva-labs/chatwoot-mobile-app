@@ -31,4 +31,4 @@ fi
 
 # Setup Firebase credentials (creates placeholders if real ones don't exist)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-"$SCRIPT_DIR/setup-credentials.sh"
+"$SCRIPT_DIR/setup-firebase-credentials.sh"

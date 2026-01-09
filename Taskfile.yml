@@ -1,0 +1,197 @@
+# https://taskfile.dev
+version: '3'
+
+dotenv:
+  - .env.example
+  - .env
+
+# Use bash and source nvm for all tasks
+set: [pipefail]
+shopt: [globstar]
+
+tasks:
+  default:
+    desc: Show available tasks
+    silent: true
+    cmd: task --list
+
+  # ====================
+  # Development Server
+  # ====================
+  start:
+    desc: Start Expo dev client
+    cmd: pnpm run start
+
+  start-prod:
+    desc: Start Expo in production mode
+    cmd: pnpm run start:prod
+
+  # ====================
+  # iOS
+  # ====================
+  build-ios:
+    desc: Build iOS (prebuild native project)
+    cmd: pnpm run generate
+
+  run-ios:
+    desc: Run on iOS (uses SIMULATOR env from .env)
+    cmd: pnpm run ios
+
+  # ====================
+  # Android
+  # ====================
+  build-android:
+    desc: Build Android (prebuild native project)
+    cmd: pnpm run generate
+
+  run-android:
+    desc: Run on Android device/emulator
+    cmd: pnpm run android
+
+  # ====================
+  # EAS Cloud Builds
+  # ====================
+  eas-build-ios:
+    desc: Build iOS on EAS (production)
+    cmd: pnpm run eas:build:ios
+
+  eas-build-ios-local:
+    desc: Build iOS locally via EAS (production)
+    cmd: pnpm run eas:build:ios:local
+
+  eas-build-android:
+    desc: Build Android on EAS (production)
+    cmd: pnpm run eas:build:android
+
+  eas-build-android-local:
+    desc: Build Android locally via EAS (production)
+    cmd: pnpm run eas:build:android:local
+
+  # ====================
+  # Code Quality
+  # ====================
+  lint:
+    desc: Run ESLint
+    cmd: pnpm run lint
+
+  lint-fix:
+    desc: Run ESLint with auto-fix
+    cmd: pnpm run lint -- --fix
+
+  format:
+    desc: Format code with Prettier
+    cmd: pnpm run format
+
+  test:
+    desc: Run tests
+    cmd: pnpm run test
+
+  # ====================
+  # Native / Expo
+  # ====================
+  generate:
+    desc: Regenerate native projects (clean)
+    cmd: pnpm run generate
+
+  generate-soft:
+    desc: Regenerate native projects (incremental)
+    cmd: pnpm run generate:soft
+
+  doctor:
+    desc: Run Expo doctor
+    cmd: pnpm run doctor
+
+  clean:
+    desc: Clean caches
+    cmd: pnpm run clean
+
+  # ====================
+  # Setup & Environment
+  # ====================
+  install:
+    desc: Install dependencies
+    cmd: pnpm install
+
+  setup:
+    desc: Full project setup (install + env + Firebase credentials)
+    cmds:
+      - task: install
+      - task: setup-dev
+
+  setup-dev:
+    desc: Setup for development (pulls env + creates Firebase placeholders)
+    cmds:
+      - pnpm run expo:env:pull:dev
+      - echo ""
+      - echo "✅ Development setup complete!"
+      - echo "   Run 'task run-ios' or 'task run-android' to start"
+
+  setup-prod:
+    desc: Setup for production (pulls env + creates Firebase placeholders)
+    cmd: pnpm run expo:env:pull:prod
+
+  setup-firebase:
+    desc: Setup Firebase credentials (placeholders if no real ones exist)
+    cmd: pnpm run firebase:setup
+
+  check-prereqs:
+    desc: Verify all development prerequisites are installed
+    cmd: ./scripts/check-prerequisites.sh
+
+  setup-volta:
+    desc: Setup Volta with Node 20 and pin project versions
+    cmds:
+      - volta install node@20
+      - volta pin node@20
+      - echo "✅ Volta setup complete with Node 20"
+
+  setup-node:
+    desc: Setup Node.js with Volta (installs and pins Node 20)
+    cmds:
+      - volta install node@20
+      - volta pin node@20
+      - echo "✅ Node.js 20 setup complete with Volta"
+
+  env-check:
+    desc: Verify environment variables are loaded
+    silent: true
+    cmds:
+      - echo "ENVIRONMENT=$ENVIRONMENT"
+      - echo "SIMULATOR=$SIMULATOR"
+      - echo "EXPO_PUBLIC_BASE_URL=$EXPO_PUBLIC_BASE_URL"
+      - echo ""
+      - echo "Firebase credentials:"
+      - ls -la credentials/android/ 2>/dev/null || echo "  (no android credentials)"
+      - ls -la credentials/ios/ 2>/dev/null || echo "  (no ios credentials)"
+
+  # ====================
+  # Storybook
+  # ====================
+  storybook:
+    desc: Start Storybook
+    env:
+      EXPO_STORYBOOK_ENABLED: 'true'
+    cmd: pnpm run storybook
+
+  storybook-generate:
+    desc: Generate Storybook stories index
+    cmd: pnpm run storybook:generate
+
+  storybook-ios:
+    desc: Run Storybook on iOS
+    env:
+      EXPO_STORYBOOK_ENABLED: 'true'
+    cmd: pnpm run ios
+
+  storybook-android:
+    desc: Run Storybook on Android
+    env:
+      EXPO_STORYBOOK_ENABLED: 'true'
+    cmd: pnpm run android
+
+  # ====================
+  # Utilities
+  # ====================
+  adb-connect:
+    desc: Connect ADB for React Native debugging
+    cmd: pnpm run adb:connect

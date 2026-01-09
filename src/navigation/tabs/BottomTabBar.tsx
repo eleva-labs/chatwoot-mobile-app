@@ -112,7 +112,8 @@ const TabItem = (props: any) => {
   );
   return (
     <Animated.View
-      style={[tailwind.style('justify-center items-center flex-1 bg-transparent'), animatedStyle]}>
+      style={[tailwind.style('justify-center items-center flex-1 bg-transparent'), animatedStyle]}
+    >
       <Pressable
         hitSlop={hitSlop}
         {...handlers}
@@ -121,7 +122,8 @@ const TabItem = (props: any) => {
         accessibilityLabel={options.tabBarAccessibilityLabel}
         testID={options.tabBarTestID}
         onPress={onPress}
-        onLongPress={onLongPress}>
+        onLongPress={onLongPress}
+      >
         <TabBarIcons focused={isFocused} route={route} />
       </Pressable>
     </Animated.View>
@@ -183,7 +185,8 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
             `h-[${tabBarHeight}px]`,
           ),
         ],
-      })}>
+      })}
+    >
       <Animated.View style={themedTailwind.style('absolute inset-0 h-[1px] bg-gray-200')} />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];

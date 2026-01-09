@@ -207,7 +207,8 @@ export const AITextPart: React.FC<AITextPartProps> = ({
             typographer: true,
           })}
           onLinkPress={handleLinkPress}
-          style={markdownStyles}>
+          style={markdownStyles}
+        >
           {text}
         </Markdown>
       </View>

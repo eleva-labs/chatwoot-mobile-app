@@ -60,7 +60,8 @@ export function Rating({
               accessible
               accessibilityRole="button"
               accessibilityState={{ selected: isSelected }}
-              accessibilityLabel={`Rate ${ratingValue} out of ${maxRating}`}>
+              accessibilityLabel={`Rate ${ratingValue} out of ${maxRating}`}
+            >
               <Text style={themedStyles.style(sizeClasses[size])}>
                 {getIcon(index, isSelected)}
               </Text>

@@ -39,7 +39,8 @@ const DropdownMenuItem = DropdownMenu.create<React.ComponentProps<typeof Dropdow
           <DropdownMenu.ItemTitle
             style={themedTailwind.style(
               'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-            )}>
+            )}
+          >
             {props.children}
           </DropdownMenu.ItemTitle>
         </View>
@@ -129,7 +130,8 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
           bottomInset={bottom === 0 ? 12 : bottom}
           animationConfigs={animationConfigs}
           enablePanDownToClose
-          snapPoints={[dropdownMenuList.length * 44 + 4 + 37]}>
+          snapPoints={[dropdownMenuList.length * 44 + 4 + 37]}
+        >
           <BottomSheetWrapper>
             <BottomSheetHeader headerText="Select action" />
             <Animated.View style={themedTailwind.style('py-1 pl-3')}>
@@ -145,18 +147,21 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
                   <Pressable
                     key={option.title + index}
                     style={themedTailwind.style('flex flex-row items-center')}
-                    onPress={handleOnOptionSelect}>
+                    onPress={handleOnOptionSelect}
+                  >
                     <Animated.View
                       style={themedTailwind.style(
                         'flex-1 flex-row justify-between py-[11px] pr-3',
                         index !== dropdownMenuList.length - 1
                           ? 'border-b-[1px] border-blackA-A3'
                           : '',
-                      )}>
+                      )}
+                    >
                       <Animated.Text
                         style={themedTailwind.style(
                           'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-                        )}>
+                        )}
+                      >
                         {option.title}
                       </Animated.Text>
                     </Animated.View>

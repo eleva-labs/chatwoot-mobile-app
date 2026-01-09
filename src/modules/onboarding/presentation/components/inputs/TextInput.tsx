@@ -93,7 +93,8 @@ export function TextInput({
                 : 'text-gray-500',
           )}
           accessible
-          accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}>
+          accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}
+        >
           {characterCountStatus.remaining} character
           {characterCountStatus.remaining !== 1 ? 's' : ''} remaining
         </Text>

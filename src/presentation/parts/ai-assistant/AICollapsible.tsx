@@ -110,16 +110,19 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
       accessible
       accessibilityRole="button"
       accessibilityState={{ expanded: isExpanded }}
-      accessibilityLabel={`${title}, ${isExpanded ? 'expanded' : 'collapsed'}`}>
+      accessibilityLabel={`${title}, ${isExpanded ? 'expanded' : 'collapsed'}`}
+    >
       {/* Header - matching Vue's button styles */}
       <TouchableOpacity
         onPress={handleToggle}
         style={style('flex-row items-center gap-2 px-3 py-2')}
-        activeOpacity={0.7}>
+        activeOpacity={0.7}
+      >
         {/* Icon with streaming animation color */}
         {icon && (
           <View
-            style={style('w-4 h-4 items-center justify-center', isStreaming && colors.iconActive)}>
+            style={style('w-4 h-4 items-center justify-center', isStreaming && colors.iconActive)}
+          >
             {icon}
           </View>
         )}
@@ -130,7 +133,8 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
             'text-sm font-inter-normal-20 flex-1',
             isStreaming ? colors.labelActive : colors.label,
           )}
-          numberOfLines={1}>
+          numberOfLines={1}
+        >
           {title}
         </Text>
 
