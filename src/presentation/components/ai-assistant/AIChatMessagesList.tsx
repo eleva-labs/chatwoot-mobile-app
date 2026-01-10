@@ -118,8 +118,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style('flex-1 items-center justify-center p-4')}
             accessible
             accessibilityRole="text"
-            accessibilityLabel="Loading messages"
-          >
+            accessibilityLabel="Loading messages">
             <Text style={style(tokens.text.muted)}>Loading conversation...</Text>
           </View>
         ) : listData.length === 0 ? (
@@ -127,8 +126,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style('flex-1 items-center justify-center p-4')}
             accessible
             accessibilityRole="text"
-            accessibilityLabel="No messages yet"
-          >
+            accessibilityLabel="No messages yet">
             <Text style={style(tokens.text.muted)}>
               {activeSessionId
                 ? 'No messages in this conversation'
@@ -172,8 +170,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style('mx-4 mb-2 p-3 rounded-lg', tokens.tool.errorBackground)}
             accessible
             accessibilityRole="alert"
-            accessibilityLabel="Error message"
-          >
+            accessibilityLabel="Error message">
             <Text style={style(tokens.tool.errorText)}>{error.message || String(error)}</Text>
           </View>
         )}

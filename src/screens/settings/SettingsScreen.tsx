@@ -314,8 +314,7 @@ const SettingsScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'bottom']}
-      style={themedTailwind.style('flex-1 bg-white font-inter-normal-20')}
-    >
+      style={themedTailwind.style('flex-1 bg-white font-inter-normal-20')}>
       <StatusBar
         translucent
         backgroundColor={themedTailwind.color('bg-white')}
@@ -326,28 +325,24 @@ const SettingsScreen = () => {
       <SettingsHeader />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
-      >
+        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}>
         <Animated.View style={tailwind.style('flex justify-center items-center pt-4 gap-4')}>
           <Animated.View>
             <UserAvatar src={avatarUrl} name={name} status={availabilityStatus} />
             <Animated.View
               style={themedTailwind.style(
                 'absolute border-[2px] border-white rounded-full -bottom-[2px] right-[10px]',
-              )}
-            ></Animated.View>
+              )}></Animated.View>
           </Animated.View>
           <Animated.View style={tailwind.style('flex flex-col items-center gap-1')}>
             <Animated.Text
-              style={themedTailwind.style('text-[22px] font-inter-580-24 text-gray-950')}
-            >
+              style={themedTailwind.style('text-[22px] font-inter-580-24 text-gray-950')}>
               {name}
             </Animated.Text>
             <Animated.Text
               style={themedTailwind.style(
                 'text-[15px] font-inter-420-20 leading-[17.25px] text-gray-900',
-              )}
-            >
+              )}>
               {email}
             </Animated.Text>
           </Animated.View>
@@ -368,8 +363,7 @@ const SettingsScreen = () => {
         </Animated.View>
         <Pressable
           style={tailwind.style('p-4 items-center')}
-          onLongPress={() => debugActionsSheetRef.current?.present()}
-        >
+          onLongPress={() => debugActionsSheetRef.current?.present()}>
           <BuildInfo />
         </Pressable>
       </Animated.ScrollView>
@@ -384,8 +378,7 @@ const SettingsScreen = () => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-white')}
-        snapPoints={[190]}
-      >
+        snapPoints={[190]}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_AVAILABILITY')} />
           <AvailabilityStatusList
@@ -405,8 +398,7 @@ const SettingsScreen = () => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-white')}
-        snapPoints={['70%']}
-      >
+        snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />
           <LanguageList onChangeLanguage={onChangeLanguage} currentLanguage={activeLocale} />
@@ -423,8 +415,7 @@ const SettingsScreen = () => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-white')}
-        snapPoints={['52%']}
-      >
+        snapPoints={['52%']}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.NOTIFICATION_PREFERENCES')} />
           <NotificationPreferences />
@@ -441,8 +432,7 @@ const SettingsScreen = () => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-white')}
-        snapPoints={['50%']}
-      >
+        snapPoints={['50%']}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SWITCH_ACCOUNT')} />
           <SwitchAccount
@@ -461,8 +451,7 @@ const SettingsScreen = () => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-white')}
-        snapPoints={['36%']}
-      >
+        snapPoints={['36%']}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.DEBUG_ACTIONS')} />
           <DebugActions />

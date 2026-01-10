@@ -74,8 +74,7 @@ export const IconButton = ({
         accessibilityRole="button"
         accessibilityState={{ disabled }}
         style={({ pressed }) => getButtonStyles(isPrimary, pressed, themedTailwind)}
-        {...handlers}
-      >
+        {...handlers}>
         <Icon
           icon={<PhoneIcon strokeWidth={2} stroke={tailwind.color('bg-blue-800')} />}
           size={24}

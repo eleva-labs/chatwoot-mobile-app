@@ -82,14 +82,12 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
       icon={
         // Vue uses i-lucide-brain icon
         <Text style={style(irisTokens.iconActive)}>🧠</Text>
-      }
-    >
+      }>
       <ScrollView
         style={style('max-h-64')}
         contentContainerStyle={style('pr-1')}
         showsVerticalScrollIndicator={true}
-        nestedScrollEnabled={true}
-      >
+        nestedScrollEnabled={true}>
         {reasoningText ? (
           <View style={style('flex-row flex-wrap items-end')}>
             {/* Text content using slate-12 like Vue's prose */}

@@ -89,11 +89,9 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
   return (
     <AnimatedNativeView
       layout={LinearTransition.springify().damping(28).stiffness(200)}
-      style={themedTailwind.style('flex-1 gap-0.5 py-2 border-b-[1px] border-b-gray-200')}
-    >
+      style={themedTailwind.style('flex-1 gap-0.5 py-2 border-b-[1px] border-b-gray-200')}>
       <AnimatedNativeView
-        style={tailwind.style('flex flex-row justify-between items-end h-[28px]')}
-      >
+        style={tailwind.style('flex flex-row justify-between items-end h-[28px]')}>
         <AnimatedNativeView style={tailwind.style('flex flex-row items-end h-[28px] gap-[5px]')}>
           <Text
             numberOfLines={1}
@@ -102,8 +100,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
               // Calculated based on the widths of other content,
               // We might have to do a 10-20px offset based on the max width of the timestamp
               `max-w-[${width - 250}px]`,
-            )}
-          >
+            )}>
             {senderName}
           </Text>
           {/* <ConversationId id={conversationId} /> */}
@@ -125,8 +122,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
       {hasLabels || hasSLA ? (
         <AnimatedNativeView style={tailwind.style('flex flex-col items-center gap-1')}>
           <AnimatedNativeView
-            style={tailwind.style('flex flex-row w-full justify-between items-center gap-2')}
-          >
+            style={tailwind.style('flex flex-row w-full justify-between items-center gap-2')}>
             {typingText ? (
               <TypingMessage typingText={typingText} />
             ) : (
@@ -134,8 +130,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
             )}
           </AnimatedNativeView>
           <AnimatedNativeView
-            style={tailwind.style('flex flex-row h-6 justify-between items-center gap-2')}
-          >
+            style={tailwind.style('flex flex-row h-6 justify-between items-center gap-2')}>
             <AnimatedNativeView style={tailwind.style('flex flex-row flex-1 gap-2 items-center')}>
               {hasSLA && (
                 <SLAIndicator
@@ -189,8 +184,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
                 paddingLeft: 4,
                 paddingRight: 0,
                 backgroundColor: 'transparent',
-              }}
-            >
+              }}>
               <AIStatusIcon isEnabled={isAIEnabled ?? false} size={32} />
             </View>
             {/* Invisible spacer to maintain layout */}

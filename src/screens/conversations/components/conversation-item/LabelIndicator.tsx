@@ -27,8 +27,7 @@ const LabelText = ({ labelText, labelColor }: { labelText: string; labelColor: s
       <Text
         style={themedTailwind.style(
           'pl-1 text-sm font-inter-420-20 leading-[16px] tracking-[0.32px] text-gray-700',
-        )}
-      >
+        )}>
         {labelText}
       </Text>
     </NativeView>
@@ -73,8 +72,7 @@ export const LabelIndicator = ({ labels, allLabels }: { labels: string[]; allLab
         // Measure the container width when it is rendered
         const { width } = event.nativeEvent.layout;
         setContainerWidth(width);
-      }}
-    >
+      }}>
       <NativeView style={tailwind.style('flex-row items-center overflow-hidden')}>
         {activeLabels.map((label, index) => (
           <NativeView key={index} style={tailwind.style(index !== 0 ? 'pl-1.5' : '')}>

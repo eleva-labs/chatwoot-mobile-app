@@ -144,8 +144,7 @@ export const ConversationActions = () => {
     <Animated.View style={tailwind.style('', `w-[${SCREEN_WIDTH}px]`)}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}
-      >
+        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
         <ConversationBasicActions
           status={status}
           updateConversationStatus={updateConversationStatus}
@@ -186,8 +185,7 @@ export const ConversationActions = () => {
         backgroundStyle={themedTailwind.style('bg-black')}
         animationConfigs={animationConfigs}
         enablePanDownToClose
-        snapPoints={['50%']}
-      >
+        snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />
       </BottomSheetModal>
     </Animated.View>

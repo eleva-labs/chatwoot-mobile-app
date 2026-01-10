@@ -41,15 +41,13 @@ export const AvatarCounter: React.FC<AvatarCounterProps> = ({
           height: avatarTheme.counter.size[size].height,
           paddingHorizontal: isLargeCount ? avatarTheme.counter.padding[size].horizontal : 0,
         },
-      ]}
-    >
+      ]}>
       <Text
         style={tailwind.style(
           cx(avatarTheme.counter.text.base, avatarTheme.counter.text.size[size]),
         )}
         adjustsFontSizeToFit
-        allowFontScaling={false}
-      >
+        allowFontScaling={false}>
         {displayCount}
       </Text>
     </View>

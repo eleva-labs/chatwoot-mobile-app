@@ -34,15 +34,13 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
           headerTokens.border,
         )}
         accessible
-        accessibilityRole="header"
-      >
+        accessibilityRole="header">
         <View style={style('flex-row items-center flex-1')}>
           <Text
             style={style('text-lg font-inter-semibold-20', headerTokens.title)}
             accessible
             accessibilityRole="text"
-            accessibilityLabel={selectedBot?.name || 'AI Assistant'}
-          >
+            accessibilityLabel={selectedBot?.name || 'AI Assistant'}>
             {selectedBot?.name || 'AI Assistant'}
           </Text>
           {sessionsCount > 0 && (
@@ -51,8 +49,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               style={({ pressed }) => style('ml-3 p-1 rounded', pressed && 'opacity-70')}
               accessible
               accessibilityRole="button"
-              accessibilityLabel="Toggle sessions list"
-            >
+              accessibilityLabel="Toggle sessions list">
               <Text style={style('text-sm font-inter-420-20', headerTokens.link)}>
                 Sessions ({sessionsCount})
               </Text>
@@ -66,8 +63,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               style={({ pressed }) => style('p-2 rounded-full', pressed && 'opacity-70')}
               accessible
               accessibilityRole="button"
-              accessibilityLabel="New conversation"
-            >
+              accessibilityLabel="New conversation">
               <Text style={style('text-sm font-inter-420-20', headerTokens.link)}>New</Text>
             </Pressable>
           )}
@@ -77,8 +73,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessible
             accessibilityRole="button"
             accessibilityLabel="Close AI Assistant"
-            accessibilityHint="Closes the AI assistant chat interface"
-          >
+            accessibilityHint="Closes the AI assistant chat interface">
             <Icon icon={<CloseIcon />} size={20} />
           </Pressable>
         </View>

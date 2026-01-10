@@ -84,11 +84,27 @@ tasks:
 
   lint-fix:
     desc: Run ESLint with auto-fix
-    cmd: pnpm run lint -- --fix
+    cmd: pnpm exec eslint . --fix
 
   format:
     desc: Format code with Prettier
     cmd: pnpm run format
+
+  format-check:
+    desc: Check if code is formatted (no changes)
+    cmd: pnpm exec prettier --check "src/**/*.{ts,tsx,js,jsx}"
+
+  format-all:
+    desc: Format code with Prettier then fix with ESLint (recommended)
+    cmds:
+      - task: format
+      - task: lint-fix
+
+  check:
+    desc: Run all code quality checks (format check + lint)
+    cmds:
+      - task: format-check
+      - task: lint
 
   test:
     desc: Run tests

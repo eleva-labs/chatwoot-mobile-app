@@ -16,8 +16,7 @@ export const AIToolIndicator: React.FC<AIToolIndicatorProps> = ({ toolCalls }) =
       style={style('px-3 py-2 rounded-lg mb-2', slateTokens.background)}
       accessible
       accessibilityRole="text"
-      accessibilityLabel="AI tool call indicator"
-    >
+      accessibilityLabel="AI tool call indicator">
       <Text style={style('text-sm font-inter-medium-24', slateTokens.labelActive)}>
         {toolCalls.length === 1 ? 'Using tool...' : `Using ${toolCalls.length} tools...`}
       </Text>

@@ -73,11 +73,9 @@ export const NotificationPreferences = () => {
       {typedPushFlags.map((item: NotificationPreferenceType) => (
         <Animated.View
           key={item}
-          style={tailwind.style('flex flex-row items-center justify-between ml-2 mt-2')}
-        >
+          style={tailwind.style('flex flex-row items-center justify-between ml-2 mt-2')}>
           <Animated.Text
-            style={themedTailwind.style('flex-1 leading-[17px] tracking-[0.24px] text-gray-950')}
-          >
+            style={themedTailwind.style('flex-1 leading-[17px] tracking-[0.24px] text-gray-950')}>
             {i18n.t(`NOTIFICATION_PREFERENCE.${NOTIFICATION_PREFERENCE_TYPES[item]}`)}
           </Animated.Text>
           <Switch

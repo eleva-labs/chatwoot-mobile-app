@@ -35,13 +35,11 @@ export const AIChatSessionPanel: React.FC<AIChatSessionPanelProps> = React.memo(
             : {
                 elevation: 4,
               },
-        ]}
-      >
+        ]}>
         <ScrollView
           style={style('flex-1')}
           showsVerticalScrollIndicator={true}
-          nestedScrollEnabled={true}
-        >
+          nestedScrollEnabled={true}>
           <AISessionList
             sessions={sessions}
             activeSessionId={activeSessionId}

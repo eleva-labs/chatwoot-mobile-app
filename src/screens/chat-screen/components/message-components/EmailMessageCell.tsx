@@ -67,8 +67,7 @@ export const EmailMessageCell = (props: EmailMessageCellProps) => {
           shouldRenderAvatar ? 'mb-2' : '',
           messageItem.private ? 'my-6' : '',
         ),
-      ]}
-    >
+      ]}>
       <Animated.View style={tailwind.style('flex flex-row w-full')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
