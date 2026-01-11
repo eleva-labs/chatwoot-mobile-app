@@ -1,7 +1,5 @@
 import type { UIMessage } from 'ai';
 import type { AIChatMessage } from '@/infrastructure/dto/ai-assistant';
-// Use domain constants instead of hardcoded strings
-import { PART_TYPES } from '@/domain/types/ai-assistant/constants';
 
 /**
  * Convert backend AIChatMessage to Vercel AI SDK UIMessage format
@@ -12,11 +10,11 @@ export function convertBackendMessageToUIMessage(message: AIChatMessage): UIMess
     role: message.role === 'assistant' ? 'assistant' : message.role === 'user' ? 'user' : 'system',
     parts: [
       {
-        type: PART_TYPES.TEXT,
+        type: 'text' as const,
         text: message.content,
       },
     ],
-    createdAt: new Date(message.timestamp),
+    // Note: createdAt is not a standard UIMessage property in SDK v5
   };
 }
 

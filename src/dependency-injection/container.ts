@@ -1,70 +1,58 @@
 /**
  * Dependency Injection Container
  *
- * Composes all feature modules to create the application's DI container.
- * This file should be imported once at app startup (e.g., in App.tsx or index.ts).
+ * Provides utilities for resolving dependencies from the DI container.
+ * For initialization, use bootstrap.ts instead.
  *
  * Usage:
- *   import '@/dependency-injection/container';
- *   // or
- *   import { initializeContainer } from '@/dependency-injection/container';
- *   initializeContainer();
+ *   import { resolve, getContainer } from '@/dependency-injection/container';
+ *   const service = resolve<IMyService>(TOKENS.IMyService);
  */
 
-import 'reflect-metadata';
 import { container } from 'tsyringe';
-
-// Feature Modules
-import { registerSharedModule, registerAIAssistantModule } from './modules';
+import { isContainerInitialized, bootstrapDI } from './bootstrap';
 
 // ============================================================================
-// Container Initialization
+// Container Access
 // ============================================================================
-
-let isInitialized = false;
-
-/**
- * Initialize the DI container with all feature modules.
- * Safe to call multiple times - will only register once.
- */
-export function initializeContainer(): void {
-  if (isInitialized) {
-    return;
-  }
-
-  // Register modules in dependency order
-  // (shared first, then features that depend on shared)
-  registerSharedModule(container);
-  registerAIAssistantModule(container);
-
-  isInitialized = true;
-
-  if (__DEV__) {
-    console.log('[DI Container] Initialized successfully');
-  }
-}
 
 /**
  * Get the TSyringe container instance.
- * Useful for resolving dependencies manually.
+ *
+ * Will auto-initialize if not already initialized.
+ * Prefer explicit bootstrapDI() call in App.tsx.
  */
 export function getContainer() {
-  if (!isInitialized) {
-    initializeContainer();
+  if (!isContainerInitialized()) {
+    if (__DEV__) {
+      console.warn(
+        '[DI Container] getContainer() called before explicit bootstrap. ' +
+          'Consider calling bootstrapDI() in App.tsx for predictable initialization.',
+      );
+    }
+    bootstrapDI();
   }
   return container;
 }
 
 /**
  * Resolve a dependency from the container.
- * Shorthand for container.resolve().
+ *
+ * @param token - The injection token (Symbol) to resolve
+ * @returns The resolved dependency
  */
 export function resolve<T>(token: symbol): T {
-  if (!isInitialized) {
-    initializeContainer();
+  if (!isContainerInitialized()) {
+    if (__DEV__) {
+      console.warn(
+        '[DI Container] resolve() called before explicit bootstrap. ' +
+          'Consider calling bootstrapDI() in App.tsx for predictable initialization.',
+      );
+    }
+    bootstrapDI();
   }
   return container.resolve<T>(token);
 }
 
-// Auto-initialize when this module is imported
-initializeContainer();
+// Re-export for backward compatibility
+export { bootstrapDI, isContainerInitialized } from './bootstrap';

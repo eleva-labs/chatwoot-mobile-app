@@ -57,8 +57,8 @@ export function useAIChatSessions(
       // Sessions are sorted by most recent first
       if (!activeSessionId && sessions.length > 0) {
         const latestSession = sessions[0];
-        if (latestSession?.id) {
-          dispatch(setActiveSession({ sessionId: latestSession.id }));
+        if (latestSession?.chat_session_id) {
+          dispatch(setActiveSession({ sessionId: latestSession.chat_session_id }));
         } else {
           console.warn('[useAIChatSessions] No latest session available to auto-select');
         }

@@ -11,6 +11,9 @@ export type { ApiResponse, RequestOptions } from './ApiClient';
 // Analytics service
 export { FirebaseAnalyticsService } from './FirebaseAnalyticsService';
 
+// AI Chat Configuration service
+export { AIChatConfigService } from './AIChatConfigService';
+
 // Re-export buildQueryString from endpoints for convenience
 export { buildQueryString } from '@/infrastructure/services/ai-assistant/endpoints';
 

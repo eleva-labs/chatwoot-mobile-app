@@ -115,8 +115,8 @@ export const aiChatActions = {
     } catch (error) {
       console.error('[AI Chat Actions] ===== FETCH SESSIONS ACTION ERROR =====');
       console.error('[AI Chat Actions] Error type:', error?.constructor?.name);
-      console.error('[AI Chat Actions] Error message:', error?.message);
-      console.error('[AI Chat Actions] Error stack:', error?.stack);
+      console.error('[AI Chat Actions] Error message:', (error as Error)?.message);
+      console.error('[AI Chat Actions] Error stack:', (error as Error)?.stack);
       console.error(
         '[AI Chat Actions] Full error:',
         JSON.stringify(error, Object.getOwnPropertyNames(error), 2),

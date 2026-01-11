@@ -1,15 +1,26 @@
 /**
  * Dependency Injection - Barrel Export
  *
- * Import this module to initialize the DI container:
- *   import '@/dependency-injection';
+ * Initialize the container explicitly:
+ *   import { bootstrapDI } from '@/dependency-injection';
+ *   bootstrapDI();
  *
- * Or import specific functions:
- *   import { initializeContainer, resolve } from '@/dependency-injection';
+ * Or resolve dependencies:
+ *   import { resolve } from '@/dependency-injection';
+ *   const service = resolve<IMyService>(TOKENS.IMyService);
  */
 
 // Export tokens
 export { AI_ASSISTANT_TOKENS, SHARED_TOKENS, DI_TOKENS } from './tokens';
 
-// Export container functions
-export { initializeContainer, getContainer, resolve } from './container';
+// Export bootstrap functions
+export {
+  bootstrapDI,
+  isContainerInitialized,
+  validateContainerSetup,
+  resetContainer,
+  getInitializationTimestamp,
+} from './bootstrap';
+
+// Export container utilities
+export { getContainer, resolve } from './container';

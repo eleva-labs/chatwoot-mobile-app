@@ -7,8 +7,8 @@
  * Key features:
  * - Uses DefaultChatTransport for SSE streaming (no custom parsing needed)
  * - Integrates expo/fetch for React Native compatibility
- * - Handles Chatwoot-specific auth headers and request format
- * - Manages session persistence via AsyncStorage
+ * - Handles Chatwoot-specific auth headers and request format via DI (useAIChatConfig)
+ * - Manages session persistence via DI (useSessionStorage)
  * - Handles app background/foreground lifecycle
  *
  * @see https://ai-sdk.dev/docs/getting-started/expo
@@ -20,11 +20,12 @@ import type { UIMessage } from 'ai';
 import { fetch as expoFetch } from 'expo/fetch';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { getStore } from '@/store/storeAccessor';
 // Use domain type guards instead of hardcoded strings
 import { isTextPart, type MessagePart, type TextPart } from '@/domain/types/ai-assistant/parts';
+import { createAIChatSessionId } from '@/domain/value-objects/ai-assistant';
+import { useAIChatConfig } from '../di/useAIChatConfig';
+import { useSessionStorage } from '../di/useSessionStorage';
 
 // ============================================================================
 // Types & Interfaces
@@ -73,52 +74,8 @@ export interface UseAIChatReturn {
 }
 
 // ============================================================================
-// Constants
-// ============================================================================
-
-const SESSION_STORAGE_KEY = '@ai_chat:session_id';
-
-// ============================================================================
 // Helper Functions
 // ============================================================================
-
-/**
- * Get authentication headers from Redux store
- */
-function getAuthHeaders(): Record<string, string> {
-  const store = getStore();
-  const state = store.getState();
-  const headers = state.auth.headers;
-
-  if (!headers) {
-    return {};
-  }
-
-  return {
-    'access-token': headers['access-token'],
-    uid: headers.uid,
-    client: headers.client,
-  };
-}
-
-/**
- * Get the base URL from Redux store settings
- */
-function getBaseURL(): string {
-  const store = getStore();
-  const state = store.getState();
-  const url = state.settings?.installationUrl || '';
-  return url.endsWith('/') ? url.slice(0, -1) : url;
-}
-
-/**
- * Get the current account ID from Redux store
- */
-function getAccountId(): number | null {
-  const store = getStore();
-  const state = store.getState();
-  return state.auth.user?.account_id || null;
-}
 
 /**
  * Parse error response from the server
@@ -193,6 +150,13 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   } = options || {};
 
   // ============================================================================
+  // DI Hooks
+  // ============================================================================
+
+  const config = useAIChatConfig();
+  const sessionStorage = useSessionStorage();
+
+  // ============================================================================
   // State & Refs
   // ============================================================================
 
@@ -214,7 +178,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   // Session Persistence
   // ============================================================================
 
-  // Load session from AsyncStorage on mount
+  // Load session from DI session storage on mount
   useEffect(() => {
     const loadSession = async () => {
       if (initialSessionId) {
@@ -223,63 +187,66 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
         return;
       }
 
-      try {
-        const storedSessionId = await AsyncStorage.getItem(SESSION_STORAGE_KEY);
-        if (storedSessionId && isMountedRef.current) {
-          setSessionId(storedSessionId);
+      const result = await sessionStorage.getActiveAIChatSessionId();
+      if (result.isSuccess && isMountedRef.current) {
+        const storedId = result.getValue();
+        if (storedId) {
+          setSessionId(storedId as string);
         }
-      } catch (error) {
-        console.warn('[useAIChat] Failed to load session from storage:', error);
+      } else if (result.isFailure) {
+        console.warn('[useAIChat] Failed to load session from storage:', result.getError());
       }
     };
 
     loadSession();
-  }, [initialSessionId]);
+  }, [initialSessionId, sessionStorage]);
 
-  // Save session to AsyncStorage when it changes
+  // Save session to DI session storage when it changes
   useEffect(() => {
     const saveSession = async () => {
       if (!sessionId) return;
 
-      try {
-        await AsyncStorage.setItem(SESSION_STORAGE_KEY, sessionId);
+      const result = await sessionStorage.setActiveAIChatSessionId(
+        createAIChatSessionId(sessionId),
+      );
+      if (result.isSuccess) {
         // Notify parent component
         optionsRef.current?.onSessionIdExtracted?.(sessionId);
-      } catch (error) {
-        console.warn('[useAIChat] Failed to save session to storage:', error);
+      } else {
+        console.warn('[useAIChat] Failed to save session to storage:', result.getError());
       }
     };
 
     saveSession();
-  }, [sessionId]);
+  }, [sessionId, sessionStorage]);
 
   // ============================================================================
   // Transport Configuration
   // ============================================================================
 
   const transport = useMemo(() => {
-    const accountId = getAccountId();
-    const baseURL = getBaseURL();
+    const accountId = config.getAccountId();
 
     if (!accountId) {
       console.warn('[useAIChat] No account ID available');
     }
 
-    // Build API endpoint
-    const apiEndpoint = aiBackendUrl
-      ? `${aiBackendUrl}/chat/stream`
-      : `${baseURL}/api/v1/accounts/${accountId}/ai_chat/stream`;
+    // Use config.buildStreamEndpoint for cleaner endpoint construction
+    const apiEndpoint = config.buildStreamEndpoint(aiBackendUrl);
 
     return new DefaultChatTransport({
       api: apiEndpoint,
 
       // Use expo/fetch for React Native streaming support
-      fetch: async (url: string | URL | Request, fetchOptions: RequestInit | undefined) => {
-        const response = await expoFetch(url as string, fetchOptions as RequestInit);
+      fetch: async (url, fetchOptions) => {
+        const response = await expoFetch(
+          url as string,
+          fetchOptions as Parameters<typeof expoFetch>[1],
+        );
 
         // Check for errors and parse Chatwoot-specific error format
         if (!response.ok) {
-          const errorMessage = await parseErrorResponse(response);
+          const errorMessage = await parseErrorResponse(response as unknown as Response);
           throw new Error(errorMessage);
         }
 
@@ -289,26 +256,26 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
           setSessionId(newSessionId);
         }
 
-        return response;
+        return response as unknown as Response;
       },
 
       // Provide auth headers
       headers: () => ({
-        ...getAuthHeaders(),
+        ...config.getAuthHeaders(),
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       }),
 
       // Transform request body to Chatwoot backend format
-      prepareSendMessagesRequest: async ({
-        messages,
-        headers,
-      }: {
-        messages: UIMessage[];
-        headers: Record<string, string>;
-      }) => {
+      prepareSendMessagesRequest: async options => {
+        const { messages } = options;
+        const headers =
+          options.headers instanceof Headers
+            ? Object.fromEntries(options.headers.entries())
+            : ((options.headers as Record<string, string>) ?? {});
+
         const lastMessage = messages[messages.length - 1];
-        const accountId = getAccountId();
+        const accountId = config.getAccountId();
 
         // Chatwoot expects a specific request format
         const body: Record<string, unknown> = {
@@ -343,7 +310,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
         return { body, headers };
       },
     });
-  }, [agentBotId, aiBackendUrl]);
+  }, [agentBotId, aiBackendUrl, config]);
 
   // ============================================================================
   // SDK Hook Integration
@@ -368,7 +335,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   );
 
   const handleFinish = useCallback(
-    (message: UIMessage) => {
+    ({ message }: { message: UIMessage }) => {
       if (isMountedRef.current) {
         onFinish?.(message);
       }
@@ -439,16 +406,14 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   );
 
   const clearSession = useCallback(async () => {
-    try {
-      await AsyncStorage.removeItem(SESSION_STORAGE_KEY);
-      if (isMountedRef.current) {
-        setSessionId(null);
-        chat.setMessages([]);
-      }
-    } catch (error) {
-      console.warn('[useAIChat] Failed to clear session:', error);
+    const result = await sessionStorage.clearActiveAIChatSessionId();
+    if (result.isSuccess && isMountedRef.current) {
+      setSessionId(null);
+      chat.setMessages([]);
+    } else if (result.isFailure) {
+      console.warn('[useAIChat] Failed to clear session:', result.getError());
     }
-  }, [chat]);
+  }, [chat, sessionStorage]);
 
   // ============================================================================
   // Return Value

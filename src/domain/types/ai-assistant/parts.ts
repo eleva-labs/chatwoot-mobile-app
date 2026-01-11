@@ -32,9 +32,12 @@ export interface TextPart extends BasePart {
  */
 export interface ReasoningPart extends BasePart {
   type: 'reasoning';
-  reasoning: string;
-  /** Some SDK versions use 'text' instead of 'reasoning' */
-  text?: string;
+  /** Primary text field - matches SDK v5 */
+  text: string;
+  /** @deprecated Use 'text' instead. Kept for backwards compatibility. */
+  reasoning?: string;
+  /** Streaming state */
+  state?: 'streaming' | 'done';
   details?: { type: string; text: string }[];
 }
 

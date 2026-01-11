@@ -87,6 +87,13 @@ export const SHARED_TOKENS = {
 
   /** Redux state access */
   IStateRepository: Symbol.for('IStateRepository'),
+
+  // ============================================================================
+  // Services
+  // ============================================================================
+
+  /** AI chat configuration facade */
+  IAIChatConfigService: Symbol.for('IAIChatConfigService'),
 } as const;
 
 /**

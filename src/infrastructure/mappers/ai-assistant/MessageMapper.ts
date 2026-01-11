@@ -9,7 +9,6 @@ import { injectable } from 'tsyringe';
 import type { UIMessage } from 'ai';
 import type { IMessageMapper } from '@/domain/interfaces/mappers/ai-assistant';
 import type { AIChatMessageDTO, AIChatMessagePartDTO } from '@/infrastructure/dto/ai-assistant';
-// Use domain constants for part types (no hardcoded strings)
 import { PART_TYPES } from '@/domain/types/ai-assistant/constants';
 
 /**
@@ -23,12 +22,15 @@ export class MessageMapper implements IMessageMapper {
   toUIMessage(dto: unknown): UIMessage {
     const messageDTO = dto as AIChatMessageDTO;
 
+    // Map parts first, ensuring we always have an array
+    const parts = this.mapParts(messageDTO.parts, messageDTO.content);
+
     return {
       id: messageDTO.id,
       role: messageDTO.role,
-      content: messageDTO.content || '',
-      parts: this.mapParts(messageDTO.parts),
-      createdAt: messageDTO.timestamp ? new Date(messageDTO.timestamp) : new Date(),
+      parts, // Always an array, never undefined
+      // Note: createdAt is not a standard UIMessage property in SDK v5
+      // Store in metadata if needed
     };
   }
 
@@ -41,18 +43,31 @@ export class MessageMapper implements IMessageMapper {
 
   /**
    * Map message parts from DTO format to SDK format
+   * Always returns an array (never undefined)
    */
-  private mapParts(parts?: AIChatMessagePartDTO[]): UIMessage['parts'] {
+  private mapParts(parts?: AIChatMessagePartDTO[], fallbackContent?: string): UIMessage['parts'] {
+    // If no parts but we have content, create a text part
     if (!parts || parts.length === 0) {
-      return undefined;
+      if (fallbackContent) {
+        return [{ type: 'text' as const, text: fallbackContent }];
+      }
+      return []; // Empty array, never undefined
     }
 
-    return parts.map(part => this.mapPart(part)).filter(Boolean) as UIMessage['parts'];
+    const mappedParts = parts
+      .map(part => this.mapPart(part))
+      .filter((part): part is NonNullable<typeof part> => part !== null);
+
+    // If all parts were filtered out but we have content, use that
+    if (mappedParts.length === 0 && fallbackContent) {
+      return [{ type: 'text' as const, text: fallbackContent }];
+    }
+
+    return mappedParts;
   }
 
   /**
    * Map a single part from DTO to SDK format
-   * Uses domain PART_TYPES constants (no hardcoded strings)
    */
   private mapPart(part: AIChatMessagePartDTO): UIMessage['parts'][number] | null {
     const type = part.type;
@@ -60,47 +75,52 @@ export class MessageMapper implements IMessageMapper {
     // Text parts
     if (type === PART_TYPES.TEXT) {
       return {
-        type: PART_TYPES.TEXT,
+        type: 'text' as const,
         text: part.text || '',
       };
     }
 
-    // Reasoning parts
+    // Reasoning parts - SDK v5 uses 'text' not 'reasoning'
     if (type === PART_TYPES.REASONING) {
       return {
-        type: PART_TYPES.REASONING,
-        reasoning: part.text || '',
+        type: 'reasoning' as const,
+        text: part.text || (part as { reasoning?: string }).reasoning || '',
+        state: 'done' as const,
       };
     }
 
-    // Tool call parts - handle both SDK format and backend variants
+    // Tool call parts - SDK v5 uses 'dynamic-tool' type
     if (type === PART_TYPES.TOOL_CALL || type === PART_TYPES.TOOL_INPUT_AVAILABLE) {
       return {
-        type: PART_TYPES.TOOL_CALL,
+        type: 'dynamic-tool' as const,
         toolCallId: part.toolCallId || '',
         toolName: part.toolName || '',
-        args: part.args || {},
-      };
+        state: 'input-available' as const,
+        input: part.args || {},
+      } as UIMessage['parts'][number];
     }
 
-    // Tool result parts - handle both SDK format and backend variants
+    // Tool result parts - SDK v5 uses 'dynamic-tool' with output
     if (type === PART_TYPES.TOOL_RESULT || type === PART_TYPES.TOOL_OUTPUT_AVAILABLE) {
       return {
-        type: PART_TYPES.TOOL_RESULT,
+        type: 'dynamic-tool' as const,
         toolCallId: part.toolCallId || '',
         toolName: part.toolName || '',
-        result: part.result,
-      };
+        state: 'output-available' as const,
+        input: part.args || {},
+        output: part.result,
+      } as UIMessage['parts'][number];
     }
 
     // Unknown part type - return as text if has content
     if (part.text) {
       return {
-        type: PART_TYPES.TEXT,
+        type: 'text' as const,
         text: part.text,
       };
     }
 
+    console.warn('[MessageMapper] Unknown part type:', type);
     return null;
   }
 }

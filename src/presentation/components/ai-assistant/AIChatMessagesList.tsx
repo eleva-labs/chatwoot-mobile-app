@@ -3,12 +3,13 @@ import { View, Text } from 'react-native';
 import { Platform } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { LinearTransition } from 'react-native-reanimated';
-import type { UIMessage, UIMessagePart, UIDataTypes, UITools } from 'ai';
+import type { UIMessage } from 'ai';
 import { AIMessageBubble } from './AIMessageBubble';
 import { AIThoughtsView } from './AIThoughtsView';
 import { AIToolIndicator } from './AIToolIndicator';
 import type { FlashListRef } from '@/presentation/hooks/ai-assistant/useAIChatScroll';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import type { ToolPart } from '@/domain/types/ai-assistant/parts';
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +27,7 @@ export interface AIChatMessagesListProps {
   isLoadingMessages: boolean;
   activeSessionId: string | null;
   error: Error | null;
-  toolCalls: UIMessagePart<UIDataTypes, UITools>[];
+  toolCalls: ToolPart[];
   listRef: React.RefObject<FlashListRef>;
   onScroll: (event: { nativeEvent: unknown }) => void;
   thoughtsText: string;

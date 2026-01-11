@@ -12,6 +12,9 @@ import { ReduxAuthRepository } from '@/infrastructure/repositories/shared/ReduxA
 import { ReduxSettingsRepository } from '@/infrastructure/repositories/shared/ReduxSettingsRepository';
 import { ReduxStateRepository } from '@/infrastructure/repositories/shared/ReduxStateRepository';
 
+// Service Implementations
+import { AIChatConfigService } from '@/infrastructure/services/shared/AIChatConfigService';
+
 /**
  * Register shared module dependencies
  */
@@ -23,4 +26,10 @@ export function registerSharedModule(container: DependencyContainer): void {
   container.registerSingleton(SHARED_TOKENS.IAuthRepository, ReduxAuthRepository);
   container.registerSingleton(SHARED_TOKENS.ISettingsRepository, ReduxSettingsRepository);
   container.registerSingleton(SHARED_TOKENS.IStateRepository, ReduxStateRepository);
+
+  // --------------------------------------------------------------------------
+  // Services (Singletons - shared across app)
+  // --------------------------------------------------------------------------
+
+  container.registerSingleton(SHARED_TOKENS.IAIChatConfigService, AIChatConfigService);
 }

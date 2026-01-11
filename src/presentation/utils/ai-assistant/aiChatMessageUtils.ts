@@ -56,7 +56,7 @@ export function validateAndNormalizeParts(msg: UIMessage): UIMessage {
     });
 
   if (validParts.length !== msg.parts.length) {
-    return { ...msg, parts: validParts };
+    return { ...msg, parts: validParts as UIMessage['parts'] };
   }
 
   return msg;

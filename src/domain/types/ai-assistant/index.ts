@@ -15,7 +15,12 @@
 
 import type { UIMessage } from 'ai';
 
-export type { UIMessage, CreateMessage, Message } from 'ai';
+export type { UIMessage, CreateUIMessage } from 'ai';
+
+/** @deprecated Use UIMessage instead */
+export type { UIMessage as Message } from 'ai';
+/** @deprecated Use CreateUIMessage instead */
+export type { CreateUIMessage as CreateMessage } from 'ai';
 
 /**
  * Domain alias for UIMessage
