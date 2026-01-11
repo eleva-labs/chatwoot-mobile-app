@@ -1,6 +1,6 @@
-# Agent-Driven Development Process Guide
+# Feature Development Process Guide
 
-**Version**: 1.0.0
+**Version**: 1.2.0
 **Last Updated**: 2026-01-11
 **Status**: Active
 **Document Type**: Process Guide
@@ -11,7 +11,7 @@
 ## Overview
 
 ### Purpose
-This process enables complex, multi-session feature development using AI agents with persistent documentation. It ensures continuity across sessions, tracks progress systematically, and allows any agent (or human) to pick up work exactly where the previous session left off.
+This process enables complex, multi-session feature development with persistent documentation. It ensures continuity across sessions, tracks progress systematically, and allows any developer (or AI agent) to pick up work exactly where the previous session left off.
 
 ### Scope
 **Covered**: Feature development, refactoring projects, architecture migrations, multi-phase implementations
