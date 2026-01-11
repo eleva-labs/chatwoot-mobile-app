@@ -138,17 +138,41 @@ export class AxiosOnboardingRepository implements IOnboardingRepository {
   }
 
   async submitAnswers(flowId: string, answers: Answers): Promise<Result<void, Error>> {
+    const url = `${this.BASE_URL}/${flowId}/submit`;
+
+    // DEBUG: Log request details
+    console.log('[OnboardingRepository] submitAnswers - Request Details:');
+    console.log('[OnboardingRepository] URL:', url);
+    console.log('[OnboardingRepository] Flow ID:', flowId);
+    console.log('[OnboardingRepository] Answers:', JSON.stringify(answers, null, 2));
+
     try {
-      await apiService.post<void>(`${this.BASE_URL}/${flowId}/submit`, {
+      await apiService.post<void>(url, {
         answers,
       });
 
+      console.log('[OnboardingRepository] submitAnswers - Success');
       return Result.ok(undefined);
     } catch (error) {
+      // DEBUG: Log detailed error information
+      console.error('[OnboardingRepository] submitAnswers - Error occurred:');
+
       if (error instanceof AxiosError) {
+        console.error('[OnboardingRepository] AxiosError Details:');
+        console.error('[OnboardingRepository] - Status:', error.response?.status);
+        console.error('[OnboardingRepository] - Status Text:', error.response?.statusText);
+        console.error('[OnboardingRepository] - Response Data:', JSON.stringify(error.response?.data, null, 2));
+        console.error('[OnboardingRepository] - Request URL:', error.config?.url);
+        console.error('[OnboardingRepository] - Request BaseURL:', error.config?.baseURL);
+        console.error('[OnboardingRepository] - Full URL:', `${error.config?.baseURL}${error.config?.url}`);
+        console.error('[OnboardingRepository] - Request Headers:', JSON.stringify(error.config?.headers, null, 2));
+        console.error('[OnboardingRepository] - Error Message:', error.message);
+        console.error('[OnboardingRepository] - Error Code:', error.code);
+
         return Result.fail(new NetworkError(`Failed to submit answers: ${error.message}`, error));
       }
 
+      console.error('[OnboardingRepository] Non-Axios Error:', error);
       return Result.fail(
         error instanceof Error ? error : new NetworkError('Failed to submit answers'),
       );

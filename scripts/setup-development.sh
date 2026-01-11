@@ -107,6 +107,26 @@ install_dependencies() {
     fi
 }
 
+# Function to setup ccache for iOS builds
+setup_ccache() {
+    echo -e "${BLUE}📦 Setting up ccache for iOS builds...${NC}"
+
+    if command_exists ccache; then
+        echo -e "${GREEN}✅ ccache is already installed${NC}"
+    else
+        brew install ccache
+        echo -e "${GREEN}✅ ccache installed${NC}"
+    fi
+
+    # Add ccache to PATH if not already there
+    if ! grep -q "ccache/libexec" ~/.zshrc 2>/dev/null; then
+        echo '' >> ~/.zshrc
+        echo '# ccache for iOS builds' >> ~/.zshrc
+        echo 'export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"' >> ~/.zshrc
+        echo -e "${GREEN}✅ ccache PATH added to ~/.zshrc${NC}"
+    fi
+}
+
 # Function to setup development environment
 setup_dev_environment() {
     echo -e "${BLUE}🔧 Setting up development environment...${NC}"
@@ -156,6 +176,9 @@ main() {
 
     # Install dependencies
     install_dependencies
+
+    # Setup ccache for faster iOS builds
+    setup_ccache
 
     # Setup development environment
     setup_dev_environment

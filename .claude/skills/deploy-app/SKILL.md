@@ -69,7 +69,49 @@ Build and deploy the Chatwoot Mobile App to the App Store and Google Play using 
 |---------|-------------|----------|
 | `development` | dev | Development builds with dev client |
 | `development:simulator` | dev | iOS simulator builds |
+| `preview` | dev | Internal distribution builds |
 | `production` | prod | Store-ready builds |
+
+---
+
+## Build Caching
+
+EAS Build includes automatic caching to speed up builds:
+
+### Cache Configuration
+
+Each build profile includes cache configuration in `eas.json`:
+
+```json
+{
+  "cache": {
+    "disabled": false,
+    "key": "profile-v1",
+    "cacheDefaultPaths": true,
+    "customPaths": ["./ios/Podfile.lock"]
+  }
+}
+```
+
+### Cache Keys
+
+| Profile | Cache Key | Purpose |
+|---------|-----------|---------|
+| development | `dev-v1` | Development client builds |
+| development:simulator | `dev-sim-v1` | Simulator builds |
+| preview | `preview-v1` | Internal distribution |
+| production | `prod-v1` | Store builds |
+
+### Invalidating Cache
+
+To force a fresh build (when cache causes issues):
+
+```bash
+# Bump the cache key version in eas.json
+# e.g., "key": "dev-v1" -> "key": "dev-v2"
+```
+
+Or use the EAS dashboard to clear cache for a specific build.
 
 ---
 

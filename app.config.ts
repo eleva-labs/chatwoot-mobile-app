@@ -218,11 +218,21 @@ export default ({ config }: ConfigContext): ExpoConfig => {
               abiFilters: ['arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'],
             },
           },
-          ios: { useFrameworks: 'static' },
+          ios: { useFrameworks: 'static', ccacheEnabled: true },
         },
       ],
       './plugins/with-notifee-maven',
     ],
     androidNavigationBar: { backgroundColor: '#ffffff' },
+    // NOTE: expo-build-disk-cache requires Expo SDK 53+
+    // Enable this when upgrading to SDK 53:
+    // experiments: {
+    //   buildCacheProvider: {
+    //     plugin: 'expo-build-disk-cache',
+    //     options: {
+    //       cacheDir: 'node_modules/.expo-build-disk-cache',
+    //     },
+    //   },
+    // },
   };
 };

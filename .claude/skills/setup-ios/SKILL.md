@@ -169,6 +169,27 @@ If Ruby issues occur:
 brew install ruby
 ```
 
+### ccache (Recommended for Faster Builds)
+
+ccache dramatically speeds up C/C++ compilation for native iOS builds.
+
+```bash
+# Install ccache
+brew install ccache
+
+# Add to PATH (add to ~/.zshrc)
+export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
+
+# Verify installation
+ccache --version
+ccache -s  # Show statistics
+```
+
+**Important:** To use ccache with Xcode, launch Xcode from terminal:
+```bash
+xed ios/ChatscommerceDev.xcworkspace
+```
+
 ---
 
 ## Phase 4: Configure iOS Simulator
@@ -385,7 +406,8 @@ SIMULATOR=0
 | "No signing certificate" error | Set `SIMULATOR=1` in `.env` for simulator; configure signing in Xcode for device |
 | "Command PhaseScriptExecution failed" | Run `cd ios && pod deintegrate && pod install && cd ..` |
 | Simulator not appearing | Run `killall Simulator && open -a Simulator` |
-| Build taking too long | First build is slow; use `task generate-soft` for incremental prebuild |
+| Build taking too long | Verify ccache is enabled: `ccache -s`, use `task generate-soft` for incremental prebuild |
+| ccache not working | Launch Xcode from terminal: `xed ios/*.xcworkspace` |
 | Xcode not found | Install Xcode from App Store |
 | xcode-select path wrong | Run `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer` |
 | CocoaPods version mismatch | Run `sudo gem install cocoapods` to update |

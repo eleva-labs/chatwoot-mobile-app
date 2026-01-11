@@ -3,6 +3,9 @@ const { getDefaultConfig } = require('expo/metro-config');
 const { getSentryExpoConfig } = require('@sentry/react-native/metro');
 const withStorybook = require('@storybook/react-native/metro/withStorybook');
 
+// Check if running in CI environment
+const isCI = process.env.CI === 'true';
+
 /** @type {import('expo/metro-config').MetroConfig} */
 const defaultConfig = getDefaultConfig(__dirname);
 const sentryConfig = getSentryExpoConfig(__dirname);
@@ -38,6 +41,10 @@ const customResolveRequest = (context, realModuleName, platform) => {
 
 const config = {
   ...baseConfig,
+  // Reset cache when RESET_METRO_CACHE=true (useful for CI)
+  resetCache: process.env.RESET_METRO_CACHE === 'true',
+  // Limit workers in CI to reduce memory usage (only set if in CI)
+  ...(isCI && { maxWorkers: 2 }),
   resolver: {
     ...defaultResolver,
     // Provide mocks for Node.js-only packages that aren't compatible with React Native

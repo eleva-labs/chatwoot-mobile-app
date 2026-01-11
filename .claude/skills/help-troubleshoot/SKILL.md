@@ -39,27 +39,37 @@ Systematic diagnosis and resolution of common development issues for React Nativ
 
 ## Issue Categories
 
-### Build Issues
+Issues are organized into separate files by category for easier navigation:
+
+| Category | File | Description |
+|----------|------|-------------|
+| **Setup** | [SETUP_ISSUES.md](SETUP_ISSUES.md) | Environment, dependencies, tooling issues |
+| **Build** | [BUILD_ISSUES.md](BUILD_ISSUES.md) | Metro, native builds, TypeScript, caching |
+| **Runtime** | [RUNTIME_ISSUES.md](RUNTIME_ISSUES.md) | Crashes, state, navigation, hot reload |
+| **Platform** | [PLATFORM_ISSUES.md](PLATFORM_ISSUES.md) | iOS and Android specific issues |
+
+### Quick Category Reference
+
+**Setup Issues** (see [SETUP_ISSUES.md](SETUP_ISSUES.md))
+- Environment variables not loading
+- Expo CLI issues, EAS login problems
+- Node version mismatches, pnpm issues
+
+**Build Issues** (see [BUILD_ISSUES.md](BUILD_ISSUES.md))
 - Metro bundler problems
 - Native code build failures
 - TypeScript compilation errors
-- Dependency conflicts
+- Build cache issues (ccache, EAS cache)
 
-### Runtime Issues
+**Runtime Issues** (see [RUNTIME_ISSUES.md](RUNTIME_ISSUES.md))
 - App crashes on startup
 - Redux state problems
 - Navigation failures
-- API integration errors
+- Hot reload not working
 
-### Platform-Specific Issues
-- iOS-only problems (Xcode, CocoaPods, simulator)
-- Android-only problems (Gradle, SDK, emulator)
-- UI differences between platforms
-
-### Performance Issues
-- Slow rendering
-- Memory leaks
-- Network bottlenecks
+**Platform-Specific Issues** (see [PLATFORM_ISSUES.md](PLATFORM_ISSUES.md))
+- iOS: Xcode, CocoaPods, simulator, Ruby gems
+- Android: Gradle, SDK, emulator, ADB
 
 ---
 
@@ -105,7 +115,12 @@ pnpm run clean
 ```
 
 ### Step 4: Apply Specific Solution
-See [COMMON_ISSUES.md](COMMON_ISSUES.md) for detailed solutions by category.
+See categorized issue files for detailed solutions:
+- [SETUP_ISSUES.md](SETUP_ISSUES.md) - Environment and dependency issues
+- [BUILD_ISSUES.md](BUILD_ISSUES.md) - Build and compilation issues
+- [RUNTIME_ISSUES.md](RUNTIME_ISSUES.md) - App crashes and runtime errors
+- [PLATFORM_ISSUES.md](PLATFORM_ISSUES.md) - iOS/Android specific issues
+- [COMMON_ISSUES.md](COMMON_ISSUES.md) - Index of all issues
 
 ---
 

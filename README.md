@@ -78,6 +78,32 @@ task clean           # Clean caches
 
 For comprehensive onboarding, development workflows, troubleshooting, and best practices, see our **[Development Guide](docs/DEVELOPMENT.md)**.
 
+## Build Performance
+
+This project includes optimizations for faster builds:
+
+| Feature | Impact | Command to Verify |
+|---------|--------|-------------------|
+| ccache | 40-50% faster clean builds | `ccache -s` |
+| expo-build-disk-cache | Near-instant cached rebuilds | `ls node_modules/.expo-build-disk-cache` |
+| EAS Build caching | 30-40% faster cloud builds | Check EAS dashboard |
+
+**Build Commands:**
+```bash
+task generate        # Clean rebuild (use after SDK changes)
+task generate-soft   # Incremental (use for config changes)
+task generate-fast   # Skip pod install (fastest for testing)
+```
+
+**If builds are slow:**
+```bash
+# Verify ccache is working
+ccache -s
+
+# Clear caches if needed
+task clean-all-caches
+```
+
 ## Prerequisites
 
 | Requirement | Version | Installation                                                                      |

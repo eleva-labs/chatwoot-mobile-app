@@ -87,10 +87,12 @@ task check-prereqs
 # Run tests
 task test
 
-# Clean and regenerate
+# Clean and regenerate (use generate-soft for faster rebuilds)
 task clean
-task generate
+task generate-soft  # or task generate for clean rebuild
 ```
+
+> **Tip:** Use `task generate-soft` for incremental rebuilds or `task generate-fast` to skip pod install entirely. See Build Performance section below.
 
 ### Project Structure
 
@@ -226,6 +228,9 @@ task generate
 # Clear Metro cache
 task clean-cache
 
+# Clear all caches (Metro, iOS, ccache)
+task clean-all-caches
+
 # Reset iOS simulator
 task reset-ios-simulator
 ```
@@ -239,6 +244,49 @@ pnpm install
 
 # Clear all caches
 task clean-all
+```
+
+---
+
+## Build Performance
+
+This project includes build caching optimizations for faster development:
+
+### Caching Features
+
+| Feature | Benefit | Status |
+|---------|---------|--------|
+| ccache | 40-50% faster C/C++ compilation | Enabled - requires ccache install |
+| EAS Build caching | 30-40% faster cloud builds | Enabled |
+| expo-build-disk-cache | Near-instant rebuilds | Ready for SDK 53+ |
+
+### Build Commands
+
+```bash
+task generate        # Clean rebuild (use after SDK changes)
+task generate-soft   # Incremental (use for config changes)
+task generate-fast   # Skip pod install (fastest)
+```
+
+### First-Time Setup for ccache
+
+```bash
+# Install ccache
+brew install ccache
+
+# Add to ~/.zshrc
+export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
+
+# Verify
+source ~/.zshrc
+ccache -s
+```
+
+### Monitoring Cache Performance
+
+```bash
+task ccache-stats     # Show ccache hit/miss statistics
+task build-metrics soft ios  # Track build time
 ```
 
 ---

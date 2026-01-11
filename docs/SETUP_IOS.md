@@ -49,6 +49,51 @@ CocoaPods is managed automatically by Expo, but you can install it manually if n
 sudo gem install cocoapods
 ```
 
+### 4.5. ccache (Recommended for Faster Builds)
+
+ccache dramatically speeds up C/C++ compilation for native iOS builds (40-50% faster clean builds).
+
+#### Installation
+
+```bash
+# Install ccache
+brew install ccache
+
+# Verify installation
+ccache --version
+```
+
+#### PATH Configuration (Required)
+
+Add the following to your `~/.zshrc` (or `~/.bashrc`):
+
+```bash
+# ccache for faster iOS builds
+export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
+```
+
+Then reload your shell:
+
+```bash
+source ~/.zshrc
+```
+
+#### Verification
+
+```bash
+# Show ccache statistics
+ccache -s
+
+# After running a build, cache hits should appear
+task ccache-stats
+```
+
+**Important:** For ccache to work with Xcode, launch Xcode from terminal:
+
+```bash
+xed ios/ChatscommerceDev.xcworkspace
+```
+
 ### 5. Watchman (File Watcher)
 
 Watchman is required for React Native's Metro bundler to efficiently watch file changes.
@@ -287,11 +332,55 @@ open -a Simulator
 
 ### Build taking too long
 
-First build is slow (compiling native modules). Subsequent builds are faster. To speed up:
+First build is slow (compiling native modules). Subsequent builds benefit from caching:
+
+**Verify ccache is working:**
+```bash
+ccache -s  # Should show cache hits after second build
+```
+
+**Use incremental builds:**
+```bash
+task generate-soft   # Incremental (use for config changes)
+task generate-fast   # Skip pod install (fastest for testing)
+```
+
+**If builds remain slow:**
+```bash
+# Verify ccache PATH is set
+echo $PATH | grep ccache
+
+# Launch Xcode from terminal (required for ccache)
+xed ios/ChatscommerceDev.xcworkspace
+```
+
+---
+
+## Build Performance
+
+This project uses several optimizations for faster builds:
+
+| Feature | Impact | Verification Command |
+|---------|--------|---------------------|
+| ccache | 40-50% faster clean builds | `ccache -s` |
+| expo-build-disk-cache | Near-instant cached rebuilds | `ls node_modules/.expo-build-disk-cache` (SDK 53+) |
+| EAS Build caching | 30-40% faster cloud builds | Check EAS dashboard |
+
+### Build Commands
+
+| Command | Description | Use Case |
+|---------|-------------|----------|
+| `task generate` | Clean rebuild | After SDK/dependency changes |
+| `task generate-soft` | Incremental rebuild | Config changes |
+| `task generate-fast` | Skip pod install | Quick testing |
+
+### Cache Management
 
 ```bash
-# Use incremental prebuild
-task generate-soft
+task ccache-stats     # Show ccache statistics
+task ccache-clear     # Clear ccache
+task clean-ios-cache  # Clear iOS caches (DerivedData, Pods)
+task clean-all-caches # Clear ALL build caches
 ```
 
 ## Next Steps

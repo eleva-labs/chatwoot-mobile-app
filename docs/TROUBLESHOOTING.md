@@ -37,6 +37,48 @@ cd ..
 task run-ios
 ```
 
+### Ruby/CocoaPods gem errors (e.g., bigdecimal missing)
+
+If you encounter errors like "cannot load such file -- bigdecimal" or other gem loading errors when running CocoaPods:
+
+**Root Cause:** Homebrew Ruby 4.0 may have dependency issues with CocoaPods gem requirements.
+
+**Solution 1 - Use system Ruby:**
+```bash
+# Check which ruby is being used
+which ruby
+
+# If using Homebrew Ruby (/opt/homebrew/opt/ruby/bin/ruby), switch to system Ruby
+# Remove or comment out Ruby PATH in ~/.zshrc
+
+# Use system Ruby with sudo for gem install
+sudo gem install cocoapods
+```
+
+**Solution 2 - Install missing gems:**
+```bash
+# Install the missing gem
+sudo gem install bigdecimal
+
+# Or reinstall CocoaPods with dependencies
+sudo gem install cocoapods --no-document
+```
+
+**Solution 3 - Use rbenv/rvm for Ruby version management:**
+```bash
+# Install rbenv
+brew install rbenv
+
+# Install a compatible Ruby version
+rbenv install 3.2.2
+rbenv global 3.2.2
+
+# Then install CocoaPods
+gem install cocoapods
+```
+
+**Prevention:** Pin to a stable Ruby version (3.2.x or 3.3.x) rather than using latest Homebrew Ruby.
+
 ### Build fails with memory error (Android)
 
 Add to `android/gradle.properties`:
@@ -222,6 +264,66 @@ pnpm install
 task generate
 task run-ios  # or task run-android
 ```
+
+## Build Cache Issues
+
+### ccache not working
+
+**Symptoms:** Build times haven't improved, `ccache -s` shows no hits
+
+**Solutions:**
+
+1. Verify ccache is installed:
+   ```bash
+   ccache --version
+   which ccache
+   ```
+
+2. Verify PATH includes ccache libexec:
+   ```bash
+   echo $PATH | grep ccache
+   # Should show: /opt/homebrew/opt/ccache/libexec
+   ```
+
+3. Add to ~/.zshrc if missing:
+   ```bash
+   export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
+   source ~/.zshrc
+   ```
+
+4. Launch Xcode from terminal (required for ccache to intercept compiler calls):
+   ```bash
+   xed ios/ChatscommerceDev.xcworkspace
+   ```
+
+5. Verify ccache is enabled in Podfile.properties.json:
+   ```json
+   "apple.ccacheEnabled": "true"
+   ```
+
+### Stale cache causing build failures
+
+**Symptoms:** Strange build errors after dependency updates
+
+**Solution:**
+```bash
+# Clear all caches
+task clean-all-caches
+
+# Reinstall and rebuild
+pnpm install
+task generate
+```
+
+### expo-build-disk-cache not working
+
+**Note:** This feature requires Expo SDK 53+. The project currently uses SDK 52.
+
+**When SDK 53 is available:**
+
+1. Uncomment experiments section in `app.config.ts`
+2. Run `task generate`
+3. Verify cache directory: `ls node_modules/.expo-build-disk-cache`
 
 ## Getting Help
 

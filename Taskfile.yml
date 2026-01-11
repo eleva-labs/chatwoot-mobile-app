@@ -121,6 +121,38 @@ tasks:
     desc: Regenerate native projects (incremental)
     cmd: pnpm run generate:soft
 
+  generate-fast:
+    desc: Regenerate native projects (skip pod install - fastest)
+    cmd: pnpm run generate:fast
+
+  build-metrics:
+    desc: Track build time metrics
+    cmd: ./scripts/track-build-time.sh {{.CLI_ARGS}}
+
+  ccache-stats:
+    desc: Show ccache statistics
+    cmd: ccache -s
+
+  ccache-clear:
+    desc: Clear ccache
+    cmd: ccache -C
+
+  clean-ios-cache:
+    desc: Clean iOS build cache (DerivedData and Pods)
+    cmds:
+      - rm -rf ~/Library/Developer/Xcode/DerivedData
+      - rm -rf ios/Pods ios/Podfile.lock ios/build
+      - echo "iOS caches cleared. Run 'task generate' to rebuild."
+
+  clean-all-caches:
+    desc: Clean all build caches (Metro, iOS, ccache, expo-build-disk-cache)
+    cmds:
+      - task: clean
+      - task: clean-ios-cache
+      - task: ccache-clear
+      - rm -rf node_modules/.expo-build-disk-cache
+      - echo "All caches cleared."
+
   doctor:
     desc: Run Expo doctor
     cmd: pnpm run doctor

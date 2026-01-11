@@ -216,6 +216,48 @@ chatwoot-mobile-app/
 
 ---
 
+## Build Caching (Performance)
+
+This project uses several caching mechanisms to speed up builds:
+
+### Local Build Caching
+
+1. **ccache** - Caches C/C++ compilation (40-50% faster clean builds)
+   ```bash
+   # Verify ccache is working
+   ccache -s
+
+   # Clear ccache if needed
+   ccache -C
+   ```
+
+2. **expo-build-disk-cache** - Caches Expo build artifacts
+   - Cache location: `node_modules/.expo-build-disk-cache`
+   - Near-instant rebuilds when cache exists
+
+### Build Commands
+
+| Command | Description | Use Case |
+|---------|-------------|----------|
+| `task generate` | Clean rebuild | After SDK/dependency changes |
+| `task generate-soft` | Incremental rebuild | Config changes |
+| `task generate-fast` | Skip pod install | Quick testing |
+
+### Clearing Caches
+
+```bash
+# Clear all caches (if experiencing issues)
+task clean-all-caches
+
+# Clear iOS caches only
+task clean-ios-cache
+
+# Clear ccache only
+task ccache-clear
+```
+
+---
+
 ## Daily Development Commands
 
 ### Starting Development
