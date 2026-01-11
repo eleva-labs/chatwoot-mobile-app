@@ -45,6 +45,7 @@ export interface FetchSessionsPayload {
   agentSystemId?: number;
   userId?: number;
   limit?: number;
+  offset?: number;
   aiBackendUrl?: string;
   usePythonBackend?: boolean;
 }
@@ -52,6 +53,7 @@ export interface FetchSessionsPayload {
 export interface FetchMessagesPayload {
   sessionId: string;
   limit?: number;
+  offset?: number;
   accountId?: number;
   agentBotId?: number;
   storeId?: number;

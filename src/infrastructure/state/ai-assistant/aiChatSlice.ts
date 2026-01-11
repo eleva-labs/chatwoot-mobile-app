@@ -78,6 +78,54 @@ const aiChatSlice = createSlice({
         state.isLoadingMessages = false;
         state.messagesError = action.error.message || 'Failed to fetch messages';
       });
+
+    // Create Session
+    builder
+      .addCase(aiChatActions.createSession.pending, state => {
+        state.isLoadingSessions = true;
+        state.sessionsError = null;
+      })
+      .addCase(aiChatActions.createSession.fulfilled, (state, action) => {
+        state.isLoadingSessions = false;
+        const { session, key } = action.payload;
+        // Add the new session to the beginning of the list
+        if (!state.sessions[key]) {
+          state.sessions[key] = [];
+        }
+        state.sessions[key].unshift(session);
+        state.activeSessionId = session.chat_session_id;
+        state.sessionsError = null;
+      })
+      .addCase(aiChatActions.createSession.rejected, (state, action) => {
+        state.isLoadingSessions = false;
+        state.sessionsError = action.error.message || 'Failed to create session';
+      });
+
+    // Delete Session
+    builder
+      .addCase(aiChatActions.deleteSession.pending, state => {
+        state.isLoadingSessions = true;
+        state.sessionsError = null;
+      })
+      .addCase(aiChatActions.deleteSession.fulfilled, (state, action) => {
+        state.isLoadingSessions = false;
+        const { sessionId, key } = action.payload;
+        // Remove the session from the list
+        if (state.sessions[key]) {
+          state.sessions[key] = state.sessions[key].filter(s => s.chat_session_id !== sessionId);
+        }
+        // Clear messages for this session
+        delete state.messages[sessionId];
+        // Clear active session if it was the deleted one
+        if (state.activeSessionId === sessionId) {
+          state.activeSessionId = null;
+        }
+        state.sessionsError = null;
+      })
+      .addCase(aiChatActions.deleteSession.rejected, (state, action) => {
+        state.isLoadingSessions = false;
+        state.sessionsError = action.error.message || 'Failed to delete session';
+      });
   },
 });
 

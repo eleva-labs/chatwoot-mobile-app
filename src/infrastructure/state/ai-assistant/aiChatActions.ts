@@ -2,10 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
 import { resolve } from '@/dependency-injection';
 import { AI_ASSISTANT_TOKENS } from '@/dependency-injection/tokens';
-import type {
-  IChatwootApiService,
-  IAIChatApiService,
-} from '@/domain/interfaces/services/ai-assistant';
+import type { IAIChatApiService } from '@/domain/interfaces/services/ai-assistant';
+import { getDefaultAIAssistantDependencies } from '@/presentation/factory/ai-assistant';
+import { createAIChatSessionId } from '@/domain/value-objects/ai-assistant';
 import type {
   FetchSessionsPayload,
   FetchMessagesPayload,
@@ -14,9 +13,10 @@ import type {
 } from './aiChatTypes';
 import type { ApiErrorResponse } from '@/store/conversation/conversationTypes';
 
-// Resolve services from DI container
-const getChatwootApiService = () =>
-  resolve<IChatwootApiService>(AI_ASSISTANT_TOKENS.IChatwootApiService);
+// Factory getter for use cases
+const getDependencies = () => getDefaultAIAssistantDependencies();
+
+// Keep Python backend service access for now (use cases don't cover it yet)
 const getAIChatApiService = () => resolve<IAIChatApiService>(AI_ASSISTANT_TOKENS.IAIChatApiService);
 
 /**
@@ -34,23 +34,24 @@ function getSessionsKey(payload: FetchSessionsPayload): string {
 }
 
 /**
- * Fetch AI chat sessions
- * Supports both Rails proxy and Python backend
+ * AI Chat Redux Actions
+ * Refactored to use AIAssistantFactory and Use Cases for Clean Architecture
  */
 export const aiChatActions = {
+  /**
+   * Fetch AI chat sessions
+   * Supports both Rails proxy (via Use Case) and Python backend (direct service)
+   */
   fetchSessions: createAsyncThunk<
     { sessions: AIChatSessionsAPIResponse['sessions']; key: string },
     FetchSessionsPayload
   >('aiChat/fetchSessions', async (payload, { rejectWithValue }) => {
-    console.log('[AI Chat Actions] ===== FETCH SESSIONS ACTION START =====');
-    console.log('[AI Chat Actions] Full payload:', JSON.stringify(payload, null, 2));
+    console.log('[AI Chat Actions] ===== FETCH SESSIONS (via Use Case) =====');
     console.log('[AI Chat Actions] Payload details:', {
       usePythonBackend: payload.usePythonBackend,
       storeId: payload.storeId,
       userId: payload.userId,
       agentBotId: payload.agentBotId,
-      agentSystemId: payload.agentSystemId,
-      aiBackendUrl: payload.aiBackendUrl,
       limit: payload.limit,
     });
 
@@ -62,19 +63,11 @@ export const aiChatActions = {
         payload.storeId !== undefined &&
         payload.userId !== undefined
       ) {
-        // Use Python backend
-        console.log('[AI Chat Actions] ===== USING PYTHON BACKEND =====');
-        console.log('[AI Chat Actions] Validating required parameters...');
-
+        // Python backend - keep existing service call (use cases don't cover this yet)
+        console.log('[AI Chat Actions] Using Python backend (direct service)');
         if (!payload.aiBackendUrl) {
-          const error = 'AI backend URL is required for Python backend';
-          console.error('[AI Chat Actions]', error);
-          throw new Error(error);
+          throw new Error('AI backend URL is required for Python backend');
         }
-
-        console.log(
-          '[AI Chat Actions] All required parameters present, calling AIChatApiService.fetchStoreSessions...',
-        );
         const aiChatService = getAIChatApiService();
         const response = await aiChatService.fetchStoreSessions({
           storeId: payload.storeId,
@@ -82,68 +75,64 @@ export const aiChatActions = {
           userId: payload.userId,
           limit: payload.limit || 25,
         });
-
-        console.log('[AI Chat Actions] ===== PYTHON BACKEND RESPONSE RECEIVED =====');
-        console.log('[AI Chat Actions] Response object:', JSON.stringify(response, null, 2));
         sessions = response.sessions;
-        console.log('[AI Chat Actions] Sessions array:', sessions);
-        console.log('[AI Chat Actions] Sessions count:', sessions?.length || 0);
+        console.log('[AI Chat Actions] Python sessions count:', sessions?.length || 0);
       } else if (payload.agentBotId !== undefined) {
-        // Use Rails proxy
-        console.log('[AI Chat Actions] ===== USING RAILS PROXY =====');
-        console.log('[AI Chat Actions] Calling ChatwootApiService.fetchSessions...');
-        const chatwootService = getChatwootApiService();
-        const response = await chatwootService.fetchSessions({
+        // Rails proxy - USE THE USE CASE
+        console.log('[AI Chat Actions] Using Rails proxy (via Use Case)');
+        const { fetchSessionsUseCase } = getDependencies();
+
+        const result = await fetchSessionsUseCase.execute({
           agentBotId: payload.agentBotId,
           limit: payload.limit || 25,
+          offset: payload.offset,
         });
 
-        console.log('[AI Chat Actions] ===== RAILS PROXY RESPONSE RECEIVED =====');
-        sessions = response.sessions;
-        console.log('[AI Chat Actions] Sessions count:', sessions?.length || 0);
+        if (result.isFailure) {
+          const error = result.getError();
+          console.error('[AI Chat Actions] Use case failed:', error.message);
+          return rejectWithValue({ message: error.message });
+        }
+
+        const domainSessions = result.getValue();
+
+        // Map domain entities to DTOs for Redux state
+        sessions = domainSessions.map(session => ({
+          chat_session_id: session.id.toString(),
+          agent_bot_id: session.agentBotId,
+          account_id: session.accountId,
+          created_at: session.createdAt.toISOString(),
+          updated_at: session.updatedAt.toISOString(),
+        }));
+
+        console.log('[AI Chat Actions] Sessions fetched via use case:', sessions.length);
       } else {
-        const errorMsg =
-          'Either agentBotId (for Rails) or storeId with userId (for Python backend) is required';
-        console.error('[AI Chat Actions]', errorMsg);
-        throw new Error(errorMsg);
+        throw new Error('Either agentBotId or storeId with userId required');
       }
 
       const key = getSessionsKey(payload);
       console.log('[AI Chat Actions] Sessions key:', key);
-      console.log('[AI Chat Actions] ===== FETCH SESSIONS ACTION END (SUCCESS) =====');
       return { sessions, key };
     } catch (error) {
-      console.error('[AI Chat Actions] ===== FETCH SESSIONS ACTION ERROR =====');
-      console.error('[AI Chat Actions] Error type:', error?.constructor?.name);
-      console.error('[AI Chat Actions] Error message:', (error as Error)?.message);
-      console.error('[AI Chat Actions] Error stack:', (error as Error)?.stack);
-      console.error(
-        '[AI Chat Actions] Full error:',
-        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
-      );
-
+      console.error('[AI Chat Actions] Error:', (error as Error)?.message);
       const axiosError = error as AxiosError<ApiErrorResponse>;
       if (axiosError.response) {
-        console.error(
-          '[AI Chat Actions] Axios error response:',
-          JSON.stringify(axiosError.response.data, null, 2),
-        );
         return rejectWithValue(axiosError.response.data);
       }
-      const errorMessage = (error as Error).message;
-      console.error('[AI Chat Actions] Rejecting with value:', errorMessage);
-      return rejectWithValue({ message: errorMessage });
+      return rejectWithValue({ message: (error as Error).message });
     }
   }),
 
   /**
    * Fetch messages from a specific AI chat session
-   * Supports both Rails proxy and Python backend
+   * Supports both Rails proxy (via Use Case) and Python backend (direct service)
    */
   fetchMessages: createAsyncThunk<
     { messages: AIChatMessagesAPIResponse['messages']; sessionId: string },
     FetchMessagesPayload
   >('aiChat/fetchMessages', async (payload, { rejectWithValue }) => {
+    console.log('[AI Chat Actions] ===== FETCH MESSAGES (via Use Case) =====');
+
     try {
       let messages: AIChatMessagesAPIResponse['messages'] = [];
 
@@ -152,7 +141,8 @@ export const aiChatActions = {
         payload.storeId !== undefined &&
         payload.userId !== undefined
       ) {
-        // Use Python backend - fetch all messages from store
+        // Python backend - keep existing service call
+        console.log('[AI Chat Actions] Using Python backend (direct service)');
         const aiChatService = getAIChatApiService();
         const response = await aiChatService.fetchStoreMessages({
           storeId: payload.storeId,
@@ -162,17 +152,42 @@ export const aiChatActions = {
         });
         messages = response.messages;
       } else if (payload.sessionId) {
-        // Use Rails proxy - fetch messages from specific session
-        const chatwootService = getChatwootApiService();
-        const response = await chatwootService.fetchSessionMessages({
-          sessionId: payload.sessionId,
+        // Rails proxy - USE THE USE CASE
+        console.log('[AI Chat Actions] Loading messages via use case');
+        const { loadMessagesUseCase } = getDependencies();
+
+        const result = await loadMessagesUseCase.execute({
+          chatSessionId: createAIChatSessionId(payload.sessionId),
           limit: payload.limit || 100,
+          offset: payload.offset,
         });
-        messages = response.messages;
+
+        if (result.isFailure) {
+          const error = result.getError();
+          console.error('[AI Chat Actions] Use case failed:', error.message);
+          return rejectWithValue({ message: error.message });
+        }
+
+        const uiMessages = result.getValue();
+
+        // Map UIMessages to DTO format for Redux
+        messages = uiMessages.map(msg => ({
+          id: msg.id,
+          role: msg.role as 'user' | 'assistant' | 'system',
+          content:
+            msg.parts
+              ?.filter(
+                (p): p is { type: 'text'; text: string } =>
+                  'type' in p && p.type === 'text' && 'text' in p,
+              )
+              .map(p => p.text)
+              .join('') || '',
+          timestamp: new Date().toISOString(),
+        }));
+
+        console.log('[AI Chat Actions] Messages loaded via use case:', messages.length);
       } else {
-        throw new Error(
-          'Session ID is required for Rails proxy, or storeId with userId for Python backend',
-        );
+        throw new Error('Session ID or Python backend params required');
       }
 
       return { messages, sessionId: payload.sessionId };
@@ -181,6 +196,78 @@ export const aiChatActions = {
       if (axiosError.response) {
         return rejectWithValue(axiosError.response.data);
       }
+      return rejectWithValue({ message: (error as Error).message });
+    }
+  }),
+
+  /**
+   * Create a new AI chat session
+   */
+  createSession: createAsyncThunk<
+    { session: AIChatSessionsAPIResponse['sessions'][0]; key: string },
+    { agentBotId: number; initialMessage?: string }
+  >('aiChat/createSession', async (payload, { rejectWithValue }) => {
+    console.log('[AI Chat Actions] ===== CREATE SESSION (via Use Case) =====');
+
+    try {
+      const { createSessionUseCase } = getDependencies();
+
+      const result = await createSessionUseCase.execute({
+        agentBotId: payload.agentBotId,
+        initialMessage: payload.initialMessage,
+      });
+
+      if (result.isFailure) {
+        return rejectWithValue({ message: result.getError().message });
+      }
+
+      const session = result.getValue();
+
+      return {
+        session: {
+          chat_session_id: session.id.toString(),
+          agent_bot_id: session.agentBotId,
+          account_id: session.accountId,
+          created_at: session.createdAt.toISOString(),
+          updated_at: session.updatedAt.toISOString(),
+        },
+        key: `agentBot_${payload.agentBotId}`,
+      };
+    } catch (error) {
+      return rejectWithValue({ message: (error as Error).message });
+    }
+  }),
+
+  /**
+   * Delete an AI chat session
+   */
+  deleteSession: createAsyncThunk<
+    { sessionId: string; key: string },
+    { sessionId: string; agentBotId?: number; storeId?: number }
+  >('aiChat/deleteSession', async (payload, { rejectWithValue }) => {
+    console.log('[AI Chat Actions] ===== DELETE SESSION (via Use Case) =====');
+
+    try {
+      const { deleteSessionUseCase } = getDependencies();
+
+      const result = await deleteSessionUseCase.execute({
+        chatSessionId: createAIChatSessionId(payload.sessionId),
+      });
+
+      if (result.isFailure) {
+        return rejectWithValue({ message: result.getError().message });
+      }
+
+      // Determine the key for the session list
+      let key = 'default';
+      if (payload.agentBotId !== undefined) {
+        key = `agentBot_${payload.agentBotId}`;
+      } else if (payload.storeId !== undefined) {
+        key = `store_${payload.storeId}`;
+      }
+
+      return { sessionId: payload.sessionId, key };
+    } catch (error) {
       return rejectWithValue({ message: (error as Error).message });
     }
   }),

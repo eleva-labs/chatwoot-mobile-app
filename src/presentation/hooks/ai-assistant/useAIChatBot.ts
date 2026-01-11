@@ -1,64 +1,84 @@
+/**
+ * Hook for managing AI chat bot selection and fetching
+ *
+ * REFACTORED: Uses AIAssistantFactory instead of direct service calls
+ */
+
 import { useState, useEffect, useMemo } from 'react';
 import type { AIChatBot } from '@/infrastructure/dto/ai-assistant';
-import { resolve } from '@/dependency-injection';
-import { AI_ASSISTANT_TOKENS } from '@/dependency-injection/tokens';
-import type { IChatwootApiService } from '@/domain/interfaces/services/ai-assistant';
+import { getDefaultAIAssistantDependencies } from '@/presentation/factory/ai-assistant';
 
 export interface UseAIChatBotReturn {
   selectedBotId: number | undefined;
   selectedBot: AIChatBot | null;
   setSelectedBotId: (botId: number | undefined) => void;
+  isLoading: boolean;
+  error: Error | null;
 }
 
-/**
- * Hook for managing AI chat bot selection and fetching
- */
 export function useAIChatBot(agentBotId?: number, accountId?: number): UseAIChatBotReturn {
   const [selectedBotId, setSelectedBotId] = useState<number | undefined>(agentBotId);
   const [selectedBot, setSelectedBot] = useState<AIChatBot | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-  // Resolve service from DI container
-  const chatwootService = useMemo(
-    () => resolve<IChatwootApiService>(AI_ASSISTANT_TOKENS.IChatwootApiService),
-    [],
-  );
+  // Get use case from factory
+  const { fetchBotsUseCase } = useMemo(() => getDefaultAIAssistantDependencies(), []);
 
   useEffect(() => {
-    if (!agentBotId && accountId) {
-      chatwootService
-        .fetchBots()
-        .then(response => {
-          if (response.bots && response.bots.length > 0) {
-            const firstBot = response.bots[0];
-            setSelectedBotId(firstBot.id);
-            setSelectedBot(firstBot);
-          } else {
-            console.warn('[useAIChatBot] No bots available');
-          }
-        })
-        .catch(error => {
-          console.error('[useAIChatBot] Failed to fetch bots:', error);
-        });
-    } else if (agentBotId && accountId) {
-      // If agentBotId is provided, fetch the bot details
-      setSelectedBotId(agentBotId);
-      chatwootService
-        .fetchBots()
-        .then(response => {
-          const bot = response.bots?.find(b => b.id === agentBotId);
+    const fetchBots = async () => {
+      if (!accountId) return;
+
+      setIsLoading(true);
+      setError(null);
+
+      // Use the use case instead of direct service call
+      const result = await fetchBotsUseCase.execute({ accountId });
+
+      if (result.isSuccess) {
+        const bots = result.getValue();
+
+        if (agentBotId) {
+          const bot = bots.find(b => b.id === agentBotId);
           if (bot) {
-            setSelectedBot(bot);
+            setSelectedBotId(agentBotId);
+            // Map domain entity to DTO format for backwards compatibility
+            setSelectedBot({
+              id: bot.id,
+              name: bot.name,
+              description: bot.description || '',
+              avatar_url: bot.avatarUrl || '',
+            } as AIChatBot);
           }
-        })
-        .catch(error => {
-          console.error('[useAIChatBot] Failed to fetch bot details:', error);
-        });
-    }
-  }, [agentBotId, accountId, chatwootService]);
+        } else if (bots.length > 0) {
+          const firstBot = bots[0];
+          setSelectedBotId(firstBot.id);
+          setSelectedBot({
+            id: firstBot.id,
+            name: firstBot.name,
+            description: firstBot.description || '',
+            avatar_url: firstBot.avatarUrl || '',
+          } as AIChatBot);
+        } else {
+          console.warn('[useAIChatBot] No bots available');
+        }
+      } else {
+        const err = result.getError();
+        console.error('[useAIChatBot] Failed to fetch bots:', err);
+        setError(err);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchBots();
+  }, [agentBotId, accountId, fetchBotsUseCase]);
 
   return {
     selectedBotId,
     selectedBot,
     setSelectedBotId,
+    isLoading,
+    error,
   };
 }

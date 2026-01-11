@@ -64,7 +64,11 @@ The process ensures that:
         ↓
 [Create INDEX.md] ← Central navigation + dependencies
         ↓
-[Execute Tasks via Sub-Agents] ←→ [Update Docs]
+[Execute Tasks via Sub-Agents]
+        ↓
+[Validation & Review] ← TypeScript, Review Agent, Tests
+        ↓
+[Update Documentation] → EXECUTION_##.md, INDEX.md
         ↓
 [Session End] → Update SESSION_HANDOFF.md
         ↓
@@ -79,8 +83,9 @@ The process ensures that:
 | 2. Research | Understand current state, identify gaps | Gap analysis, research notes | 1-4 hours |
 | 3. Design | Create solutions for identified problems | Design documents per component | 2-6 hours |
 | 4. Planning | Break designs into executable tasks | Execution documents with checkboxes | 1-2 hours |
-| 5. Execution | Implement via sub-agents | Working code, passing tests | Variable |
-| 6. Handoff | Document session state for continuity | Updated SESSION_HANDOFF.md | 10-15 min |
+| 5. Execution | Implement via sub-agents | Working code (pending validation) | Variable |
+| 6. Validation | Verify correctness, patterns, quality | Validated code, updated docs | 15-30 min |
+| 7. Handoff | Document session state for continuity | Updated SESSION_HANDOFF.md | 10-15 min |
 
 ### Prerequisites
 - Clear feature requirements or problem statement
@@ -491,42 +496,109 @@ Run: npx tsc --noEmit && task format-all
 - [ ] Criterion 2
 ```
 
-### Step 5.3: Review Agent Output
+### Step 5.3: Verify Agent Output
 
 When agent completes:
 1. Verify reported changes match expectations
-2. Run validation commands
-3. Check for any issues to address
+2. Note any issues mentioned by agent
+3. Proceed to Phase 6 (Validation)
 
-### Step 5.4: Update Documentation
+### Deliverable
+**Output**: Working code (pending validation)
 
-After successful execution:
-1. Update execution document checkboxes
-2. Update progress percentages
-3. Add observations if any
-4. Update INDEX.md status
+---
 
-**Commands for update agent**:
+## Phase 6: Validation & Review
+
+**Objective**: Verify implementation correctness, patterns, and quality before documenting completion
+**Duration**: 15-30 minutes
+
+This phase is **mandatory** after every execution. It catches issues early and ensures consistent quality.
+
+### Step 6.1: TypeScript Compilation
+
+Run TypeScript check on modified files:
+
+```bash
+npx tsc --noEmit
 ```
-Resume agent or spawn new one to:
-1. Review implementation for improvements
-2. Update EXECUTION_##.md with completed tasks
-3. Update SESSION_HANDOFF.md
-4. Update INDEX.md status
+
+**Check for:**
+- Zero errors in modified files
+- No implicit `any` types
+- Proper type imports (`import type` for type-only)
+
+### Step 6.2: Spawn Review Agent
+
+Use the Task tool with `subagent_type: "general-purpose"` to review the implementation:
+
+```
+## Task: Review EXECUTION_## Implementation
+
+Review all files created/modified for correctness and patterns.
+
+### Files to Review
+- {list files created}
+- {list files modified}
+
+### Review Checklist
+
+1. **TypeScript Compilation** - Run `npx tsc --noEmit`
+2. **Pattern Compliance** - Verify follows established patterns
+3. **Clean Architecture** - No layer violations
+4. **Code Quality** - JSDoc, error handling, logging format
+5. **Backwards Compatibility** - Existing interfaces preserved
+6. **Edge Cases** - Error paths handled
+
+### Expected Output
+1. Issues Found - with file path and line numbers
+2. Fixes Applied - if any issues fixed
+3. Recommendations - optional improvements
+
+Fix any issues found, then report results.
+```
+
+### Step 6.3: Run Tests (if applicable)
+
+```bash
+# Run tests for modified modules
+pnpm test -- --testPathPattern="{module-name}"
+
+# Or run full test suite
+pnpm test
+```
+
+### Step 6.4: Address Review Findings
+
+If review agent finds issues:
+1. Have agent fix them, OR
+2. Resume agent to apply fixes
+3. Re-run validation after fixes
+
+### Step 6.5: Update Documentation
+
+After successful validation:
+
+```
+Spawn agent to:
+1. Update EXECUTION_##.md - mark tasks complete, update progress bars
+2. Update SESSION_HANDOFF.md - add to completed work
+3. Update INDEX.md - update status table
 ```
 
 ### Deliverable
-**Output**: Working code, updated documentation
+**Output**: Validated code, updated documentation
 
 **Quality Check**:
-- [ ] Code compiles without errors
-- [ ] Tests pass
-- [ ] Execution document updated
+- [ ] TypeScript compiles without errors
+- [ ] Review agent reports all PASS
+- [ ] Tests pass (if applicable)
+- [ ] Execution document shows completion
 - [ ] INDEX.md reflects new status
 
 ---
 
-## Phase 6: Session Handoff
+## Phase 7: Session Handoff
 
 **Objective**: Ensure next session can resume seamlessly
 **Duration**: 10-15 minutes
@@ -590,7 +662,14 @@ git commit -m "docs: update {feature} session handoff"
 
 ### Execution Phase (per task)
 - [ ] Agent spawned with full context
-- [ ] Work completed and validated
+- [ ] Work completed by agent
+- [ ] Agent reports summary of changes
+
+### Validation Phase (per task)
+- [ ] TypeScript compiles without errors
+- [ ] Review agent spawned and reports PASS
+- [ ] Tests pass (if applicable)
+- [ ] Issues fixed (if any found)
 - [ ] Execution doc updated with progress
 - [ ] INDEX.md status updated
 
@@ -736,8 +815,12 @@ cat docs/ignored/{feature}/SESSION_HANDOFF.md
 
 ## Changelog
 
-### Version 1.0.0 (2026-01-11)
+### Version 1.1.0 (2026-01-11)
 **Status**: Active
+**Changes**: Added explicit Phase 6: Validation & Review - mandatory review agent step after each execution
+
+### Version 1.0.0 (2026-01-11)
+**Status**: Superseded
 **Changes**: Initial version based on AI Assistant Clean Architecture refactoring experience
 
 ---
