@@ -62,8 +62,8 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
   const totalDuration = useSharedValue(0);
 
   const audioPlayBackStatus = useCallback(
-    (data: { data: PlayBackType }) => {
-      const playBackData = data.data as PlayBackType;
+    (args: { status: unknown; data?: PlayBackType }) => {
+      const playBackData = args.data;
       if (playBackData) {
         currentPosition.value = playBackData.currentPosition;
         totalDuration.value = playBackData.duration;
@@ -84,7 +84,9 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
         setIsSoundLoading(true);
         try {
           const convertedSrc = await convertOggToWav(audioSrc);
-          setConvertedAudioSrc(convertedSrc);
+          if (typeof convertedSrc === 'string') {
+            setConvertedAudioSrc(convertedSrc);
+          }
         } catch (error) {
           Sentry.captureException(error);
         } finally {

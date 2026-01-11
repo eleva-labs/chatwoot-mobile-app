@@ -17,14 +17,22 @@ const onboardingTranslations = {
   pt,
 };
 
+// Type for i18n translations that include onboarding
+type OnboardingLocales = 'en' | 'es' | 'pt';
+type TranslationsWithOnboarding = Record<
+  string,
+  { onboarding?: Record<string, string> } & Record<string, unknown>
+>;
+
 // Merge onboarding translations into the existing i18n instance
 // This ensures we don't overwrite the app's translations
-if (!I18n.translations.en?.onboarding) {
-  Object.keys(onboardingTranslations).forEach(locale => {
-    if (!I18n.translations[locale]) {
-      I18n.translations[locale] = {};
+const translations = I18n.translations as TranslationsWithOnboarding;
+if (!translations.en?.onboarding) {
+  (Object.keys(onboardingTranslations) as OnboardingLocales[]).forEach(locale => {
+    if (!translations[locale]) {
+      translations[locale] = {};
     }
-    I18n.translations[locale].onboarding = onboardingTranslations[locale];
+    translations[locale].onboarding = onboardingTranslations[locale];
   });
 }
 
@@ -73,18 +81,19 @@ export function getLocale(): string {
  * Add custom translations to the onboarding module
  * Useful for extending the module with additional languages
  */
-export function addTranslations(locale: string, translations: Record<string, string>) {
-  if (!onboardingI18n.translations[locale]) {
-    onboardingI18n.translations[locale] = {};
+export function addTranslations(locale: string, newTranslations: Record<string, string>) {
+  const i18nTranslations = onboardingI18n.translations as TranslationsWithOnboarding;
+  if (!i18nTranslations[locale]) {
+    i18nTranslations[locale] = {};
   }
 
-  if (!onboardingI18n.translations[locale].onboarding) {
-    onboardingI18n.translations[locale].onboarding = {};
+  if (!i18nTranslations[locale].onboarding) {
+    i18nTranslations[locale].onboarding = {};
   }
 
-  onboardingI18n.translations[locale].onboarding = {
-    ...onboardingI18n.translations[locale].onboarding,
-    ...translations,
+  i18nTranslations[locale].onboarding = {
+    ...i18nTranslations[locale].onboarding,
+    ...newTranslations,
   };
 }
 

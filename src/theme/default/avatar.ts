@@ -77,6 +77,7 @@ export const avatarTheme = {
         '2xl': 'h-2.5 w-2.5',
         '3xl': 'h-[11px] w-[11px]',
         '4xl': 'h-[12px] w-[12px]',
+        '5xl': 'h-[14px] w-[14px]',
       },
     },
     away: {
@@ -119,6 +120,7 @@ export const avatarTheme = {
         '2xl': 'w-[15px] h-[9px]',
         '3xl': 'w-[17px] h-[9px]',
         '4xl': 'w-[20px] h-[10px]',
+        '5xl': 'w-[22px] h-[11px]',
       },
       innerDots: {
         base: 'h-0.5 w-0.5 rounded-full bg-white',
@@ -131,6 +133,7 @@ export const avatarTheme = {
           '2xl': 'h-[2.25px] w-[2.25px]',
           '3xl': 'h-[2.4px] w-[2.4px]',
           '4xl': 'h-[3.5px] w-[3.5px]',
+          '5xl': 'h-[4px] w-[4px]',
         },
       },
     },

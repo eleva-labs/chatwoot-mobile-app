@@ -188,8 +188,6 @@ const InboxScreen = () => {
         translucent
         backgroundColor={themedTailwind.color('bg-white')}
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        navigationBarColor={themedTailwind.color('bg-white')}
-        navigationBarHidden={false}
       />
       <InboxListStateProvider>
         <InboxHeader markAllAsRead={markAllAsRead} />

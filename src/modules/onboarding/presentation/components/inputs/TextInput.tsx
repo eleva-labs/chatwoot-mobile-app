@@ -78,7 +78,13 @@ export function TextInput({
         accessible
         accessibilityLabel={placeholder || 'Text input'}
         accessibilityHint={required ? 'Required field' : 'Optional field'}
-        accessibilityState={{ invalid: !!error }}
+        accessibilityState={{
+          disabled: false,
+          selected: false,
+          checked: undefined,
+          busy: false,
+          expanded: undefined,
+        }}
       />
 
       {/* Character counter */}

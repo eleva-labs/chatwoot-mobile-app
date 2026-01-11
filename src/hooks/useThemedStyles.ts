@@ -60,6 +60,6 @@ export const useThemeAwareStyle = (lightStyle: string, darkStyle?: string) => {
 
   return useMemo(() => {
     const style = isDark && darkStyle ? darkStyle : lightStyle;
-    return themedTailwind(style);
+    return themedTailwind.style(style);
   }, [isDark, lightStyle, darkStyle, themedTailwind]);
 };

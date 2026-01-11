@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-// @ts-expect-error - Testing library types are available at runtime
 // eslint-disable-next-line import/no-unresolved
 import { render, fireEvent } from '@testing-library/react-native';
 import { NavigationFooter } from '../../../presentation/components/NavigationFooter';

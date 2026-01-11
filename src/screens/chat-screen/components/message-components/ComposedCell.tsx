@@ -15,7 +15,7 @@ import { INBOX_TYPES, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@/constants';
 
 import { AudioPlayer } from './AudioCell';
 import { FilePreview } from './FileCell';
-import { ImageContainer } from './ImageCell';
+import { ImageBubbleContainer as ImageContainer } from './ImageBubble';
 import { VideoPlayer } from './VideoCell';
 import { DeliveryStatus } from './DeliveryStatus';
 import { useAppSelector } from '@/hooks';
@@ -103,7 +103,11 @@ export const ComposedCell = (props: ComposedCellProps) => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name || ''} />
+            <Avatar
+              size={'md'}
+              src={{ uri: sender?.thumbnail ?? undefined }}
+              name={sender?.name || ''}
+            />
           </Animated.View>
         ) : null}
 

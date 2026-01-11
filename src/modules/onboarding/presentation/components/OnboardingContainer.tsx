@@ -217,6 +217,7 @@ export function OnboardingContainer({
           isLastStep={isLastStep}
           onNext={handleNext}
           onPrevious={onboarding.goToPrevious}
+          locale={locale}
           onSkip={() => {
             onboarding.skipQuestion();
             onSkip?.();

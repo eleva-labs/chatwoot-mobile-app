@@ -69,6 +69,7 @@ export const AllVariants: Story = {
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
           onToggleChatStatus={() => {}}
+          onToggleAI={() => {}}
         />
       </HeaderContainer>
 
@@ -85,6 +86,7 @@ export const AllVariants: Story = {
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
           onToggleChatStatus={() => {}}
+          onToggleAI={() => {}}
         />
       </HeaderContainer>
 
@@ -101,6 +103,7 @@ export const AllVariants: Story = {
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
           onToggleChatStatus={() => {}}
+          onToggleAI={() => {}}
         />
       </HeaderContainer>
 
@@ -117,6 +120,7 @@ export const AllVariants: Story = {
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
           onToggleChatStatus={() => {}}
+          onToggleAI={() => {}}
           isSlaMissed={true}
           hasSla={true}
         />
@@ -135,6 +139,7 @@ export const AllVariants: Story = {
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
           onToggleChatStatus={() => {}}
+          onToggleAI={() => {}}
           isSlaMissed={false}
           hasSla={true}
         />

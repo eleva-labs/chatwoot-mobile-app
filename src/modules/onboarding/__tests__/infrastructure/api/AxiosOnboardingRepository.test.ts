@@ -168,7 +168,7 @@ describe('AxiosOnboardingRepository', () => {
         json: async () => {
           throw new Error('Should not call json() on 404');
         },
-      } as Response;
+      } as unknown as Response;
 
       // Ensure the response object has the correct properties
       Object.defineProperty(mockResponse, 'ok', { value: false, writable: false });

@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-// @ts-expect-error - Testing library types are available at runtime
+import { ActivityIndicator, View } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { OnboardingModule } from '../../../presentation/components/OnboardingModule';
@@ -197,8 +197,7 @@ describe('OnboardingModule', () => {
       } as UseOnboardingReturn);
 
       const { UNSAFE_getByType } = render(<OnboardingModule />);
-
-      expect(UNSAFE_getByType('ActivityIndicator')).toBeTruthy();
+      expect(UNSAFE_getByType(ActivityIndicator)).toBeTruthy();
     });
 
     it('should not show loading when flow exists', () => {
@@ -327,9 +326,8 @@ describe('OnboardingModule', () => {
       } as UseOnboardingReturn);
 
       const { UNSAFE_queryByType } = render(<OnboardingModule />);
-
       // QuestionRenderer is mocked, but we can verify the module structure
-      expect(UNSAFE_queryByType('View')).toBeTruthy();
+      expect(UNSAFE_queryByType(View)).toBeTruthy();
     });
 
     it('should pass current answer to QuestionRenderer', () => {

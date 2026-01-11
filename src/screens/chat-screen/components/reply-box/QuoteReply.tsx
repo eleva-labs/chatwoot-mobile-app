@@ -87,7 +87,7 @@ export const QuoteReply = () => {
 
   const handleScrollToMessage = useCallback(() => {
     const messageIndex = messageListRef.current?.props.data?.findIndex(
-      (item: Message) => item.id === quoteMessage?.id,
+      (item: Message | { date: string }) => 'id' in item && item.id === quoteMessage?.id,
     );
     const shouldScrollToMessage = messageIndex !== -1 && messageIndex !== undefined;
 

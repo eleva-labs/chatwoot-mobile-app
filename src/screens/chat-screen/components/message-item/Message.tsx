@@ -44,6 +44,7 @@ type MessageComponentProps = {
   item: Message;
   index: number;
   isEmailInbox: boolean;
+  currentUserId?: number;
 };
 
 type MessageWrapperProps = {

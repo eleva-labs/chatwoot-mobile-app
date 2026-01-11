@@ -35,6 +35,7 @@ export const conversation: Conversation = {
       createdAt: 1,
       identifier: null,
       lastActivityAt: 1,
+      type: 'contact',
     },
     assignee: {
       id: 1,
@@ -50,6 +51,7 @@ export const conversation: Conversation = {
   timestamp: 1,
   slaPolicyId: null,
   appliedSla: null,
+  slaEvents: [],
   messages: [
     {
       id: 438072,
@@ -67,6 +69,7 @@ export const conversation: Conversation = {
       contentType: 'text',
       echoId: null,
       sender: null,
+      senderId: 1,
       lastNonActivityMessage: null,
       conversation: null,
       shouldRenderAvatar: false,
@@ -86,6 +89,7 @@ export const conversation: Conversation = {
       contentType: 'text',
       echoId: null,
       sender: null,
+      senderId: 1,
       lastNonActivityMessage: null,
       conversation: null,
       shouldRenderAvatar: false,
@@ -108,6 +112,7 @@ const lastMessage = {
   contentType: 'text' as ContentType,
   echoId: null,
   sender: null,
+  senderId: 1,
   lastNonActivityMessage: null,
   conversation: null,
   shouldRenderAvatar: false,

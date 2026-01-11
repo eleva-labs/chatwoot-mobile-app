@@ -11,7 +11,7 @@ import i18n from '@/i18n';
 import { openNumber, openEmail } from '@/utils/urlUtils';
 
 type ContactOption = {
-  contactType: 'call' | 'email';
+  contactType: string;
   icon: React.ReactNode;
 };
 
@@ -68,11 +68,11 @@ export const ContactBasicActions = (props: ContactBasicActionsProps) => {
   const { phoneNumber, email } = props;
 
   const onCallPress = () => {
-    openNumber({ phoneNumber });
+    if (phoneNumber) openNumber({ phoneNumber });
   };
 
   const onEmailPress = () => {
-    openEmail({ email });
+    if (email) openEmail({ email });
   };
 
   if (!email && !phoneNumber) {

@@ -324,8 +324,6 @@ const ConversationScreen = () => {
         translucent
         backgroundColor={themedTailwind.color('bg-white')}
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        navigationBarColor={themedTailwind.color('bg-white')}
-        navigationBarHidden={false}
       />
       <ConversationListStateProvider>
         <ConversationHeader />

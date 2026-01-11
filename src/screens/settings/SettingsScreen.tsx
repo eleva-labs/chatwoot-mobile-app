@@ -100,7 +100,7 @@ const SettingsScreen = () => {
 
   const pushToken = useAppSelector(selectPushToken);
 
-  const userPermissions = user ? getUserPermissions(user, activeAccountId) : [];
+  const userPermissions = user ? getUserPermissions(user, activeAccountId ?? null) : [];
 
   const hasConversationPermission = CONVERSATION_PERMISSIONS.some(permission =>
     userPermissions.includes(permission),
@@ -319,8 +319,6 @@ const SettingsScreen = () => {
         translucent
         backgroundColor={themedTailwind.color('bg-white')}
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        navigationBarColor={themedTailwind.color('bg-white')}
-        navigationBarHidden={false}
       />
       <SettingsHeader />
       <Animated.ScrollView

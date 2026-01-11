@@ -8,9 +8,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, Switch } from 'react-native';
 import { useTheme } from '@/context';
+import { useThemedStyles } from '@/hooks/useThemedStyles';
 
 export const ThemeDemo: React.FC = () => {
-  const { tailwind, isDark, toggleTheme, setTheme } = useTheme();
+  const { isDark, toggleTheme, setTheme } = useTheme();
+  const tailwind = useThemedStyles();
   const [inputValue, setInputValue] = useState('');
   const [switchValue, setSwitchValue] = useState(false);
 

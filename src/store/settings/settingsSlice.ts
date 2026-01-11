@@ -63,10 +63,11 @@ export const settingsSlice = createSlice({
   },
   extraReducers: builder => {
     // Log when Redux Persist rehydrates the state
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    builder.addCase(
-      'persist/REHYDRATE',
-      (state, action: { payload?: { settings?: typeof state } }) => {
+    builder.addMatcher(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (action): action is { type: 'persist/REHYDRATE'; payload?: { settings?: SettingsState } } =>
+        action.type === 'persist/REHYDRATE',
+      (state, action) => {
         if (action.payload?.settings) {
           console.log('🔄 Redux Persist REHYDRATE - Settings restored from storage:', {
             persistedBaseUrl: action.payload.settings.baseUrl,

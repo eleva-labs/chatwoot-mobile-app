@@ -126,7 +126,8 @@ export const AppNavigationContainer = () => {
   }, []);
 
   const normalizedInstallationUrl = installationUrl?.replace(/\/+$/, '');
-  const linking = {
+  // Cast to satisfy LinkingOptions type - the runtime structure is correct
+  const linking: Parameters<typeof NavigationContainer>[0]['linking'] = {
     prefixes: [
       installationUrl,
       normalizedInstallationUrl,

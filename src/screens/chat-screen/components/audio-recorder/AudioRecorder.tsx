@@ -59,11 +59,13 @@ const millisecondsToTimeString = (milliseconds: number | undefined) => {
   return `${minutesString}:${secondsString}`;
 };
 
+type MobileAudioFileType = { uri: string; fileName: string; type: string };
+
 export const AudioRecorder = ({
   onRecordingComplete,
   audioFormat,
 }: {
-  onRecordingComplete: (audioFile: File) => void;
+  onRecordingComplete: (audioFile: MobileAudioFileType | null) => void;
   audioFormat: 'audio/m4a' | 'audio/wav';
 }) => {
   const localRecordedAudioCacheFilePaths = useAppSelector(selectLocalRecordedAudioCacheFilePaths);
@@ -191,7 +193,7 @@ export const AudioRecorder = ({
           const audioFile = await createAudioFile(value);
           dispatch(addNewCachePath(audioFile.originalPath));
           setIsVoiceRecorderOpen(false);
-          onRecordingComplete(audioFile as unknown as File);
+          onRecordingComplete(audioFile as MobileAudioFileType);
         } catch (error) {
           Sentry.captureException(error);
           Alert.alert(

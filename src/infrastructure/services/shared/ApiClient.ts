@@ -48,6 +48,7 @@ export class ApiError extends Error {
  * Provides common HTTP functionality for services.
  * Subclasses should inject their specific dependencies.
  */
+// @ts-expect-error - tsyringe decorator signature is compatible at runtime
 @injectable()
 export abstract class ApiClient {
   constructor(
@@ -130,7 +131,8 @@ export abstract class ApiClient {
       );
     }
 
-    return response;
+    // Cast FetchResponse to Response - expo/fetch response is compatible at runtime
+    return response as unknown as Response;
   }
 
   // ============================================================================

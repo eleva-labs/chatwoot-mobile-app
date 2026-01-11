@@ -131,9 +131,12 @@ const BottomSheetContent = () => {
 
   useEffect(() => {
     if (!lastEmail) return;
-    const {
-      contentAttributes: { email: emailAttributes = {} },
-    } = lastEmail;
+    const contentAttributes = lastEmail.contentAttributes as
+      | Record<string, unknown>
+      | null
+      | undefined;
+    const emailAttributes =
+      (contentAttributes?.email as Record<string, string[]> | undefined) ?? {};
 
     // Retrieve the email of the current conversation's sender
     const conversationContact = conversation?.meta?.sender?.email || '';
@@ -156,7 +159,7 @@ const BottomSheetContent = () => {
     }
 
     // Remove the conversation contact's email from the BCC list if present
-    let bcc = (emailAttributes.bcc || []).filter(email => email !== conversationContact);
+    let bcc = (emailAttributes.bcc || []).filter((email: string) => email !== conversationContact);
 
     // Ensure only unique email addresses are in the CC list
     bcc = [...new Set(bcc)];
@@ -207,14 +210,16 @@ const BottomSheetContent = () => {
   };
 
   // TODO: Implement this
-  const setReplyToInPayload = (messagePayload: Record<string, unknown>) => {
+  const setReplyToInPayload = (messagePayload: SendMessagePayload): SendMessagePayload => {
     //     ...(quoteMessage?.id && {
     //       contentAttributes: { inReplyTo: quoteMessage.id },
     //     }),
     return messagePayload;
   };
 
-  const getMessagePayload = (message: string, audioFile: File | null) => {
+  type MobileFileType = { uri: string; fileName: string; type: string };
+
+  const getMessagePayload = (message: string, audioFile: MobileFileType | null) => {
     let updatedMessage = message;
     if (isPrivate) {
       const regex = /@\[([\w\s]+)\]\((\d+)\)/g;
@@ -285,11 +290,11 @@ const BottomSheetContent = () => {
     return messagePayload;
   };
 
-  const onRecordingComplete = async (audioFile: File | null) => {
+  const onRecordingComplete = async (audioFile: MobileFileType | null) => {
     confirmOnSendReply(audioFile);
   };
 
-  const confirmOnSendReply = (audioFile: File | null) => {
+  const confirmOnSendReply = (audioFile: MobileFileType | null) => {
     hapticSelection?.();
     if (textInputRef && 'current' in textInputRef && textInputRef.current) {
       (textInputRef.current as TextInput).clear();
@@ -437,7 +442,9 @@ const BottomSheetContent = () => {
             {attachmentsLength === 0 && shouldShowFileUpload && (
               <AddCommandButton
                 onPress={handleShowAddMenuOption}
-                derivedAddMenuOptionStateValue={derivedAddMenuOptionStateValue}
+                derivedAddMenuOptionStateValue={
+                  derivedAddMenuOptionStateValue as unknown as import('react-native-reanimated').SharedValue<number>
+                }
               />
             )}
             <MessageTextInput
