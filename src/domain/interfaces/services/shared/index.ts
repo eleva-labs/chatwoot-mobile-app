@@ -6,3 +6,5 @@
  */
 
 export type { IAIChatConfigService } from './IAIChatConfigService';
+export type { IAnalyticsService, AnalyticsEventParams } from './IAnalyticsService';
+export type { IPerformanceService, IPerformanceTrace } from './IPerformanceService';

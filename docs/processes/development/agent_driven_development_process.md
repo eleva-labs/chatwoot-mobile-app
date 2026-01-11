@@ -575,16 +575,25 @@ If review agent finds issues:
 2. Resume agent to apply fixes
 3. Re-run validation after fixes
 
-### Step 6.5: Update Documentation
+### Step 6.5: Update Documentation (REQUIRED)
 
-After successful validation:
+After successful validation, **ALL THREE documents MUST be updated**:
 
 ```
 Spawn agent to:
 1. Update EXECUTION_##.md - mark tasks complete, update progress bars
 2. Update SESSION_HANDOFF.md - add to completed work
-3. Update INDEX.md - update status table
+3. Update INDEX.md - update status table, metrics, dependency graph
+
+CRITICAL: INDEX.md must reflect current state after EVERY execution.
+This is the single source of truth for project status.
 ```
+
+**INDEX.md Required Updates:**
+- Status column in execution order table
+- Current metrics (CA compliance %, use case utilization, etc.)
+- Dependency graph (mark completed dependencies with ✅)
+- "Quick Start" section with correct next recommended task
 
 ### Deliverable
 **Output**: Validated code, updated documentation
@@ -815,8 +824,12 @@ cat docs/ignored/{feature}/SESSION_HANDOFF.md
 
 ## Changelog
 
-### Version 1.1.0 (2026-01-11)
+### Version 1.2.0 (2026-01-11)
 **Status**: Active
+**Changes**: Made INDEX.md updates REQUIRED after every execution - INDEX is single source of truth
+
+### Version 1.1.0 (2026-01-11)
+**Status**: Superseded
 **Changes**: Added explicit Phase 6: Validation & Review - mandatory review agent step after each execution
 
 ### Version 1.0.0 (2026-01-11)

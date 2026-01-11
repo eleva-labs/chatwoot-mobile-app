@@ -8,13 +8,10 @@ import {
   FirebaseAnalyticsTypes,
 } from '@react-native-firebase/analytics';
 
-import {
-  AnalyticsEventParams,
-  AnalyticsService,
-} from '@/domain/interfaces/analytics/AnalyticsService';
+import type { AnalyticsEventParams, IAnalyticsService } from '@/domain/interfaces/services/shared';
 import { normalizeEventName } from '@/utils/normalizeEventName';
 
-export class FirebaseAnalyticsService implements AnalyticsService {
+export class FirebaseAnalyticsService implements IAnalyticsService {
   private collectionEnabled = true;
   private _analytics: FirebaseAnalyticsTypes.Module | null = null;
 
