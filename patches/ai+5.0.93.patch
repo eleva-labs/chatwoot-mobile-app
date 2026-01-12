@@ -1,8 +1,9 @@
 diff --git a/node_modules/ai/dist/internal/index.js b/node_modules/ai/dist/internal/index.js
-index 0000000..1111111 100644
+index 3bb992e..c32353f 100644
 --- a/node_modules/ai/dist/internal/index.js
 +++ b/node_modules/ai/dist/internal/index.js
-@@ -342,7 +342,7 @@ function convertMessageToLanguageModelMessage(message, downloadedAssets) {
+@@ -342,7 +342,7 @@ function convertToLanguageModelMessage({
+       }
        return {
          role: "user",
 -        content: message.content.map((part) => convertPartToLanguageModelPart(part, downloadedAssets)).filter((part) => part.type !== "text" || part.text !== ""),
@@ -10,7 +11,25 @@ index 0000000..1111111 100644
          providerOptions: message.providerOptions
        };
      }
-@@ -467,6 +467,9 @@ function convertPartToLanguageModelPart(part, downloadedAssets) {
+@@ -377,14 +377,14 @@ function convertToLanguageModelMessage({
+             case "reasoning": {
+               return {
+                 type: "reasoning",
+-                text: part.text,
++                text: part.text || "",
+                 providerOptions
+               };
+             }
+             case "text": {
+               return {
+                 type: "text",
+-                text: part.text,
++                text: part.text || "",
+                 providerOptions
+               };
+             }
+@@ -469,10 +469,13 @@ async function downloadAssets(messages, download2, supportedUrls) {
+ }
  function convertPartToLanguageModelPart(part, downloadedAssets) {
    var _a5;
 +  if (!part) {
@@ -24,21 +43,3 @@ index 0000000..1111111 100644
        providerOptions: part.providerOptions
      };
    }
-@@ -377,13 +380,13 @@ function convertMessageToLanguageModelMessage(message, downloadedAssets) {
-             case "reasoning": {
-               return {
-                 type: "reasoning",
--                text: part.text,
-+                text: part.text || "",
-                 providerOptions
-               };
-             }
-             case "text": {
-               return {
-                 type: "text",
--                text: part.text || "",
-+                text: part.text || "",
-                 providerOptions
-               };
-             }
-
