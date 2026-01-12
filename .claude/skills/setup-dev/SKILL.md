@@ -82,6 +82,20 @@ task setup-dev
 task check-prereqs
 ```
 
+### Option 3: One-Command Full Setup (Fastest)
+
+If you already have the repository cloned and just need to complete setup:
+
+```bash
+task setup-full
+```
+
+This does everything in one command:
+1. Install all dependencies (`pnpm install`)
+2. Create local environment config (`.env.local`)
+3. Pull development settings from EAS
+4. Verify all patches applied correctly
+
 ---
 
 ## Detailed Guide
@@ -111,6 +125,14 @@ task test
 task clean && task generate
 ```
 
+### Local Environment Setup
+
+```bash
+task setup-local-env    # Creates .env.local
+task verify-patches     # Check patches are applied
+task setup-full         # Complete setup in one command
+```
+
 ### Key Environment Variables
 ```bash
 # Check Node version (should be v20.x.x)
@@ -135,6 +157,8 @@ pnpm --version
 | Metro bundler errors | Run `task clean-cache` |
 | iOS build fails | See `setup-ios` skill or [SETUP_GUIDE.md](./SETUP_GUIDE.md) |
 | Android build fails | See `setup-android` skill or [SETUP_GUIDE.md](./SETUP_GUIDE.md) |
+| `.env.local` missing | Run `task setup-local-env` |
+| SIMULATOR variable undefined | Run `task setup-local-env` to recreate `.env.local` |
 
 ---
 

@@ -1,25 +1,71 @@
-# Environment Variables
+# Environment Configuration Guide
 
 This guide explains how environment variables are managed in the Chatscommerce mobile app.
 
 ## Overview
 
-Environment variables are managed through two files:
+The app uses layered environment configuration:
 
-| File | Purpose | Git Status |
-|------|---------|------------|
-| `.env.example` | Template with defaults | Committed |
-| `.env` | Actual values | Gitignored |
+1. **`.env.local`** - Local machine overrides (highest priority)
+2. **`.env`** - EAS-managed settings
+3. **`.env.example`** - Template/defaults (lowest priority)
+
+## Environment Files
+
+| File | Purpose | Committed | Created By |
+|------|---------|-----------|------------|
+| `.env.example` | Template with all variables | Yes | Manual |
+| `.env.local.example` | Local-only template | Yes | Manual |
+| `.env` | EAS-managed settings | No | `task setup-dev` |
+| `.env.local` | Local overrides | No | `task setup-local-env` |
 
 ## Quick Setup
 
 ```bash
-# Pull environment from EAS (recommended)
-task setup-dev
+# Complete setup in one command (recommended)
+task setup-full
 
-# Or manually create from template
-cp .env.example .env
-# Then fill in values
+# Or step by step:
+task setup-dev        # Pull environment from EAS
+task setup-local-env  # Create local environment file
+```
+
+## Setting Up Local Environment
+
+```bash
+# Create your local environment file
+task setup-local-env
+
+# This creates:
+# - .env.local (with SIMULATOR and SENTRY settings)
+# - ios/.xcode.env.local (Node.js path)
+```
+
+## What Gets Created
+
+### .env.local
+```bash
+SENTRY_DISABLE_AUTO_UPLOAD=true  # Prevents auth errors
+SIMULATOR=1                       # Build for simulator
+```
+
+### ios/.xcode.env.local
+```bash
+export NODE_BINARY="/path/to/node"  # Auto-detected
+```
+
+## Common Local Settings
+
+### Simulator Development (Default)
+```bash
+SIMULATOR=1
+SENTRY_DISABLE_AUTO_UPLOAD=true
+```
+
+### Physical Device Development
+```bash
+SIMULATOR=0
+# Also configure code signing in Xcode
 ```
 
 ## How It Works
@@ -32,12 +78,14 @@ The `Taskfile.yml` loads environment files in order:
 dotenv:
   - .env.example  # Loaded first (defaults)
   - .env          # Loaded second (overrides)
+  - .env.local    # Loaded last (local overrides, highest priority)
 ```
 
 This means:
 1. `.env.example` provides default values
-2. `.env` overrides with actual/secret values
-3. First file wins for any variable (already set = not overwritten)
+2. `.env` overrides with EAS-managed values
+3. `.env.local` provides local-only overrides (highest priority)
+4. Later files override earlier ones for any variable
 
 ### Variable Categories
 
@@ -235,6 +283,23 @@ npx eas login
 
 # Verify account
 npx eas whoami
+```
+
+### "SIMULATOR variable undefined"
+**Fix**: Run `task setup-local-env` to create `.env.local`
+
+### "Code signing failed"
+**Fix**: Set `SIMULATOR=1` in `.env.local`, or configure code signing in Xcode
+
+### "Sentry auth error during build"
+**Fix**: Ensure `.env.local` has `SENTRY_DISABLE_AUTO_UPLOAD=true`
+
+## Related Commands
+
+```bash
+task setup-local-env    # Create/update local environment
+task verify-patches     # Verify patches applied
+task setup-full         # Complete setup
 ```
 
 ## Next Steps

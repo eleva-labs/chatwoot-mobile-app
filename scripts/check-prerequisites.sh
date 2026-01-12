@@ -130,6 +130,79 @@ else
 fi
 
 echo ""
+echo -e "${BLUE}iOS Build Tools:${NC}"
+
+# Check ccache
+if command -v "ccache" &> /dev/null; then
+    echo -e "${GREEN}✅ ccache: $(ccache --version | head -1)${NC}"
+    ((PASSED++))
+else
+    echo -e "${YELLOW}⚠️  ccache: Not installed (recommended for faster builds)${NC}"
+fi
+
+# Check ccache in PATH
+if echo "$PATH" | grep -q "ccache/libexec"; then
+    echo -e "${GREEN}✅ ccache PATH: Configured${NC}"
+    ((PASSED++))
+else
+    echo -e "${YELLOW}⚠️  ccache PATH: Not configured (run: ./scripts/setup-ios-build-tools.sh)${NC}"
+fi
+
+# Check CocoaPods is linked and available
+if command -v "pod" &> /dev/null; then
+    echo -e "${GREEN}✅ CocoaPods: $(pod --version)${NC}"
+    ((PASSED++))
+else
+    echo -e "${RED}❌ CocoaPods: Not available${NC}"
+    ((FAILED++))
+fi
+
+# Check bigdecimal gem
+if gem list bigdecimal -i >/dev/null 2>&1; then
+    echo -e "${GREEN}✅ bigdecimal gem: Installed${NC}"
+    ((PASSED++))
+else
+    echo -e "${YELLOW}⚠️  bigdecimal gem: Not installed (may cause issues with Ruby 4.0+)${NC}"
+fi
+
+echo ""
+echo -e "${BLUE}Local Environment:${NC}"
+
+# Check .env.local exists
+if [[ -f "$PROJECT_ROOT/.env.local" ]]; then
+    echo -e "${GREEN}✅ .env.local: exists${NC}"
+    ((PASSED++))
+
+    # Check SENTRY_DISABLE_AUTO_UPLOAD is set
+    if grep -q "^SENTRY_DISABLE_AUTO_UPLOAD=true" "$PROJECT_ROOT/.env.local"; then
+        echo -e "${GREEN}   ✅ SENTRY_DISABLE_AUTO_UPLOAD: set${NC}"
+    else
+        echo -e "${YELLOW}   ⚠️  SENTRY_DISABLE_AUTO_UPLOAD: not set (run 'task setup-local-env')${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠️  .env.local: not found (run 'task setup-local-env')${NC}"
+fi
+
+# Verify patches are applied
+if grep -q "@unknown default" "$PROJECT_ROOT/node_modules/expo-localization/ios/LocalizationModule.swift" 2>/dev/null; then
+    echo -e "${GREEN}✅ expo-localization patch: applied${NC}"
+    ((PASSED++))
+else
+    echo -e "${RED}❌ expo-localization patch: NOT applied (run 'pnpm install')${NC}"
+    ((FAILED++))
+fi
+
+# Check ios/.xcode.env.local if ios/ exists
+if [[ -d "$PROJECT_ROOT/ios" ]]; then
+    if [[ -f "$PROJECT_ROOT/ios/.xcode.env.local" ]]; then
+        echo -e "${GREEN}✅ ios/.xcode.env.local: exists${NC}"
+        ((PASSED++))
+    else
+        echo -e "${YELLOW}⚠️  ios/.xcode.env.local: not found (run 'task setup-local-env')${NC}"
+    fi
+fi
+
+echo ""
 echo -e "${BLUE}📊 Summary:${NC}"
 echo -e "   ✅ Passed: $PASSED"
 echo -e "   ❌ Failed: $FAILED"

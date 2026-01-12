@@ -194,6 +194,30 @@ tasks:
     desc: Verify all development prerequisites are installed
     cmd: ./scripts/check-prerequisites.sh
 
+  setup-local-env:
+    desc: Setup local-only environment variables (.env.local, .xcode.env.local)
+    cmd: ./scripts/setup-local-env.sh
+
+  verify-patches:
+    desc: Verify all patches are applied correctly
+    cmds:
+      - echo "Checking patches..."
+      - |
+        if grep -q "@unknown default" node_modules/expo-localization/ios/LocalizationModule.swift 2>/dev/null; then
+          echo "  expo-localization: PATCHED"
+        else
+          echo "  expo-localization: NOT patched (run pnpm install)"
+        fi
+      - echo "Done."
+
+  setup-full:
+    desc: Complete setup (install + local-env + dev + verify-patches)
+    cmds:
+      - task: install
+      - task: setup-local-env
+      - task: setup-dev
+      - task: verify-patches
+
   setup-volta:
     desc: Setup Volta with Node 20 and pin project versions
     cmds:

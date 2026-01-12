@@ -80,6 +80,25 @@ This script will:
 
 ---
 
+## Phase 2B: Quick Setup with task setup-full
+
+If you have already cloned the repository and have Volta/Node 20 installed:
+
+```bash
+cd chatwoot-mobile-app
+task setup-full
+```
+
+This single command runs:
+1. `pnpm install` - Install dependencies (patches auto-apply)
+2. `task setup-local-env` - Create `.env.local` with local settings
+3. `task setup-dev` - Pull environment from EAS
+4. `task verify-patches` - Confirm patches were applied
+
+**Time**: ~2-3 minutes
+
+---
+
 ## Phase 3: Manual Setup (Alternative)
 
 If the automated setup fails, follow these steps manually.
@@ -159,6 +178,47 @@ task run-ios
 
 # OR Start Android Emulator
 task run-android
+```
+
+---
+
+## Local Environment Configuration
+
+After setup, your machine has these environment files:
+
+### What is `.env.local`?
+
+A local-only environment file that:
+- Overrides values from `.env` (pulled from EAS)
+- Is never committed to git
+- Contains machine-specific settings:
+  - `SIMULATOR=1` - For iOS simulator development
+  - `SENTRY_DISABLE_AUTO_UPLOAD=true` - Prevent auth errors
+
+### Viewing Your Local Configuration
+
+```bash
+cat .env.local
+cat ios/.xcode.env.local  # Node.js path for Xcode
+```
+
+### Updating Local Settings
+
+Edit `.env.local` to change simulator/device target:
+
+```bash
+# For simulator (no code signing needed)
+SIMULATOR=1
+
+# For physical device (requires code signing)
+SIMULATOR=0
+```
+
+### If You Lose `.env.local`
+
+Simply regenerate it:
+```bash
+task setup-local-env
 ```
 
 ---
@@ -347,6 +407,7 @@ After completing setup, verify:
 - [ ] `task check-prereqs` passes
 - [ ] `node --version` shows v20.x.x
 - [ ] `pnpm --version` shows version number
+- [ ] `.env.local` exists with `SIMULATOR=1`
 - [ ] `task run-ios` starts iOS Simulator
 - [ ] `task run-android` starts Android Emulator (if configured)
 - [ ] `task test` runs without errors

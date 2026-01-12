@@ -299,6 +299,9 @@ importers:
       '@react-native-community/slider':
         specifier: ^4.5.5
         version: 4.5.7
+      '@rnx-kit/metro-resolver-symlinks':
+        specifier: ^0.2.8
+        version: 0.2.8
       '@stardazed/streams-text-encoding':
         specifier: ^1.0.2
         version: 1.0.2
@@ -2495,6 +2498,27 @@ packages:
       react-redux:
         optional: true
 
+  '@rnx-kit/console@2.0.0':
+    resolution: {integrity: sha512-8kyM0TUWpawWlaypHKWLgJjPoF5HcsjIxx9LSnYM8VgwBW1gOl2cCDhPYaeS8IG9m0fi4rMtQD8OJqmwpJ2jEg==}
+    engines: {node: '>=16.17'}
+
+  '@rnx-kit/metro-resolver-symlinks@0.2.8':
+    resolution: {integrity: sha512-7as8n1VD18s6A68IGDayEdpyOryg/A7qb1MawzqsHg3cy+Nr0s27AFmpFt4wyc46fZTA6gpZ5izOWES6lXffPA==}
+    engines: {node: '>=16.17'}
+    peerDependencies:
+      oxc-resolver: ^11.0.0
+    peerDependenciesMeta:
+      oxc-resolver:
+        optional: true
+
+  '@rnx-kit/tools-node@3.0.3':
+    resolution: {integrity: sha512-EbSpiHCMuWvnp/hpayoStsIFncDYSr9zDhkjASJbNR88MtTGmHOOeECduKEbiWLRy3pFfzoHSago9jndL1xvlQ==}
+    engines: {node: '>=16.17'}
+
+  '@rnx-kit/tools-react-native@2.3.2':
+    resolution: {integrity: sha512-/9IbD6liBGEQMcmL2JwgIZd1N6ZW3XIjiTkgf5EHqpk1+8wMjRXhkSrSzPIblJERYqOjB3iDY37GhV/7FdQoRg==}
+    engines: {node: '>=16.17'}
+
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
@@ -3980,6 +4004,10 @@ packages:
 
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
+
+  enhanced-resolve@5.18.4:
+    resolution: {integrity: sha512-LgQMM4WXU3QI+SYgEc2liRgznaD5ojbmY3sb8LxyguVkIg5FxdpTkvk72te2R38/TGKxH634oLxXRGY6d7AP+Q==}
+    engines: {node: '>=10.13.0'}
 
   entities@2.0.3:
     resolution: {integrity: sha512-MyoZ0jgnLvB2X3Lg5HqpFmn1kybDiIfEQmKzTb5apr51Rb+T3KdmMiqa70T+bhGnyv7bQ6WMj2QMHpGMmlrUYQ==}
@@ -7185,6 +7213,10 @@ packages:
     resolution: {integrity: sha512-6A2rnmW5xZMdw11LYjhcI5846rt9pbLSabY5XPxo+XWdxwZaFEn47Go4NzFiHu9sNNmr/kXivP1vStfvMaK1GQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
+
+  tapable@2.3.0:
+    resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
+    engines: {node: '>=6'}
 
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
@@ -10594,6 +10626,21 @@ snapshots:
       react: 18.3.1
       react-redux: 9.2.0(@types/react@18.3.26)(react@18.3.1)(redux@5.0.1)
 
+  '@rnx-kit/console@2.0.0': {}
+
+  '@rnx-kit/metro-resolver-symlinks@0.2.8':
+    dependencies:
+      '@rnx-kit/console': 2.0.0
+      '@rnx-kit/tools-node': 3.0.3
+      '@rnx-kit/tools-react-native': 2.3.2
+      enhanced-resolve: 5.18.4
+
+  '@rnx-kit/tools-node@3.0.3': {}
+
+  '@rnx-kit/tools-react-native@2.3.2':
+    dependencies:
+      '@rnx-kit/tools-node': 3.0.3
+
   '@rtsao/scc@1.1.0': {}
 
   '@segment/ajv-human-errors@2.15.0(ajv@8.11.0)':
@@ -12357,6 +12404,11 @@ snapshots:
   end-of-stream@1.4.4:
     dependencies:
       once: 1.4.0
+
+  enhanced-resolve@5.18.4:
+    dependencies:
+      graceful-fs: 4.2.11
+      tapable: 2.3.0
 
   entities@2.0.3: {}
 
@@ -16219,6 +16271,8 @@ snapshots:
       sucrase: 3.35.0
     transitivePeerDependencies:
       - ts-node
+
+  tapable@2.3.0: {}
 
   tar-stream@3.1.7:
     dependencies:

@@ -54,6 +54,7 @@ Issues are organized into separate files by category for easier navigation:
 - Environment variables not loading
 - Expo CLI issues, EAS login problems
 - Node version mismatches, pnpm issues
+- Local environment (`.env.local`) missing or misconfigured
 
 **Build Issues** (see [BUILD_ISSUES.md](BUILD_ISSUES.md))
 - Metro bundler problems
@@ -112,6 +113,15 @@ pnpm run generate
 
 # Full clean
 pnpm run clean
+
+# Recreate local environment
+task setup-local-env
+
+# Verify patches are applied
+task verify-patches
+
+# Check local env
+cat .env.local
 ```
 
 ### Step 4: Apply Specific Solution
@@ -200,8 +210,16 @@ sdk.dir=/Users/<username>/Library/Android/sdk
 
 ### "No signing certificate" (iOS)
 **Cause**: Missing code signing configuration
-**Fix for simulator**: Set `SIMULATOR=1` in `.env`
+**Fix for simulator**: Set `SIMULATOR=1` in `.env.local` (run `task setup-local-env`)
 **Fix for device**: Configure signing in Xcode
+
+### "SIMULATOR variable undefined"
+**Cause**: `.env.local` file missing or incomplete
+**Fix**: Run `task setup-local-env` to recreate local environment
+
+### "Sentry auth error during build"
+**Cause**: Sentry uploads enabled without valid credentials
+**Fix**: Ensure `.env.local` has `SENTRY_DISABLE_AUTO_UPLOAD=true`
 
 ### "Command PhaseScriptExecution failed" (iOS)
 **Cause**: CocoaPods issue

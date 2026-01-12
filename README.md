@@ -21,6 +21,9 @@ cd chatwoot-mobile-app
 # Run automated setup (installs Volta, Node 20, Watchman, Expo CLI, dependencies, environment)
 ./scripts/setup-development.sh
 
+# OR use the unified task command (recommended)
+task setup-full
+
 # Verify setup
 task check-prereqs
 
@@ -57,11 +60,27 @@ task check-prereqs
 task run-ios
 ```
 
+### Local Environment Variables
+
+The app uses two layers of environment configuration:
+- **`.env`** - Pulled from EAS (shared team settings)
+- **`.env.local`** - Local-only overrides (gitignored, machine-specific)
+
+Local overrides are useful for:
+- Disabling Sentry uploads (`SENTRY_DISABLE_AUTO_UPLOAD=true`)
+- Switching between simulator/device builds (`SIMULATOR=1` or `0`)
+
+Setup automatically: `task setup-local-env`
+
 ### Development Workflow
 
 ```bash
 # Check environment anytime
 task check-prereqs
+
+# Configure local environment (one-time after setup)
+task setup-local-env    # Creates .env.local with local settings
+task verify-patches     # Verify patches applied during pnpm install
 
 # Start development
 task run-ios          # iOS Simulator (5-10 min first build)
@@ -192,6 +211,8 @@ Environment variables are managed via `.env` files:
 
 - `.env.example` - Template with defaults (committed)
 - `.env` - Actual values (gitignored, pulled from EAS)
+- `.env.local.example` - Local-only variables template (committed)
+- `.env.local` - Local overrides (gitignored, machine-specific)
 
 See [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) for details.
 

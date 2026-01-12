@@ -33,6 +33,9 @@ yarn-error.*
 # local env files
 .env*.local
 
+# Xcode local configuration (machine-specific Node path)
+ios/.xcode.env.local
+
 # typescript
 *.tsbuildinfo
 

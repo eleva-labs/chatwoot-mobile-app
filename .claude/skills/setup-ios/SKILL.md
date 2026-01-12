@@ -280,14 +280,23 @@ The `SIMULATOR` environment variable controls code signing:
 
 | Value | Target | Code Signing |
 |-------|--------|--------------|
-| `SIMULATOR=1` | iOS Simulator | Not required |
+| `SIMULATOR=1` | iOS Simulator | Not required (default) |
 | `SIMULATOR=0` | Physical device | Required |
 
-This is configured in `.env.example`:
+### Using Local Environment Variables for Simulator
+
+Your `.env.local` file is created by:
 ```bash
-# Build target: 0 = device (needs signing), 1 = simulator (no signing)
-SIMULATOR=1
+task setup-local-env
 ```
+
+**To switch targets**, edit `.env.local`:
+```bash
+SIMULATOR=1  # For simulator (default)
+SIMULATOR=0  # For physical device
+```
+
+Then rebuild: `task run-ios`
 
 ---
 

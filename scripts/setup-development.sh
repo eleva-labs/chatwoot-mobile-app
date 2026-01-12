@@ -107,23 +107,14 @@ install_dependencies() {
     fi
 }
 
-# Function to setup ccache for iOS builds
-setup_ccache() {
-    echo -e "${BLUE}📦 Setting up ccache for iOS builds...${NC}"
+# Function to setup iOS build tools (ccache, bigdecimal gem, CocoaPods)
+setup_ios_build_tools() {
+    echo -e "${BLUE}📦 Setting up iOS build tools...${NC}"
 
-    if command_exists ccache; then
-        echo -e "${GREEN}✅ ccache is already installed${NC}"
+    if [[ -f "$SCRIPT_DIR/setup-ios-build-tools.sh" ]]; then
+        bash "$SCRIPT_DIR/setup-ios-build-tools.sh"
     else
-        brew install ccache
-        echo -e "${GREEN}✅ ccache installed${NC}"
-    fi
-
-    # Add ccache to PATH if not already there
-    if ! grep -q "ccache/libexec" ~/.zshrc 2>/dev/null; then
-        echo '' >> ~/.zshrc
-        echo '# ccache for iOS builds' >> ~/.zshrc
-        echo 'export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"' >> ~/.zshrc
-        echo -e "${GREEN}✅ ccache PATH added to ~/.zshrc${NC}"
+        echo -e "${YELLOW}⚠️  iOS build tools script not found, skipping${NC}"
     fi
 }
 
@@ -177,8 +168,8 @@ main() {
     # Install dependencies
     install_dependencies
 
-    # Setup ccache for faster iOS builds
-    setup_ccache
+    # Setup iOS build tools (ccache, bigdecimal gem, CocoaPods)
+    setup_ios_build_tools
 
     # Setup development environment
     setup_dev_environment
