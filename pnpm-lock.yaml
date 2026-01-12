@@ -9,7 +9,7 @@ patchedDependencies:
     hash: 9addf5ab77501890a1932b4eba65cb8fb8a70c99fc0f863df28e52a0ad10e631
     path: patches/@react-native-firebase__analytics.patch
   ai@5.0.93:
-    hash: e9a21b998e368514cecdad767f5260dad35b3a9d5132939f747b0d598bc2c7f9
+    hash: f7cf0406a49a18639e1369435176a1d04a0884465fb3a50dfa9f0009b85a478c
     path: patches/ai@5.0.93.patch
 
 importers:
@@ -93,7 +93,7 @@ importers:
         version: 4.17.20
       ai:
         specifier: 5.0.93
-        version: 5.0.93(patch_hash=e9a21b998e368514cecdad767f5260dad35b3a9d5132939f747b0d598bc2c7f9)(zod@4.1.13)
+        version: 5.0.93(patch_hash=f7cf0406a49a18639e1369435176a1d04a0884465fb3a50dfa9f0009b85a478c)(zod@4.1.13)
       axios:
         specifier: ^1.6.4
         version: 1.12.2
@@ -7814,7 +7814,7 @@ snapshots:
   '@ai-sdk/react@2.0.93(react@18.3.1)(zod@4.1.13)':
     dependencies:
       '@ai-sdk/provider-utils': 3.0.17(zod@4.1.13)
-      ai: 5.0.93(patch_hash=e9a21b998e368514cecdad767f5260dad35b3a9d5132939f747b0d598bc2c7f9)(zod@4.1.13)
+      ai: 5.0.93(patch_hash=f7cf0406a49a18639e1369435176a1d04a0884465fb3a50dfa9f0009b85a478c)(zod@4.1.13)
       react: 18.3.1
       swr: 2.3.6(react@18.3.1)
       throttleit: 2.1.0
@@ -11353,7 +11353,7 @@ snapshots:
       clean-stack: 2.2.0
       indent-string: 4.0.0
 
-  ai@5.0.93(patch_hash=e9a21b998e368514cecdad767f5260dad35b3a9d5132939f747b0d598bc2c7f9)(zod@4.1.13):
+  ai@5.0.93(patch_hash=f7cf0406a49a18639e1369435176a1d04a0884465fb3a50dfa9f0009b85a478c)(zod@4.1.13):
     dependencies:
       '@ai-sdk/gateway': 2.0.9(zod@4.1.13)
       '@ai-sdk/provider': 2.0.0
