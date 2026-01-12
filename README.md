@@ -127,11 +127,12 @@ task clean-all-caches
 
 | Requirement | Version | Installation                                                                      |
 | ----------- | ------- | --------------------------------------------------------------------------------- |
-| Node.js     | 20 LTS  | See [SETUP_IOS.md](docs/SETUP_IOS.md#6-node-version-manager-volta) (Volta or nvm) |
-| pnpm        | Latest  | `npm install -g pnpm`                                                             |
+| Node.js     | 20.19.6 | See [SETUP_IOS.md](docs/SETUP_IOS.md#6-node-version-manager-volta) (Volta or nvm) |
+| pnpm        | 9.0.0   | Managed by Volta (auto-installed)                                                 |
 | Task        | Latest  | `brew install go-task`                                                            |
 | Watchman    | Latest  | `brew install watchman`                                                           |
-| Expo CLI    | Latest  | `npm install -g @expo/cli`                                                        |
+| Expo CLI    | Latest  | `volta install @expo/cli` or `npm install -g @expo/cli`                           |
+| CocoaPods   | 1.16.2+ | `sudo gem install cocoapods` (iOS only)                                           |
 
 ### Platform-Specific Setup
 
@@ -228,14 +229,18 @@ See [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) for details.
 
 ## Tech Stack
 
-| Technology      | Version |
-| --------------- | ------- |
-| Node.js         | 20 LTS  |
-| React Native    | 0.76.9  |
-| Expo SDK        | 52      |
-| TypeScript      | 5.1.3   |
-| Min iOS         | 13.0    |
-| Min Android API | 24      |
+| Technology      | Version  |
+| --------------- | -------- |
+| Node.js         | 20.19.6  |
+| pnpm            | 9.0.0    |
+| React Native    | 0.76.9   |
+| Expo SDK        | 52.0.48  |
+| TypeScript      | 5.1.3    |
+| Hermes Engine   | 0.76.9   |
+| Firebase SDK    | 12.4.0   |
+| CocoaPods       | 1.16.2   |
+| Min iOS         | 13.0     |
+| Min Android API | 24       |
 
 ## Project Structure
 

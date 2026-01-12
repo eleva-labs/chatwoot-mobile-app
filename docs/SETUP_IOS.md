@@ -4,11 +4,21 @@ This guide covers setting up your macOS environment for iOS development.
 
 > **Note:** iOS development requires macOS. Windows and Linux users can only develop for Android.
 
+## Version Requirements
+
+| Tool | Required Version | Notes |
+|------|-----------------|-------|
+| Xcode | 15.0+ | Download from Mac App Store |
+| CocoaPods | 1.16.2+ | `sudo gem install cocoapods` |
+| Node.js | 20.19.6 | Managed by Volta |
+| Watchman | Latest | `brew install watchman` |
+| ccache | 4.10+ | Optional, for faster builds |
+
 ## Prerequisites
 
 ### 1. Xcode
 
-Install Xcode from the Mac App Store:
+Install Xcode **15.0 or later** from the Mac App Store:
 
 1. Open **App Store** on your Mac
 2. Search for **Xcode**
@@ -41,15 +51,19 @@ The iOS Simulator is included with Xcode. To verify:
    open -a Simulator
    ```
 
-### 4. CocoaPods (Optional)
+### 4. CocoaPods (Required: 1.16.2+)
 
 CocoaPods is managed automatically by Expo, but you can install it manually if needed:
 
 ```bash
 sudo gem install cocoapods
+
+# Verify version
+pod --version
+# Should show 1.16.2 or higher
 ```
 
-### 4.5. ccache (Recommended for Faster Builds)
+### 4.5. ccache (Recommended for Faster Builds - v4.10+)
 
 ccache dramatically speeds up C/C++ compilation for native iOS builds (40-50% faster clean builds).
 
@@ -59,8 +73,9 @@ ccache dramatically speeds up C/C++ compilation for native iOS builds (40-50% fa
 # Install ccache
 brew install ccache
 
-# Verify installation
+# Verify installation (should be 4.10 or higher)
 ccache --version
+# Tested with: ccache 4.12.2
 ```
 
 #### PATH Configuration (Required)
@@ -126,9 +141,11 @@ volta pin node@20
 Verify:
 
 ```bash
-node --version  # Should show v20.x.x
+node --version  # Should show v20.19.6
 volta --version # Should show version info
 ```
+
+> **Note:** The project pins Node 20.19.6 and pnpm 9.0.0 in `package.json`. Volta automatically uses these versions when you enter the project directory.
 
 > **Note:** This project also supports nvm (currently used in Xcode builds). You can use either Volta or nvm, but Volta provides automatic version switching and better team consistency. The project has both `.nvmrc` and `volta` configurations for compatibility.
 

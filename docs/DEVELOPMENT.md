@@ -22,9 +22,10 @@ If you're new to the project, start with the [README Quick Start](../README.md#q
 ### Development Tools (Auto-installed)
 
 - [ ] **Volta** (Node version manager)
-- [ ] **Node.js 20** (via Volta)
-- [ ] **pnpm** (Package manager)
+- [ ] **Node.js 20.19.6** (via Volta - pinned in package.json)
+- [ ] **pnpm 9.0.0** (via Volta - pinned in package.json)
 - [ ] **Watchman** (File watcher for Metro)
+- [ ] **CocoaPods 1.16.2+** (iOS builds)
 
 ---
 
