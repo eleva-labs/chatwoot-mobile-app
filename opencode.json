@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/schema.json",
+  "model": "anthropic/claude-3-5-sonnet-20241022",
   "mcp": {
     "helicone": {
       "type": "local",
@@ -7,6 +8,23 @@
       "enabled": true,
       "environment": {
         "HELICONE_API_KEY": "{env:HELICONE_API_KEY}"
+      }
+    }
+  },
+  "agent": {
+    "build": {
+      "tools": {
+        "helicone_*": false
+      }
+    },
+    "plan": {
+      "tools": {
+        "helicone_*": false
+      }
+    },
+    "general": {
+      "tools": {
+        "helicone_*": false
       }
     }
   }
