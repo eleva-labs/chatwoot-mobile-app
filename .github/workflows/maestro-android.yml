@@ -1,0 +1,134 @@
+name: Maestro E2E Tests - Android
+
+# Trigger Rationale: Android and iOS workflows use different trigger strategies for cost optimization and feedback speed.
+# See .github/workflows/README.md "Trigger Rationale" section for detailed explanation.
+on:
+  pull_request:
+    branches: [development]
+  push:
+    branches: [development, main]
+    paths:
+      - 'src/**'
+      - 'maestro/**'
+      - 'package.json'
+  workflow_dispatch:
+    inputs:
+      test_path:
+        description: 'Test path (e.g., flows/smoke/)'
+        required: false
+        default: 'flows/smoke/'
+
+env:
+  CI: true
+  BACKEND_URL: https://dev.app.chatscommerce.com
+  APP_ID: com.chatscommerce.app.dev
+  E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+  E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+  E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
+  E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+
+jobs:
+  test:
+    name: Run Maestro Tests on Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install Maestro CLI
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache pnpm packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Setup Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          emulator-boot-timeout: 600
+          disable-animations: true
+          script: |
+            echo "Emulator started"
+
+      - name: Build Android App
+        run: |
+          npx expo prebuild --platform android --clean
+          cd android && ./gradlew assembleDebug --no-daemon
+
+      - name: Install APK on Emulator
+        run: |
+          adb install android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Run Maestro Tests
+        run: |
+          export PATH="$HOME/.maestro/bin:$PATH"
+          TEST_PATH="${{ github.event.inputs.test_path || 'flows/smoke/' }}"
+          maestro test maestro/$TEST_PATH --format junit --output maestro-test-results.xml
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-test-results-android
+          path: maestro-test-results.xml
+          retention-days: 14
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-screenshots-android
+          path: |
+            *.png
+            ~/.maestro/screenshots/
+          retention-days: 7
+
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Maestro Test Report - Android
+          path: maestro-test-results.xml
+          reporter: java-junit
+          fail-on-error: false

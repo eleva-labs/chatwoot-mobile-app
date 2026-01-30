@@ -1,0 +1,138 @@
+name: Maestro E2E Tests - iOS
+
+# Trigger Rationale: Android and iOS workflows use different trigger strategies for cost optimization and feedback speed.
+# See .github/workflows/README.md "Trigger Rationale" section for detailed explanation.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'maestro/**'
+      - 'package.json'
+      - 'app.config.ts'
+      - 'ios/**'
+  workflow_dispatch:
+    inputs:
+      test_path:
+        description: 'Test path (e.g., flows/smoke/)'
+        required: false
+        default: 'flows/smoke/'
+
+env:
+  CI: true
+  BACKEND_URL: https://dev.app.chatscommerce.com
+  APP_ID: com.chatscommerce.app.dev
+  E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+  E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+  E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
+  E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+
+jobs:
+  test:
+    name: Run Maestro Tests on iOS
+    runs-on: macos-14
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install Maestro CLI
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Install idb-companion
+        run: |
+          brew tap facebook/fb
+          brew install facebook/fb/idb-companion
+
+      - name: Cache pnpm packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Boot iOS Simulator
+        run: |
+          SIMULATOR_NAME="iPhone 15 Pro"
+          DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -1 | grep -o '[0-9A-F\-]\{36\}')
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+
+      - name: Build iOS App
+        run: |
+          npx expo prebuild --platform ios --clean
+          cd ios && xcodebuild \
+            -workspace chatwootmobileapp.xcworkspace \
+            -scheme chatwootmobileapp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+            -derivedDataPath build
+
+      - name: Install App on Simulator
+        run: |
+          APP_PATH=$(find ios/build -name "*.app" -type d | head -1)
+          xcrun simctl install booted "$APP_PATH"
+
+      - name: Run Maestro Tests
+        run: |
+          export PATH="$HOME/.maestro/bin:$PATH"
+          TEST_PATH="${{ github.event.inputs.test_path || 'flows/smoke/' }}"
+          maestro test maestro/$TEST_PATH --format junit --output maestro-test-results.xml
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-test-results-ios
+          path: maestro-test-results.xml
+          retention-days: 14
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-screenshots-ios
+          path: |
+            *.png
+            ~/.maestro/screenshots/
+          retention-days: 7
+
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Maestro Test Report - iOS
+          path: maestro-test-results.xml
+          reporter: java-junit
+          fail-on-error: false
