@@ -12,7 +12,8 @@ executionOrder:
 # Environment variable defaults
 env:
   # App identifier (same for both platforms)
-  APP_ID: 'com.chatwoot.mobile'
+  # Dev environment bundle identifier for testing
+  APP_ID: 'com.chatscommerce.app.dev'
 
   # Backend URL (default to local, override for dev)
   BACKEND_URL: ${BACKEND_URL:-http://localhost:3000}

@@ -11,6 +11,7 @@ type ButtonProps = {
   handlePress?: () => void;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
+  testID?: string;
 };
 
 const getButtonStyles = (
@@ -55,6 +56,7 @@ export const Button = ({
   handlePress,
   variant = 'primary',
   disabled = false,
+  testID,
 }: ButtonProps) => {
   const { handlers, animatedStyle } = useScaleAnimation();
   const haptic = useHaptic(isDestructive ? 'medium' : 'selection');
@@ -77,6 +79,7 @@ export const Button = ({
         accessible
         accessibilityRole="button"
         accessibilityState={{ disabled }}
+        testID={testID}
         style={({ pressed }) => getButtonStyles(isPrimary, pressed, themedTailwind, isDestructive)}
         {...handlers}>
         <Animated.Text style={getTextStyles(isPrimary, isDestructive, themedTailwind)}>

@@ -1,0 +1,32 @@
+# Login Helper - Agent User
+# =========================
+# Reusable flow to log in as the test agent user
+# Called via runFlow from other test flows
+
+appId: ${APP_ID:-com.chatwoot.mobile}
+---
+# Clear previous state
+- clearState
+
+# Launch app fresh
+- launchApp:
+    clearKeychain: true
+
+# Wait for login screen
+- assertVisible:
+    id: 'login_screen'
+
+# Perform login
+- tapOn:
+    id: 'email_input'
+- inputText: ${E2E_USER_EMAIL}
+- tapOn:
+    id: 'password_input'
+- inputText: ${E2E_USER_PASSWORD}
+- tapOn:
+    id: 'login_button'
+
+# Wait for dashboard
+- assertVisible:
+    id: 'dashboard_screen'
+    timeout: 15000

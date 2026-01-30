@@ -187,7 +187,10 @@ const LoginScreen = () => {
   const secondaryTextColor = isDark ? 'text-grayDark-700' : 'text-gray-900';
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style(`flex-1 ${backgroundColor}`)}>
+    <SafeAreaView
+      edges={['top']}
+      style={tailwind.style(`flex-1 ${backgroundColor}`)}
+      testID="login_screen">
       <StatusBar
         translucent
         backgroundColor={tailwind.color(backgroundColor)}
@@ -246,6 +249,7 @@ const LoginScreen = () => {
                   {i18n.t('LOGIN.EMAIL')}
                 </Animated.Text>
                 <TextInput
+                  testID="email_input"
                   style={[
                     tailwind.style(
                       'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
@@ -286,6 +290,7 @@ const LoginScreen = () => {
                 </Animated.Text>
                 <View style={tailwind.style('relative')}>
                   <TextInput
+                    testID="password_input"
                     style={[
                       tailwind.style(
                         'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
@@ -325,6 +330,7 @@ const LoginScreen = () => {
           <Button
             text={isLoggingIn ? i18n.t('LOGIN.LOGIN_LOADING') : i18n.t('LOGIN.LOGIN')}
             handlePress={handleSubmit(onSubmit)}
+            testID="login_button"
           />
 
           {/* <Pressable

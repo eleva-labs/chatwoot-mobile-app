@@ -319,7 +319,10 @@ const ConversationScreen = () => {
   }, [currentBottomSheet]);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-white')}>
+    <SafeAreaView
+      edges={['top', 'bottom']}
+      style={themedTailwind.style('flex-1 bg-white')}
+      testID="dashboard_screen">
       <StatusBar
         translucent
         backgroundColor={themedTailwind.color('bg-white')}

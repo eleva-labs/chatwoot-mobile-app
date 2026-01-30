@@ -1,0 +1,31 @@
+# Login Helper - Admin User
+# =========================
+# Reusable flow to log in as admin user (for admin-only tests)
+
+appId: ${APP_ID:-com.chatwoot.mobile}
+---
+# Clear previous state
+- clearState
+
+# Launch app fresh
+- launchApp:
+    clearKeychain: true
+
+# Wait for login screen
+- assertVisible:
+    id: 'login_screen'
+
+# Perform login with admin credentials
+- tapOn:
+    id: 'email_input'
+- inputText: ${E2E_ADMIN_EMAIL}
+- tapOn:
+    id: 'password_input'
+- inputText: ${E2E_ADMIN_PASSWORD}
+- tapOn:
+    id: 'login_button'
+
+# Wait for dashboard
+- assertVisible:
+    id: 'dashboard_screen'
+    timeout: 15000

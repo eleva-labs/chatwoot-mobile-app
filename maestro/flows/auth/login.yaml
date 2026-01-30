@@ -1,0 +1,46 @@
+# Login Flow - Successful Authentication
+# ======================================
+# Tests that a user can log in with valid credentials
+#
+# Prerequisites:
+#   - App is installed on device/simulator
+#   - Test user exists with valid credentials
+#
+# Environment Variables Required:
+#   - E2E_USER_EMAIL
+#   - E2E_USER_PASSWORD
+
+appId: ${APP_ID:-com.chatwoot.mobile}
+---
+# Clear app state for fresh start
+- clearState
+
+# Launch the app
+- launchApp:
+    clearKeychain: true
+
+# Wait for login screen
+- assertVisible:
+    id: 'login_screen'
+
+# Enter email
+- tapOn:
+    id: 'email_input'
+- inputText: ${E2E_USER_EMAIL}
+
+# Enter password
+- tapOn:
+    id: 'password_input'
+- inputText: ${E2E_USER_PASSWORD}
+
+# Tap login button
+- tapOn:
+    id: 'login_button'
+
+# Verify successful login - dashboard is visible
+- assertVisible:
+    id: 'dashboard_screen'
+    timeout: 10000
+
+# Take screenshot for verification
+- takeScreenshot: 'login_success'
