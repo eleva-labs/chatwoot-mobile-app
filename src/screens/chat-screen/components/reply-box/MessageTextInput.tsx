@@ -240,6 +240,7 @@ export const MessageTextInput = ({
         layout={LinearTransition.springify().damping(20).stiffness(120)}
         style={[tailwind.style('flex-1 my-0.5')]}>
         <MentionInput
+          testID="message_input"
           // @ts-expect-error MentionInput ref typing issue with forwardRef
           ref={textInputRef}
           layout={LinearTransition.springify().damping(20).stiffness(120)}

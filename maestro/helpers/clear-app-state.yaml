@@ -1,0 +1,6 @@
+# Clear App State Helper
+# =======================
+# Clears app state for fresh test start
+
+---
+- clearState

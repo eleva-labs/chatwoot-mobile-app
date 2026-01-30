@@ -60,6 +60,8 @@ export type ConversationItemProps = {
   typingText?: string;
   isAIEnabled?: boolean;
   contactId?: number;
+
+  testID?: string;
 };
 
 export const ConversationItem = memo(
@@ -87,11 +89,14 @@ export const ConversationItem = memo(
     typingText,
     isAIEnabled = false,
     contactId,
+    testID,
   }: ConversationItemProps) => {
     const themedTailwind = useThemedStyles();
 
     return (
-      <NativeView style={themedTailwind.style('px-3 gap-3 flex-row justify-between bg-white')}>
+      <NativeView
+        style={themedTailwind.style('px-3 gap-3 flex-row justify-between bg-white')}
+        testID={testID}>
         <NativeView style={tailwind.style('py-3 flex flex-row')}>
           <ConversationSelect {...{ isSelected, currentState }} />
           <ConversationAvatar

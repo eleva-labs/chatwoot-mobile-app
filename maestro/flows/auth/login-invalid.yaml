@@ -5,7 +5,6 @@
 # Prerequisites:
 #   - App is installed on device/simulator
 
-appId: ${APP_ID:-com.chatwoot.mobile}
 ---
 # Clear app state
 - clearState

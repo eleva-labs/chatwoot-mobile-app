@@ -1,0 +1,36 @@
+# Logout Flow
+# ============
+# Tests that a user can log out
+#
+# Prerequisites:
+#   - Test user is logged in
+
+---
+# Login using helper (ensure user is logged in)
+- runFlow: ../../helpers/login-as-agent.yaml
+
+# Wait for dashboard to load
+- assertVisible:
+    id: 'dashboard_screen'
+    timeout: 10000
+
+# Navigate to settings by tapping on settings tab
+- tapOn:
+    id: 'settings_tab'
+
+# Wait for settings screen
+- assertVisible:
+    id: 'settings_screen'
+    timeout: 5000
+
+# Tap on logout button
+- tapOn:
+    id: 'logout_button'
+
+# Verify login screen appears
+- assertVisible:
+    id: 'login_screen'
+    timeout: 10000
+
+# Take screenshot for verification
+- takeScreenshot: 'logout_success'

@@ -314,7 +314,8 @@ const SettingsScreen = () => {
   return (
     <SafeAreaView
       edges={['top', 'bottom']}
-      style={themedTailwind.style('flex-1 bg-white font-inter-normal-20')}>
+      style={themedTailwind.style('flex-1 bg-white font-inter-normal-20')}
+      testID="settings_screen">
       <StatusBar
         translucent
         backgroundColor={themedTailwind.color('bg-white')}
@@ -357,6 +358,7 @@ const SettingsScreen = () => {
             text={i18n.t('SETTINGS.LOGOUT')}
             isDestructive
             handlePress={onClickLogout}
+            testID="logout_button"
           />
         </Animated.View>
         <Pressable

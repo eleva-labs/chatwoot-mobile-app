@@ -1,0 +1,29 @@
+# Critical Paths Smoke Test
+# ========================
+# Quick validation of core user journeys
+# Runs multiple flows in sequence
+
+---
+# Test 1: Login
+- runFlow: ../auth/login.yaml
+
+# Clear state between tests
+- runFlow: ../../helpers/clear-app-state.yaml
+
+# Test 2: View Conversations (includes login)
+- runFlow: ../conversations/list.yaml
+
+# Clear state
+- runFlow: ../../helpers/clear-app-state.yaml
+
+# Test 3: Open Conversation (includes login)
+- runFlow: ../conversations/open.yaml
+
+# Clear state
+- runFlow: ../../helpers/clear-app-state.yaml
+
+# Test 4: Reply to Conversation (includes login)
+- runFlow: ../conversations/reply.yaml
+
+# All critical paths passed
+- takeScreenshot: 'smoke_complete'

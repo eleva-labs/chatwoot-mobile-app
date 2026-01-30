@@ -1,0 +1,26 @@
+# Conversation List Flow
+# =======================
+# Tests that a user can view the conversation list
+#
+# Prerequisites:
+#   - Test user is logged in
+
+---
+# Login using helper
+- runFlow: ../../helpers/login-as-agent.yaml
+
+# Wait for conversation list to load
+- assertVisible:
+    id: 'dashboard_screen'
+    timeout: 10000
+
+# Verify at least one conversation exists (tap first item)
+- tapOn:
+    id: 'conversation_list_item'
+    index: 0
+
+# Wait for tap to complete
+- waitForAnimationToEnd
+
+# Take screenshot for verification
+- takeScreenshot: 'conversation_list_view'

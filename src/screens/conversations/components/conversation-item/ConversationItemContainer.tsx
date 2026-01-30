@@ -190,7 +190,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
       handlePress={onPressAction}
       triggerOverswipeOnFlick
       {...{ index, openedRowIndex }}>
-      <ConversationItem {...viewProps} />
+      <ConversationItem {...viewProps} testID={`conversation_list_item_${id}`} />
     </Swipeable>
   );
 });

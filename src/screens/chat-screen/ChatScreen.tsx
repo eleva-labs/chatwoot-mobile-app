@@ -160,7 +160,10 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   if (conversation) {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-white')}>
+      <SafeAreaView
+        edges={['top', 'bottom']}
+        style={themedTailwind.style('flex-1 bg-white')}
+        testID="conversation_view">
         <LightBoxProvider>
           <ChatWindowProvider conversationId={conversationId}>
             <ChatScreenWrapper {...props} />

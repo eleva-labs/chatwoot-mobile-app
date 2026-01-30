@@ -16,7 +16,7 @@ export const SendMessageButton = (props: SendMessageButtonProps) => {
   const isPrivateMessage = useAppSelector(selectIsPrivateMessage);
 
   return (
-    <Pressable {...props} {...handlers}>
+    <Pressable {...props} {...handlers} testID="send_button">
       <Animated.View
         layout={LinearTransition.springify().damping(20).stiffness(180)}
         entering={sendIconEnterAnimation}

@@ -1,0 +1,26 @@
+# Inbox View Flow
+# ================
+# Tests that a user can view the inbox (conversations list)
+#
+# Prerequisites:
+#   - Test user is logged in
+
+---
+# Login using helper
+- runFlow: ../../helpers/login-as-agent.yaml
+
+# Wait for dashboard (conversations list)
+- assertVisible:
+    id: 'dashboard_screen'
+    timeout: 10000
+
+# Tap on first conversation item
+- tapOn:
+    id: 'conversation_list_item'
+    index: 0
+
+# Wait for tap to complete
+- waitForAnimationToEnd
+
+# Take screenshot for verification
+- takeScreenshot: 'inbox_view'

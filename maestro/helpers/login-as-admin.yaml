@@ -2,7 +2,7 @@
 # =========================
 # Reusable flow to log in as admin user (for admin-only tests)
 
-appId: ${APP_ID:-com.chatwoot.mobile}
+# APP_ID is configured in maestro/.maestro/config.yaml
 ---
 # Clear previous state
 - clearState

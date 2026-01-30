@@ -175,11 +175,15 @@ const Tabs = () => {
       {hasConversationPermission && (
         <Tab.Screen
           name="Conversations"
-          options={{ headerShown: false }}
+          options={{ headerShown: false, tabBarTestID: 'conversations_tab' }}
           component={ConversationStack}
         />
       )}
-      <Tab.Screen name="Settings" options={{ headerShown: false }} component={SettingsStack} />
+      <Tab.Screen
+        name="Settings"
+        options={{ headerShown: false, tabBarTestID: 'settings_tab' }}
+        component={SettingsStack}
+      />
     </Tab.Navigator>
   );
 };

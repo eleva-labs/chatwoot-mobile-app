@@ -3,7 +3,6 @@
 # Reusable flow to log in as the test agent user
 # Called via runFlow from other test flows
 
-appId: ${APP_ID:-com.chatwoot.mobile}
 ---
 # Clear previous state
 - clearState
