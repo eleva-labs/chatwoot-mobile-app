@@ -3,6 +3,7 @@
 # Quick validation of core user journeys
 # Runs multiple flows in sequence
 
+appId: ${MAESTRO_APP_ID}
 ---
 # Test 1: Login
 - runFlow: ../auth/login.yaml

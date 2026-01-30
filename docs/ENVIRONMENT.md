@@ -12,12 +12,12 @@ The app uses layered environment configuration:
 
 ## Environment Files
 
-| File | Purpose | Committed | Created By |
-|------|---------|-----------|------------|
-| `.env.example` | Template with all variables | Yes | Manual |
-| `.env.local.example` | Local-only template | Yes | Manual |
-| `.env` | EAS-managed settings | No | `task setup-dev` |
-| `.env.local` | Local overrides | No | `task setup-local-env` |
+| File                 | Purpose                     | Committed | Created By             |
+| -------------------- | --------------------------- | --------- | ---------------------- |
+| `.env.example`       | Template with all variables | Yes       | Manual                 |
+| `.env.local.example` | Local-only template         | Yes       | Manual                 |
+| `.env`               | EAS-managed settings        | No        | `task setup-dev`       |
+| `.env.local`         | Local overrides             | No        | `task setup-local-env` |
 
 ## Quick Setup
 
@@ -27,7 +27,59 @@ task setup-full
 
 # Or step by step:
 task setup-dev        # Pull environment from EAS
+task setup-direnv     # Setup direnv for auto-loading env vars
 task setup-local-env  # Create local environment file
+```
+
+## Auto-Loading with direnv
+
+The project uses **direnv** to automatically load environment variables when you `cd` into the project directory.
+
+### Why direnv?
+
+- **Automatic**: No need to manually run `source .env` or `export` commands
+- **Secure**: Keeps API keys and secrets in local `.env` files (gitignored)
+- **Convenient**: Works for all tools (OpenCode, Expo, Task, etc.)
+
+### Setup direnv
+
+```bash
+# Install and configure direnv
+task setup-direnv
+```
+
+This will:
+
+1. Install direnv via Homebrew
+2. Add the direnv hook to your shell config (`~/.zshrc` or `~/.bashrc`)
+3. Create `.envrc` file if it doesn't exist
+4. Allow direnv for this project
+
+### How it Works
+
+When you `cd` into the project:
+
+```bash
+cd /path/to/chatwoot-mobile-app
+# direnv: loading ~/path/to/chatwoot-mobile-app/.envrc
+# direnv: export +HELICONE_API_KEY +SIMULATOR ...
+```
+
+direnv automatically loads:
+
+- `.env` - Project environment variables
+- `.env.maestro` - Test configuration
+
+Your shell now has all environment variables available!
+
+### Manual Setup (Alternative)
+
+If you prefer not to use direnv:
+
+```bash
+# Load environment manually each session
+source .env
+export $(grep -v '^#' .env | xargs)
 ```
 
 ## Setting Up Local Environment
@@ -44,12 +96,14 @@ task setup-local-env
 ## What Gets Created
 
 ### .env.local
+
 ```bash
 SENTRY_DISABLE_AUTO_UPLOAD=true  # Prevents auth errors
 SIMULATOR=1                       # Build for simulator
 ```
 
 ### ios/.xcode.env.local
+
 ```bash
 export NODE_BINARY="/path/to/node"  # Auto-detected
 ```
@@ -57,12 +111,14 @@ export NODE_BINARY="/path/to/node"  # Auto-detected
 ## Common Local Settings
 
 ### Simulator Development (Default)
+
 ```bash
 SIMULATOR=1
 SENTRY_DISABLE_AUTO_UPLOAD=true
 ```
 
 ### Physical Device Development
+
 ```bash
 SIMULATOR=0
 # Also configure code signing in Xcode
@@ -76,12 +132,13 @@ The `Taskfile.yml` loads environment files in order:
 
 ```yaml
 dotenv:
-  - .env.example  # Loaded first (defaults)
-  - .env          # Loaded second (overrides)
-  - .env.local    # Loaded last (local overrides, highest priority)
+  - .env.example # Loaded first (defaults)
+  - .env # Loaded second (overrides)
+  - .env.local # Loaded last (local overrides, highest priority)
 ```
 
 This means:
+
 1. `.env.example` provides default values
 2. `.env` overrides with EAS-managed values
 3. `.env.local` provides local-only overrides (highest priority)
@@ -171,11 +228,13 @@ To enable push notifications:
 3. Add apps for each platform:
 
 **Android:**
+
 - Package name: `com.chatscommerce.app.dev` (dev) or `com.chatscommerce.app` (prod)
 - Download `google-services.json`
 - Place in `credentials/android/`
 
 **iOS:**
+
 - Bundle ID: `com.chatscommerce.app.dev` (dev) or `com.chatscommerce.app` (prod)
 - Download `GoogleService-Info.plist`
 - Place in `credentials/ios/`
@@ -237,6 +296,7 @@ const isSimulator = process.env.SIMULATOR === '1';
 ```
 
 Key behaviors:
+
 - `ENVIRONMENT=prod` → Production bundle ID, icons, URLs
 - `ENVIRONMENT=dev` → Development bundle ID, icons, URLs
 - `SIMULATOR=1` → Skips iOS entitlements requiring code signing
@@ -245,6 +305,7 @@ Key behaviors:
 ## Adding New Variables
 
 1. Add to `.env.example` with a default or empty value:
+
    ```bash
    # Description of variable
    NEW_VARIABLE=default_value
@@ -253,6 +314,7 @@ Key behaviors:
 2. If it's a secret, add to EAS Secrets in the dashboard
 
 3. If needed in app code, prefix with `EXPO_PUBLIC_`:
+
    ```bash
    EXPO_PUBLIC_NEW_FEATURE_FLAG=true
    ```
@@ -286,12 +348,15 @@ npx eas whoami
 ```
 
 ### "SIMULATOR variable undefined"
+
 **Fix**: Run `task setup-local-env` to create `.env.local`
 
 ### "Code signing failed"
+
 **Fix**: Set `SIMULATOR=1` in `.env.local`, or configure code signing in Xcode
 
 ### "Sentry auth error during build"
+
 **Fix**: Ensure `.env.local` has `SENTRY_DISABLE_AUTO_UPLOAD=true`
 
 ## Related Commands

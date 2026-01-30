@@ -8,8 +8,9 @@ React Native mobile application for Chatscommerce, built with Expo.
 
 - **macOS** (iOS development requires macOS)
 - **Xcode** (Download from Mac App Store - ~10GB)
-- **Volta** (Node version manager - `curl https://get.volta.sh | bash`)
 - **Homebrew** (Package manager - install from brew.sh)
+- **Volta** (Node version manager - `curl https://get.volta.sh | bash`)
+- **direnv** (Auto-loads environment variables - installed via `task setup-direnv`)
 
 ### Automated Setup (Recommended - 5 minutes)
 
@@ -63,10 +64,12 @@ task run-ios
 ### Local Environment Variables
 
 The app uses two layers of environment configuration:
+
 - **`.env`** - Pulled from EAS (shared team settings)
 - **`.env.local`** - Local-only overrides (gitignored, machine-specific)
 
 Local overrides are useful for:
+
 - Disabling Sentry uploads (`SENTRY_DISABLE_AUTO_UPLOAD=true`)
 - Switching between simulator/device builds (`SIMULATOR=1` or `0`)
 
@@ -93,6 +96,53 @@ task lint            # Check code quality
 task clean           # Clean caches
 ```
 
+## Maestro E2E Testing
+
+This project uses [Maestro](https://docs.maestro.dev) for mobile UI automation testing. Maestro provides deterministic, YAML-based test execution without requiring LLM/AI for running tests.
+
+### Quick Start
+
+```bash
+# Install Maestro
+./scripts/maestro/setup.sh
+
+# Set up test credentials
+cp .env.maestro.local.example .env.maestro.local
+# Edit .env.maestro.local with your test credentials
+
+# Run tests
+pnpm maestro:test
+```
+
+### Documentation
+
+- **[Maestro Testing Guide](./maestro/README.md)** - Comprehensive guide for using Maestro
+- **[CI/CD Workflows](./.github/workflows/README.md)** - GitHub Actions configuration and trigger rationale
+
+### Features
+
+- **Deterministic execution** - Tests run as pure YAML, no LLM required
+- **Cross-platform support** - iOS and Android tests
+- **Centralized configuration** - Single APP_ID in config.yaml
+- **Exploratory workflow** - Maestro Studio for flow exploration
+- **Transformation workflow** - Studio recordings → formal test flows
+- **CI/CD integration** - Automated testing on PRs and commits
+
+### Running Tests
+
+```bash
+# All tests (default: local backend)
+pnpm maestro:test
+
+# Against dev backend
+pnpm maestro:test:dev
+
+# Smoke tests only
+pnpm maestro:test:smoke
+```
+
+For detailed information, see [maestro/README.md](./maestro/README.md).
+
 ### 📖 Detailed Setup Guide
 
 For comprehensive onboarding, development workflows, troubleshooting, and best practices, see our **[Development Guide](docs/DEVELOPMENT.md)**.
@@ -101,13 +151,14 @@ For comprehensive onboarding, development workflows, troubleshooting, and best p
 
 This project includes optimizations for faster builds:
 
-| Feature | Impact | Command to Verify |
-|---------|--------|-------------------|
-| ccache | 40-50% faster clean builds | `ccache -s` |
+| Feature               | Impact                       | Command to Verify                        |
+| --------------------- | ---------------------------- | ---------------------------------------- |
+| ccache                | 40-50% faster clean builds   | `ccache -s`                              |
 | expo-build-disk-cache | Near-instant cached rebuilds | `ls node_modules/.expo-build-disk-cache` |
-| EAS Build caching | 30-40% faster cloud builds | Check EAS dashboard |
+| EAS Build caching     | 30-40% faster cloud builds   | Check EAS dashboard                      |
 
 **Build Commands:**
+
 ```bash
 task generate        # Clean rebuild (use after SDK changes)
 task generate-soft   # Incremental (use for config changes)
@@ -115,6 +166,7 @@ task generate-fast   # Skip pod install (fastest for testing)
 ```
 
 **If builds are slow:**
+
 ```bash
 # Verify ccache is working
 ccache -s
@@ -229,18 +281,18 @@ See [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) for details.
 
 ## Tech Stack
 
-| Technology      | Version  |
-| --------------- | -------- |
-| Node.js         | 20.19.6  |
-| pnpm            | 9.0.0    |
-| React Native    | 0.76.9   |
-| Expo SDK        | 52.0.48  |
-| TypeScript      | 5.1.3    |
-| Hermes Engine   | 0.76.9   |
-| Firebase SDK    | 12.4.0   |
-| CocoaPods       | 1.16.2   |
-| Min iOS         | 13.0     |
-| Min Android API | 24       |
+| Technology      | Version |
+| --------------- | ------- |
+| Node.js         | 20.19.6 |
+| pnpm            | 9.0.0   |
+| React Native    | 0.76.9  |
+| Expo SDK        | 52.0.48 |
+| TypeScript      | 5.1.3   |
+| Hermes Engine   | 0.76.9  |
+| Firebase SDK    | 12.4.0  |
+| CocoaPods       | 1.16.2  |
+| Min iOS         | 13.0    |
+| Min Android API | 24      |
 
 ## Project Structure
 

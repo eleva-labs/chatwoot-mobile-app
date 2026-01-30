@@ -3,6 +3,7 @@
 # Reusable flow to log in as admin user (for admin-only tests)
 
 # APP_ID is configured in maestro/.maestro/config.yaml
+appId: ${MAESTRO_APP_ID}
 ---
 # Clear previous state
 - clearState
@@ -18,14 +19,13 @@
 # Perform login with admin credentials
 - tapOn:
     id: 'email_input'
-- inputText: ${E2E_ADMIN_EMAIL}
+- inputText: ${MAESTRO_E2E_ADMIN_EMAIL}
 - tapOn:
     id: 'password_input'
-- inputText: ${E2E_ADMIN_PASSWORD}
+- inputText: ${MAESTRO_E2E_ADMIN_PASSWORD}
 - tapOn:
     id: 'login_button'
 
 # Wait for dashboard
 - assertVisible:
     id: 'dashboard_screen'
-    timeout: 15000

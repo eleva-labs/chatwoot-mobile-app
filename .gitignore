@@ -44,8 +44,9 @@ ios/.xcode.env.local
 /google-services.json
 /GoogleService-Info.plist
 
+# Environment files
 .env
-.env.local
+.env.maestro
 .env.development
 .env.production
 dev.env
@@ -54,8 +55,19 @@ android/app/google-services.json
 ios/GoogleService-Info.plist
 service-account-key.json
 
+# Temporary Documentation
 /docs/ignored/
+/docs/temp/
 
 # Log files
 *.txt
 *.log
+metro.log
+.envrc
+
+# OpenCode temp files
+.opencode/
+
+# Maestro test artifacts
+maestro/*.png
+maestro/**/*.png

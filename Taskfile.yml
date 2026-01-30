@@ -2,8 +2,14 @@
 version: '3'
 
 dotenv:
-  - .env.example
+  - .env.maestro
   - .env
+
+# Global environment variables
+env:
+  # Java configuration for Maestro
+  JAVA_HOME: /opt/homebrew/opt/openjdk@17
+  PATH: /opt/homebrew/opt/openjdk@17/bin:{{.PATH}}:{{.HOME}}/.maestro/bin
 
 # Use bash and source nvm for all tasks
 set: [pipefail]
@@ -211,9 +217,10 @@ tasks:
       - echo "Done."
 
   setup-full:
-    desc: Complete setup (install + local-env + dev + verify-patches)
+    desc: Complete setup (install + direnv + local-env + dev + verify-patches)
     cmds:
       - task: install
+      - task: setup-direnv
       - task: setup-local-env
       - task: setup-dev
       - task: verify-patches
@@ -231,6 +238,10 @@ tasks:
       - volta install node@20
       - volta pin node@20
       - echo "✅ Node.js 20 setup complete with Volta"
+
+  setup-direnv:
+    desc: Setup direnv for auto-loading environment variables
+    cmd: ./scripts/setup-direnv.sh
 
   env-check:
     desc: Verify environment variables are loaded
@@ -279,40 +290,110 @@ tasks:
   # ====================
   # MAESTRO E2E TESTING
   # Mobile UI testing with Maestro framework
+  # NOTE: PATH and MAESTRO_* variables are loaded from .env.maestro
   # ====================
-  maestro-test:
-    desc: Run all Maestro tests - default local backend
+
+  # Internal prerequisite tasks (prefixed with _)
+  _maestro-ensure-simulator:
+    desc: Ensure iOS simulator is booted
+    internal: true
+    silent: true
     cmds:
-      - maestro test maestro/flows
+      - |
+        if xcrun simctl list devices booted | grep -q "{{.SIMULATOR}}"; then
+          echo "✓ Simulator '{{.SIMULATOR}}' already running"
+        else
+          echo "→ Booting simulator '{{.SIMULATOR}}'..."
+          xcrun simctl boot "{{.SIMULATOR}}" 2>/dev/null || true
+          sleep 3
+          echo "✓ Simulator booted"
+        fi
+
+  _maestro-ensure-dev-server:
+    desc: Ensure Expo dev server is running
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if lsof -ti:8081 > /dev/null 2>&1; then
+          echo "✓ Dev server already running on port 8081"
+        else
+          echo "→ Starting Expo dev server in background..."
+          nohup pnpm run start > /tmp/expo-dev-server.log 2>&1 &
+          echo $! > /tmp/expo-dev-server.pid
+          echo "→ Waiting for dev server to be ready..."
+          timeout=30
+          elapsed=0
+          while ! lsof -ti:8081 > /dev/null 2>&1; do
+            if [ $elapsed -ge $timeout ]; then
+              echo "✗ Dev server failed to start after ${timeout}s"
+              exit 1
+            fi
+            sleep 1
+            elapsed=$((elapsed + 1))
+          done
+          sleep 2
+          echo "✓ Dev server ready on port 8081"
+        fi
+
+  _maestro-ensure-app-installed:
+    desc: Ensure app is installed on simulator
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if xcrun simctl listapps booted | grep -q "{{.MAESTRO_APP_ID}}"; then
+          echo "✓ App '{{.MAESTRO_APP_ID}}' is installed"
+        else
+          echo "✗ App '{{.MAESTRO_APP_ID}}' not found on simulator"
+          echo "→ Please run 'task run-ios' first to install the app"
+          exit 1
+        fi
+
+  maestro-test:
+    desc: Run all Maestro tests - uses env from .env.maestro
+    deps: [_maestro-ensure-simulator, _maestro-ensure-dev-server, _maestro-ensure-app-installed]
+    dir: maestro
+    cmds:
+      - maestro test flows/auth flows/conversations flows/inbox
 
   maestro-test-local:
     desc: Run Maestro tests against local backend - localhost port 3000
+    deps: [_maestro-ensure-simulator, _maestro-ensure-dev-server, _maestro-ensure-app-installed]
+    dir: maestro
     env:
-      BACKEND_URL: http://localhost:3000
+      MAESTRO_BACKEND_URL: http://localhost:3000
     cmds:
-      - maestro test maestro/flows
+      - maestro test flows/auth flows/conversations flows/inbox
 
   maestro-test-dev:
     desc: Run Maestro tests against dev backend
+    deps: [_maestro-ensure-simulator, _maestro-ensure-dev-server, _maestro-ensure-app-installed]
+    dir: maestro
     env:
-      BACKEND_URL: https://dev.app.chatscommerce.com
+      MAESTRO_BACKEND_URL: https://dev.app.chatscommerce.com
     cmds:
-      - maestro test maestro/flows
+      - maestro test flows/auth/login.yaml
 
   maestro-test-smoke:
-    desc: Run Maestro smoke tests only
+    desc: Run Maestro smoke tests only (single flow for quick validation)
+    deps: [_maestro-ensure-simulator, _maestro-ensure-dev-server, _maestro-ensure-app-installed]
+    dir: maestro
     cmds:
-      - maestro test maestro/flows/smoke
+      - maestro test flows/smoke/critical-paths.yaml
 
   maestro-test-smoke-dev:
     desc: Run Maestro smoke tests against dev backend
+    deps: [_maestro-ensure-simulator, _maestro-ensure-dev-server, _maestro-ensure-app-installed]
+    dir: maestro
     env:
-      BACKEND_URL: https://dev.app.chatscommerce.com
+      MAESTRO_BACKEND_URL: https://dev.app.chatscommerce.com
     cmds:
-      - maestro test maestro/flows/smoke
+      - maestro test flows/smoke/critical-paths.yaml
 
   maestro-studio:
     desc: Launch Maestro Studio for exploratory testing
+    dir: maestro
     cmds:
       - maestro studio
 
@@ -324,7 +405,4 @@ tasks:
   maestro-setup:
     desc: Install Maestro and verify setup
     cmds:
-      - curl -fsSL "https://get.maestro.mobile.dev" | bash
-      - export PATH="$HOME/.maestro/bin:$PATH"
-      - maestro --version
-      - maestro doctor
+      - ./scripts/maestro/setup.sh

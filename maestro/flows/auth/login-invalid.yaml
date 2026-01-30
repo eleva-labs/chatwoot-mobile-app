@@ -5,6 +5,7 @@
 # Prerequisites:
 #   - App is installed on device/simulator
 
+appId: ${MAESTRO_APP_ID}
 ---
 # Clear app state
 - clearState
@@ -34,7 +35,6 @@
 # Verify login screen is still visible (user not logged in)
 - assertVisible:
     id: 'login_screen'
-    timeout: 5000
 
 # Take screenshot for verification
 - takeScreenshot: 'login_invalid_credentials'

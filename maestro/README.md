@@ -2,11 +2,11 @@
 
 ## Overview
 
-This directory contains Maestro-based E2E (end-to-end) tests for the Chatwoot Mobile App. Maestro is a mobile UI testing framework that provides deterministic test execution via YAML flows.
+This project uses [Maestro](https://docs.maestro.dev) for mobile UI automation testing. Maestro provides deterministic, YAML-based test execution.
 
-## Key Principle
+### Key Principle
 
-**Maestro does NOT require LLM for test execution.** The core `maestro test` command is 100% deterministic, executing YAML flows against the device's accessibility tree without any AI involvement. AI features are optional add-ons for exploratory testing only.
+**Tests run as pure YAML, deterministic execution. AI is only for exploratory testing (optional).**
 
 ## Directory Structure
 
@@ -26,65 +26,82 @@ maestro/
 
 ## Quick Start
 
-### Prerequisites
+### Installation
 
-1. **Maestro CLI**: Install via setup script
+```bash
+# Install Maestro and dependencies
+task maestro-setup
 
-   ```bash
-   ./scripts/maestro/setup.sh
-   ```
+# Verify installation
+maestro --version
+maestro doctor
+```
 
-2. **Test Credentials**: Configure environment
+### Test Credentials Setup
 
-   ```bash
-   cp .env.maestro.local.example .env.maestro.local
-   # Edit .env.maestro.local with your test credentials
-   ```
+```bash
+# Copy example file
+cp .env.maestro.local.example .env.maestro.local
 
-3. **Device/Emulator**: Start iOS Simulator or Android Emulator
+# Edit with your test credentials
+# E2E_USER_EMAIL=your-test-email@example.com
+# E2E_USER_PASSWORD=your-test-password
+# E2E_ADMIN_EMAIL=your-admin-email@example.com
+# E2E_ADMIN_PASSWORD=your-admin-password
+```
+
+### Device/Emulator Setup
+
+**iOS** (macOS only):
+
+```bash
+# Boot iOS Simulator
+task run-ios
+```
+
+**Android**:
+
+```bash
+# Run Android Emulator
+task run-android
+```
 
 ### Running Tests
+
+#### Important: Metro Bundler
+
+If you are testing a **Debug build** (default for local development), ensure Metro is running:
+
+```bash
+# Start Metro in background
+task start &
+```
+
+For **Release builds** (CI/CD), Metro is not required.
 
 #### All Tests
 
 ```bash
-# Default: uses BACKEND_URL from env or http://localhost:3000
-pnpm maestro:test
-
-# Against local backend
-pnpm maestro:test:local
+# Run all tests (default: local backend)
+task maestro-test
 
 # Against dev backend
-pnpm maestro:test:dev
+task maestro-test-dev
 ```
 
 #### Smoke Tests Only
 
 ```bash
 # Default backend
-pnpm maestro:test:smoke
+task maestro-test-smoke
 
 # Against dev backend
-pnpm maestro:test:smoke:dev
-```
-
-#### Using Task Runner
-
-```bash
-# All tests
-task maestro-test
-
-# Local backend
-task maestro-test-local
-
-# Dev backend
-task maestro-test-dev
-
-# Smoke tests
-task maestro-test-smoke
+task maestro-test-smoke-dev
 ```
 
 #### Manual Maestro Commands
+
+If you need granular control or want to run specific flows without Task:
 
 ```bash
 # Run specific flow
@@ -92,9 +109,6 @@ maestro test maestro/flows/auth/login.yaml
 
 # Run all flows in a directory
 maestro test maestro/flows/auth/
-
-# List available flows
-maestro test --list maestro/flows/
 ```
 
 ## Development Workflow
@@ -104,8 +118,6 @@ maestro test --list maestro/flows/
 Use Maestro Studio to explore the app and generate draft flows:
 
 ```bash
-pnpm maestro:studio
-# or
 task maestro-studio
 ```
 
@@ -138,6 +150,95 @@ Run tests deterministically (no AI involved):
 maestro test maestro/flows/
 ```
 
+## Exploratory Testing Workflow
+
+Maestro Studio is an interactive tool for exploring the app and generating test flows. It's used for:
+
+- Exploring UI elements and accessibility tree
+- Recording interactions as YAML flows
+- Understanding element selectors and testIDs
+- Creating draft flows for refinement
+
+### When to Use Exploratory Testing
+
+Use Maestro Studio when:
+
+- **Creating new test flows** - Start from scratch by exploring the app
+- **Investigating UI changes** - Understand new screens and components
+- **Debugging element selection** - Find the right selectors for elements
+- **Learning Maestro features** - Experiment with Maestro's capabilities
+
+### How It Works
+
+1. **Launch Studio**:
+
+   ```bash
+   pnpm maestro:studio
+   # or
+   task maestro-studio
+   ```
+
+2. **Connect Device/Simulator**:
+   - Ensure iOS Simulator or Android Emulator is running
+   - Studio will detect and connect automatically
+
+3. **Explore App**:
+   - Navigate through the app manually
+   - Use Studio's element inspector to find testIDs
+   - Try tapping elements to see what selectors Maestro suggests
+   - Record actions to generate YAML flow
+
+4. **Generate Draft Flow**:
+   - Studio creates YAML flow based on your interactions
+   - Save to `maestro/exploratory/` as draft
+
+5. **Refine and Transform**:
+   - Apply the transformation checklist (see "Transformation Checklist" section)
+   - Move refined flow to `flows/<category>/<name>.yaml`
+   - Delete draft from `exploratory/`
+
+### Studio Features
+
+- **Element Inspector**: Click on any UI element to see its properties:
+  - `id` (testID) - preferred selector
+  - `text` - element text
+  - `label` - accessibility label
+  - `bounds` - position (avoid if possible)
+  - `className` - component type
+
+- **Flow Recording**: Actions are recorded as you interact:
+  - Tap actions
+  - Input actions
+  - Scroll actions
+  - Swipe actions
+  - Wait/assert actions
+
+- **Copy to Clipboard**: Copy YAML snippets
+- **Visual mirroring**: See device/simulator in real-time
+- **Code suggestions**: Maestro suggests React Native selectors
+
+### Best Practices
+
+- **Use testIDs over text selectors**: More stable across UI changes
+- **Record end-to-end flows**: Not just individual interactions
+- **Add comments during recording**: Explain what each step does
+- **Test on both platforms**: Verify flows work on iOS and Android
+- **Iterate quickly**: Draft → refine → test → repeat
+
+### Limitations
+
+- Manual process: Requires human interaction to explore
+- No AI generation: Studio is purely interactive, not AI-powered
+- Exploratory recordings are drafts: Must be refined before committing
+
+### Integration with Development Workflow
+
+Exploratory testing is **Step 1** of the three-step workflow:
+
+1. **Exploratory** (Step 1) - Use Maestro Studio, save to `exploratory/`
+2. **Transformation** (Step 2) - Apply checklist, move to `flows/`
+3. **Execution** (Step 3) - Run deterministically without AI
+
 ### Transformation Checklist
 
 Before committing a flow to `flows/`:
@@ -151,7 +252,7 @@ Before committing a flow to `flows/`:
 
 **Flow Structure**
 
-- [ ] Add `appId` header (use `${APP_ID:-com.chatwoot.mobile}`)
+- [ ] No `appId` header (use config.yaml instead)
 - [ ] Add `clearState` before `launchApp` (for clean state)
 - [ ] Use environment variables for credentials (`${E2E_USER_EMAIL}`)
 - [ ] Add descriptive comments for each section
@@ -182,16 +283,39 @@ Before committing a flow to `flows/`:
 
 ### Environment Variables
 
-| Variable             | Description                 | Default                   |
-| -------------------- | --------------------------- | ------------------------- |
-| `BACKEND_URL`        | Backend URL to test against | `http://localhost:3000`   |
-| `APP_ID`             | App identifier              | `com.chatwoot.mobile`     |
-| `LAUNCH_TIMEOUT`     | App launch timeout (ms)     | `30000`                   |
-| `ELEMENT_TIMEOUT`    | Element wait timeout (ms)   | `10000`                   |
-| `E2E_USER_EMAIL`     | Test agent email            | From `.env.maestro.local` |
-| `E2E_USER_PASSWORD`  | Test agent password         | From `.env.maestro.local` |
-| `E2E_ADMIN_EMAIL`    | Test admin email            | From `.env.maestro.local` |
-| `E2E_ADMIN_PASSWORD` | Test admin password         | From `.env.maestro.local` |
+| Variable              | Description                 | Default                     |
+| --------------------- | --------------------------- | --------------------------- |
+| `MAESTRO_BACKEND_URL` | Backend URL to test against | `http://localhost:3000`     |
+| `APP_ID`              | App identifier              | `com.chatscommerce.app.dev` |
+| `LAUNCH_TIMEOUT`      | App launch timeout (ms)     | `30000`                     |
+| `ELEMENT_TIMEOUT`     | Element wait timeout (ms)   | `10000`                     |
+| `E2E_USER_EMAIL`      | Test agent email            | From `.env.maestro.local`   |
+| `E2E_USER_PASSWORD`   | Test agent password         | From `.env.maestro.local`   |
+| `E2E_ADMIN_EMAIL`     | Test admin email            | From `.env.maestro.local`   |
+| `E2E_ADMIN_PASSWORD`  | Test admin password         | From `.env.maestro.local`   |
+
+### Centralized Configuration
+
+All flows rely on `config.yaml` for APP_ID configuration:
+
+```yaml
+# maestro/.maestro/config.yaml
+env:
+  APP_ID: 'com.chatscommerce.app.dev'
+  MAESTRO_BACKEND_URL: ${MAESTRO_BACKEND_URL:-http://localhost:3000}
+```
+
+**Single source of truth** - no need to edit individual flow files when APP_ID changes.
+
+**Runtime Overrides**:
+
+```bash
+# Override APP_ID
+APP_ID=com.chatscommerce.app maestro test maestro/flows/
+
+# Override backend
+MAESTRO_BACKEND_URL=https://dev.app.chatscommerce.com maestro test maestro/flows/
+```
 
 ### Backend Selection
 
@@ -240,32 +364,29 @@ Tests covering inbox management:
 - Filter conversations
 - Status updates
 
-## Helper Flows
+## Helper Flows (`helpers/`)
 
-Reusable sub-flows in `helpers/`:
+Reusable sub-flows:
 
-### `login-as-agent.yaml`
+- `login-as-agent.yaml` - Log in as test agent user
+- `login-as-admin.yaml` - Log in as admin user
+- `clear-app-state.yaml` - Clear app state for fresh tests
+- `navigate-to-conversations.yaml` - Navigate to conversations tab
 
-Logs in as the test agent user. Used by most test flows.
+**Usage in flows**:
 
 ```yaml
 - runFlow: ../../helpers/login-as-agent.yaml
+- runFlow: ../../helpers/navigate-to-conversations.yaml
 ```
 
-### `login-as-admin.yaml`
+## Local Testing
 
-Logs in as the test admin user for admin-only features.
+To test workflows locally before pushing:
 
-```yaml
-- runFlow: ../../helpers/login-as-admin.yaml
-```
-
-### `clear-app-state.yaml`
-
-Clears app state for fresh test starts.
-
-```yaml
-- runFlow: ../../helpers/clear-app-state.yaml
+```bash
+# Run Maestro tests locally against dev backend
+MAESTRO_BACKEND_URL=https://dev.app.chatscommerce.com pnpm maestro:test:smoke:dev
 ```
 
 ## Troubleshooting
@@ -314,15 +435,25 @@ adb devices
 2. Add explicit waits for dynamic content
 3. Use `testID` selectors instead of text selectors
 4. Run on same device/simulator version as CI
+5. Check for timing issues between steps
+
+### Secrets Not Working (CI)
+
+1. Verify secrets are correctly named (case-sensitive)
+2. Ensure secrets are set for correct repository
+3. Check workflow run logs for secret references
+4. Ensure test users exist on dev backend
+
+See `.github/workflows/README.md` for detailed GitHub Actions troubleshooting.
 
 ## CI/CD Integration
 
 Tests run automatically in CI/CD via GitHub Actions:
 
-- **Android**: On every PR to `development` branch
-- **iOS**: On every push to `main` branch (macOS runner)
+- **Android**: On every PR to `development` branch (frequent feedback, broad path coverage)
+- **iOS**: On every push to `main` branch (production readiness, cost optimization)
 
-See `.github/workflows/maestro-android.yml` and `.github/workflows/maestro-ios.yml` for configuration.
+See `.github/workflows/README.md` for detailed workflow configuration, triggers, secrets, and troubleshooting.
 
 ## Resources
 
@@ -337,5 +468,5 @@ For issues or questions:
 
 1. Check this README's Troubleshooting section
 2. Review Maestro docs
-3. Check DESIGN_PROPOSAL.md for design decisions
-4. Contact the development team
+3. Check `.github/workflows/README.md` for CI/CD issues
+4. Contact development team

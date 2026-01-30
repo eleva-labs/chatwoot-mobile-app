@@ -7,39 +7,62 @@
 #   - Test user exists with valid credentials
 #
 # Environment Variables Required:
-#   - E2E_USER_EMAIL
-#   - E2E_USER_PASSWORD
+#   - MAESTRO_E2E_USER_EMAIL
+#   - MAESTRO_E2E_USER_PASSWORD
 
+appId: ${MAESTRO_APP_ID}
 ---
-# Clear app state for fresh start
 - clearState
 
-# Launch the app
 - launchApp:
     clearKeychain: true
 
-# Wait for login screen
+# Expo Dev Client handling (using runFlow+when:visible for iOS - optional:true is broken, GitHub #1807)
+- runFlow:
+    when:
+      visible: 'http://localhost:8081'
+    commands:
+      - tapOn:
+          text: 'http://localhost:8081'
+
+- runFlow:
+    when:
+      visible: 'Continue'
+    commands:
+      - tapOn:
+          text: 'Continue'
+
+# Dismiss Expo Dev Menu modal (tap X in top-right)
+- runFlow:
+    when:
+      visible: 'Toggle performance monitor'
+    commands:
+      - tapOn:
+          point: 95%,8%
+
+# Wait for and verify login screen is visible
 - assertVisible:
     id: 'login_screen'
 
-# Enter email
+# Enter email credentials
 - tapOn:
     id: 'email_input'
-- inputText: ${E2E_USER_EMAIL}
+- inputText: ${MAESTRO_E2E_USER_EMAIL}
 
-# Enter password
+# Enter password credentials
 - tapOn:
     id: 'password_input'
-- inputText: ${E2E_USER_PASSWORD}
+- inputText: ${MAESTRO_E2E_USER_PASSWORD}
 
-# Tap login button
+# Hide keyboard to reveal login button
+- hideKeyboard
+
+# Submit login form
 - tapOn:
     id: 'login_button'
 
-# Verify successful login - dashboard is visible
-- assertVisible:
-    id: 'dashboard_screen'
-    timeout: 10000
+# Verify successful login by checking onboarding screen
+- assertVisible: 'What type of store do you have?'
 
-# Take screenshot for verification
+# Capture success screenshot for test artifacts
 - takeScreenshot: 'login_success'

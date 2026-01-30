@@ -5,6 +5,7 @@
 # Prerequisites:
 #   - Test user has at least one conversation
 
+appId: ${MAESTRO_APP_ID}
 ---
 # Login using helper
 - runFlow: ../../helpers/login-as-agent.yaml
@@ -12,7 +13,6 @@
 # Wait for conversation list to load
 - assertVisible:
     id: 'dashboard_screen'
-    timeout: 10000
 
 # Tap on first conversation
 - tapOn:
@@ -22,12 +22,10 @@
 # Wait for conversation view to load
 - assertVisible:
     id: 'conversation_view'
-    timeout: 10000
 
 # Verify message input is visible
 - assertVisible:
     id: 'message_input'
-    timeout: 5000
 
 # Take screenshot for verification
 - takeScreenshot: 'conversation_open'

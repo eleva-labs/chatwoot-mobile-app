@@ -2,6 +2,7 @@
 # =======================
 # Reusable flow to navigate to inbox (conversations tab)
 
+appId: ${MAESTRO_APP_ID}
 ---
 # Tap on conversations tab (which shows the inbox/list)
 - tapOn:

@@ -3,21 +3,15 @@
 
 # Flow discovery
 flows:
-  - flows/**/*.yaml
+  - '**/*.yaml'
 
 # Execution settings
 executionOrder:
   continueOnFailure: false
-
-# Environment variable defaults
-env:
-  # App identifier (same for both platforms)
-  # Dev environment bundle identifier for testing
-  APP_ID: 'com.chatscommerce.app.dev'
-
-  # Backend URL (default to local, override for dev)
-  BACKEND_URL: ${BACKEND_URL:-http://localhost:3000}
-
-  # Timeouts (milliseconds)
-  LAUNCH_TIMEOUT: 30000
-  ELEMENT_TIMEOUT: 10000
+# NOTE: Environment variables are managed via .env.maestro (loaded by Taskfile)
+# Variables with MAESTRO_ prefix are auto-injected into flows with the SAME name:
+#   - MAESTRO_APP_ID → use as ${MAESTRO_APP_ID} in flows
+#   - MAESTRO_BACKEND_URL → use as ${MAESTRO_BACKEND_URL} in flows
+#   - MAESTRO_E2E_USER_EMAIL → use as ${MAESTRO_E2E_USER_EMAIL} in flows
+#
+# To change APP_ID for different environments, update MAESTRO_APP_ID in .env.maestro.local

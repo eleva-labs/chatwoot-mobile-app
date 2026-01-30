@@ -92,6 +92,31 @@ else
     echo -e "${YELLOW}⚠️  Volta: Not installed (recommended for Node version management)${NC}"
 fi
 
+# Check direnv (required for auto-loading .env files)
+if command -v "direnv" &> /dev/null; then
+    echo -e "${GREEN}✅ direnv: $(direnv --version)${NC}"
+    ((PASSED++))
+    
+    # Check if direnv hook is in shell config
+    if grep -q "direnv hook" ~/.zshrc 2>/dev/null || grep -q "direnv hook" ~/.bashrc 2>/dev/null; then
+        echo -e "${GREEN}   ✅ direnv hook: configured${NC}"
+    else
+        echo -e "${YELLOW}   ⚠️  direnv hook: not configured (run 'task setup-direnv')${NC}"
+    fi
+    
+    # Check if project .envrc is allowed
+    if [[ -f "$PROJECT_ROOT/.envrc" ]]; then
+        if direnv status 2>/dev/null | grep -q "Found RC allowed true"; then
+            echo -e "${GREEN}   ✅ .envrc: allowed${NC}"
+        else
+            echo -e "${YELLOW}   ⚠️  .envrc: not allowed (run 'direnv allow .')${NC}"
+        fi
+    fi
+else
+    echo -e "${RED}❌ direnv: Not installed (required for auto-loading .env files)${NC}"
+    ((FAILED++))
+fi
+
 # Check Homebrew
 check_command "brew" "Homebrew"
 

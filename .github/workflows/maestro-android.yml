@@ -94,11 +94,11 @@ jobs:
       - name: Build Android App
         run: |
           npx expo prebuild --platform android --clean
-          cd android && ./gradlew assembleDebug --no-daemon
+          cd android && ./gradlew assembleRelease --no-daemon
 
       - name: Install APK on Emulator
         run: |
-          adb install android/app/build/outputs/apk/debug/app-debug.apk
+          adb install android/app/build/outputs/apk/release/app-release.apk
 
       - name: Run Maestro Tests
         run: |
