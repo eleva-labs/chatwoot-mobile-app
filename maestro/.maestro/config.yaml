@@ -1,0 +1,22 @@
+# Maestro Global Configuration
+# ============================
+
+# Flow discovery
+flows:
+  - flows/**/*.yaml
+
+# Execution settings
+executionOrder:
+  continueOnFailure: false
+
+# Environment variable defaults
+env:
+  # App identifier (same for both platforms)
+  APP_ID: 'com.chatwoot.mobile'
+
+  # Backend URL (default to local, override for dev)
+  BACKEND_URL: ${BACKEND_URL:-http://localhost:3000}
+
+  # Timeouts (milliseconds)
+  LAUNCH_TIMEOUT: 30000
+  ELEMENT_TIMEOUT: 10000

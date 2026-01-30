@@ -275,3 +275,56 @@ tasks:
   adb-connect:
     desc: Connect ADB for React Native debugging
     cmd: pnpm run adb:connect
+
+  # ====================
+  # MAESTRO E2E TESTING
+  # Mobile UI testing with Maestro framework
+  # ====================
+  maestro-test:
+    desc: Run all Maestro tests - default local backend
+    cmds:
+      - maestro test maestro/flows
+
+  maestro-test-local:
+    desc: Run Maestro tests against local backend - localhost port 3000
+    env:
+      BACKEND_URL: http://localhost:3000
+    cmds:
+      - maestro test maestro/flows
+
+  maestro-test-dev:
+    desc: Run Maestro tests against dev backend
+    env:
+      BACKEND_URL: https://dev.app.chatscommerce.com
+    cmds:
+      - maestro test maestro/flows
+
+  maestro-test-smoke:
+    desc: Run Maestro smoke tests only
+    cmds:
+      - maestro test maestro/flows/smoke
+
+  maestro-test-smoke-dev:
+    desc: Run Maestro smoke tests against dev backend
+    env:
+      BACKEND_URL: https://dev.app.chatscommerce.com
+    cmds:
+      - maestro test maestro/flows/smoke
+
+  maestro-studio:
+    desc: Launch Maestro Studio for exploratory testing
+    cmds:
+      - maestro studio
+
+  maestro-doctor:
+    desc: Verify Maestro installation
+    cmds:
+      - maestro doctor
+
+  maestro-setup:
+    desc: Install Maestro and verify setup
+    cmds:
+      - curl -fsSL "https://get.maestro.mobile.dev" | bash
+      - export PATH="$HOME/.maestro/bin:$PATH"
+      - maestro --version
+      - maestro doctor
