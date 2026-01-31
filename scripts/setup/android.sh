@@ -8,59 +8,74 @@ source "$SCRIPT_DIR/helpers.sh"
 
 # Install/verify Android Studio and SDK
 install-android-studio() {
-  log_step 1 3 "Checking Android Studio and SDK"
+  log_step 1 4 "Checking Android SDK"
   
-  # Check if Android SDK is installed
+  local platform=$(detect_platform)
+  
+  # Check if Android SDK is already installed
   if [[ -n "$ANDROID_HOME" ]] && [[ -d "$ANDROID_HOME" ]]; then
     log_success "Android SDK found: $ANDROID_HOME"
-  else
-    log_error "Android SDK not found"
-    log_info ""
-    log_info "Installation instructions:"
-    log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    log_info "1. Download Android Studio from:"
-    log_info "   https://developer.android.com/studio"
-    log_info ""
-    log_info "2. Install Android Studio"
-    log_info ""
-    log_info "3. Open Android Studio → More Actions → SDK Manager"
-    log_info ""
-    log_info "4. Install Android SDK components:"
-    log_info "   • Android 7.0 (Nougat) API Level 24 (minimum)"
-    log_info "   • Android 13.0 (Tiramisu) API Level 33 (recommended)"
-    log_info "   • Android SDK Build-Tools (latest)"
-    log_info "   • Android SDK Platform-Tools"
-    log_info "   • Android Emulator"
-    log_info ""
-    local platform=$(detect_platform)
-    local sdk_path=""
-    if [[ "$platform" == "macos" ]]; then
-      sdk_path="\$HOME/Library/Android/sdk"
-    else
-      sdk_path="\$HOME/Android/Sdk"
-    fi
-    
-    log_info "5. Ensure Android SDK is installed at the expected location:"
-    log_info "   Expected location: $sdk_path"
-    log_info ""
-    log_info "6. ANDROID_HOME and PATH are configured via .env + direnv"
-    log_info "   After installation, run: direnv allow ."
-    log_info "   Android tools will be available automatically in this project"
-    log_info ""
-    log_info "7. After direnv setup, run: task android:setup"
-    log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    log_info ""
-    exit 1
+    return 0
   fi
   
-  # Verify SDK tools are accessible
-  if ! command -v adb >/dev/null 2>&1; then
-    log_warning "adb not in PATH"
-    log_info "Add to your shell config:"
-    log_info "  export PATH=\$PATH:\$ANDROID_HOME/platform-tools"
-  else
-    log_success "Android SDK tools accessible (adb found)"
+  # SDK not found - attempt to install
+  log_info "Android SDK not found - attempting auto-installation..."
+  
+  if [[ "$platform" == "macos" ]]; then
+    # Install Android command-line tools via Homebrew
+    if ! command_exists brew; then
+      log_error "Homebrew required for auto-installation"
+      log_info "Install Homebrew: https://brew.sh"
+      log_info "Or follow manual installation instructions below"
+    else
+      log_info "Installing Android command-line tools via Homebrew..."
+      if brew install --cask android-commandlinetools; then
+        log_success "Android command-line tools installed"
+        log_warning "Please run 'direnv allow .' to activate ANDROID_HOME"
+        log_info "Then re-run: task android:setup"
+        return 0
+      else
+        log_warning "Auto-installation failed - showing manual instructions"
+      fi
+    fi
   fi
+  
+  # Show manual installation instructions (for all platforms or if auto-install failed)
+  log_info ""
+  log_info "Manual Installation Instructions:"
+  log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  log_info "Option 1: Android Studio (Recommended - Full IDE)"
+  log_info "  1. Download from: https://developer.android.com/studio"
+  log_info "  2. Install Android Studio"
+  log_info "  3. Open → More Actions → SDK Manager"
+  log_info "  4. Install SDK components:"
+  log_info "     • Android 13.0 (API 33) - recommended"
+  log_info "     • Android SDK Build-Tools (latest)"
+  log_info "     • Android SDK Platform-Tools"
+  log_info "     • Android Emulator"
+  log_info ""
+  log_info "Option 2: Command-line tools only (Lightweight)"
+  log_info "  1. Download: https://developer.android.com/studio#command-line-tools-only"
+  
+  local sdk_path=""
+  if [[ "$platform" == "macos" ]]; then
+    sdk_path="\$HOME/Library/Android/sdk"
+  else
+    sdk_path="\$HOME/Android/Sdk"
+  fi
+  
+  log_info "  2. Extract to: $sdk_path/cmdline-tools/latest"
+  log_info "  3. Run: direnv allow ."
+  log_info "  4. Install SDK: sdkmanager \"platform-tools\" \"platforms;android-33\""
+  log_info ""
+  log_info "Expected SDK location: $sdk_path"
+  log_info ""
+  log_info "After installation:"
+  log_info "  • Run: direnv allow .  (to activate ANDROID_HOME)"
+  log_info "  • Run: task android:setup  (to continue setup)"
+  log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  log_info ""
+  exit 1
 }
 
 # Setup Android SDK
@@ -89,13 +104,22 @@ setup-android-sdk() {
   yes | sdkmanager --licenses >/dev/null 2>&1 || true
   log_success "Android SDK licenses accepted"
   
-  # Verify API levels
-  log_info "Verifying SDK platforms..."
+  # Install essential SDK components (2026 stable versions)
+  log_info "Installing Android SDK platforms and tools (this may take 5-10 minutes)..."
+  sdkmanager --install \
+    "platform-tools" \
+    "platforms;android-35" \
+    "build-tools;35.0.1" \
+    "emulator" \
+    "system-images;android-35;google_apis;x86_64" \
+    2>&1 | grep -v "^\[" || true  # Hide progress bars, show errors
+  
+  # Verify installation
   if sdkmanager --list_installed 2>/dev/null | grep -q "platforms;android-"; then
-    log_success "Android SDK platforms installed"
+    log_success "Android SDK platforms installed (Android 15 / API 35)"
   else
     log_warning "No Android SDK platforms detected"
-    log_info "Install platforms via Android Studio SDK Manager"
+    log_info "Install manually: sdkmanager \"platforms;android-35\""
   fi
 }
 

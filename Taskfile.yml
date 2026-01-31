@@ -18,7 +18,7 @@ dotenv:
 # Global environment variables
 env:
   JAVA_HOME: /opt/homebrew/opt/openjdk@17
-  ANDROID_HOME: '{{.HOME}}/Library/Android/sdk'
+  ANDROID_HOME: '/opt/homebrew/share/android-commandlinetools'
   PATH: /opt/homebrew/opt/openjdk@17/bin:{{.ANDROID_HOME}}/emulator:{{.ANDROID_HOME}}/platform-tools:{{.ANDROID_HOME}}/tools:{{.ANDROID_HOME}}/tools/bin:{{.PATH}}:{{.HOME}}/.maestro/bin
 
 # Use bash for all tasks
