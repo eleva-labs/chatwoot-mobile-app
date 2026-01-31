@@ -1,19 +1,32 @@
 #!/bin/bash
 
 # Setup Firebase Credentials Script
-# Creates placeholder Firebase credential files for local development
-# Real credentials should be obtained from Firebase Console for push notifications
+# 
+# Workflow:
+# 1. Checks if credentials exist in environment variables (EAS cloud builds only)
+# 2. Uses copy-firebase-credentials.js to process them if available
+# 3. Falls back to placeholders if no real credentials found
+# 
+# For local development:
+#   - Download files from Firebase Console
+#   - Place in credentials/android/ and credentials/ios/
+#   - This script will detect them and skip placeholder creation
+#
+# For EAS cloud builds:
+#   - Credentials are injected as environment variables
+#   - scripts/eas/pre-install.sh handles copying them automatically
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CREDENTIALS_DIR="$PROJECT_ROOT/credentials"
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 echo "🔧 Setting up Firebase credentials..."
@@ -21,6 +34,15 @@ echo "🔧 Setting up Firebase credentials..."
 # Create directory structure
 mkdir -p "$CREDENTIALS_DIR/android"
 mkdir -p "$CREDENTIALS_DIR/ios"
+
+# Check if we have credentials in environment variables (from eas env:pull)
+# If so, use the existing copy-firebase-credentials.js script to process them
+if [ -n "$GOOGLE_SERVICES_JSON" ] || [ -n "$GOOGLE_SERVICE_INFO_PLIST" ]; then
+    echo -e "${BLUE}ℹ️  Found Firebase credentials in environment, processing...${NC}"
+    node "$SCRIPT_DIR/../eas/copy-firebase-credentials.js"
+else
+    echo -e "${YELLOW}ℹ️  No Firebase credentials found in environment variables${NC}"
+fi
 
 # Check if real credentials already exist
 ANDROID_DEV_EXISTS=false
@@ -215,12 +237,38 @@ echo "✅ Firebase credentials setup complete!"
 # Show warning if using placeholders
 if [ "$ANDROID_DEV_EXISTS" = false ] || [ "$IOS_DEV_EXISTS" = false ]; then
     echo ""
-    echo -e "${YELLOW}⚠️  Note: Placeholder credentials are being used.${NC}"
-    echo -e "${YELLOW}   Push notifications will NOT work with placeholder credentials.${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${YELLOW}⚠️  WARNING: Placeholder Firebase credentials are being used${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo "To enable push notifications, replace the placeholder files with real Firebase credentials:"
+    echo -e "${RED}✗ Push notifications will NOT work${NC}"
+    echo -e "${RED}✗ Firebase Performance Monitoring will NOT work${NC}"
+    echo -e "${RED}✗ Firebase Analytics will NOT work${NC}"
+    echo -e "${RED}✗ App may crash on launch if Firebase is required${NC}"
+    echo ""
+    echo -e "${BLUE}To fix this, add real Firebase credentials using ONE of these methods:${NC}"
+    echo ""
+    echo -e "${GREEN}Option 1: Download from Firebase Console (Recommended for local dev)${NC}"
     echo "  1. Go to Firebase Console: https://console.firebase.google.com"
-    echo "  2. Download google-services.json (Android) and GoogleService-Info.plist (iOS)"
-    echo "  3. Place them in the credentials/ directory with the appropriate names"
+    echo "  2. Select your project (development environment)"
+    echo "  3. Download the configuration files:"
+    echo "     - Android: Project Settings → Your apps → Download google-services.json"
+    echo "     - iOS: Project Settings → Your apps → Download GoogleService-Info.plist"
+    echo "  4. Place files in credentials/ directory:"
+    echo "     - credentials/android/google-services-dev.json"
+    echo "     - credentials/ios/GoogleService-Info-dev.plist"
+    echo "  5. Rebuild the app: task android:run (or task ios:run)"
+    echo ""
+    echo -e "${GREEN}Option 2: Add to EAS Secrets (For cloud builds - already configured)${NC}"
+    echo "  Note: EAS cloud builds automatically use Firebase credentials from EAS Secrets."
+    echo "  These are already configured for this project."
+    echo "  Local development requires Option 1 (download and place files manually)."
+    echo ""
+    echo -e "${GREEN}Option 3: Continue with placeholders (Testing setup only)${NC}"
+    echo "  - Some features will not work (push notifications, analytics, etc.)"
+    echo "  - App may crash if Firebase initialization is required"
+    echo "  - Only use this to test the build/setup process itself"
+    echo ""
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
 fi

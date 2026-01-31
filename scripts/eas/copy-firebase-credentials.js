@@ -16,17 +16,19 @@
 const fs = require('fs');
 const path = require('path');
 
-const CREDENTIALS_DIR = path.join(__dirname, '..', 'credentials');
+const CREDENTIALS_DIR = path.join(__dirname, '..', '..', 'credentials');
 const ANDROID_DIR = path.join(CREDENTIALS_DIR, 'android');
 const IOS_DIR = path.join(CREDENTIALS_DIR, 'ios');
 
 // Determine environment from EAS build profile
-const isProd =
-  process.env.ENVIRONMENT === 'prod' || process.env.EAS_BUILD_PROFILE === 'production';
+const isProd = process.env.ENVIRONMENT === 'prod' || process.env.EAS_BUILD_PROFILE === 'production';
 
 console.log('[copy-google-services] Starting...');
 console.log('[copy-google-services] Environment:', process.env.ENVIRONMENT || 'not set');
-console.log('[copy-google-services] EAS_BUILD_PROFILE:', process.env.EAS_BUILD_PROFILE || 'not set');
+console.log(
+  '[copy-google-services] EAS_BUILD_PROFILE:',
+  process.env.EAS_BUILD_PROFILE || 'not set',
+);
 console.log('[copy-google-services] isProd:', isProd);
 
 // Ensure directories exist
@@ -104,5 +106,7 @@ console.log(`[copy-google-services] Files written: ${filesWritten}`);
 if (filesWritten === 0) {
   console.log('[copy-google-services] ⚠️  No credentials were written.');
   console.log('[copy-google-services] This is normal for local builds without EAS secrets.');
-  console.log('[copy-google-services] Falling back to credentials/ directory files or placeholders.');
+  console.log(
+    '[copy-google-services] Falling back to credentials/ directory files or placeholders.',
+  );
 }

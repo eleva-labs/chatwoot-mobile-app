@@ -104,6 +104,17 @@ setup-android-sdk() {
   yes | sdkmanager --licenses >/dev/null 2>&1 || true
   log_success "Android SDK licenses accepted"
   
+  # Detect host architecture for correct system image
+  local arch=$(uname -m)
+  local system_image
+  if [[ "$arch" == "arm64" ]] || [[ "$arch" == "aarch64" ]]; then
+    system_image="system-images;android-35;google_apis;arm64-v8a"
+    log_info "Detected ARM64 architecture (Apple Silicon / ARM Mac)"
+  else
+    system_image="system-images;android-35;google_apis;x86_64"
+    log_info "Detected x86_64 architecture (Intel Mac / Linux)"
+  fi
+  
   # Install essential SDK components (2026 stable versions)
   log_info "Installing Android SDK platforms and tools (this may take 5-10 minutes)..."
   sdkmanager --install \
@@ -111,12 +122,13 @@ setup-android-sdk() {
     "platforms;android-35" \
     "build-tools;35.0.1" \
     "emulator" \
-    "system-images;android-35;google_apis;x86_64" \
+    "$system_image" \
     2>&1 | grep -v "^\[" || true  # Hide progress bars, show errors
   
   # Verify installation
   if sdkmanager --list_installed 2>/dev/null | grep -q "platforms;android-"; then
     log_success "Android SDK platforms installed (Android 15 / API 35)"
+    log_success "System image installed: $system_image"
   else
     log_warning "No Android SDK platforms detected"
     log_info "Install manually: sdkmanager \"platforms;android-35\""
@@ -142,23 +154,58 @@ setup-android-emulator() {
   
   if [[ -z "$avds" ]]; then
     log_warning "No Android Virtual Devices (AVDs) found"
-    log_info ""
-    log_info "Create an AVD:"
-    log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    log_info "Option 1: Android Studio (Recommended)"
-    log_info "  1. Open Android Studio"
-    log_info "  2. Tools → Device Manager"
-    log_info "  3. Click 'Create Device'"
-    log_info "  4. Select a device (e.g., Pixel 5)"
-    log_info "  5. Select a system image (e.g., Android 13 / API 33)"
-    log_info "  6. Finish setup"
-    log_info ""
-    log_info "Option 2: Command Line"
-    log_info "  avdmanager create avd -n Pixel_5_API_33 \\"
-    log_info "    -k \"system-images;android-33;google_apis;x86_64\" \\"
-    log_info "    -d \"pixel_5\""
-    log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    log_info ""
+    log_info "Auto-creating default AVD: Pixel_5_API_35"
+    
+    # Detect host architecture for correct system image
+    local arch=$(uname -m)
+    local system_image
+    local abi
+    if [[ "$arch" == "arm64" ]] || [[ "$arch" == "aarch64" ]]; then
+      system_image="system-images;android-35;google_apis;arm64-v8a"
+      abi="arm64-v8a"
+      log_info "Detected ARM64 architecture (Apple Silicon / ARM Mac)"
+    else
+      system_image="system-images;android-35;google_apis;x86_64"
+      abi="x86_64"
+      log_info "Detected x86_64 architecture (Intel Mac / Linux)"
+    fi
+    
+    # Check if system image is installed
+    if ! sdkmanager --list_installed 2>/dev/null | grep -q "$system_image"; then
+      log_error "System image not installed: $system_image"
+      log_info "Install with: sdkmanager \"$system_image\""
+      return 1
+    fi
+    
+    # Create default AVD
+    if avdmanager create avd -n Pixel_5_API_35 \
+      -k "$system_image" \
+      -d "pixel_5" \
+      --force >/dev/null 2>&1; then
+      log_success "Created AVD: Pixel_5_API_35"
+      log_info "  Device: Pixel 5"
+      log_info "  API Level: 35 (Android 15)"
+      log_info "  ABI: $abi"
+    else
+      log_warning "Failed to auto-create AVD"
+      log_info ""
+      log_info "Create an AVD manually:"
+      log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      log_info "Option 1: Android Studio (Recommended)"
+      log_info "  1. Open Android Studio"
+      log_info "  2. Tools → Device Manager"
+      log_info "  3. Click 'Create Device'"
+      log_info "  4. Select a device (e.g., Pixel 5)"
+      log_info "  5. Select a system image (Android 15 / API 35, $abi)"
+      log_info "  6. Finish setup"
+      log_info ""
+      log_info "Option 2: Command Line"
+      log_info "  avdmanager create avd -n Pixel_5_API_35 \\"
+      log_info "    -k \"$system_image\" \\"
+      log_info "    -d \"pixel_5\""
+      log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      log_info ""
+    fi
   else
     log_success "Android Virtual Devices available:"
     echo "$avds" | while read -r avd; do
