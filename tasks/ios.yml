@@ -129,12 +129,12 @@ tasks:
   eas:
     desc: Build iOS on EAS cloud (production)
     cmds:
-      - pnpm run eas:build:ios
+      - pnpm run build:ios:prod
 
   eas-local:
     desc: Build iOS locally via EAS (production)
     cmds:
-      - pnpm run eas:build:ios:local
+      - pnpm run build:ios:local
 
   storybook:
     desc: Run Storybook on iOS

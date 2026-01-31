@@ -11,7 +11,7 @@ tasks:
   start-prod:
     desc: Start Expo in production mode
     cmds:
-      - pnpm run start:prod
+      - pnpm run start:production
 
   stop:
     desc: Stop Expo dev server (kill port 8081)

@@ -10,7 +10,7 @@
  * during cloud builds. This script reads those variables and writes them to files.
  *
  * Usage: node scripts/copy-google-services.js
- * Called from: scripts/eas-build-pre-install.sh
+ * Called from: scripts/eas/pre-install.sh
  */
 
 const fs = require('fs');

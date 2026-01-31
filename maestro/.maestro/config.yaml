@@ -1,5 +1,10 @@
 # Maestro Global Configuration
 # ============================
+# NOTE: Environment variables are managed via .env.maestro (loaded by Taskfile)
+# Variables with MAESTRO_ prefix are auto-injected into flows with the SAME name:
+#   - MAESTRO_APP_ID → use as ${MAESTRO_APP_ID} in flows
+#   - MAESTRO_BACKEND_URL → use as ${MAESTRO_BACKEND_URL} in flows
+#   - MAESTRO_E2E_USER_EMAIL → use as ${MAESTRO_E2E_USER_EMAIL} in flows
 
 # Flow discovery
 flows:
@@ -8,10 +13,3 @@ flows:
 # Execution settings
 executionOrder:
   continueOnFailure: false
-# NOTE: Environment variables are managed via .env.maestro (loaded by Taskfile)
-# Variables with MAESTRO_ prefix are auto-injected into flows with the SAME name:
-#   - MAESTRO_APP_ID → use as ${MAESTRO_APP_ID} in flows
-#   - MAESTRO_BACKEND_URL → use as ${MAESTRO_BACKEND_URL} in flows
-#   - MAESTRO_E2E_USER_EMAIL → use as ${MAESTRO_E2E_USER_EMAIL} in flows
-#
-# To change APP_ID for different environments, update MAESTRO_APP_ID in .env.maestro.local

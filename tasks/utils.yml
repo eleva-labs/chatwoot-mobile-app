@@ -6,7 +6,7 @@ tasks:
   doctor:
     desc: Run Expo doctor for diagnostics
     cmds:
-      - pnpm run doctor
+      - pnpm run run:doctor
 
   adb-connect:
     desc: Connect ADB for React Native debugging
@@ -18,12 +18,12 @@ tasks:
     env:
       EXPO_STORYBOOK_ENABLED: 'true'
     cmds:
-      - pnpm run storybook
+      - pnpm run start:storybook
 
   storybook-generate:
     desc: Generate Storybook stories index
     cmds:
-      - pnpm run storybook:generate
+      - pnpm run storybook-generate
 
   build-metrics:
     desc: Track build time metrics

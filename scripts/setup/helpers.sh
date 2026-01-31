@@ -2,6 +2,12 @@
 # Helper utilities for setup scripts
 # Provides platform detection, logging, and common functions
 
+# Ensure Volta binaries are in PATH
+# This is critical when scripts are run via pnpm which doesn't inherit shell PATH
+if [ -d "$HOME/.volta/bin" ]; then
+  export PATH="$HOME/.volta/bin:$PATH"
+fi
+
 # Platform detection (returns: "macos", "linux", or "windows")
 detect_platform() {
   case "$OSTYPE" in

@@ -32,7 +32,7 @@ tasks:
       - ./scripts/setup/base.sh install-direnv
 
   _env-files:
-    desc: Pull environment from EAS and create local config files
+    desc: Pull environment from EAS and create local config files (requires EAS login)
     internal: true
     silent: true
     cmds:
@@ -40,6 +40,8 @@ tasks:
     preconditions:
       - sh: command -v pnpm
         msg: "pnpm is required. Run 'task setup:base' first."
+      - sh: command -v eas
+        msg: "EAS CLI is required. Run 'task setup:base' first."
 
   # ==================== Public Tasks ====================
 
@@ -54,12 +56,16 @@ tasks:
       - echo ""
       - echo "✅ Base setup complete!"
       - echo ""
+      - echo "Environment pulled from EAS and configured."
+      - echo ""
       - echo "Next steps:"
       - echo "  - For iOS development - task ios:setup"
       - echo "  - For Android development - task android:setup"
       - echo ""
       - echo "Then install dependencies:"
       - echo "  pnpm install"
+      - echo ""
+      - echo "Note - EAS session persists (no re-login needed for future work)"
 
   e2e:
     desc: E2E testing setup (Java, Maestro, idb-companion)

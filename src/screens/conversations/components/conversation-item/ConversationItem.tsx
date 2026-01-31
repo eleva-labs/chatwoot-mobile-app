@@ -96,7 +96,8 @@ export const ConversationItem = memo(
     return (
       <NativeView
         style={themedTailwind.style('px-3 gap-3 flex-row justify-between bg-white')}
-        testID={testID}>
+        testID={testID}
+      >
         <NativeView style={tailwind.style('py-3 flex flex-row')}>
           <ConversationSelect {...{ isSelected, currentState }} />
           <ConversationAvatar

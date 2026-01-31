@@ -68,6 +68,10 @@ check "Expo CLI" \
   "command_exists expo" \
   "Expo CLI not found. Run: task setup:base"
 
+check "EAS CLI" \
+  "command_exists eas" \
+  "EAS CLI not found. Install with: npm install --global eas-cli"
+
 check "direnv" \
   "command_exists direnv" \
   "direnv not found. Run: task setup:base"
@@ -150,9 +154,19 @@ echo ""
 log_info "Environment Configuration:"
 log_info "----------------------------------------"
 
+# Check EAS authentication
+check "EAS authentication" \
+  "$SCRIPT_DIR/../utils/check-eas-auth.sh --quiet" \
+  "Not logged in to EAS. Run: eas login"
+
+# Check EAS project access
+check "EAS project access" \
+  "$SCRIPT_DIR/../utils/check-eas-auth.sh --project --quiet" \
+  "No access to this project. Request access from project admin"
+
 check ".env exists" \
   "[ -f .env ]" \
-  ".env not found. Run: pnpm run expo:env:pull:dev"
+  ".env not found. Run: pnpm run env:pull:dev"
 
 # Check expo-localization patch
 check "expo-localization patch applied" \

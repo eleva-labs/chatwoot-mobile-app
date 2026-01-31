@@ -1,344 +1,463 @@
-# Chatwoot Mobile App - Initial Setup Guide
+# Chatscommerce Mobile App
 
-This guide will help you set up and run the Chatwoot mobile application on both Android and iOS platforms.
+Quick reference for developers using Task Runner for all development workflows.
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Prerequisites](#prerequisites)
+- [Common Commands](#common-commands)
+- [Development Workflow](#development-workflow)
+- [Quality & Testing](#quality--testing)
+- [Troubleshooting](#troubleshooting)
+- [Reference](#reference)
+
+---
+
+## Quick Start
+
+```bash
+# 1. Install Task Runner - https://taskfile.dev/installation
+# 2. Run foundation setup
+task setup:base
+
+# 3. Install dependencies
+pnpm install
+
+# 4. Setup platform
+task ios:setup        # macOS only
+task android:setup    # Any OS
+
+# 5. Run the app
+task ios:run          # iOS
+task android:run      # Android
+
+# 6. See all commands
+task --list
+```
+
+**Why Task Runner?** Consistent interface, hides complexity, enforces best practices, self-documents.
+
+---
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed on your system:
+**Required:**
 
-### Required Software
+- [Task Runner](https://taskfile.dev/installation) - All commands use Task
+- Node.js 20.20+ ([Download](https://nodejs.org) or use [nvm](https://github.com/nvm-sh/nvm)/[asdf](https://asdf-vm.com))
+- Git
+- pnpm (installed via Corepack - see setup below)
 
-1. **Node.js** (version 18 or higher)
-   - Download from [nodejs.org](https://nodejs.org/)
-   - Verify installation: `node --version`
+**Platform-Specific:**
 
-2. **pnpm** (Package Manager)
-   - Install globally: `npm install -g pnpm`
-   - Verify installation: `pnpm --version`
+- **iOS**: macOS, Xcode, Homebrew
+- **Android**: Android Studio, Android SDK (API 34 recommended, min 24), JDK
+- **E2E**: Java, Maestro (installed via `task setup:e2e`)
 
-3. **Git**
-   - Download from [git-scm.com](https://git-scm.com/)
-   - Verify installation: `git --version`
+---
 
-4. **Expo CLI**
-   - Install globally: `npm install -g @expo/cli`
-   - Verify installation: `expo --version`
+## Common Commands
 
-### Platform-Specific Requirements
+### Setup
 
-#### For Android Development
+| Command              | Purpose                                    |
+| -------------------- | ------------------------------------------ |
+| `task setup:base`    | Node, pnpm, tools, direnv, environment     |
+| `task setup:quick`   | Minimal setup (dependencies + environment) |
+| `task ios:setup`     | iOS development tools                      |
+| `task android:setup` | Android development tools                  |
+| `task setup:e2e`     | E2E testing (Maestro)                      |
+| `task setup:full`    | All platforms + verification               |
+| `task setup:verify`  | Verify setup complete                      |
 
-1. **Android Studio**
-   - Download from [developer.android.com](https://developer.android.com/studio)
-   - Install Android SDK (API level 34 recommended)
-   - Set up Android Virtual Device (AVD) or connect a physical device
+### Development
 
-2. **Java Development Kit (JDK)**
-   - Android Studio usually includes this
-   - Verify: `java --version`
+| Command              | Purpose                              |
+| -------------------- | ------------------------------------ |
+| `task dev:start`     | Start Expo dev server                |
+| `task dev:stop`      | Stop dev server                      |
+| `task dev:restart`   | Restart dev server                   |
+| `task ios:run`       | Build and run iOS (full rebuild)     |
+| `task ios:start`     | Run iOS (fast iteration)             |
+| `task ios:clean`     | Clean iOS caches                     |
+| `task android:run`   | Build and run Android (full rebuild) |
+| `task android:start` | Run Android (fast iteration)         |
+| `task android:clean` | Clean Android caches                 |
 
-#### For iOS Development (macOS only)
+### Quality
 
-1. **Xcode** (latest version)
-   - Download from Mac App Store
-   - Install Xcode Command Line Tools: `xcode-select --install`
+| Command                   | Purpose                         |
+| ------------------------- | ------------------------------- |
+| `task quality:check`      | format-check + lint + typecheck |
+| `task quality:format-all` | Auto-fix formatting and linting |
+| `task quality:test`       | Run unit tests                  |
+| `task quality:test-watch` | Tests in watch mode             |
 
-2. **iOS Simulator**
-   - Included with Xcode
-   - Or use a physical iOS device
+### E2E Testing
 
-## Project Setup
+| Command                      | Purpose                     |
+| ---------------------------- | --------------------------- |
+| `task maestro:smoke-ios`     | Quick smoke tests (iOS)     |
+| `task maestro:test-ios`      | Full test suite (iOS)       |
+| `task maestro:smoke-android` | Quick smoke tests (Android) |
+| `task maestro:test-android`  | Full test suite (Android)   |
+| `task maestro:studio`        | Launch Maestro Studio GUI   |
 
-### 1. Clone the Repository
+### Build & Deploy
+
+| Command            | Purpose                                 |
+| ------------------ | --------------------------------------- |
+| `task ios:eas`     | Build iOS on EAS cloud (production)     |
+| `task android:eas` | Build Android on EAS cloud (production) |
+
+---
+
+## Development Workflow
+
+### First-Time Setup
 
 ```bash
+# 1. Install Task Runner - https://taskfile.dev/installation
+# 2. Clone repo
 git clone <repository-url>
 cd chatwoot-mobile-app
-```
 
-### 2. Install Dependencies
+# 3. Run full setup
+task setup:full
 
-```bash
+# 4. Install dependencies
 pnpm install
+
+# 5. Add Firebase credentials to /credentials directory
+# See Firebase Setup section below
+
+# 6. Verify
+task setup:verify
+
+# 7. Run
+task ios:run      # or task android:run
 ```
 
-### 3. Environment Configuration
-
-Environment variables are managed through Expo's dashboard and automatically downloaded using scripts. This eliminates the need for manual environment file management.
-
-**Development Environment:**
-```bash
-./scripts/pull-env.sh development
-```
-
-**Production Environment:**
-```bash
-./scripts/pull-env.sh production
-```
-
-These scripts automatically download the appropriate environment variables from the Expo dashboard based on the specified environment. The variables are then used by the build and run scripts automatically.
-
-### 4. Firebase Setup (Required for Push Notifications)
-
-Firebase configuration files should be placed in the `/credentials` directory for proper environment management:
-
-**Android Configuration:**
-1. Create Firebase Android app with package name: `com.chatscommerce.app`
-2. Download the `google-services.json` files and place them in:
-   - `/credentials/android/google-services.json` (production environment)
-   - `/credentials/android/google-services-dev.json` (development environment)
-
-**iOS Configuration:**
-1. Create Firebase iOS app with bundle ID: `com.chatscommerce.app`
-2. Download the `GoogleService-Info.plist` files and place them in:
-   - `/credentials/ios/GoogleService-Info.plist` (production environment)
-   - `/credentials/ios/GoogleService-Info-dev.plist` (development environment)
-
-These files are automatically copied to the appropriate native directories during the build process based on the selected environment.
-
-### 5. Expo Development Build
-
-Generate the native development build:
+### Daily Development
 
 ```bash
-# Clean prebuild (recommended for first setup)
-pnpm run generate
+# Terminal 1: Start dev server
+task dev:start
 
-# Or soft prebuild (if you've done this before)
-pnpm run generate:soft
+# Terminal 2: Run app (fast iteration)
+task ios:start      # or task android:start
+
+# Hot reload happens automatically on code changes
+
+# Before committing
+task quality:check
+task quality:test
 ```
 
-## Running the Application
-
-To run the application, use the environment-specific commands. These scripts will automatically set the correct environment variables and launch the app on a selected device or simulator.
-
-### Android
+### Pre-Commit
 
 ```bash
-# Run the app on Android with the development environment
-pnpm run android:dev
+# Run all checks
+task quality:check
 
-# Run the app on Android with the production environment
-pnpm run android:prod
+# Auto-fix issues
+task quality:format-all
+
+# Run tests
+task quality:test
 ```
 
-### iOS (macOS only)
+### Production Builds
 
 ```bash
-# Run the app on iOS with the development environment
-pnpm run ios:dev
+# Build on EAS cloud (recommended)
+task ios:eas        # iOS for App Store
+task android:eas    # Android for Play Store
 
-# Run the app on iOS with the production environment
-pnpm run ios:prod
+# Automatic deployment on merge to main branch
 ```
 
-You can also start the Expo development server separately if you need more control:
+### Environment Switching
+
+Edit `.env` file in project root:
 
 ```bash
-pnpm start
+# Development
+EXPO_PUBLIC_BASE_URL=https://dev-api.example.com
+ENVIRONMENT=development
+
+# Production
+EXPO_PUBLIC_BASE_URL=https://api.example.com
+ENVIRONMENT=production
 ```
-This will open the Expo development tools in your browser. From there, you can press `a` to run on Android or `i` to run on iOS, but be aware that this will use the environment variables from the currently active `.env` file.
 
-## Metro Bundler and Logging
-
-### Understanding Metro
-
-**Metro is the JavaScript bundler** that compiles and serves your React Native code. You don't need to run Metro manually - it's automatically handled by the Expo and React Native tooling.
-
-### Running Metro and Viewing Logs
-
-#### Method 1: All-in-One Commands (Recommended)
+After changing `.env`:
 
 ```bash
-# This starts Metro AND runs the Android app
-pnpm run android:dev
-
-# This starts Metro with Expo dev tools
-pnpm start
-# Then press 'a' to run on Android, or scan QR code
+task dev:restart
+task ios:run      # or task android:run
 ```
 
-#### Method 2: Separate Commands (More Control)
+### Firebase Setup
+
+**Required for push notifications**
+
+**Android:**
+
+1. Create Firebase Android app: `com.chatscommerce.app`
+2. Download `google-services.json` to:
+   - `/credentials/android/google-services.json` (production)
+   - `/credentials/android/google-services-dev.json` (development)
+
+**iOS:**
+
+1. Create Firebase iOS app: `com.chatscommerce.app`
+2. Download `GoogleService-Info.plist` to:
+   - `/credentials/ios/GoogleService-Info.plist` (production)
+   - `/credentials/ios/GoogleService-Info-dev.plist` (development)
+
+---
+
+## Quality & Testing
+
+### Code Quality
 
 ```bash
-# Terminal 1: Start Metro first (to see logs clearly)
-pnpm start
+# Check code quality
+task quality:check              # format-check + lint + typecheck
 
-# Terminal 2: Run Android app
-pnpm run android:dev
+# Auto-fix issues
+task quality:format-all         # Format + lint fix
+
+# Individual checks
+task quality:lint               # Check linting
+task quality:lint-fix           # Fix lint issues
+task quality:format             # Format code
+task quality:typecheck          # TypeScript check
 ```
 
-#### Method 3: Direct React Native Commands
+### Unit Testing
 
 ```bash
-# Terminal 1: Start Metro bundler directly
-npx react-native start
-
-# Terminal 2: Run Android app
-npx react-native run-android
+task quality:test               # Run all tests
+task quality:test-watch         # Watch mode
+task quality:test-coverage      # Coverage report
 ```
 
-### Viewing Different Types of Logs
-
-#### Metro Logs (JavaScript logs)
-The terminal where you ran Metro will show:
-- `console.log()` statements from your React Native code
-- Bundling progress
-- Hot reload notifications
-- JavaScript errors and warnings
-
-#### Android System Logs
-```bash
-# In a third terminal (optional, for native Android logs)
-adb logcat
-
-# OR filtered for your app
-adb logcat | grep "com.chatwoot.app"
-```
-
-#### iOS Logs
-```bash
-# View iOS simulator logs
-npx react-native log-ios
-```
-
-### Recommended Development Workflow
-
-1. **Start Metro first** (to see logs clearly):
-   ```bash
-   pnpm start
-   ```
-
-2. **In another terminal, run Android**:
-   ```bash
-   pnpm run android:dev
-   ```
-
-3. **Optional: Watch Android logs** (third terminal):
-   ```bash
-   adb logcat | grep "ReactNative\|com.chatwoot.app"
-   ```
-
-### When Metro Gets Stuck
-
-Sometimes Metro gets cached or stuck, and you might need to:
+### E2E Testing
 
 ```bash
-# Clean Metro cache
-pnpm run clean
+# Quick validation (recommended first)
+task maestro:smoke-ios          # iOS smoke tests
+task maestro:smoke-android      # Android smoke tests
 
-# Or restart with cache cleared
-pnpm start --clear
+# Full test suite
+task maestro:test-ios           # All iOS tests
+task maestro:test-android       # All Android tests
+
+# Test against specific backend
+task maestro:test-ios-local     # localhost:3000
+task maestro:test-ios-dev       # dev backend
+
+# Exploratory testing
+task maestro:studio             # Maestro GUI
 ```
 
-## Available Scripts
-
-Here are the most commonly used scripts from `package.json`:
-
-### Environment Management
-- `pnpm run env:dev` - Sets the development environment.
-- `pnpm run env:prod` - Sets the production environment.
-
-### Development Scripts
-- `pnpm start` - Start Expo development server.
-- `pnpm run android:dev` - Run on Android with the dev environment.
-- `pnpm run android:prod` - Run on Android with the prod environment.
-- `pnpm run ios:dev` - Run on iOS with the dev environment.
-- `pnpm run ios:prod` - Run on iOS with the prod environment.
-- `pnpm run clean` - Clean cache and dependencies.
-
-### Build Scripts
-- `pnpm run generate` - Generate native code (clean prebuild).
-- `pnpm run build:android:dev` - Build Android app for development.
-- `pnpm run build:android:prod` - Build Android app for production.
-- `pnpm run build:ios:dev` - Build iOS app for development.
-- `pnpm run build:ios:prod` - Build iOS app for production.
-
-### Submit Scripts
-- `pnpm run submit:android:dev` - Submit Android app for development.
-- `pnpm run submit:android:prod` - Submit Android app for production.
-- `pnpm run submit:ios:dev` - Submit iOS app for development.
-- `pnpm run submit:ios:prod` - Submit iOS app for production.
-
-### Testing and Quality
-- `pnpm test` - Run tests.
-- `pnpm run lint` - Run ESLint.
-
-### Storybook (Component Development)
-- `pnpm run start:storybook` - Start Storybook server.
-- `pnpm run storybook:android` - Run Storybook on Android (dev environment).
-- `pnpm run storybook:ios` - Run Storybook on iOS (dev environment).
+---
 
 ## Troubleshooting
 
-### Common Issues
-
-1. **Metro bundler issues**
-   ```bash
-   pnpm run clean
-   pnpm install
-   ```
-
-2. **Android build failures**
-   - Ensure Android SDK is properly installed
-   - Check that `ANDROID_HOME` environment variable is set
-   - Verify Android Virtual Device is running
-
-3. **iOS build failures**
-   - Ensure Xcode is up to date
-   - Run `cd ios && pod install` if using CocoaPods
-   - Clear derived data in Xcode
-
-### Environment Variables Issues
-
-If you encounter issues with environment variables:
-
-1. Ensure `.env` file is in the project root
-2. Restart the development server after changing environment variables
-3. For production builds, set environment variables in your CI/CD pipeline
-
-
-## Deployment and CI/CD
-
-### Automatic Production Deployment
-
-When a Pull Request is merged to the `main` branch, the following automated processes are triggered:
-
-1. **Production Builds**: Automatic production builds are created for both Android and iOS platforms using EAS Build
-2. **App Store Submission**: The built applications are automatically submitted to:
-   - **Google Play Store** (Android) - submitted to the internal track for testing before production release
-   - **Apple App Store** (iOS) - submitted for App Store review and release
-
-### Manual Deployment
-
-For manual deployments or testing, use the following commands:
+### Quick Diagnostics
 
 ```bash
-# Build production apps manually
-pnpm run build:android:prod  # Build Android production
-pnpm run build:ios:prod      # Build iOS production
-pnpm run build:all           # Build both platforms
-
-# Submit to app stores manually
-pnpm run submit:android:prod # Submit Android to Google Play
-pnpm run submit:ios:prod     # Submit iOS to App Store
-pnpm run submit:all          # Submit both platforms
+task utils:doctor               # Expo diagnostics
+task setup:verify               # Verify setup
+task maestro:doctor             # Check Maestro version
 ```
 
-### Development Workflow
+### Common Issues
 
-1. Create feature branches from `develop`
-2. Make changes and test on both platforms
-3. Create Pull Request to `develop` branch
-4. After review and approval, merge to `develop`
-5. When ready for release, merge `develop` to `main`
-6. **Automatic deployment** triggers upon merge to `main`
+#### Metro/Bundler Issues
 
-## Development Environment
+```bash
+task dev:stop
+task ios:clean        # or task android:clean
+pnpm install
+task dev:start
+```
+
+#### iOS Build Failures
+
+```bash
+task ios:clean
+task ios:generate
+task setup:verify
+```
+
+If CocoaPods issues persist:
+
+```bash
+task ios:clean
+cd ios && rm -rf Pods Podfile.lock && pod install && cd ..
+task ios:generate
+```
+
+#### Android Build Failures
+
+```bash
+task android:clean
+task android:generate
+task setup:verify
+```
+
+If Gradle issues persist:
+
+```bash
+task android:clean
+rm -rf ~/.gradle/caches
+task android:generate
+```
+
+#### Environment Variable Issues
+
+```bash
+task setup:env-check            # Check current environment
+task setup:base                 # Re-pull from Expo
+task dev:restart                # Restart dev server
+```
+
+#### Dependency Issues
+
+```bash
+rm -rf node_modules
+pnpm install
+task setup:verify-patches       # Verify patches applied
+```
+
+### Platform-Specific
+
+**iOS Simulator:**
+
+```bash
+task ios:stop
+xcrun simctl list devices       # List available
+xcrun simctl boot "iPhone 15 Pro"  # Boot specific
+```
+
+**Android Emulator:**
+
+```bash
+task android:stop
+emulator -list-avds             # List available
+emulator -avd <avd-name>        # Start specific
+task utils:adb-connect          # Connect for debugging
+```
+
+---
+
+## Reference
+
+### Tech Stack
 
 - **Node.js**: 18+
 - **React Native**: 0.76.9
 - **Expo SDK**: ~52.0.46
 - **TypeScript**: 5.1.3
-- **Minimum iOS Version**: 13.0
-- **Minimum Android API Level**: 24
+- **Min iOS**: 13.0
+- **Min Android API**: 24
+
+### Project Structure
+
+```
+chatwoot-mobile-app/
+├── src/                # App source code
+├── ios/                # iOS native (generated)
+├── android/            # Android native (generated)
+├── credentials/        # Firebase configs (gitignored)
+├── maestro/            # E2E test flows
+├── scripts/            # Build/setup scripts
+├── tasks/              # Task definitions
+├── .env                # Environment config
+└── Taskfile.yml        # Task runner config
+```
+
+### Environment Variables
+
+Key variables in `.env`:
+
+```bash
+EXPO_PUBLIC_BASE_URL=<api-url>
+ENVIRONMENT=development|production
+SIMULATOR=iPhone 15 Pro
+```
+
+Check current: `task setup:env-check`
+
+### All Available Tasks
+
+See complete list:
+
+```bash
+task --list
+```
+
+### Advanced Commands
+
+**iOS:**
+
+| Command                  | Purpose                               |
+| ------------------------ | ------------------------------------- |
+| `task ios:generate`      | Generate native project (clean)       |
+| `task ios:generate-soft` | Generate native project (incremental) |
+| `task ios:build`         | Build without running                 |
+| `task ios:storybook`     | Run Storybook on iOS                  |
+
+**Android:**
+
+| Command                      | Purpose                               |
+| ---------------------------- | ------------------------------------- |
+| `task android:generate`      | Generate native project (clean)       |
+| `task android:generate-soft` | Generate native project (incremental) |
+| `task android:build`         | Build without running                 |
+| `task android:storybook`     | Run Storybook on Android              |
+
+**Utilities:**
+
+| Command                    | Purpose                 |
+| -------------------------- | ----------------------- |
+| `task utils:storybook`     | Start Storybook server  |
+| `task utils:build-metrics` | Track build metrics     |
+| `task utils:ccache-stats`  | Show ccache stats (iOS) |
+| `task utils:ccache-clear`  | Clear ccache (iOS)      |
+
+### Useful Links
+
+- [Task Runner](https://taskfile.dev)
+- [Expo Docs](https://docs.expo.dev)
+- [React Native](https://reactnative.dev)
+- [Maestro](https://maestro.mobile.dev)
+- [EAS Build](https://docs.expo.dev/build/introduction/)
+
+### Getting Help
+
+```bash
+task utils:doctor
+task setup:verify
+```
+
+Check `/docs` directory or GitHub issues for more help.
+
+---
+
+**Quick Reference Card:**
+
+```bash
+# Most Common Commands
+task ios:run           # Run on iOS
+task android:run       # Run on Android
+task quality:check     # Check code quality
+task quality:test      # Run tests
+task setup:verify      # Verify setup
+task --list            # All commands
+```

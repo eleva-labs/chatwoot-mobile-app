@@ -37,6 +37,16 @@ install-node-volta() {
   # Verify
   node_version=$(node --version)
   log_success "Node.js: $node_version"
+  
+  # pnpm is automatically installed via Volta
+  if command_exists pnpm; then
+    log_success "pnpm available via Volta"
+  else
+    log_info "Installing pnpm via Volta..."
+    volta install pnpm
+    check_error "Failed to install pnpm"
+    log_success "pnpm installed"
+  fi
 }
 
 # Install base tools
@@ -91,24 +101,24 @@ install-tools-base() {
     log_success "Task installed"
   fi
   
-  # Expo CLI
+  # Expo CLI (install via Volta)
   if command_exists expo; then
     log_success "Expo CLI already installed"
   else
-    log_info "Installing Expo CLI..."
+    log_info "Installing Expo CLI via Volta..."
     volta install @expo/cli
     check_error "Failed to install Expo CLI"
     log_success "Expo CLI installed"
   fi
   
-  # pnpm is automatically installed via Volta
-  if command_exists pnpm; then
-    log_success "pnpm available via Volta"
+  # EAS CLI (install via Volta)
+  if command_exists eas; then
+    log_success "EAS CLI already installed"
   else
-    log_info "Installing pnpm via Volta..."
-    volta install pnpm
-    check_error "Failed to install pnpm"
-    log_success "pnpm installed"
+    log_info "Installing EAS CLI via Volta..."
+    volta install eas-cli
+    check_error "Failed to install EAS CLI"
+    log_success "EAS CLI installed"
   fi
 }
 
@@ -199,10 +209,8 @@ EOF
   
   # Allow direnv
   if command_exists direnv; then
-    # Source direnv for current session
-    eval "$(direnv hook $shell_name)" 2>/dev/null || true
+    # Allow direnv for this directory
     direnv allow . 2>/dev/null || log_warning "Please restart your shell and run 'direnv allow .'"
-    log_success "direnv configured"
   fi
 }
 
@@ -210,9 +218,27 @@ EOF
 setup-env-files() {
   log_step 4 4 "Setting up environment variables"
   
+  # Verify EAS authentication (prerequisite)
+  log_info "Verifying EAS authentication..."
+  # SCRIPT_DIR already defined at script top - use global
+  if ! "$SCRIPT_DIR/../utils/check-eas-auth.sh" --project --quiet; then
+    echo ""
+    log_error "EAS authentication required"
+    echo ""
+    echo "Before running setup, you must login to EAS (one-time):"
+    echo "  1. Run: eas login"
+    echo "  2. Enter your Expo credentials"
+    echo "  3. Then re-run: task setup:base"
+    echo ""
+    echo "EAS session persists for weeks/months (no re-login needed)."
+    echo ""
+    exit 1
+  fi
+  log_success "EAS authentication verified"
+  
   # Pull from EAS (creates .env)
   log_info "Pulling environment from EAS..."
-  pnpm run expo:env:pull:dev
+  pnpm run env:pull:dev
   check_error "Failed to pull environment from EAS"
   log_success ".env created from EAS"
   

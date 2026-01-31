@@ -105,9 +105,9 @@ check_version() {
 if [[ "$PLATFORM_FILTER" == "" || "$PLATFORM_FILTER" == "foundation" ]]; then
     log_info "Foundation Tools:"
     
-    check_version "node" "Node.js" 20 "Run: task setup:base" true
-    check_command "pnpm" "pnpm" "Run: task setup:base" true
-    check_command "task" "Task" "Run: task setup:base" true
+    check_version "node" "Node.js" 20 "Install from https://nodejs.org or use nvm/asdf" true
+    check_command "pnpm" "pnpm" "Enable Corepack: corepack enable" true
+    check_command "task" "Task" "Install from https://taskfile.dev" true
     
     if [[ "$QUICK_MODE" == "false" ]]; then
         check_command "watchman" "Watchman" "Run: task setup:base"
@@ -116,21 +116,18 @@ if [[ "$PLATFORM_FILTER" == "" || "$PLATFORM_FILTER" == "foundation" ]]; then
         if command -v "expo" &> /dev/null; then
             log_success "Expo CLI: $(expo --version)"
             ((PASSED++))
-        elif [ -f "$HOME/.volta/bin/expo-internal" ]; then
-            log_success "Expo CLI: $(~/.volta/bin/expo-internal --version) (via Volta)"
-            ((PASSED++))
         else
             log_error "Expo CLI: Not installed"
-            echo "         Fix: Run: task setup:base"
+            echo "         Fix: Run: task setup:base OR pnpm add -g @expo/cli"
             ((FAILED++))
         fi
         
-        # Check Volta (optional but recommended)
-        if command -v "volta" &> /dev/null; then
-            log_success "Volta: $(volta --version)"
+        # Check Corepack (for pnpm management)
+        if command -v "corepack" &> /dev/null; then
+            log_success "Corepack: Available (manages pnpm version)"
             ((PASSED++))
         else
-            log_warning "Volta: Not installed (recommended for Node version management)"
+            log_warning "Corepack: Not available (comes with Node.js 16.9+)"
         fi
         
         # Check direnv
@@ -274,6 +271,44 @@ if [[ "$PLATFORM_FILTER" == "" || "$PLATFORM_FILTER" == "e2e" ]]; then
                 log_warning "ios/.xcode.env.local: not found"
                 echo "         Fix: Run: task setup:base"
             fi
+        fi
+        
+        echo ""
+    fi
+fi
+
+# ==================== EAS Authentication Checks ====================
+if [[ "$PLATFORM_FILTER" == "" || "$PLATFORM_FILTER" == "foundation" ]]; then
+    if [[ "$QUICK_MODE" == "false" ]]; then
+        log_info "EAS Authentication:"
+        
+        # Check EAS CLI is available
+        if command -v "eas" &> /dev/null; then
+            log_success "EAS CLI: $(eas --version 2>/dev/null | head -1)"
+            ((PASSED++))
+            
+            # Check if logged in
+            if eas whoami &>/dev/null; then
+                logged_in_user=$(eas whoami 2>/dev/null | head -1)
+                log_success "EAS Login: $logged_in_user"
+                ((PASSED++))
+                
+                # Check project access
+                if eas project:info &>/dev/null; then
+                    log_success "EAS Project Access: Verified"
+                    ((PASSED++))
+                else
+                    log_warning "EAS Project Access: No access to this project"
+                    echo "         Fix: Request access from project admin"
+                fi
+            else
+                log_warning "EAS Login: Not logged in"
+                echo "         Fix: Run: eas login (one-time, session persists)"
+            fi
+        else
+            log_error "EAS CLI: Not installed"
+            echo "         Fix: Run: task setup:base"
+            ((FAILED++))
         fi
         
         echo ""

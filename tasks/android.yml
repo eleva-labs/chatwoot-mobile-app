@@ -93,12 +93,12 @@ tasks:
   eas:
     desc: Build Android on EAS cloud (production)
     cmds:
-      - pnpm run eas:build:android
+      - pnpm run build:android:prod
 
   eas-local:
     desc: Build Android locally via EAS (production)
     cmds:
-      - pnpm run eas:build:android:local
+      - pnpm run build:android:local
 
   storybook:
     desc: Run Storybook on Android

@@ -226,9 +226,9 @@ tasks:
       - maestro studio
 
   doctor:
-    desc: Verify Maestro installation
+    desc: Check Maestro version
     cmds:
-      - maestro doctor
+      - maestro --version
 
   setup:
     desc: Install Maestro and verify setup
