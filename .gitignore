@@ -47,4 +47,12 @@ android/app/google-services.json
 ios/GoogleService-Info.plist
 service-account-key.json
 
+# Native build output directories (created by expo prebuild/run)
+/android/
+/ios/
+
+# Temporary documentation
+/docs/temp/
+
+# Local ignored documentation
 /docs/ignored/
