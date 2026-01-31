@@ -11,15 +11,31 @@ includes:
   maestro: ./tasks/maestro.yml
   utils: ./tasks/utils.yml
 
+# Environment configuration
+# ============================================================================
+# Load environment variables from .env files (in order of precedence)
+# - .env.maestro: Maestro E2E test configuration (optional, gitignored)
+# - .env: Main environment config (gitignored, use .env.example as template)
+# - .env.development: Development defaults (tracked in git)
+# - .env.production: Production defaults (tracked in git)
+#
+# IMPORTANT: Use direnv for automatic environment loading
+# Install: brew install direnv
+# Setup: echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
+#
+# Without direnv, task will still load these files, but JAVA_HOME and
+# ANDROID_HOME must be set in .env for Android/Maestro tasks to work.
+# ============================================================================
 dotenv:
-  - .env.maestro # E2E testing configuration
-  - .env # Base configuration from EAS
+  - .env.maestro # Maestro test config (optional)
+  - .env # Main config (required, use .env.example template)
+  - .env.{{.ENVIRONMENT}} # Environment-specific defaults
 
-# Global environment variables
+# Global environment - extends from dotenv
+# Only add PATH modifications here, all other vars come from .env files
 env:
-  JAVA_HOME: /opt/homebrew/opt/openjdk@17
-  ANDROID_HOME: '/opt/homebrew/share/android-commandlinetools'
-  PATH: /opt/homebrew/opt/openjdk@17/bin:{{.ANDROID_HOME}}/emulator:{{.ANDROID_HOME}}/platform-tools:{{.ANDROID_HOME}}/tools:{{.ANDROID_HOME}}/tools/bin:{{.PATH}}:{{.HOME}}/.maestro/bin
+  # Extend PATH with development tools (if JAVA_HOME/ANDROID_HOME are set)
+  PATH: '{{if .JAVA_HOME}}{{.JAVA_HOME}}/bin:{{end}}{{if .ANDROID_HOME}}{{.ANDROID_HOME}}/emulator:{{.ANDROID_HOME}}/platform-tools:{{.ANDROID_HOME}}/tools:{{.ANDROID_HOME}}/tools/bin:{{end}}{{.PATH}}{{if .HOME}}:{{.HOME}}/.maestro/bin{{end}}'
 
 # Use bash for all tasks
 set: [pipefail]
