@@ -11,6 +11,7 @@ type ButtonProps = {
   handlePress?: () => void;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
+  testID?: string;
 };
 
 const getButtonStyles = (
@@ -55,6 +56,7 @@ export const Button = ({
   handlePress,
   variant = 'primary',
   disabled = false,
+  testID,
 }: ButtonProps) => {
   const { handlers, animatedStyle } = useScaleAnimation();
   const haptic = useHaptic(isDestructive ? 'medium' : 'selection');
@@ -72,6 +74,7 @@ export const Button = ({
   return (
     <Animated.View style={animatedStyle}>
       <Pressable
+        testID={testID}
         onPress={handleButtonPress}
         disabled={disabled}
         accessible
