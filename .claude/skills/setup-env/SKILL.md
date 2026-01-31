@@ -1,5 +1,5 @@
 ---
-name: setup
+name: setup-env
 description: >-
   Set up any part of the development environment for the Chatscommerce Mobile App.
   Use when onboarding, setting up a new machine, or troubleshooting

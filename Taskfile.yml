@@ -11,8 +11,8 @@ includes:
   maestro: ./tasks/maestro.yml
   utils: ./tasks/utils.yml
 
-# Environment configuration
 # ============================================================================
+# Environment configuration
 # IMPORTANT: Use direnv for automatic environment loading (use `task setup:base` to setup direnv)
 # ============================================================================
 dotenv:
