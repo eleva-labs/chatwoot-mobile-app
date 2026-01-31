@@ -13,23 +13,11 @@ includes:
 
 # Environment configuration
 # ============================================================================
-# Load environment variables from .env files (in order of precedence)
-# - .env.maestro: Maestro E2E test configuration (optional, gitignored)
-# - .env: Main environment config (gitignored, use .env.example as template)
-# - .env.development: Development defaults (tracked in git)
-# - .env.production: Production defaults (tracked in git)
-#
-# IMPORTANT: Use direnv for automatic environment loading
-# Install: brew install direnv
-# Setup: echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
-#
-# Without direnv, task will still load these files, but JAVA_HOME and
-# ANDROID_HOME must be set in .env for Android/Maestro tasks to work.
+# IMPORTANT: Use direnv for automatic environment loading (use `task setup:base` to setup direnv)
 # ============================================================================
 dotenv:
   - .env.maestro # Maestro test config (optional)
   - .env # Main config (required, use .env.example template)
-  - .env.{{.ENVIRONMENT}} # Environment-specific defaults
 
 # Global environment - extends from dotenv
 # Only add PATH modifications here, all other vars come from .env files
