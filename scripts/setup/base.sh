@@ -164,11 +164,35 @@ install-direnv() {
   # Create .envrc if not exists
   if [[ ! -f .envrc ]]; then
     cat > .envrc <<'EOF'
-# Auto-load environment variables
+# ===========================================
+# direnv configuration
+# ===========================================
+# Auto-loads environment variables when you cd into this directory
+
+# Main Environment File (Source of Truth)
 dotenv_if_exists .env
+
+# Maestro Test Configuration (Optional)
 dotenv_if_exists .env.maestro
+
+# Development Tools PATH Configuration
+# Add Java to PATH (for Maestro E2E testing)
+if [ -n "$JAVA_HOME" ]; then
+  PATH_add "$JAVA_HOME/bin"
+fi
+
+# Add Android SDK tools to PATH (for Android development)
+if [ -n "$ANDROID_HOME" ]; then
+  PATH_add "$ANDROID_HOME/emulator"
+  PATH_add "$ANDROID_HOME/platform-tools"
+  PATH_add "$ANDROID_HOME/tools"
+  PATH_add "$ANDROID_HOME/tools/bin"
+fi
+
+# Add Maestro to PATH (for E2E testing)
+PATH_add "$HOME/.maestro/bin"
 EOF
-    log_success "Created .envrc"
+    log_success "Created .envrc with development tool paths"
   else
     log_success ".envrc already exists"
   fi
@@ -191,6 +215,24 @@ setup-env-files() {
   pnpm run expo:env:pull:dev
   check_error "Failed to pull environment from EAS"
   log_success ".env created from EAS"
+  
+  # Add development tool paths to .env if not present
+  if ! grep -q "JAVA_HOME" .env 2>/dev/null; then
+    cat >> .env <<'EOF'
+
+# -------------------------------------------
+# Development Tools (auto-configured by setup scripts)
+# -------------------------------------------
+# Java (for Maestro E2E testing)
+JAVA_HOME=/opt/homebrew/opt/openjdk@17
+
+# Android SDK (for Android development)
+ANDROID_HOME=$HOME/Library/Android/sdk
+EOF
+    log_success "Added JAVA_HOME and ANDROID_HOME to .env"
+  else
+    log_success "Development tools already configured in .env"
+  fi
   
   # Create .env.maestro from template if it doesn't exist
   if [[ ! -f .env.maestro ]]; then
