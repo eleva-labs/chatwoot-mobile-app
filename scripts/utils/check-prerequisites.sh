@@ -8,29 +8,61 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Source helpers for consistent logging
+source "$SCRIPT_DIR/../setup/helpers.sh"
 
-echo -e "${BLUE}🔍 Checking iOS development prerequisites...${NC}"
+# Parse flags
+QUICK_MODE=false
+PLATFORM_FILTER=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --quick)
+      QUICK_MODE=true
+      shift
+      ;;
+    --platform=*)
+      PLATFORM_FILTER="${1#*=}"
+      shift
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+log_info "🔍 Checking prerequisites..."
+if [[ "$PLATFORM_FILTER" != "" ]]; then
+  log_info "Filter: $PLATFORM_FILTER only"
+fi
+if [[ "$QUICK_MODE" == "true" ]]; then
+  log_info "Mode: Quick check (critical tools only)"
+fi
 echo ""
 
 PASSED=0
 FAILED=0
+CRITICAL_FAILED=0
 
 # Helper function to check command existence
 check_command() {
     local cmd=$1
     local name=$2
+    local fix_msg=$3
+    local is_critical=${4:-false}
+    
     if command -v "$cmd" &> /dev/null; then
-        echo -e "${GREEN}✅ $name: $(eval "$cmd --version" 2>/dev/null | head -1)${NC}"
+        log_success "$name: $(eval "$cmd --version" 2>/dev/null | head -1)"
         ((PASSED++))
     else
-        echo -e "${RED}❌ $name: Not installed${NC}"
+        log_error "$name: Not installed"
+        if [[ -n "$fix_msg" ]]; then
+            echo "         Fix: $fix_msg"
+        fi
         ((FAILED++))
+        if [[ "$is_critical" == "true" ]]; then
+            ((CRITICAL_FAILED++))
+        fi
     fi
 }
 
@@ -39,6 +71,9 @@ check_version() {
     local cmd=$1
     local name=$2
     local expected_major=$3
+    local fix_msg=$4
+    local is_critical=${5:-false}
+    
     if command -v "$cmd" &> /dev/null; then
         local version_output
         version_output=$(eval "$cmd --version" 2>/dev/null | head -1)
@@ -48,187 +83,239 @@ check_version() {
         major_version=$(echo "$version" | cut -d'.' -f1)
 
         if [ "$major_version" -eq "$expected_major" ]; then
-            echo -e "${GREEN}✅ $name: $version_output${NC}"
+            log_success "$name: $version_output"
             ((PASSED++))
         else
-            echo -e "${YELLOW}⚠️  $name: $version_output (Expected major version $expected_major)${NC}"
+            log_warning "$name: $version_output (Expected major version $expected_major)"
             ((PASSED++))  # Still count as passed, just warn
         fi
     else
-        echo -e "${RED}❌ $name: Not installed${NC}"
+        log_error "$name: Not installed"
+        if [[ -n "$fix_msg" ]]; then
+            echo "         Fix: $fix_msg"
+        fi
         ((FAILED++))
+        if [[ "$is_critical" == "true" ]]; then
+            ((CRITICAL_FAILED++))
+        fi
     fi
 }
 
-# Check Node.js version
-check_version "node" "Node.js" 20
-
-# Check pnpm
-check_command "pnpm" "pnpm"
-
-# Check Task
-check_command "task" "Task"
-
-# Check Watchman
-check_command "watchman" "Watchman"
-
-# Check Expo CLI (can be installed via Volta or npm)
-if command -v "expo" &> /dev/null; then
-    echo -e "${GREEN}✅ Expo CLI: $(expo --version)${NC}"
-    ((PASSED++))
-elif [ -f "$HOME/.volta/bin/expo-internal" ]; then
-    echo -e "${GREEN}✅ Expo CLI: $(~/.volta/bin/expo-internal --version) (via Volta)${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ Expo CLI: Not installed${NC}"
-    ((FAILED++))
-fi
-
-# Check Volta (optional but recommended)
-if command -v "volta" &> /dev/null; then
-    echo -e "${GREEN}✅ Volta: $(volta --version)${NC}"
-    ((PASSED++))
-else
-    echo -e "${YELLOW}⚠️  Volta: Not installed (recommended for Node version management)${NC}"
-fi
-
-# Check direnv (required for auto-loading .env files)
-if command -v "direnv" &> /dev/null; then
-    echo -e "${GREEN}✅ direnv: $(direnv --version)${NC}"
-    ((PASSED++))
+# ==================== Foundation Checks ====================
+if [[ "$PLATFORM_FILTER" == "" || "$PLATFORM_FILTER" == "foundation" ]]; then
+    log_info "Foundation Tools:"
     
-    # Check if direnv hook is in shell config
-    if grep -q "direnv hook" ~/.zshrc 2>/dev/null || grep -q "direnv hook" ~/.bashrc 2>/dev/null; then
-        echo -e "${GREEN}   ✅ direnv hook: configured${NC}"
-    else
-        echo -e "${YELLOW}   ⚠️  direnv hook: not configured (run 'task setup:base')${NC}"
-    fi
+    check_version "node" "Node.js" 20 "Run: task setup:base" true
+    check_command "pnpm" "pnpm" "Run: task setup:base" true
+    check_command "task" "Task" "Run: task setup:base" true
     
-    # Check if project .envrc is allowed
-    if [[ -f "$PROJECT_ROOT/.envrc" ]]; then
-        if direnv status 2>/dev/null | grep -q "Found RC allowed true"; then
-            echo -e "${GREEN}   ✅ .envrc: allowed${NC}"
+    if [[ "$QUICK_MODE" == "false" ]]; then
+        check_command "watchman" "Watchman" "Run: task setup:base"
+        
+        # Check Expo CLI
+        if command -v "expo" &> /dev/null; then
+            log_success "Expo CLI: $(expo --version)"
+            ((PASSED++))
+        elif [ -f "$HOME/.volta/bin/expo-internal" ]; then
+            log_success "Expo CLI: $(~/.volta/bin/expo-internal --version) (via Volta)"
+            ((PASSED++))
         else
-            echo -e "${YELLOW}   ⚠️  .envrc: not allowed (run 'direnv allow .')${NC}"
+            log_error "Expo CLI: Not installed"
+            echo "         Fix: Run: task setup:base"
+            ((FAILED++))
         fi
+        
+        # Check Volta (optional but recommended)
+        if command -v "volta" &> /dev/null; then
+            log_success "Volta: $(volta --version)"
+            ((PASSED++))
+        else
+            log_warning "Volta: Not installed (recommended for Node version management)"
+        fi
+        
+        # Check direnv
+        if command -v "direnv" &> /dev/null; then
+            log_success "direnv: $(direnv --version)"
+            ((PASSED++))
+            
+            # Check if direnv hook is in shell config
+            if grep -q "direnv hook" ~/.zshrc 2>/dev/null || grep -q "direnv hook" ~/.bashrc 2>/dev/null; then
+                log_success "   direnv hook: configured"
+            else
+                log_warning "   direnv hook: not configured"
+                echo "         Fix: Run: task setup:base"
+            fi
+            
+            # Check if project .envrc is allowed
+            if [[ -f "$PROJECT_ROOT/.envrc" ]]; then
+                if direnv status 2>/dev/null | grep -q "Found RC allowed true"; then
+                    log_success "   .envrc: allowed"
+                else
+                    log_warning "   .envrc: not allowed"
+                    echo "         Fix: Run: direnv allow ."
+                fi
+            fi
+        else
+            log_error "direnv: Not installed"
+            echo "         Fix: Run: task setup:base"
+            ((FAILED++))
+        fi
+        
+        check_command "brew" "Homebrew" "Install from https://brew.sh"
     fi
-else
-    echo -e "${RED}❌ direnv: Not installed (required for auto-loading .env files)${NC}"
-    ((FAILED++))
+    
+    echo ""
 fi
 
-# Check Homebrew
-check_command "brew" "Homebrew"
-
-# Check Xcode Command Line Tools
-if xcode-select -p &> /dev/null; then
-    echo -e "${GREEN}✅ Xcode Command Line Tools: $(xcode-select -p)${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ Xcode Command Line Tools: Not installed${NC}"
-    ((FAILED++))
+# ==================== iOS Checks ====================
+if [[ "$PLATFORM_FILTER" == "" || "$PLATFORM_FILTER" == "ios" ]]; then
+    if [[ "$QUICK_MODE" == "false" ]]; then
+        log_info "iOS Development Tools:"
+        
+        # Check Xcode Command Line Tools
+        if xcode-select -p &> /dev/null; then
+            log_success "Xcode Command Line Tools: $(xcode-select -p)"
+            ((PASSED++))
+        else
+            log_error "Xcode Command Line Tools: Not installed"
+            echo "         Fix: Run: task ios:setup"
+            ((FAILED++))
+        fi
+        
+        # Check Xcode
+        if command -v "xcodebuild" &> /dev/null; then
+            xcode_version=$(xcodebuild -version | head -1)
+            log_success "Xcode: $xcode_version"
+            ((PASSED++))
+        else
+            log_error "Xcode: Not installed"
+            echo "         Fix: Install from Mac App Store"
+            ((FAILED++))
+        fi
+        
+        check_command "ruby" "Ruby" "System Ruby should be available on macOS"
+        check_command "gem" "RubyGems" "System RubyGems should be available on macOS"
+        
+        # Check iOS Simulator
+        if command -v "xcrun" &> /dev/null && xcrun simctl list devices &> /dev/null; then
+            log_success "iOS Simulator: Available"
+            ((PASSED++))
+        else
+            log_error "iOS Simulator: Not available"
+            echo "         Fix: Open Xcode → Settings → Platforms"
+            ((FAILED++))
+        fi
+        
+        echo ""
+        log_info "iOS Build Tools:"
+        
+        # Check ccache
+        if command -v "ccache" &> /dev/null; then
+            log_success "ccache: $(ccache --version | head -1)"
+            ((PASSED++))
+        else
+            log_warning "ccache: Not installed (recommended for faster builds)"
+            echo "         Fix: Run: task ios:setup"
+        fi
+        
+        # Check ccache in PATH
+        if echo "$PATH" | grep -q "ccache/libexec"; then
+            log_success "ccache PATH: Configured"
+            ((PASSED++))
+        else
+            log_warning "ccache PATH: Not configured"
+            echo "         Fix: Run: task ios:setup and restart shell"
+        fi
+        
+        # Check CocoaPods
+        if command -v "pod" &> /dev/null; then
+            log_success "CocoaPods: $(pod --version)"
+            ((PASSED++))
+        else
+            log_error "CocoaPods: Not available"
+            echo "         Fix: Run: task ios:setup"
+            ((FAILED++))
+        fi
+        
+        # Check bigdecimal gem
+        if gem list bigdecimal -i >/dev/null 2>&1; then
+            log_success "bigdecimal gem: Installed"
+            ((PASSED++))
+        else
+            log_warning "bigdecimal gem: Not installed (may cause issues with Ruby 4.0+)"
+            echo "         Fix: gem install bigdecimal"
+        fi
+        
+        echo ""
+    fi
 fi
 
-# Check Xcode
-if command -v "xcodebuild" &> /dev/null; then
-    xcode_version=$(xcodebuild -version | head -1)
-    echo -e "${GREEN}✅ Xcode: $xcode_version${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ Xcode: Not installed${NC}"
-    ((FAILED++))
-fi
-
-# Check Ruby
-check_command "ruby" "Ruby"
-
-# Check RubyGems
-check_command "gem" "RubyGems"
-
-# Check iOS Simulator
-if command -v "xcrun" &> /dev/null && xcrun simctl list devices &> /dev/null; then
-    echo -e "${GREEN}✅ iOS Simulator: Available${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ iOS Simulator: Not available${NC}"
-    ((FAILED++))
-fi
-
-echo ""
-echo -e "${BLUE}iOS Build Tools:${NC}"
-
-# Check ccache
-if command -v "ccache" &> /dev/null; then
-    echo -e "${GREEN}✅ ccache: $(ccache --version | head -1)${NC}"
-    ((PASSED++))
-else
-    echo -e "${YELLOW}⚠️  ccache: Not installed (recommended for faster builds)${NC}"
-fi
-
-# Check ccache in PATH
-if echo "$PATH" | grep -q "ccache/libexec"; then
-    echo -e "${GREEN}✅ ccache PATH: Configured${NC}"
-    ((PASSED++))
-else
-    echo -e "${YELLOW}⚠️  ccache PATH: Not configured (run: task ios:setup)${NC}"
-fi
-
-# Check CocoaPods is linked and available
-if command -v "pod" &> /dev/null; then
-    echo -e "${GREEN}✅ CocoaPods: $(pod --version)${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ CocoaPods: Not available${NC}"
-    ((FAILED++))
-fi
-
-# Check bigdecimal gem
-if gem list bigdecimal -i >/dev/null 2>&1; then
-    echo -e "${GREEN}✅ bigdecimal gem: Installed${NC}"
-    ((PASSED++))
-else
-    echo -e "${YELLOW}⚠️  bigdecimal gem: Not installed (may cause issues with Ruby 4.0+)${NC}"
-fi
-
-echo ""
-echo -e "${BLUE}Local Environment:${NC}"
-
-# Verify patches are applied
-if grep -q "@unknown default" "$PROJECT_ROOT/node_modules/expo-localization/ios/LocalizationModule.swift" 2>/dev/null; then
-    echo -e "${GREEN}✅ expo-localization patch: applied${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ expo-localization patch: NOT applied (run 'pnpm install')${NC}"
-    ((FAILED++))
-fi
-
-# Check ios/.xcode.env.local if ios/ exists
-if [[ -d "$PROJECT_ROOT/ios" ]]; then
-    if [[ -f "$PROJECT_ROOT/ios/.xcode.env.local" ]]; then
-        echo -e "${GREEN}✅ ios/.xcode.env.local: exists${NC}"
-        ((PASSED++))
-    else
-        echo -e "${YELLOW}⚠️  ios/.xcode.env.local: not found (run 'task setup:base')${NC}"
+# ==================== Environment Checks ====================
+if [[ "$PLATFORM_FILTER" == "" || "$PLATFORM_FILTER" == "e2e" ]]; then
+    if [[ "$QUICK_MODE" == "false" ]]; then
+        log_info "Local Environment:"
+        
+        # Verify patches are applied
+        if grep -q "@unknown default" "$PROJECT_ROOT/node_modules/expo-localization/ios/LocalizationModule.swift" 2>/dev/null; then
+            log_success "expo-localization patch: applied"
+            ((PASSED++))
+        else
+            log_error "expo-localization patch: NOT applied"
+            echo "         Fix: Run: pnpm install"
+            ((FAILED++))
+        fi
+        
+        # Check ios/.xcode.env.local if ios/ exists
+        if [[ -d "$PROJECT_ROOT/ios" ]]; then
+            if [[ -f "$PROJECT_ROOT/ios/.xcode.env.local" ]]; then
+                log_success "ios/.xcode.env.local: exists"
+                ((PASSED++))
+            else
+                log_warning "ios/.xcode.env.local: not found"
+                echo "         Fix: Run: task setup:base"
+            fi
+        fi
+        
+        echo ""
     fi
 fi
 
 echo ""
-echo -e "${BLUE}📊 Summary:${NC}"
-echo -e "   ✅ Passed: $PASSED"
-echo -e "   ❌ Failed: $FAILED"
+log_info "📊 Summary:"
+echo "   ✅ Passed: $PASSED"
+echo "   ❌ Failed: $FAILED"
+if [[ $CRITICAL_FAILED -gt 0 ]]; then
+    echo "   🔴 Critical failures: $CRITICAL_FAILED"
+fi
 echo ""
 
 if [ $FAILED -eq 0 ]; then
-    echo -e "${GREEN}🎉 All prerequisites satisfied! Ready for iOS development.${NC}"
-    exit 0
-else
-    echo -e "${RED}⚠️  Some prerequisites are missing. Please install them before proceeding.${NC}"
+    log_success "🎉 All prerequisites satisfied! Ready for development."
     echo ""
-    echo -e "${YELLOW}📖 Installation guides:${NC}"
-    echo -e "   - Watchman: brew install watchman"
-    echo -e "   - Volta: curl https://get.volta.sh | bash"
-    echo -e "   - Xcode: Install from Mac App Store"
-    echo -e "   - Full guide: docs/SETUP_IOS.md"
+    log_info "Next steps:"
+    echo "   • Install dependencies: pnpm install"
+    echo "   • Run iOS: task ios:run"
+    echo "   • Run Android: task android:run"
+    echo ""
+    exit 0
+elif [ $CRITICAL_FAILED -gt 0 ]; then
+    log_error "⚠️  Critical prerequisites are missing. Cannot proceed."
+    echo ""
+    log_info "Quick fixes:"
+    echo "   • Foundation setup: task setup:base"
+    echo "   • iOS setup: task ios:setup"
+    echo "   • Android setup: task android:setup"
+    echo ""
+    exit 2
+else
+    log_warning "⚠️  Some prerequisites are missing (non-critical)."
+    echo ""
+    log_info "Quick fixes:"
+    echo "   • Foundation setup: task setup:base"
+    echo "   • iOS setup: task ios:setup"
+    echo "   • Android setup: task android:setup"
+    echo ""
+    log_info "For detailed verification: task setup:verify"
     echo ""
     exit 1
 fi

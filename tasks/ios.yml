@@ -10,7 +10,7 @@ tasks:
     internal: true
     silent: true
     preconditions:
-      - sh: '[[ "$OSTYPE" == "darwin"* ]]'
+      - sh: 'test "$(uname -s)" = "Darwin"'
         msg: |
           iOS development requires macOS.
           You're running on: {{OS}}

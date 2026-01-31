@@ -41,18 +41,9 @@ install-java() {
       brew install openjdk@17
       check_error "Failed to install Java 17"
       
-      # Link it so system can find it
-      log_info "Linking Java 17 to system..."
-      sudo ln -sfn /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
-      
-      # Verify installation
-      if java -version &> /dev/null; then
-        log_success "Java 17 installed successfully"
-      else
-        log_warn "Java installed but 'java' command still failing"
-        log_info 'Try adding to PATH: export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"'
-        log_info "You may need to restart your terminal"
-      fi
+      log_success "Java 17 installed successfully"
+      log_info "Java is configured via Taskfile.yml (JAVA_HOME and PATH)"
+      log_info "When using task commands, Java will be available automatically"
     elif [[ "$platform" == "linux" ]]; then
       log_error "Please install Java 17+ manually for Linux"
       log_info "Debian/Ubuntu: sudo apt-get install openjdk-17-jdk"
@@ -177,33 +168,20 @@ verify-e2e-setup() {
   local all_passed=true
   
   echo ""
-  log_info "=== Java Verification ==="
-  if java -version &> /dev/null; then
-    local java_version=$(java -version 2>&1 | head -1)
-    log_success "Java: $java_version"
-  else
-    log_error "Java: NOT FOUND or not working"
-    all_passed=false
-  fi
-  
-  echo ""
   log_info "=== Maestro Verification ==="
-  
-  # Add to PATH for current session
-  export PATH="$HOME/.maestro/bin:$PATH"
-  
   if command_exists maestro; then
-    local maestro_version=$(maestro --version 2>&1 || echo "unknown")
-    log_success "Maestro CLI: $maestro_version"
+    local maestro_ver=$(maestro --version 2>&1 || echo "unknown")
+    log_success "Maestro CLI: $maestro_ver"
     
-    # Run maestro doctor
+    # Note: Maestro 2.x doesn't have 'doctor' command
+    # Just verify it's accessible and can show help
     echo ""
-    log_info "Running: maestro doctor"
-    if maestro doctor; then
-      log_success "Maestro doctor: PASSED"
+    log_info "Verifying Maestro is accessible..."
+    if maestro --help >/dev/null 2>&1; then
+      log_success "Maestro is ready to use"
     else
-      log_warn "Maestro doctor: FOUND ISSUES (see above)"
-      log_info "You may need to resolve these issues before using Maestro"
+      log_warning "Maestro command exists but may have issues"
+      log_info "Try running 'source ~/.zshrc' or restart your terminal"
       all_passed=false
     fi
   else
@@ -211,6 +189,9 @@ verify-e2e-setup() {
     log_info "Try running 'source ~/.zshrc' or restart your terminal"
     all_passed=false
   fi
+  
+  # Add Maestro to PATH for current session
+  export PATH="$HOME/.maestro/bin:$PATH"
   
   echo ""
   log_info "=== iOS Device Bridge Verification (macOS only) ==="

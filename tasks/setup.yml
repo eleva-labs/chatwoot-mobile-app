@@ -93,18 +93,16 @@ tasks:
       - echo "   Next - task ios:setup OR task android:setup"
 
   verify:
-    desc: Verify complete setup (all platforms, tools, environment)
+    desc: Verify setup is complete and working
+    dir: '{{.ROOT_DIR}}'
     cmds:
-      - task: verify-patches
-      - task: env-check
-      - |
-        echo "TODO: Add scripts/setup/verify.sh in Phase 4"
-        echo "✅ Setup verification complete (partial - full verification in Phase 4)"
+      - ./scripts/setup/verify.sh
 
   check-prereqs:
-    desc: Quick check of development prerequisites
+    desc: 'Check prerequisites (supports --quick, --platform=ios|android|e2e)'
+    dir: '{{.ROOT_DIR}}'
     cmds:
-      - ./scripts/utils/check-prerequisites.sh
+      - ./scripts/utils/check-prerequisites.sh {{.CLI_ARGS}}
 
   verify-patches:
     desc: Verify all patches are applied correctly
