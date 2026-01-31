@@ -1,0 +1,32 @@
+# https://taskfile.dev
+version: '3'
+
+# Include modular task files
+includes:
+  ios: ./tasks/ios.yml
+  android: ./tasks/android.yml
+  dev: ./tasks/dev.yml
+  quality: ./tasks/quality.yml
+  setup: ./tasks/setup.yml
+  maestro: ./tasks/maestro.yml
+  utils: ./tasks/utils.yml
+
+dotenv:
+  - .env.maestro # E2E testing configuration
+  - .env # Base configuration from EAS
+
+# Global environment variables
+env:
+  JAVA_HOME: /opt/homebrew/opt/openjdk@17
+  ANDROID_HOME: '/opt/homebrew/share/android-commandlinetools'
+  PATH: /opt/homebrew/opt/openjdk@17/bin:{{.ANDROID_HOME}}/emulator:{{.ANDROID_HOME}}/platform-tools:{{.ANDROID_HOME}}/tools:{{.ANDROID_HOME}}/tools/bin:{{.PATH}}:{{.HOME}}/.maestro/bin
+
+# Use bash for all tasks
+set: [pipefail]
+shopt: [globstar]
+
+tasks:
+  default:
+    desc: Show available tasks
+    silent: true
+    cmd: task --list
