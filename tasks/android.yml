@@ -1,0 +1,108 @@
+# Android Platform Tasks
+# All Android development tasks: setup, build, run, clean, EAS
+version: '3'
+
+tasks:
+  # ==================== Internal Setup Tasks ====================
+
+  _android-studio:
+    desc: Verify Android Studio and SDK installation
+    internal: true
+    silent: true
+    cmds:
+      - ./scripts/setup/android.sh install-android-studio
+
+  _sdk:
+    desc: Setup Android SDK and accept licenses
+    internal: true
+    silent: true
+    deps:
+      - _android-studio
+    cmds:
+      - ./scripts/setup/android.sh setup-android-sdk
+
+  _emulator:
+    desc: Verify Android emulator configuration
+    internal: true
+    silent: true
+    deps:
+      - _sdk
+    cmds:
+      - ./scripts/setup/android.sh setup-android-emulator
+
+  # ==================== Public Tasks ====================
+
+  setup:
+    desc: Setup Android development (SDK, emulator)
+    cmds:
+      - task: _android-studio
+      - task: _sdk
+      - task: _emulator
+      - echo ""
+      - echo "✅ Android setup complete!"
+      - echo ""
+      - echo "Next steps:"
+      - echo "  1. Run 'task android:generate' to create native Android project"
+      - echo "  2. Run 'task android:run' to build and run on emulator/device"
+
+  generate:
+    desc: Generate Android native project (clean prebuild)
+    cmds:
+      - npx expo prebuild --clean --platform android
+
+  generate-soft:
+    desc: Generate Android native project (incremental, faster)
+    cmds:
+      - npx expo prebuild --platform android
+
+  build:
+    desc: Build Android without running
+    cmds:
+      - task: generate
+      - echo "✅ Android project built (native files generated)"
+      - echo "   Run 'task android:run' to launch on emulator"
+
+  run:
+    desc: Build and run on Android (full rebuild)
+    cmds:
+      - pnpm run android
+
+  start:
+    desc: Run Android without rebuild (faster for iteration)
+    cmds:
+      - echo "Starting Android app without rebuild..."
+      - pnpm run android --no-build-cache
+
+  stop:
+    desc: Stop Android emulator
+    cmds:
+      - echo "🛑 Shutting down Android emulator..."
+      - adb emu kill 2>/dev/null || true
+      - echo "✅ Android emulator stopped"
+
+  clean:
+    desc: Clean Android caches (gradle, build)
+    cmds:
+      - echo "🧹 Cleaning Android caches..."
+      - rm -rf android/build
+      - rm -rf android/app/build
+      - rm -rf android/.gradle
+      - echo "✅ Android caches cleared"
+      - echo "   Run 'task android:generate' to rebuild"
+
+  eas:
+    desc: Build Android on EAS cloud (production)
+    cmds:
+      - pnpm run eas:build:android
+
+  eas-local:
+    desc: Build Android locally via EAS (production)
+    cmds:
+      - pnpm run eas:build:android:local
+
+  storybook:
+    desc: Run Storybook on Android
+    env:
+      EXPO_STORYBOOK_ENABLED: 'true'
+    cmds:
+      - pnpm run android

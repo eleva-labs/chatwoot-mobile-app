@@ -1,0 +1,41 @@
+# Utility Tasks
+# Diagnostics, utilities, and helper tools
+version: '3'
+
+tasks:
+  doctor:
+    desc: Run Expo doctor for diagnostics
+    cmds:
+      - pnpm run doctor
+
+  adb-connect:
+    desc: Connect ADB for React Native debugging
+    cmds:
+      - pnpm run adb:connect
+
+  storybook:
+    desc: Start Storybook server
+    env:
+      EXPO_STORYBOOK_ENABLED: 'true'
+    cmds:
+      - pnpm run storybook
+
+  storybook-generate:
+    desc: Generate Storybook stories index
+    cmds:
+      - pnpm run storybook:generate
+
+  build-metrics:
+    desc: Track build time metrics
+    cmds:
+      - ./scripts/track-build-time.sh {{.CLI_ARGS}}
+
+  ccache-stats:
+    desc: Show ccache statistics
+    cmds:
+      - ccache -s
+
+  ccache-clear:
+    desc: Clear ccache
+    cmds:
+      - ccache -C

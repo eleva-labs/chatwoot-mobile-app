@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/schema.json",
-  "model": "anthropic/claude-3-5-sonnet-20241022",
+  "model": "anthropic/claude-sonnet-4-5-20250929",
   "mcp": {
     "helicone": {
       "type": "local",
@@ -26,6 +26,9 @@
       "tools": {
         "helicone_*": false
       }
+    },
+    "observability": {
+      "model": "anthropic/claude-sonnet-4-5-20250929 "
     }
   }
 }

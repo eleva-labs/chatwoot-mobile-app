@@ -1,0 +1,29 @@
+# Development Server Tasks
+# Expo dev server management
+version: '3'
+
+tasks:
+  start:
+    desc: Start Expo dev server
+    cmds:
+      - pnpm run start
+
+  start-prod:
+    desc: Start Expo in production mode
+    cmds:
+      - pnpm run start:prod
+
+  stop:
+    desc: Stop Expo dev server (kill port 8081)
+    cmds:
+      - echo "🛑 Stopping Expo dev server..."
+      - lsof -ti:8081 | xargs kill -9 2>/dev/null || true
+      - rm -f /tmp/expo-dev-server.pid 2>/dev/null || true
+      - echo "✅ Dev server stopped"
+
+  restart:
+    desc: Restart Expo dev server
+    cmds:
+      - task: stop
+      - sleep 1
+      - task: start

@@ -1,0 +1,57 @@
+# Code Quality Tasks
+# Linting, formatting, type checking, and testing
+version: '3'
+
+tasks:
+  lint:
+    desc: Run ESLint
+    cmds:
+      - pnpm run lint
+
+  lint-fix:
+    desc: Run ESLint with auto-fix
+    cmds:
+      - pnpm exec eslint . --fix
+
+  format:
+    desc: Format code with Prettier
+    cmds:
+      - pnpm run format
+
+  format-check:
+    desc: Check if code is formatted (no changes)
+    cmds:
+      - pnpm exec prettier --check "src/**/*.{ts,tsx,js,jsx}"
+
+  format-all:
+    desc: Format code with Prettier then fix with ESLint (recommended)
+    cmds:
+      - task: format
+      - task: lint-fix
+
+  typecheck:
+    desc: Run TypeScript type checking
+    cmds:
+      - pnpm exec tsc --noEmit
+
+  check:
+    desc: Run all code quality checks (format + lint + typecheck)
+    cmds:
+      - task: format-check
+      - task: lint
+      - task: typecheck
+
+  test:
+    desc: Run unit tests
+    cmds:
+      - pnpm run test
+
+  test-watch:
+    desc: Run tests in watch mode
+    cmds:
+      - pnpm run test -- --watch
+
+  test-coverage:
+    desc: Run tests with coverage report
+    cmds:
+      - pnpm run test -- --coverage
