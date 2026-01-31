@@ -32,23 +32,22 @@ install-android-studio() {
     log_info "   • Android SDK Platform-Tools"
     log_info "   • Android Emulator"
     log_info ""
-    log_info "5. Add to your shell config (~/.zshrc or ~/.bashrc):"
-    log_info ""
-    log_info "   # Android SDK"
-    
     local platform=$(detect_platform)
+    local sdk_path=""
     if [[ "$platform" == "macos" ]]; then
-      log_info "   export ANDROID_HOME=\$HOME/Library/Android/sdk"
+      sdk_path="\$HOME/Library/Android/sdk"
     else
-      log_info "   export ANDROID_HOME=\$HOME/Android/Sdk"
+      sdk_path="\$HOME/Android/Sdk"
     fi
     
-    log_info "   export PATH=\$PATH:\$ANDROID_HOME/emulator"
-    log_info "   export PATH=\$PATH:\$ANDROID_HOME/platform-tools"
-    log_info "   export PATH=\$PATH:\$ANDROID_HOME/tools"
-    log_info "   export PATH=\$PATH:\$ANDROID_HOME/tools/bin"
+    log_info "5. Ensure Android SDK is installed at the expected location:"
+    log_info "   Expected location: $sdk_path"
     log_info ""
-    log_info "6. Restart your shell and run: task android:setup"
+    log_info "6. ANDROID_HOME and PATH are configured via .env + direnv"
+    log_info "   After installation, run: direnv allow ."
+    log_info "   Android tools will be available automatically in this project"
+    log_info ""
+    log_info "7. After direnv setup, run: task android:setup"
     log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     log_info ""
     exit 1
