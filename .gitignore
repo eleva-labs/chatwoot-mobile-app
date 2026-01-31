@@ -53,6 +53,9 @@ yarn-error.*
 dev.env
 prod.env
 
+# Maestro test credentials (use .env.maestro.example as template)
+.env.maestro
+
 # ============================================================================
 # TypeScript
 # ============================================================================
@@ -82,6 +85,4 @@ maestro/**/*.jpeg
 # ============================================================================
 # Temporary documentation
 /docs/temp/
-
-# Local ignored documentation
 /docs/ignored/
