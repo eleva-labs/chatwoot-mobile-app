@@ -8,11 +8,11 @@ Builds are managed through [EAS Build](https://docs.expo.dev/build/introduction/
 
 ## Build Profiles
 
-| Profile | Environment | Use Case |
-|---------|-------------|----------|
-| `development` | dev | Development builds with dev client |
-| `development:simulator` | dev | iOS simulator builds |
-| `production` | prod | Store-ready builds |
+| Profile                 | Environment | Use Case                           |
+| ----------------------- | ----------- | ---------------------------------- |
+| `development`           | dev         | Development builds with dev client |
+| `development:simulator` | dev         | iOS simulator builds               |
+| `production`            | prod        | Store-ready builds                 |
 
 ## Prerequisites
 
@@ -32,11 +32,13 @@ npx eas whoami  # Verify logged in
 ### 3. App Store / Play Store Setup
 
 **iOS (App Store Connect):**
+
 - Apple Developer Program membership ($99/year)
 - App created in App Store Connect
 - App-specific password for CI (optional)
 
 **Android (Google Play Console):**
+
 - Google Play Developer account ($25 one-time)
 - App created in Play Console
 - Service account key for automated submissions
@@ -49,11 +51,11 @@ For testing on devices with development features:
 
 ```bash
 # iOS (device)
-task eas-build-ios
+task ios:eas
 # Or: eas build -p ios --profile development
 
 # Android
-task eas-build-android
+task android:eas
 # Or: eas build -p android --profile development
 
 # iOS (simulator only)
@@ -78,10 +80,10 @@ Build on your machine instead of EAS cloud:
 
 ```bash
 # iOS (requires macOS + Xcode)
-task eas-build-ios-local
+task ios:eas-local
 
 # Android
-task eas-build-android-local
+task android:eas-local
 ```
 
 ## Store Submission
@@ -154,10 +156,10 @@ Sensitive variables are stored in EAS Secrets (not in code):
 
 The `ENVIRONMENT` variable controls which config is used:
 
-| ENVIRONMENT | Bundle ID | API URL |
-|-------------|-----------|---------|
-| `dev` | `com.chatscommerce.app.dev` | `https://dev.app.chatscommerce.com` |
-| `prod` | `com.chatscommerce.app` | `https://app.chatscommerce.com` |
+| ENVIRONMENT | Bundle ID                   | API URL                             |
+| ----------- | --------------------------- | ----------------------------------- |
+| `dev`       | `com.chatscommerce.app.dev` | `https://dev.app.chatscommerce.com` |
+| `prod`      | `com.chatscommerce.app`     | `https://app.chatscommerce.com`     |
 
 ## Code Signing
 
@@ -253,11 +255,13 @@ Updates are automatically downloaded when users open the app.
 ### Submission rejected
 
 **iOS common rejections:**
+
 - Missing privacy policy
 - Incomplete metadata
 - Guideline violations
 
 **Android common rejections:**
+
 - Missing privacy policy
 - Incorrect content rating
 - Policy violations

@@ -30,7 +30,7 @@ maestro/
 
 ```bash
 # Install Maestro and dependencies
-task maestro-setup
+task maestro:setup
 
 # Verify installation
 maestro --version
@@ -41,7 +41,7 @@ maestro doctor
 
 ```bash
 # Copy example file
-cp .env.maestro.local.example .env.maestro.local
+cp .env.maestro.example .env.maestro
 
 # Edit with your test credentials
 # E2E_USER_EMAIL=your-test-email@example.com
@@ -56,14 +56,14 @@ cp .env.maestro.local.example .env.maestro.local
 
 ```bash
 # Boot iOS Simulator
-task run-ios
+task ios:run
 ```
 
 **Android**:
 
 ```bash
 # Run Android Emulator
-task run-android
+task android:run
 ```
 
 ### Running Tests
@@ -74,7 +74,7 @@ If you are testing a **Debug build** (default for local development), ensure Met
 
 ```bash
 # Start Metro in background
-task start &
+task dev:start &
 ```
 
 For **Release builds** (CI/CD), Metro is not required.
@@ -83,20 +83,20 @@ For **Release builds** (CI/CD), Metro is not required.
 
 ```bash
 # Run all tests (default: local backend)
-task maestro-test
+task maestro:test
 
 # Against dev backend
-task maestro-test-dev
+task maestro:test-dev
 ```
 
 #### Smoke Tests Only
 
 ```bash
 # Default backend
-task maestro-test-smoke
+task maestro:smoke
 
 # Against dev backend
-task maestro-test-smoke-dev
+task maestro:smoke-dev
 ```
 
 #### Manual Maestro Commands
@@ -118,7 +118,7 @@ maestro test maestro/flows/auth/
 Use Maestro Studio to explore the app and generate draft flows:
 
 ```bash
-task maestro-studio
+task maestro:studio
 ```
 
 Studio will open at http://localhost:9999, providing:
@@ -175,7 +175,7 @@ Use Maestro Studio when:
    ```bash
    pnpm maestro:studio
    # or
-   task maestro-studio
+   task maestro:studio
    ```
 
 2. **Connect Device/Simulator**:
@@ -289,10 +289,10 @@ Before committing a flow to `flows/`:
 | `APP_ID`              | App identifier              | `com.chatscommerce.app.dev` |
 | `LAUNCH_TIMEOUT`      | App launch timeout (ms)     | `30000`                     |
 | `ELEMENT_TIMEOUT`     | Element wait timeout (ms)   | `10000`                     |
-| `E2E_USER_EMAIL`      | Test agent email            | From `.env.maestro.local`   |
-| `E2E_USER_PASSWORD`   | Test agent password         | From `.env.maestro.local`   |
-| `E2E_ADMIN_EMAIL`     | Test admin email            | From `.env.maestro.local`   |
-| `E2E_ADMIN_PASSWORD`  | Test admin password         | From `.env.maestro.local`   |
+| `E2E_USER_EMAIL`      | Test agent email            | From `.env.maestro`         |
+| `E2E_USER_PASSWORD`   | Test agent password         | From `.env.maestro`         |
+| `E2E_ADMIN_EMAIL`     | Test admin email            | From `.env.maestro`         |
+| `E2E_ADMIN_PASSWORD`  | Test admin password         | From `.env.maestro`         |
 
 ### Centralized Configuration
 
@@ -394,11 +394,11 @@ MAESTRO_BACKEND_URL=https://dev.app.chatscommerce.com pnpm maestro:test:smoke:de
 ### Maestro Not Found
 
 ```bash
-# Add Maestro to PATH
-export PATH="$HOME/.maestro/bin:$PATH"
+# Run Maestro setup (installs Java, Maestro CLI, idb-companion)
+task maestro:setup
 
-# Or run setup script
-./scripts/maestro/setup.sh
+# Maestro is automatically added to PATH
+export PATH="$HOME/.maestro/bin:$PATH"
 ```
 
 ### Device Not Found

@@ -9,7 +9,7 @@ echo "🚀 Running EAS pre-install tasks..."
 
 # 1. Copy Google Services files
 echo "📄 Step 1: Copying Google Services files..."
-node scripts/copy-google-services.js
+node scripts/eas/copy-firebase-credentials.js
 
 echo "✅ EAS pre-install tasks completed!"
 

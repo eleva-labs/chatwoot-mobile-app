@@ -20,6 +20,7 @@ Or set `ANDROID_HOME` environment variable. See [Android Setup](SETUP_ANDROID.md
 Ensure `SIMULATOR=1` is set in your `.env` file.
 
 **For device builds:**
+
 1. Open `ios/ChatscommerceDev.xcworkspace` in Xcode
 2. Select project > Signing & Capabilities
 3. Enable "Automatically manage signing"
@@ -34,7 +35,7 @@ cd ios
 pod deintegrate
 pod install
 cd ..
-task run-ios
+task ios:run
 ```
 
 ### Ruby/CocoaPods gem errors (e.g., bigdecimal missing)
@@ -44,6 +45,7 @@ If you encounter errors like "cannot load such file -- bigdecimal" or other gem 
 **Root Cause:** Homebrew Ruby 4.0 may have dependency issues with CocoaPods gem requirements.
 
 **Solution 1 - Use system Ruby:**
+
 ```bash
 # Check which ruby is being used
 which ruby
@@ -56,6 +58,7 @@ sudo gem install cocoapods
 ```
 
 **Solution 2 - Install missing gems:**
+
 ```bash
 # Install the missing gem
 sudo gem install bigdecimal
@@ -65,6 +68,7 @@ sudo gem install cocoapods --no-document
 ```
 
 **Solution 3 - Use rbenv/rvm for Ruby version management:**
+
 ```bash
 # Install rbenv
 brew install rbenv
@@ -101,10 +105,10 @@ Metro bundler not running or not connected:
 
 ```bash
 # Terminal 1: Start Metro
-task start
+task dev:start
 
 # Terminal 2: Run app
-task run-android
+task android:run
 ```
 
 If using physical device, ensure port forwarding:
@@ -116,6 +120,7 @@ adb reverse tcp:8081 tcp:8081
 ### App crashes on startup
 
 1. **Check logs:**
+
    ```bash
    # iOS
    xcrun simctl spawn booted log stream --level debug
@@ -125,19 +130,20 @@ adb reverse tcp:8081 tcp:8081
    ```
 
 2. **Clear caches:**
+
    ```bash
-   task clean
-   task generate
+   task ios:clean  # or task android:clean
+   task ios:generate  # or task android:generate
    ```
 
 3. **Verify environment:**
    ```bash
-   task env-check
+   task setup:env-check
    ```
 
 ### White screen / nothing renders
 
-1. Check Metro is running (`task start`)
+1. Check Metro is running (`task dev:start`)
 2. Check for JavaScript errors in console
 3. Try reloading: shake device or `Cmd+R` (iOS) / `R R` (Android)
 
@@ -147,10 +153,10 @@ adb reverse tcp:8081 tcp:8081
 
 1. Ensure `.env` file exists in project root
 2. Restart the dev server after changes
-3. Run `task env-check` to verify
+3. Run `task setup:env-check` to verify
 
 ```bash
-task env-check
+task setup:env-check
 ```
 
 ### Variables empty in app code
@@ -175,7 +181,7 @@ npx eas login
 npx eas whoami
 
 # Retry
-task setup-dev
+task setup:base
 ```
 
 ## Simulator / Emulator Issues
@@ -220,9 +226,9 @@ Or increase emulator storage in AVD settings.
 
 ```bash
 # Full clean rebuild
-task clean
-task generate
-task run-ios  # or task run-android
+task ios:clean  # or task android:clean
+task ios:generate  # or task android:generate
+task ios:run  # or task android:run
 ```
 
 ## Firebase / Push Notifications
@@ -230,6 +236,7 @@ task run-ios  # or task run-android
 ### Push notifications not working
 
 1. **Check credentials exist:**
+
    ```bash
    ls -la credentials/android/
    ls -la credentials/ios/
@@ -255,14 +262,14 @@ When all else fails, full reset:
 rm -rf ios android
 
 # Clear all caches
-task clean
+task ios:clean  # or task android:clean
 rm -rf node_modules
 rm -rf ~/Library/Developer/Xcode/DerivedData  # iOS
 
 # Reinstall and regenerate
 pnpm install
-task generate
-task run-ios  # or task run-android
+task ios:generate  # or task android:generate
+task ios:run  # or task android:run
 ```
 
 ## Build Cache Issues
@@ -274,24 +281,28 @@ task run-ios  # or task run-android
 **Solutions:**
 
 1. Verify ccache is installed:
+
    ```bash
    ccache --version
    which ccache
    ```
 
 2. Verify PATH includes ccache libexec:
+
    ```bash
    echo $PATH | grep ccache
    # Should show: /opt/homebrew/opt/ccache/libexec
    ```
 
 3. Add to ~/.zshrc if missing:
+
    ```bash
    export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
    source ~/.zshrc
    ```
 
 4. Launch Xcode from terminal (required for ccache to intercept compiler calls):
+
    ```bash
    xed ios/ChatscommerceDev.xcworkspace
    ```
@@ -306,13 +317,11 @@ task run-ios  # or task run-android
 **Symptoms:** Strange build errors after dependency updates
 
 **Solution:**
-```bash
-# Clear all caches
-task clean-all-caches
 
+```bash
 # Reinstall and rebuild
 pnpm install
-task generate
+task ios:generate  # or task android:generate
 ```
 
 ### expo-build-disk-cache not working
@@ -322,7 +331,7 @@ task generate
 **When SDK 53 is available:**
 
 1. Uncomment experiments section in `app.config.ts`
-2. Run `task generate`
+2. Run `task ios:generate` or `task android:generate`
 3. Verify cache directory: `ls node_modules/.expo-build-disk-cache`
 
 ## Getting Help

@@ -18,9 +18,11 @@ description: >-
 ## Overview
 
 ### Purpose
+
 Build and deploy the Chatwoot Mobile App to the App Store and Google Play using EAS Build (Expo Application Services). This guide covers build profiles, code signing, store submission, version management, and over-the-air updates.
 
 ### When to Use
+
 **ALWAYS**: App store submissions, production builds, preview builds, OTA updates, version management
 **SKIP**: Local development builds, debugging, environment setup
 
@@ -39,6 +41,7 @@ Build and deploy the Chatwoot Mobile App to the App Store and Google Play using 
 ## Process Workflow
 
 ### Flow Diagram
+
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │  Setup EAS      │────>│  Configure      │────>│  Build App      │
@@ -53,24 +56,25 @@ Build and deploy the Chatwoot Mobile App to the App Store and Google Play using 
 ```
 
 ### Phase Summary
-| Phase | Description | Time |
-|-------|-------------|------|
-| 1 | Setup EAS | 10 min |
-| 2 | Configure Credentials | 15-30 min |
-| 3 | Build App | 15-45 min |
-| 4 | Submit to Store | 5 min |
-| 5 | Store Review | 1-7 days |
+
+| Phase | Description           | Time      |
+| ----- | --------------------- | --------- |
+| 1     | Setup EAS             | 10 min    |
+| 2     | Configure Credentials | 15-30 min |
+| 3     | Build App             | 15-45 min |
+| 4     | Submit to Store       | 5 min     |
+| 5     | Store Review          | 1-7 days  |
 
 ---
 
 ## Build Profiles
 
-| Profile | Environment | Use Case |
-|---------|-------------|----------|
-| `development` | dev | Development builds with dev client |
-| `development:simulator` | dev | iOS simulator builds |
-| `preview` | dev | Internal distribution builds |
-| `production` | prod | Store-ready builds |
+| Profile                 | Environment | Use Case                           |
+| ----------------------- | ----------- | ---------------------------------- |
+| `development`           | dev         | Development builds with dev client |
+| `development:simulator` | dev         | iOS simulator builds               |
+| `preview`               | dev         | Internal distribution builds       |
+| `production`            | prod        | Store-ready builds                 |
 
 ---
 
@@ -95,12 +99,12 @@ Each build profile includes cache configuration in `eas.json`:
 
 ### Cache Keys
 
-| Profile | Cache Key | Purpose |
-|---------|-----------|---------|
-| development | `dev-v1` | Development client builds |
-| development:simulator | `dev-sim-v1` | Simulator builds |
-| preview | `preview-v1` | Internal distribution |
-| production | `prod-v1` | Store builds |
+| Profile               | Cache Key    | Purpose                   |
+| --------------------- | ------------ | ------------------------- |
+| development           | `dev-v1`     | Development client builds |
+| development:simulator | `dev-sim-v1` | Simulator builds          |
+| preview               | `preview-v1` | Internal distribution     |
+| production            | `prod-v1`    | Store builds              |
 
 ### Invalidating Cache
 
@@ -143,6 +147,7 @@ npm install -g eas-cli@latest
 ### iOS (App Store Connect)
 
 Required:
+
 - Apple Developer Program membership ($99/year)
 - App created in App Store Connect
 - App-specific password for CI (optional)
@@ -150,6 +155,7 @@ Required:
 ### Android (Google Play Console)
 
 Required:
+
 - Google Play Developer account ($25 one-time)
 - App created in Play Console
 - Service account key for automated submissions
@@ -164,11 +170,11 @@ For testing on devices with development features:
 
 ```bash
 # iOS (device)
-task eas-build-ios
+task ios:eas
 # Or: eas build -p ios --profile development
 
 # Android
-task eas-build-android
+task android:eas
 # Or: eas build -p android --profile development
 
 # iOS (simulator only)
@@ -193,10 +199,10 @@ Build on your machine instead of EAS cloud:
 
 ```bash
 # iOS (requires macOS + Xcode)
-task eas-build-ios-local
+task ios:eas-local
 
 # Android
-task eas-build-android-local
+task android:eas-local
 ```
 
 ---
@@ -250,10 +256,10 @@ Version numbers are managed automatically by EAS:
 }
 ```
 
-| Setting | Description |
-|---------|-------------|
-| `appVersionSource: "remote"` | EAS tracks version numbers |
-| `autoIncrement: true` | Build number increments automatically |
+| Setting                      | Description                           |
+| ---------------------------- | ------------------------------------- |
+| `appVersionSource: "remote"` | EAS tracks version numbers            |
+| `autoIncrement: true`        | Build number increments automatically |
 
 ### Manual Version Setting
 
@@ -274,6 +280,7 @@ EAS manages iOS code signing automatically. On first build:
 3. Subsequent builds use stored credentials
 
 To manage credentials:
+
 ```bash
 eas credentials
 ```
@@ -304,10 +311,10 @@ Sensitive variables are stored in EAS Secrets (not in code):
 
 The `ENVIRONMENT` variable controls which config is used:
 
-| ENVIRONMENT | Bundle ID | API URL |
-|-------------|-----------|---------|
-| `dev` | `com.chatscommerce.app.dev` | `https://dev.app.chatscommerce.com` |
-| `prod` | `com.chatscommerce.app` | `https://app.chatscommerce.com` |
+| ENVIRONMENT | Bundle ID                   | API URL                             |
+| ----------- | --------------------------- | ----------------------------------- |
+| `dev`       | `com.chatscommerce.app.dev` | `https://dev.app.chatscommerce.com` |
+| `prod`      | `com.chatscommerce.app`     | `https://app.chatscommerce.com`     |
 
 ---
 
@@ -328,12 +335,14 @@ Updates are automatically downloaded when users open the app.
 ### When to Use OTA
 
 **Use OTA for**:
+
 - JavaScript/TypeScript bug fixes
 - UI/UX changes
 - Copy/text updates
 - Logic changes
 
 **Requires full build for**:
+
 - Native module updates
 - SDK version changes
 - New native dependencies
@@ -435,8 +444,8 @@ eas build -p android --profile production
 eas build -p ios --profile development:simulator
 
 # Local builds
-task eas-build-ios-local
-task eas-build-android-local
+task ios:eas-local
+task android:eas-local
 ```
 
 ### Submit Commands
@@ -456,15 +465,15 @@ eas build -p ios --profile production --auto-submit
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| Build failed on EAS | Check build logs on [expo.dev](https://expo.dev); common issues: missing env vars, credential issues, native deps |
-| iOS submission rejected | Common: missing privacy policy, incomplete metadata, guideline violations |
-| Android submission rejected | Common: missing privacy policy, incorrect content rating, policy violations |
-| Credentials issues | Run `eas credentials` to view/reset; select "Remove" to clear and recreate |
-| Build queue is long | Consider local builds with `task eas-build-ios-local` |
-| OTA update not appearing | Ensure app is closed/reopened; check update branch matches build branch |
-| Version number conflict | Run `eas build:version:set` to manually set version |
+| Issue                       | Solution                                                                                                          |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Build failed on EAS         | Check build logs on [expo.dev](https://expo.dev); common issues: missing env vars, credential issues, native deps |
+| iOS submission rejected     | Common: missing privacy policy, incomplete metadata, guideline violations                                         |
+| Android submission rejected | Common: missing privacy policy, incorrect content rating, policy violations                                       |
+| Credentials issues          | Run `eas credentials` to view/reset; select "Remove" to clear and recreate                                        |
+| Build queue is long         | Consider local builds with `task ios:eas-local`                                                                   |
+| OTA update not appearing    | Ensure app is closed/reopened; check update branch matches build branch                                           |
+| Version number conflict     | Run `eas build:version:set` to manually set version                                                               |
 
 ---
 
@@ -494,13 +503,10 @@ eas build -p ios --profile production --auto-submit
 
 ## Related SOPs
 
-| Skill | Purpose | When to Use |
-|-------|---------|-------------|
-| [/setup-dev](../setup-dev/SKILL.md) | Environment setup | Before first build |
-| [/setup-ios](../setup-ios/SKILL.md) | iOS environment | Local iOS builds |
-| [/setup-android](../setup-android/SKILL.md) | Android environment | Local Android builds |
-| [/setup-env](../setup-env/SKILL.md) | Environment variables | Configuring EAS secrets |
-| [/test-mobile](../test-mobile/SKILL.md) | Testing | Before production builds |
+| Skill                                   | Purpose           | When to Use              |
+| --------------------------------------- | ----------------- | ------------------------ |
+| [/setup](../setup/SKILL.md)             | Environment setup | Before first build       |
+| [/test-mobile](../test-mobile/SKILL.md) | Testing           | Before production builds |
 
 ---
 

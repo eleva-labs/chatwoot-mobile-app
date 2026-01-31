@@ -38,16 +38,21 @@ If you're new to the project, start with the [README Quick Start](../README.md#q
 git clone <repository-url>
 cd chatwoot-mobile-app
 
-# Run automated setup (installs everything)
-./scripts/setup-development.sh
+# Run complete setup (base + iOS + Android + E2E)
+task setup:full
+
+# OR quick setup (dependencies + environment only)
+task setup:quick
 ```
 
-That's it! The script handles:
+That's it! The setup handles:
 
-- ✅ Volta installation
-- ✅ Node.js 20 setup
-- ✅ Project dependency installation
-- ✅ Development environment configuration
+- ✅ Volta and Node.js 20
+- ✅ Development tools (Watchman, Task, pnpm)
+- ✅ direnv configuration
+- ✅ Environment files (.env)
+- ✅ Platform-specific tools (iOS/Android)
+- ✅ E2E testing setup (Maestro)
 
 ### Option 2: Manual Setup (10 minutes)
 
@@ -63,10 +68,10 @@ volta pin node@20
 pnpm install
 
 # 4. Setup development environment
-task setup-dev
+task setup:base
 
 # 5. Verify setup
-task check-prereqs
+task setup:check-prereqs
 ```
 
 ---
@@ -77,23 +82,23 @@ task check-prereqs
 
 ```bash
 # Start iOS development
-task run-ios
+task ios:run
 
 # Start Android development
-task run-android
+task android:run
 
 # Check your environment
-task check-prereqs
+task setup:check-prereqs
 
 # Run tests
-task test
+task quality:test
 
 # Clean and regenerate (use generate-soft for faster rebuilds)
-task clean
-task generate-soft  # or task generate for clean rebuild
+task ios:clean  # or task android:clean
+task ios:generate-soft  # or task ios:generate for clean rebuild
 ```
 
-> **Tip:** Use `task generate-soft` for incremental rebuilds or `task generate-fast` to skip pod install entirely. See Build Performance section below.
+> **Tip:** Use `task ios:generate-soft` (or `task android:generate-soft`) for incremental rebuilds. See Build Performance section below.
 
 ### Project Structure
 
@@ -154,53 +159,46 @@ volta list
 
 ```bash
 # iOS Simulator
-task run-ios
+task ios:run
 
 # Android Emulator
-task run-android
-
-# Web development
-task run-web
+task android:run
 ```
 
 ### Testing
 
 ```bash
 # Run all tests
-task test
+task quality:test
 
 # Run tests in watch mode
-task test:watch
+task quality:test-watch
 
 # Run E2E tests
-task test:e2e
+task maestro:test
 ```
 
 ### Code Quality
 
 ```bash
 # Lint code
-task lint
+task quality:lint
 
 # Format code
-task format
+task quality:format
 
 # Type check
-task typecheck
+task quality:typecheck
 ```
 
 ### Build & Deploy
 
 ```bash
 # Build for iOS (development)
-task build-ios-dev
+task ios:build
 
 # Build for Android (development)
-task build-android-dev
-
-# Submit to stores
-task submit-ios
-task submit-android
+task android:build
 ```
 
 ---
@@ -211,7 +209,7 @@ task submit-android
 
 ```bash
 # Check all prerequisites
-task check-prereqs
+task setup:check-prereqs
 
 # Common issues:
 # - Restart terminal after Volta installation
@@ -223,17 +221,8 @@ task check-prereqs
 
 ```bash
 # Clean and regenerate native code
-task clean
-task generate
-
-# Clear Metro cache
-task clean-cache
-
-# Clear all caches (Metro, iOS, ccache)
-task clean-all-caches
-
-# Reset iOS simulator
-task reset-ios-simulator
+task ios:clean  # or task android:clean
+task ios:generate  # or task android:generate
 ```
 
 ### Dependency Issues
@@ -243,8 +232,9 @@ task reset-ios-simulator
 rm -rf node_modules
 pnpm install
 
-# Clear all caches
-task clean-all
+# Clear all caches (remove manually)
+rm -rf ios android
+rm -rf node_modules/.cache
 ```
 
 ---
@@ -255,18 +245,18 @@ This project includes build caching optimizations for faster development:
 
 ### Caching Features
 
-| Feature | Benefit | Status |
-|---------|---------|--------|
-| ccache | 40-50% faster C/C++ compilation | Enabled - requires ccache install |
-| EAS Build caching | 30-40% faster cloud builds | Enabled |
-| expo-build-disk-cache | Near-instant rebuilds | Ready for SDK 53+ |
+| Feature               | Benefit                         | Status                            |
+| --------------------- | ------------------------------- | --------------------------------- |
+| ccache                | 40-50% faster C/C++ compilation | Enabled - requires ccache install |
+| EAS Build caching     | 30-40% faster cloud builds      | Enabled                           |
+| expo-build-disk-cache | Near-instant rebuilds           | Ready for SDK 53+                 |
 
 ### Build Commands
 
 ```bash
-task generate        # Clean rebuild (use after SDK changes)
-task generate-soft   # Incremental (use for config changes)
-task generate-fast   # Skip pod install (fastest)
+task ios:generate        # Clean rebuild (use after SDK changes)
+task ios:generate-soft   # Incremental (use for config changes)
+# For Android: task android:generate, task android:generate-soft
 ```
 
 ### First-Time Setup for ccache
@@ -286,8 +276,8 @@ ccache -s
 ### Monitoring Cache Performance
 
 ```bash
-task ccache-stats     # Show ccache hit/miss statistics
-task build-metrics soft ios  # Track build time
+task utils:ccache-stats          # Show ccache hit/miss statistics
+task utils:build-metrics soft ios  # Track build time
 ```
 
 ---
@@ -296,10 +286,8 @@ task build-metrics soft ios  # Track build time
 
 ### Documentation
 
-- **[Setup Guide](docs/SETUP_IOS.md)**: Detailed environment setup
+- **[Setup Guide](SETUP_IOS.md)**: Detailed environment setup
 - **[Architecture](docs/architecture.md)**: System design and patterns
-- **[API Docs](docs/api.md)**: Backend integration guide
-- **[Testing](docs/testing.md)**: Testing strategies and tools
 
 ### Communication
 
@@ -379,20 +367,17 @@ cp .env.example .env
 
 # Use Hermes engine
 # Configured in app.config.ts
-
-# Optimize bundle size
-task analyze-bundle
 ```
 
 ---
 
 ## Success Checklist
 
-- [ ] ✅ Environment setup complete (`task check-prereqs` passes)
-- [ ] ✅ Can run iOS Simulator (`task run-ios`)
-- [ ] ✅ Can run Android Emulator (`task run-android`)
-- [ ] ✅ Can run tests (`task test`)
-- [ ] ✅ Can build development app (`task build-ios-dev`)
+- [ ] ✅ Environment setup complete (`task setup:check-prereqs` passes)
+- [ ] ✅ Can run iOS Simulator (`task ios:run`)
+- [ ] ✅ Can run Android Emulator (`task android:run`)
+- [ ] ✅ Can run tests (`task quality:test`)
+- [ ] ✅ Can build development app (`task ios:build`)
 - [ ] ✅ Understands project structure and workflow
 - [ ] ✅ Knows where to find documentation and help
 

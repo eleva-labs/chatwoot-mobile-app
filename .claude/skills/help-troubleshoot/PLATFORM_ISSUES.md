@@ -17,6 +17,7 @@
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Check Xcode version
 xcodebuild -version
@@ -39,6 +40,7 @@ sudo xcodebuild -license accept
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Kill simulator
 killall Simulator
@@ -66,6 +68,7 @@ open -a Simulator
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Update CocoaPods
 sudo gem install cocoapods
@@ -91,6 +94,7 @@ cd ..
 **Cause:** Homebrew Ruby 4.0 has dependency issues with CocoaPods gem requirements
 
 **Solution 1 - Use system Ruby:**
+
 ```bash
 # Check which ruby is being used
 which ruby
@@ -103,6 +107,7 @@ sudo gem install cocoapods
 ```
 
 **Solution 2 - Install missing gems:**
+
 ```bash
 # Install the missing gem
 sudo gem install bigdecimal
@@ -112,6 +117,7 @@ sudo gem install cocoapods --no-document
 ```
 
 **Solution 3 - Use rbenv for Ruby version management:**
+
 ```bash
 # Install rbenv
 brew install rbenv
@@ -138,6 +144,7 @@ gem install cocoapods
 Set `SIMULATOR=1` in `.env`
 
 **For device:**
+
 1. Open `ios/ChatscommerceDev.xcworkspace`
 2. Select project > Signing & Capabilities
 3. Enable "Automatically manage signing"
@@ -156,6 +163,7 @@ Set `SIMULATOR=1` in `.env`
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Install command line tools
 xcode-select --install
@@ -176,6 +184,7 @@ xcode-select -p
 **Cause:** Android SDK path not configured
 
 **Solution:** Create `android/local.properties`:
+
 ```properties
 sdk.dir=/Users/<username>/Library/Android/sdk
 ```
@@ -183,6 +192,7 @@ sdk.dir=/Users/<username>/Library/Android/sdk
 Or set environment variable:
 
 **Commands:**
+
 ```bash
 export ANDROID_HOME=$HOME/Library/Android/sdk
 ```
@@ -200,6 +210,7 @@ export ANDROID_HOME=$HOME/Library/Android/sdk
 **Solution:**
 
 **Commands:**
+
 ```bash
 # List emulators
 emulator -list-avds
@@ -222,6 +233,7 @@ emulator -avd <avd_name> -wipe-data
 **Cause:** Gradle configuration issue, cache corruption
 
 **Solution:**
+
 1. Open `android/` in Android Studio
 2. Click "Sync Project with Gradle Files"
 3. If still failing: File > Invalidate Caches > Restart
@@ -239,6 +251,7 @@ emulator -avd <avd_name> -wipe-data
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Ensure Metro is running
 pnpm start
@@ -263,6 +276,7 @@ adb devices
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Wipe emulator data
 emulator -avd <avd_name> -wipe-data
@@ -281,11 +295,13 @@ Or increase storage in AVD Manager.
 **Cause:** USB debugging not enabled, driver issues, or device not authorized
 
 **Solution:**
+
 1. Enable USB debugging on device (Developer Options)
 2. Connect device and tap "Allow" on authorization prompt
 3. Install proper USB drivers (Windows)
 
 **Commands:**
+
 ```bash
 # Check devices
 adb devices
@@ -306,6 +322,7 @@ adb start-server
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Clean Gradle
 cd android
@@ -320,10 +337,10 @@ task generate
 
 ## Related Documentation
 
-- [COMMON_ISSUES.md](COMMON_ISSUES.md) - Issue index
 - [BUILD_ISSUES.md](BUILD_ISSUES.md) - Build-related issues
-- [SETUP_ISSUES.md](SETUP_ISSUES.md) - Setup-related issues
+- [RUNTIME_ISSUES.md](RUNTIME_ISSUES.md) - Runtime-related issues
 - [SKILL.md](SKILL.md) - Troubleshooting overview
+- [/setup](../setup/SKILL.md) - Environment setup and configuration
 
 ---
 

@@ -11,20 +11,25 @@
 ## Overview
 
 ### Purpose
+
 This process enables complex, multi-session feature development with persistent documentation. It ensures continuity across sessions, tracks progress systematically, and allows any developer (or AI agent) to pick up work exactly where the previous session left off.
 
 ### Scope
+
 **Covered**: Feature development, refactoring projects, architecture migrations, multi-phase implementations
 **NOT Covered**: Single-file bug fixes, documentation-only changes, simple one-off tasks
 
 ### When to Use
+
 **ALWAYS**: Multi-day features, architecture changes, projects requiring research + design + implementation phases, work that spans multiple sessions
 **SKIP**: Tasks completable in a single session, simple bug fixes, minor updates
 
 ### Summary
+
 This process creates a dedicated documentation folder for each major feature or project under `/docs/ignored/`. The folder contains an INDEX file (central navigation), SESSION_HANDOFF file (session context), design documents, execution plans, and research notes. Sub-agents are spawned for specific tasks (research, design, coding, testing) and report their work back, updating the documentation as they complete tasks.
 
 The process ensures that:
+
 1. Any session can start by reading INDEX.md and SESSION_HANDOFF.md
 2. Progress is tracked via checkboxes and status updates in execution documents
 3. Dependencies between tasks are clearly documented
@@ -41,6 +46,7 @@ The process ensures that:
 5. **Documentation-Driven Progress** - Work isn't "done" until the execution document reflects completion
 
 ### Success Criteria
+
 - [ ] Any agent can resume work by reading INDEX.md + SESSION_HANDOFF.md
 - [ ] All completed tasks have checked boxes in execution documents
 - [ ] Dependencies are tracked and respected
@@ -51,6 +57,7 @@ The process ensures that:
 ## Process Workflow
 
 ### Flow Diagram
+
 ```
 [New Feature Request]
         ↓
@@ -77,17 +84,18 @@ The process ensures that:
 
 ### Phase Summary
 
-| Phase | Objective | Deliverable | Typical Duration |
-|-------|-----------|-------------|------------------|
-| 1. Setup | Create folder structure and initial docs | Feature folder with INDEX.md | 15-30 min |
-| 2. Research | Understand current state, identify gaps | Gap analysis, research notes | 1-4 hours |
-| 3. Design | Create solutions for identified problems | Design documents per component | 2-6 hours |
-| 4. Planning | Break designs into executable tasks | Execution documents with checkboxes | 1-2 hours |
-| 5. Execution | Implement via sub-agents | Working code (pending validation) | Variable |
-| 6. Validation | Verify correctness, patterns, quality | Validated code, updated docs | 15-30 min |
-| 7. Handoff | Document session state for continuity | Updated SESSION_HANDOFF.md | 10-15 min |
+| Phase         | Objective                                | Deliverable                         | Typical Duration |
+| ------------- | ---------------------------------------- | ----------------------------------- | ---------------- |
+| 1. Setup      | Create folder structure and initial docs | Feature folder with INDEX.md        | 15-30 min        |
+| 2. Research   | Understand current state, identify gaps  | Gap analysis, research notes        | 1-4 hours        |
+| 3. Design     | Create solutions for identified problems | Design documents per component      | 2-6 hours        |
+| 4. Planning   | Break designs into executable tasks      | Execution documents with checkboxes | 1-2 hours        |
+| 5. Execution  | Implement via sub-agents                 | Working code (pending validation)   | Variable         |
+| 6. Validation | Verify correctness, patterns, quality    | Validated code, updated docs        | 15-30 min        |
+| 7. Handoff    | Document session state for continuity    | Updated SESSION_HANDOFF.md          | 10-15 min        |
 
 ### Prerequisites
+
 - Clear feature requirements or problem statement
 - Access to the codebase for research
 - Understanding of project architecture
@@ -116,6 +124,7 @@ Create the following structure under `/docs/ignored/`:
 ```
 
 **Naming Convention**:
+
 - Feature folder: `snake_case` descriptive name (e.g., `ai_assistant_clean_architecture`)
 - Design docs: `DESIGN_##_COMPONENT_NAME.md` (e.g., `DESIGN_01_DI_BOOTSTRAP.md`)
 - Execution docs: `EXECUTION_##_TASK_NAME.md` (e.g., `EXECUTION_01_DI_BOOTSTRAP.md`)
@@ -137,8 +146,8 @@ The INDEX.md file should contain:
 
 **Last Updated**: {Date}
 
-| Metric | Before | Current | Target |
-|--------|--------|---------|--------|
+| Metric     | Before  | Current | Target  |
+| ---------- | ------- | ------- | ------- |
 | {Metric 1} | {value} | {value} | {value} |
 
 ---
@@ -147,25 +156,26 @@ The INDEX.md file should contain:
 
 ### Phase 1: {Phase Name}
 
-| Order | Execution | Design | Status | Effort | Description |
-|-------|-----------|--------|--------|--------|-------------|
-| 1 | [EXECUTION_01](development/EXECUTION_01_*.md) | [DESIGN_01](design/DESIGN_01_*.md) | Not Started | X hrs | {Description} |
+| Order | Execution                                     | Design                             | Status      | Effort | Description   |
+| ----- | --------------------------------------------- | ---------------------------------- | ----------- | ------ | ------------- |
+| 1     | [EXECUTION_01](development/EXECUTION_01_*.md) | [DESIGN_01](design/DESIGN_01_*.md) | Not Started | X hrs  | {Description} |
 
 ### Phase 2: {Phase Name}
 
-| Order | Execution | Design | Status | Effort | Dependencies |
-|-------|-----------|--------|--------|--------|--------------|
-| 2 | [EXECUTION_02](...) | [DESIGN_02](...) | Not Started | X hrs | Requires EXECUTION_01 |
+| Order | Execution           | Design           | Status      | Effort | Dependencies          |
+| ----- | ------------------- | ---------------- | ----------- | ------ | --------------------- |
+| 2     | [EXECUTION_02](...) | [DESIGN_02](...) | Not Started | X hrs  | Requires EXECUTION_01 |
 
 ---
 
 ## Dependency Graph
+```
 
-```
 EXECUTION_01 ──────────────────┐
-     │                         │
-     └──────────────────────▶ EXECUTION_02
-```
+│ │
+└──────────────────────▶ EXECUTION_02
+
+````
 
 ---
 
@@ -188,12 +198,13 @@ EXECUTION_01 ──────────────────┐
 npx tsc --noEmit
 
 # Format and lint
-task format-all
+task quality:format-all
 
 # Run tests
-task test
-```
-```
+task quality:test
+````
+
+````
 
 ### Step 1.3: Create SESSION_HANDOFF.md
 
@@ -224,8 +235,10 @@ task test
 | {Task} | Complete | {Details} |
 
 ### Commits Created
-```
+````
+
 {commit-hash} {commit-message}
+
 ```
 
 ---
@@ -246,9 +259,11 @@ task test
 ```
 
 ### Deliverable
+
 **Output**: Feature folder with INDEX.md and SESSION_HANDOFF.md templates
 
 **Quality Check**:
+
 - [ ] Folder structure created
 - [ ] INDEX.md has execution order table
 - [ ] SESSION_HANDOFF.md has quick start section
@@ -273,6 +288,7 @@ Prompt structure:
 ```
 
 **Example**:
+
 ```
 Research the current state of dependency injection in the codebase.
 Investigate:
@@ -288,15 +304,18 @@ docs/ignored/{feature}/research/GAP_ANALYSIS.md
 ### Step 2.2: Document Findings
 
 Research documents should include:
+
 - Current state analysis
 - Gap identification
 - Recommendations
 - Supporting evidence (file paths, code snippets)
 
 ### Deliverable
+
 **Output**: Research documents in `/research/` folder
 
 **Quality Check**:
+
 - [ ] Current state documented with file references
 - [ ] Gaps clearly identified
 - [ ] Recommendations actionable
@@ -322,29 +341,36 @@ For each major component or task, create a design document:
 ---
 
 ## Problem Statement
+
 {What problem this solves}
 
 ## Proposed Solution
+
 {Architecture, approach, key decisions}
 
 ## Implementation Details
+
 {Code examples, file changes}
 
 ## Files to Create/Modify
-| Action | File | Purpose |
-|--------|------|---------|
+
+| Action | File            | Purpose   |
+| ------ | --------------- | --------- |
 | CREATE | path/to/file.ts | {Purpose} |
 | MODIFY | path/to/file.ts | {Changes} |
 
 ## Testing/Validation
+
 {How to verify the solution works}
 
 ## Risks and Mitigations
-| Risk | Mitigation |
-|------|------------|
+
+| Risk   | Mitigation   |
+| ------ | ------------ |
 | {Risk} | {Mitigation} |
 
 ## Success Criteria
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 ```
@@ -352,14 +378,17 @@ For each major component or task, create a design document:
 ### Step 3.2: Identify Dependencies
 
 Map dependencies between designs:
+
 - Which designs must complete before others?
 - What shared components exist?
 - What's the optimal execution order?
 
 ### Deliverable
+
 **Output**: Design documents in `/design/` folder, dependency graph in INDEX.md
 
 **Quality Check**:
+
 - [ ] Each design has clear problem/solution
 - [ ] File changes documented
 - [ ] Dependencies identified
@@ -379,17 +408,18 @@ For each design, create a corresponding execution document:
 # Execution ##: {Task Name}
 
 **Status**: Not Started | In Progress | Completed
-**Design Document**: [DESIGN_##](../design/DESIGN_##_*.md)
+**Design Document**: [DESIGN\_##](../design/DESIGN_##_*.md)
 
 ---
 
 ## Progress Overview
-
 ```
-Phase 1: {Name}      ░░░░░░░░░░  0%
-Phase 2: {Name}      ░░░░░░░░░░  0%
+
+Phase 1: {Name} ░░░░░░░░░░ 0%
+Phase 2: {Name} ░░░░░░░░░░ 0%
 ─────────────────────────────────
-TOTAL                ░░░░░░░░░░  0%
+TOTAL ░░░░░░░░░░ 0%
+
 ```
 
 ---
@@ -430,14 +460,17 @@ TOTAL                ░░░░░░░░░░  0%
 ### Step 4.2: Update INDEX.md
 
 Add all execution documents to INDEX.md with:
+
 - Execution order
 - Dependencies
 - Status tracking
 
 ### Deliverable
+
 **Output**: Execution documents in `/development/` folder
 
 **Quality Check**:
+
 - [ ] Each execution has checkable tasks
 - [ ] Progress tracking included
 - [ ] Success criteria defined
@@ -452,6 +485,7 @@ Add all execution documents to INDEX.md with:
 ### Step 5.1: Select Next Task
 
 Check INDEX.md for:
+
 1. Tasks with completed dependencies
 2. Highest priority unblocked task
 3. Current session goals
@@ -471,6 +505,7 @@ Prompt structure:
 ```
 
 **Example prompt**:
+
 ```
 ## Task: Implement EXECUTION_01 - DI Bootstrap
 
@@ -489,7 +524,7 @@ You are implementing {task description}.
 {Current content + expected changes}
 
 ### Validation
-Run: npx tsc --noEmit && task format-all
+Run: npx tsc --noEmit && task quality:format-all
 
 ### Success Criteria
 - [ ] Criterion 1
@@ -499,11 +534,13 @@ Run: npx tsc --noEmit && task format-all
 ### Step 5.3: Verify Agent Output
 
 When agent completes:
+
 1. Verify reported changes match expectations
 2. Note any issues mentioned by agent
 3. Proceed to Phase 6 (Validation)
 
 ### Deliverable
+
 **Output**: Working code (pending validation)
 
 ---
@@ -524,6 +561,7 @@ npx tsc --noEmit
 ```
 
 **Check for:**
+
 - Zero errors in modified files
 - No implicit `any` types
 - Proper type imports (`import type` for type-only)
@@ -571,6 +609,7 @@ pnpm test
 ### Step 6.4: Address Review Findings
 
 If review agent finds issues:
+
 1. Have agent fix them, OR
 2. Resume agent to apply fixes
 3. Re-run validation after fixes
@@ -590,15 +629,18 @@ This is the single source of truth for project status.
 ```
 
 **INDEX.md Required Updates:**
+
 - Status column in execution order table
 - Current metrics (CA compliance %, use case utilization, etc.)
 - Dependency graph (mark completed dependencies with ✅)
 - "Quick Start" section with correct next recommended task
 
 ### Deliverable
+
 **Output**: Validated code, updated documentation
 
 **Quality Check**:
+
 - [ ] TypeScript compiles without errors
 - [ ] Review agent reports all PASS
 - [ ] Tests pass (if applicable)
@@ -625,6 +667,7 @@ Before ending any session:
 ### Step 6.2: Update INDEX.md
 
 Ensure INDEX.md reflects:
+
 - Current status of all executions
 - Any new dependencies discovered
 - Updated metrics
@@ -637,9 +680,11 @@ git commit -m "docs: update {feature} session handoff"
 ```
 
 ### Deliverable
+
 **Output**: Updated SESSION_HANDOFF.md and INDEX.md
 
 **Quality Check**:
+
 - [ ] Next session can start from SESSION_HANDOFF.md
 - [ ] All completed work documented
 - [ ] Recommended next task clear
@@ -649,32 +694,38 @@ git commit -m "docs: update {feature} session handoff"
 ## Process Checklist
 
 ### Pre-Process
+
 - [ ] Feature requirements understood
 - [ ] Feature folder created under `/docs/ignored/`
 - [ ] INDEX.md template created
 - [ ] SESSION_HANDOFF.md template created
 
 ### Research Phase
+
 - [ ] Codebase explored via Explore agent
 - [ ] Gaps identified and documented
 - [ ] Research docs created in `/research/`
 
 ### Design Phase
+
 - [ ] Design docs created for each component
 - [ ] Dependencies mapped
 - [ ] Execution order determined
 
 ### Planning Phase
+
 - [ ] Execution docs created for each design
 - [ ] Tasks broken into checkable items
 - [ ] INDEX.md updated with all executions
 
 ### Execution Phase (per task)
+
 - [ ] Agent spawned with full context
 - [ ] Work completed by agent
 - [ ] Agent reports summary of changes
 
 ### Validation Phase (per task)
+
 - [ ] TypeScript compiles without errors
 - [ ] Review agent spawned and reports PASS
 - [ ] Tests pass (if applicable)
@@ -683,6 +734,7 @@ git commit -m "docs: update {feature} session handoff"
 - [ ] INDEX.md status updated
 
 ### Session End
+
 - [ ] SESSION_HANDOFF.md updated
 - [ ] INDEX.md current
 - [ ] Changes committed
@@ -692,29 +744,35 @@ git commit -m "docs: update {feature} session handoff"
 ## Templates & Examples
 
 ### Template: INDEX.md
+
 **Purpose**: Central navigation and status tracking
 **Location**: `/docs/ignored/{feature}/INDEX.md`
 **Usage**: Copy template, customize for feature
 
 ### Template: SESSION_HANDOFF.md
+
 **Purpose**: Session continuity and context
 **Location**: `/docs/ignored/{feature}/SESSION_HANDOFF.md`
 **Usage**: Update at end of each session
 
-### Template: DESIGN_##.md
+### Template: DESIGN\_##.md
+
 **Purpose**: Detailed solution design
 **Location**: `/docs/ignored/{feature}/design/DESIGN_##_*.md`
 **Usage**: One per major component
 
-### Template: EXECUTION_##.md
+### Template: EXECUTION\_##.md
+
 **Purpose**: Step-by-step implementation plan
 **Location**: `/docs/ignored/{feature}/development/EXECUTION_##_*.md`
 **Usage**: One per design, with checkboxes
 
 ### Example: AI Assistant Clean Architecture
+
 **Scenario**: Refactoring AI Assistant feature to proper Clean Architecture
 **Location**: `/docs/ignored/ai_assistant_clean_architecture/`
 **Structure**:
+
 ```
 ai_assistant_clean_architecture/
 ├── INDEX.md
@@ -736,15 +794,16 @@ ai_assistant_clean_architecture/
 
 ## Troubleshooting
 
-| Issue | Symptoms | Solution | Prevention |
-|-------|----------|----------|------------|
-| **Agent lacks context** | Agent asks questions already answered | Provide full design doc content in prompt | Include all relevant context upfront |
-| **Dependency not met** | Execution fails due to missing prerequisite | Check INDEX.md dependency graph | Always verify dependencies before starting |
-| **Lost session state** | Can't remember what was done | Read SESSION_HANDOFF.md | Always update handoff before ending |
-| **Stale documentation** | Docs don't match code | Run documentation update agent | Update docs immediately after code changes |
-| **Conflicting changes** | Agent work conflicts with manual changes | Coordinate via SESSION_HANDOFF.md | Document all changes in handoff |
+| Issue                   | Symptoms                                    | Solution                                  | Prevention                                 |
+| ----------------------- | ------------------------------------------- | ----------------------------------------- | ------------------------------------------ |
+| **Agent lacks context** | Agent asks questions already answered       | Provide full design doc content in prompt | Include all relevant context upfront       |
+| **Dependency not met**  | Execution fails due to missing prerequisite | Check INDEX.md dependency graph           | Always verify dependencies before starting |
+| **Lost session state**  | Can't remember what was done                | Read SESSION_HANDOFF.md                   | Always update handoff before ending        |
+| **Stale documentation** | Docs don't match code                       | Run documentation update agent            | Update docs immediately after code changes |
+| **Conflicting changes** | Agent work conflicts with manual changes    | Coordinate via SESSION_HANDOFF.md         | Document all changes in handoff            |
 
 ### When to Escalate
+
 - **Blocker discovered**: Document in execution doc, update SESSION_HANDOFF.md with blocker
 - **Design flaw found**: Create observation in execution doc, may need design revision
 - **Dependency cycle**: Revisit INDEX.md dependency graph, restructure if needed
@@ -776,21 +835,23 @@ Task tool with subagent_type: "Plan"
 ```
 
 ### Folder Structure
-| Type | Location | Description |
-|------|----------|-------------|
-| Feature Docs | `/docs/ignored/{feature}/` | All feature documentation |
-| Index | `/docs/ignored/{feature}/INDEX.md` | Central navigation |
-| Handoff | `/docs/ignored/{feature}/SESSION_HANDOFF.md` | Session context |
-| Research | `/docs/ignored/{feature}/research/` | Analysis documents |
-| Design | `/docs/ignored/{feature}/design/` | Solution designs |
-| Execution | `/docs/ignored/{feature}/development/` | Implementation plans |
+
+| Type         | Location                                     | Description               |
+| ------------ | -------------------------------------------- | ------------------------- |
+| Feature Docs | `/docs/ignored/{feature}/`                   | All feature documentation |
+| Index        | `/docs/ignored/{feature}/INDEX.md`           | Central navigation        |
+| Handoff      | `/docs/ignored/{feature}/SESSION_HANDOFF.md` | Session context           |
+| Research     | `/docs/ignored/{feature}/research/`          | Analysis documents        |
+| Design       | `/docs/ignored/{feature}/design/`            | Solution designs          |
+| Execution    | `/docs/ignored/{feature}/development/`       | Implementation plans      |
 
 ### Key Commands
+
 ```bash
 # Validate changes
 npx tsc --noEmit
-task format-all
-task test
+task quality:format-all
+task quality:test
 
 # Check current status
 cat docs/ignored/{feature}/INDEX.md
@@ -798,26 +859,29 @@ cat docs/ignored/{feature}/SESSION_HANDOFF.md
 ```
 
 ### Status Indicators
-| Symbol | Meaning |
-|--------|---------|
-| ░░░░░░░░░░ | Not started (0%) |
+
+| Symbol     | Meaning           |
+| ---------- | ----------------- |
+| ░░░░░░░░░░ | Not started (0%)  |
 | █████░░░░░ | In progress (50%) |
-| ██████████ | Complete (100%) |
-| ✅ | Task complete |
-| ⬜ | Task pending |
-| 🔄 | In progress |
-| ⏸️ | Blocked |
+| ██████████ | Complete (100%)   |
+| ✅         | Task complete     |
+| ⬜         | Task pending      |
+| 🔄         | In progress       |
+| ⏸️         | Blocked           |
 
 ---
 
 ## Related Documentation
 
 ### Internal
+
 - [Development Process](/docs/processes/development/development_process.md)
 - [Process Template](/docs/processes/process_template.md)
 - [Project Rules](/.cursor/rules/about.mdc) - Development guidelines
 
 ### Example Implementation
+
 - [AI Assistant Clean Architecture](/docs/ignored/ai_assistant_clean_architecture/INDEX.md) - Live example of this process
 
 ---
@@ -825,14 +889,17 @@ cat docs/ignored/{feature}/SESSION_HANDOFF.md
 ## Changelog
 
 ### Version 1.2.0 (2026-01-11)
+
 **Status**: Active
 **Changes**: Made INDEX.md updates REQUIRED after every execution - INDEX is single source of truth
 
 ### Version 1.1.0 (2026-01-11)
+
 **Status**: Superseded
 **Changes**: Added explicit Phase 6: Validation & Review - mandatory review agent step after each execution
 
 ### Version 1.0.0 (2026-01-11)
+
 **Status**: Superseded
 **Changes**: Initial version based on AI Assistant Clean Architecture refactoring experience
 

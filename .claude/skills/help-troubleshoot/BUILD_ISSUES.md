@@ -17,6 +17,7 @@
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Kill existing Metro process
 lsof -ti:8081 | xargs kill -9
@@ -45,6 +46,7 @@ pnpm install
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Clear Metro cache
 pnpm start --reset-cache
@@ -72,6 +74,7 @@ npx tsc --noEmit
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Clean and reinstall pods
 cd ios
@@ -102,6 +105,7 @@ pnpm run ios:dev
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Clean Gradle
 cd android
@@ -131,6 +135,7 @@ pnpm run android:dev
 **Solution:**
 
 **Commands:**
+
 ```bash
 cd ios
 pod deintegrate
@@ -150,6 +155,7 @@ pnpm run ios:dev
 **Cause:** Insufficient JVM heap allocation
 
 **Solution:** Add to `android/gradle.properties`:
+
 ```properties
 org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m
 ```
@@ -169,6 +175,7 @@ org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Check all TypeScript errors
 npx tsc --noEmit
@@ -192,18 +199,22 @@ npx tsc --noEmit
 **Cause:** ccache not installed, PATH not configured, or Xcode not launched from terminal
 
 **Solution:**
+
 1. Verify ccache is installed:
+
    ```bash
    ccache --version
    which ccache
    ```
 
 2. Verify PATH includes ccache:
+
    ```bash
    echo $PATH | grep ccache
    ```
 
 3. Launch Xcode from terminal (required for ccache):
+
    ```bash
    xed ios/ChatscommerceDev.xcworkspace
    ```
@@ -214,12 +225,13 @@ npx tsc --noEmit
    ```
 
 **Commands:**
+
 ```bash
 # Check ccache stats
-task ccache-stats
+task utils:ccache-stats
 
 # Clear ccache if needed
-task ccache-clear
+task utils:ccache-clear
 ```
 
 **Prevention:** Always launch Xcode from terminal for native development
@@ -233,12 +245,15 @@ task ccache-clear
 **Cause:** Feature requires Expo SDK 53+, not properly configured
 
 **Solution:**
+
 1. Verify package is installed:
+
    ```bash
    pnpm list expo-build-disk-cache
    ```
 
 2. Verify configuration in app.config.ts includes:
+
    ```typescript
    experiments: {
      buildCacheProvider: {
@@ -253,6 +268,7 @@ task ccache-clear
    ```
 
 **Commands:**
+
 ```bash
 # Regenerate native code
 task generate
@@ -271,10 +287,8 @@ task generate
 **Solution:**
 
 **Commands:**
-```bash
-# Clear all caches
-task clean-all-caches
 
+```bash
 # Reinstall and rebuild
 pnpm install
 task generate
@@ -286,7 +300,6 @@ task generate
 
 ## Related Documentation
 
-- [COMMON_ISSUES.md](COMMON_ISSUES.md) - Issue index
 - [PLATFORM_ISSUES.md](PLATFORM_ISSUES.md) - Platform-specific build issues
 - [SKILL.md](SKILL.md) - Troubleshooting overview
 

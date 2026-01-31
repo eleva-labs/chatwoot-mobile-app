@@ -48,7 +48,7 @@ install-android-studio() {
     log_info "   export PATH=\$PATH:\$ANDROID_HOME/tools"
     log_info "   export PATH=\$PATH:\$ANDROID_HOME/tools/bin"
     log_info ""
-    log_info "6. Restart your shell and run: task setup-android"
+    log_info "6. Restart your shell and run: task android:setup"
     log_info "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     log_info ""
     exit 1
@@ -196,12 +196,12 @@ verify-android-setup() {
     log_success "Android development setup is complete!"
     echo ""
     log_info "Next steps:"
-    log_info "  1. Run 'task run-android' to build and run the app"
-    log_info "  2. Run 'task verify-setup' for comprehensive verification"
+    log_info "  1. Run 'task android:run' to build and run the app"
+    log_info "  2. Run 'task setup:verify' for comprehensive verification"
     exit 0
   else
     log_error "$errors issue(s) found"
-    log_info "Run 'task setup-android' to fix issues"
+    log_info "Run 'task android:setup' to fix issues"
     exit 1
   fi
 }

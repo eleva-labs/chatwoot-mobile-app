@@ -15,12 +15,14 @@
 **Cause:** Native module crash, Redux Persist migration failure, or missing environment variables
 
 **Solution:**
+
 1. Check logs
 2. Check Redux Persist migration
 3. Check environment variables
 4. Regenerate native code
 
 **Commands:**
+
 ```bash
 # Check iOS logs
 npx react-native log-ios
@@ -51,6 +53,7 @@ pnpm run generate
 **Cause:** Redux state shape mismatch, API response handling error, or navigation parameter issues
 
 **Solution:**
+
 1. Check Redux state shape
 2. Verify API response handling
 3. Check navigation params
@@ -69,6 +72,7 @@ pnpm run generate
 **Cause:** Redux Persist configuration issue, version mismatch
 
 **Solution:**
+
 1. Check `persistConfig` in `src/store/index.ts`
 2. Verify `CURRENT_VERSION` matches migration
 3. Check whitelist/blacklist in persist config
@@ -84,6 +88,7 @@ pnpm run generate
 **Cause:** Action not dispatched, reducer logic error, selector issue, or memoization problem
 
 **Solution:**
+
 1. Verify action is dispatched correctly
 2. Check reducer logic
 3. Verify selector is correct
@@ -102,6 +107,7 @@ pnpm run generate
 **Cause:** Route not defined, type mismatch, or nesting issue
 
 **Solution:**
+
 1. Verify route is defined in navigator
 2. Check navigation param types
 3. Verify screen component exists
@@ -120,6 +126,7 @@ pnpm run generate
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Test deep link
 npx uri-scheme open <scheme>://path --ios
@@ -141,6 +148,7 @@ Check `app.config.ts` for scheme configuration.
 **Cause:** Network connectivity, wrong endpoint, authentication issue, or CORS (web)
 
 **Solution:**
+
 1. Verify network connectivity
 2. Check API endpoint URL
 3. Verify authentication tokens
@@ -157,6 +165,7 @@ Check `app.config.ts` for scheme configuration.
 **Cause:** API response format mismatch, parsing error, or async issue
 
 **Solution:**
+
 1. Check API response format
 2. Verify data parsing logic
 3. Check for async issues
@@ -177,6 +186,7 @@ Check `app.config.ts` for scheme configuration.
 **Solution:**
 
 **Commands:**
+
 ```bash
 # Full clean rebuild
 pnpm run clean
@@ -195,6 +205,7 @@ pnpm run ios:dev  # or android:dev
 **Cause:** Fast Refresh option disabled in developer menu
 
 **Solution:**
+
 1. Open Developer Menu (shake or `Cmd+D`/`Cmd+M`)
 2. Enable "Fast Refresh"
 
@@ -211,6 +222,7 @@ pnpm run ios:dev  # or android:dev
 **Cause:** Using FlatList instead of FlashList, or missing optimization
 
 **Solution:**
+
 ```typescript
 // Use FlashList instead of FlatList
 import { FlashList } from '@shopify/flash-list';
@@ -234,6 +246,7 @@ import { FlashList } from '@shopify/flash-list';
 **Cause:** Missing memoization, unstable references
 
 **Solution:**
+
 ```typescript
 // Memoize components
 const MemoizedComponent = React.memo(Component);
@@ -256,6 +269,7 @@ const memoizedCallback = useCallback(() => handleAction(), [deps]);
 **Cause:** Subscriptions not cleaned up, async operations not cancelled
 
 **Solution:**
+
 ```typescript
 // Clean up subscriptions
 useEffect(() => {
@@ -269,7 +283,9 @@ useEffect(() => {
   fetchData().then(data => {
     if (mounted) setData(data);
   });
-  return () => { mounted = false; };
+  return () => {
+    mounted = false;
+  };
 }, []);
 ```
 
@@ -284,6 +300,7 @@ useEffect(() => {
 **Cause:** Unoptimized image loading
 
 **Solution:**
+
 ```typescript
 // Use expo-image for optimized loading
 import { Image } from 'expo-image';
@@ -309,6 +326,7 @@ import { Image } from 'expo-image';
 **Cause:** SafeAreaView not used or configured incorrectly
 
 **Solution:**
+
 ```typescript
 // Use SafeAreaView from react-native-safe-area-context
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -328,6 +346,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 **Cause:** StatusBar not configured properly
 
 **Solution:**
+
 ```typescript
 import { StatusBar } from 'react-native';
 
@@ -344,7 +363,6 @@ import { StatusBar } from 'react-native';
 
 ## Related Documentation
 
-- [COMMON_ISSUES.md](COMMON_ISSUES.md) - Issue index
 - [BUILD_ISSUES.md](BUILD_ISSUES.md) - Build-related issues
 - [PLATFORM_ISSUES.md](PLATFORM_ISSUES.md) - Platform-specific issues
 - [SKILL.md](SKILL.md) - Troubleshooting overview

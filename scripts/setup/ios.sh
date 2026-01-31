@@ -12,7 +12,7 @@ check-platform() {
   if [[ "$platform" != "macos" ]]; then
     log_error "iOS development requires macOS"
     log_info "You're running on: $OSTYPE"
-    log_info "For Android development, use: task setup-android"
+    log_info "For Android development, use: task android:setup"
     exit 1
   fi
 }
@@ -213,7 +213,7 @@ verify-ios-setup() {
   if echo "$PATH" | grep -q "ccache"; then
     log_success "ccache configured in PATH"
   else
-    log_warning "ccache NOT in PATH (restart shell or run: task setup-ios)"
+    log_warning "ccache NOT in PATH (restart shell or run: task ios:setup)"
   fi
   
   # Check iOS Simulator
@@ -231,12 +231,12 @@ verify-ios-setup() {
     log_success "iOS development setup is complete!"
     echo ""
     log_info "Next steps:"
-    log_info "  1. Run 'task run-ios' to build and run the app"
-    log_info "  2. Run 'task verify-setup' for comprehensive verification"
+    log_info "  1. Run 'task ios:run' to build and run the app"
+    log_info "  2. Run 'task setup:verify' for comprehensive verification"
     exit 0
   else
     log_error "$errors issue(s) found"
-    log_info "Run 'task setup-ios' to fix issues"
+    log_info "Run 'task ios:setup' to fix issues"
     exit 1
   fi
 }

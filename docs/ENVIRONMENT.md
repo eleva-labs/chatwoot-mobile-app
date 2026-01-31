@@ -6,29 +6,26 @@ This guide explains how environment variables are managed in the Chatscommerce m
 
 The app uses layered environment configuration:
 
-1. **`.env.local`** - Local machine overrides (highest priority)
-2. **`.env`** - EAS-managed settings
-3. **`.env.example`** - Template/defaults (lowest priority)
+1. **`.env`** - EAS-managed settings
+2. **`.env.example`** - Template/defaults
 
 ## Environment Files
 
-| File                 | Purpose                     | Committed | Created By             |
-| -------------------- | --------------------------- | --------- | ---------------------- |
-| `.env.example`       | Template with all variables | Yes       | Manual                 |
-| `.env.local.example` | Local-only template         | Yes       | Manual                 |
-| `.env`               | EAS-managed settings        | No        | `task setup-dev`       |
-| `.env.local`         | Local overrides             | No        | `task setup-local-env` |
+| File                   | Purpose                     | Committed | Created By        |
+| ---------------------- | --------------------------- | --------- | ----------------- |
+| `.env.example`         | Template with all variables | Yes       | Manual            |
+| `.env`                 | Base configuration from EAS | No        | `task setup:base` |
+| `.env.maestro.example` | E2E testing template        | Yes       | Manual            |
+| `.env.maestro`         | E2E testing configuration   | No        | `task setup:base` |
 
 ## Quick Setup
 
 ```bash
 # Complete setup in one command (recommended)
-task setup-full
+task setup:full
 
 # Or step by step:
-task setup-dev        # Pull environment from EAS
-task setup-direnv     # Setup direnv for auto-loading env vars
-task setup-local-env  # Create local environment file
+task setup:base       # Install tools + pull environment from EAS + setup direnv
 ```
 
 ## Auto-Loading with direnv
@@ -45,7 +42,7 @@ The project uses **direnv** to automatically load environment variables when you
 
 ```bash
 # Install and configure direnv
-task setup-direnv
+task setup:base
 ```
 
 This will:
@@ -85,22 +82,16 @@ export $(grep -v '^#' .env | xargs)
 ## Setting Up Local Environment
 
 ```bash
-# Create your local environment file
-task setup-local-env
+# Environment files are created automatically during setup
+task setup:base
 
 # This creates:
-# - .env.local (with SIMULATOR and SENTRY settings)
-# - ios/.xcode.env.local (Node.js path)
+# - .env (base configuration from EAS)
+# - .env.maestro (E2E testing configuration)
+# - ios/.xcode.env.local (Node.js path for Xcode)
 ```
 
 ## What Gets Created
-
-### .env.local
-
-```bash
-SENTRY_DISABLE_AUTO_UPLOAD=true  # Prevents auth errors
-SIMULATOR=1                       # Build for simulator
-```
 
 ### ios/.xcode.env.local
 
@@ -132,17 +123,15 @@ The `Taskfile.yml` loads environment files in order:
 
 ```yaml
 dotenv:
-  - .env.example # Loaded first (defaults)
-  - .env # Loaded second (overrides)
-  - .env.local # Loaded last (local overrides, highest priority)
+  - .env.maestro
+  - .env
 ```
 
 This means:
 
-1. `.env.example` provides default values
-2. `.env` overrides with EAS-managed values
-3. `.env.local` provides local-only overrides (highest priority)
-4. Later files override earlier ones for any variable
+1. `.env.maestro` provides test-specific configuration
+2. `.env` provides base EAS-managed values
+3. Later files override earlier ones for any variable
 
 ### Variable Categories
 
@@ -211,10 +200,10 @@ credentials/
 
 ### Automatic Setup (Placeholders)
 
-When you run `task setup-dev`, placeholder credentials are created automatically:
+When you run `task setup:base`, placeholder credentials are created automatically:
 
 ```bash
-task setup-firebase
+task setup:base  # Includes direnv setup
 ```
 
 Placeholders allow the app to build and run, but **push notifications won't work**.
@@ -249,12 +238,12 @@ Environment variables are stored in the EAS dashboard and can be pulled locally:
 
 ```bash
 # Development environment
-task setup-dev
-# Runs: ./scripts/pull-expo-env.sh development
+pnpm run expo:env:pull:dev
+# Runs: ./scripts/env/pull.sh development
 
 # Production environment
-task setup-prod
-# Runs: ./scripts/pull-expo-env.sh production
+pnpm run expo:env:pull:prod
+# Runs: ./scripts/env/pull.sh production
 ```
 
 This requires EAS CLI to be logged in:
@@ -268,7 +257,7 @@ npx eas login
 Check that variables are loaded correctly:
 
 ```bash
-task env-check
+task setup:env-check
 ```
 
 Output:
@@ -330,7 +319,7 @@ Key behaviors:
 
 1. Ensure `.env` file exists in project root
 2. Restart the dev server after changing variables
-3. Run `task env-check` to verify
+3. Run `task setup:env-check` to verify
 
 ### Variables empty in app
 
@@ -349,22 +338,22 @@ npx eas whoami
 
 ### "SIMULATOR variable undefined"
 
-**Fix**: Run `task setup-local-env` to create `.env.local`
+**Fix**: Edit `.env` and set `SIMULATOR=1` (created by `task setup:base`)
 
 ### "Code signing failed"
 
-**Fix**: Set `SIMULATOR=1` in `.env.local`, or configure code signing in Xcode
+**Fix**: Set `SIMULATOR=1` in `.env`, or configure code signing in Xcode
 
 ### "Sentry auth error during build"
 
-**Fix**: Ensure `.env.local` has `SENTRY_DISABLE_AUTO_UPLOAD=true`
+**Fix**: Add `SENTRY_DISABLE_AUTO_UPLOAD=true` to `.env`
 
 ## Related Commands
 
 ```bash
-task setup-local-env    # Create/update local environment
-task verify-patches     # Verify patches applied
-task setup-full         # Complete setup
+task setup:base         # Setup base environment
+task setup:verify       # Verify setup
+task setup:full         # Complete setup
 ```
 
 ## Next Steps

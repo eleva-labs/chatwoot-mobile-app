@@ -119,4 +119,7 @@ tasks:
   setup:
     desc: Install Maestro and verify setup
     cmds:
-      - ./scripts/maestro/setup.sh
+      - ./scripts/setup/e2e.sh install-java
+      - ./scripts/setup/e2e.sh install-maestro
+      - ./scripts/setup/e2e.sh install-idb-companion
+      - ./scripts/setup/e2e.sh verify-e2e-setup

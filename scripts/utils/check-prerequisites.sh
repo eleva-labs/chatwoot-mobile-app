@@ -101,7 +101,7 @@ if command -v "direnv" &> /dev/null; then
     if grep -q "direnv hook" ~/.zshrc 2>/dev/null || grep -q "direnv hook" ~/.bashrc 2>/dev/null; then
         echo -e "${GREEN}   ✅ direnv hook: configured${NC}"
     else
-        echo -e "${YELLOW}   ⚠️  direnv hook: not configured (run 'task setup-direnv')${NC}"
+        echo -e "${YELLOW}   ⚠️  direnv hook: not configured (run 'task setup:base')${NC}"
     fi
     
     # Check if project .envrc is allowed
@@ -170,7 +170,7 @@ if echo "$PATH" | grep -q "ccache/libexec"; then
     echo -e "${GREEN}✅ ccache PATH: Configured${NC}"
     ((PASSED++))
 else
-    echo -e "${YELLOW}⚠️  ccache PATH: Not configured (run: ./scripts/setup-ios-build-tools.sh)${NC}"
+    echo -e "${YELLOW}⚠️  ccache PATH: Not configured (run: task ios:setup)${NC}"
 fi
 
 # Check CocoaPods is linked and available
@@ -193,21 +193,6 @@ fi
 echo ""
 echo -e "${BLUE}Local Environment:${NC}"
 
-# Check .env.local exists
-if [[ -f "$PROJECT_ROOT/.env.local" ]]; then
-    echo -e "${GREEN}✅ .env.local: exists${NC}"
-    ((PASSED++))
-
-    # Check SENTRY_DISABLE_AUTO_UPLOAD is set
-    if grep -q "^SENTRY_DISABLE_AUTO_UPLOAD=true" "$PROJECT_ROOT/.env.local"; then
-        echo -e "${GREEN}   ✅ SENTRY_DISABLE_AUTO_UPLOAD: set${NC}"
-    else
-        echo -e "${YELLOW}   ⚠️  SENTRY_DISABLE_AUTO_UPLOAD: not set (run 'task setup-local-env')${NC}"
-    fi
-else
-    echo -e "${YELLOW}⚠️  .env.local: not found (run 'task setup-local-env')${NC}"
-fi
-
 # Verify patches are applied
 if grep -q "@unknown default" "$PROJECT_ROOT/node_modules/expo-localization/ios/LocalizationModule.swift" 2>/dev/null; then
     echo -e "${GREEN}✅ expo-localization patch: applied${NC}"
@@ -223,7 +208,7 @@ if [[ -d "$PROJECT_ROOT/ios" ]]; then
         echo -e "${GREEN}✅ ios/.xcode.env.local: exists${NC}"
         ((PASSED++))
     else
-        echo -e "${YELLOW}⚠️  ios/.xcode.env.local: not found (run 'task setup-local-env')${NC}"
+        echo -e "${YELLOW}⚠️  ios/.xcode.env.local: not found (run 'task setup:base')${NC}"
     fi
 fi
 

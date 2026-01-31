@@ -10,26 +10,26 @@ React Native mobile application for Chatscommerce, built with Expo.
 - **Xcode** (Download from Mac App Store - ~10GB)
 - **Homebrew** (Package manager - install from brew.sh)
 - **Volta** (Node version manager - `curl https://get.volta.sh | bash`)
-- **direnv** (Auto-loads environment variables - installed via `task setup-direnv`)
+- **direnv** (Auto-loads environment variables - installed via `task setup:base`)
 
-### Automated Setup (Recommended - 5 minutes)
+### Automated Setup (Recommended - 10-15 minutes)
 
 ```bash
 # Clone repository
 git clone <repo-url>
 cd chatwoot-mobile-app
 
-# Run automated setup (installs Volta, Node 20, Watchman, Expo CLI, dependencies, environment)
-./scripts/setup-development.sh
+# Complete setup (base + iOS + Android + E2E + verification)
+task setup:full
 
-# OR use the unified task command (recommended)
-task setup-full
+# OR minimal setup (dependencies + environment only)
+task setup:quick
 
 # Verify setup
-task check-prereqs
+task setup:check-prereqs
 
 # Start iOS development (build takes 5-10 minutes first time)
-task run-ios
+task ios:run
 ```
 
 ### Manual Setup (10 minutes)
@@ -52,48 +52,44 @@ volta install @expo/cli
 pnpm install
 
 # Setup development environment
-task setup-dev
+task setup:base
 
 # Verify setup
-task check-prereqs
+task setup:check-prereqs
 
 # Start iOS development (build takes 5-10 minutes first time)
-task run-ios
+task ios:run
 ```
 
 ### Local Environment Variables
 
-The app uses two layers of environment configuration:
+The app uses environment configuration from:
 
 - **`.env`** - Pulled from EAS (shared team settings)
-- **`.env.local`** - Local-only overrides (gitignored, machine-specific)
 
-Local overrides are useful for:
+Edit `.env` for local overrides:
 
 - Disabling Sentry uploads (`SENTRY_DISABLE_AUTO_UPLOAD=true`)
 - Switching between simulator/device builds (`SIMULATOR=1` or `0`)
 
-Setup automatically: `task setup-local-env`
+Environment files are created automatically by `task setup:base`
 
 ### Development Workflow
 
 ```bash
 # Check environment anytime
-task check-prereqs
+task setup:check-prereqs
 
-# Configure local environment (one-time after setup)
-task setup-local-env    # Creates .env.local with local settings
-task verify-patches     # Verify patches applied during pnpm install
+# Verify patches applied during pnpm install
+task setup:verify-patches
 
 # Start development
-task run-ios          # iOS Simulator (5-10 min first build)
-task run-android      # Android Emulator
-task run-web          # Web development
+task ios:run          # iOS Simulator (5-10 min first build)
+task android:run      # Android Emulator
 
 # Other useful commands
-task test            # Run tests
-task lint            # Check code quality
-task clean           # Clean caches
+task quality:test    # Run tests
+task quality:lint    # Check code quality
 ```
 
 ## Maestro E2E Testing
@@ -103,15 +99,16 @@ This project uses [Maestro](https://docs.maestro.dev) for mobile UI automation t
 ### Quick Start
 
 ```bash
-# Install Maestro
-./scripts/maestro/setup.sh
+# Install Maestro (Java, Maestro CLI, idb-companion)
+task maestro:setup
+# OR: task setup:e2e
 
-# Set up test credentials
-cp .env.maestro.local.example .env.maestro.local
-# Edit .env.maestro.local with your test credentials
+# Set up test environment
+cp .env.maestro.example .env.maestro
+# Edit .env.maestro with your test credentials
 
 # Run tests
-pnpm maestro:test
+task maestro:test
 ```
 
 ### Documentation
@@ -160,9 +157,9 @@ This project includes optimizations for faster builds:
 **Build Commands:**
 
 ```bash
-task generate        # Clean rebuild (use after SDK changes)
-task generate-soft   # Incremental (use for config changes)
-task generate-fast   # Skip pod install (fastest for testing)
+task ios:generate        # Clean rebuild (use after SDK changes)
+task ios:generate-soft   # Incremental (use for config changes)
+# For Android: task android:generate, task android:generate-soft
 ```
 
 **If builds are slow:**
@@ -170,9 +167,6 @@ task generate-fast   # Skip pod install (fastest for testing)
 ```bash
 # Verify ccache is working
 ccache -s
-
-# Clear caches if needed
-task clean-all-caches
 ```
 
 ## Prerequisites
@@ -214,10 +208,7 @@ This will:
 pnpm install
 
 # Pull environment from EAS (requires EAS login)
-task setup-dev
-
-# Or manually setup Firebase placeholders
-task setup-firebase
+task setup:base
 ```
 
 ## Commands
@@ -226,46 +217,47 @@ All commands are run via [Taskfile](https://taskfile.dev/). Run `task` to see al
 
 ### Development
 
-| Command            | Description                         |
-| ------------------ | ----------------------------------- |
-| `task start`       | Start Expo dev server               |
-| `task run-ios`     | Build and run on iOS                |
-| `task run-android` | Build and run on Android            |
-| `task storybook`   | Start Storybook (component gallery) |
+| Command                | Description                         |
+| ---------------------- | ----------------------------------- |
+| `task dev:start`       | Start Expo dev server               |
+| `task ios:run`         | Build and run on iOS                |
+| `task android:run`     | Build and run on Android            |
+| `task utils:storybook` | Start Storybook (component gallery) |
 
 ### Build
 
-| Command                  | Description                        |
-| ------------------------ | ---------------------------------- |
-| `task generate`          | Regenerate native projects (clean) |
-| `task eas-build-ios`     | Build iOS on EAS cloud             |
-| `task eas-build-android` | Build Android on EAS cloud         |
+| Command                 | Description                       |
+| ----------------------- | --------------------------------- |
+| `task ios:generate`     | Regenerate iOS native project     |
+| `task android:generate` | Regenerate Android native project |
+| `task ios:eas`          | Build iOS on EAS cloud            |
+| `task android:eas`      | Build Android on EAS cloud        |
 
 ### Code Quality
 
-| Command         | Description               |
-| --------------- | ------------------------- |
-| `task lint`     | Run ESLint                |
-| `task lint-fix` | Run ESLint with auto-fix  |
-| `task format`   | Format code with Prettier |
-| `task test`     | Run tests                 |
+| Command                 | Description               |
+| ----------------------- | ------------------------- |
+| `task quality:lint`     | Run ESLint                |
+| `task quality:lint-fix` | Run ESLint with auto-fix  |
+| `task quality:format`   | Format code with Prettier |
+| `task quality:test`     | Run tests                 |
 
 ### Environment
 
-| Command           | Description                    |
-| ----------------- | ------------------------------ |
-| `task setup-dev`  | Pull dev environment from EAS  |
-| `task setup-prod` | Pull prod environment from EAS |
-| `task env-check`  | Verify environment variables   |
+| Command                       | Description                    |
+| ----------------------------- | ------------------------------ |
+| `task setup:base`             | Setup development environment  |
+| `pnpm run expo:env:pull:prod` | Pull prod environment from EAS |
+| `task setup:env-check`        | Verify environment variables   |
 
 ## Environment Variables
 
 Environment variables are managed via `.env` files:
 
-- `.env.example` - Template with defaults (committed)
-- `.env` - Actual values (gitignored, pulled from EAS)
-- `.env.local.example` - Local-only variables template (committed)
-- `.env.local` - Local overrides (gitignored, machine-specific)
+- `.env.example` - Template with all variables
+- `.env` - Base configuration from EAS
+- `.env.maestro.example` - E2E testing template
+- `.env.maestro` - E2E testing configuration
 
 See [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) for details.
 

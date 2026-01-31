@@ -147,11 +147,11 @@ emulator -avd <avd_name>
 
 ```bash
 # Ensure environment is set up
-task setup-dev
+task setup:base
 
 # Start emulator first (from Android Studio or command line)
 # Then run
-task run-android
+task android:run
 ```
 
 ### Verify Device Connection
@@ -183,23 +183,23 @@ adb devices
 ### Run
 
 ```bash
-task run-android
+task android:run
 ```
 
 ## Common Commands
 
 ```bash
 # Run on Android
-task run-android
+task android:run
 
 # Build native project only
-task build-android
+task android:build
 
 # Regenerate native project
-task generate
+task android:generate
 
 # Connect ADB for debugging
-task adb-connect
+task utils:adb-connect
 
 # View logs
 adb logcat | grep "ReactNative"
@@ -277,10 +277,10 @@ Metro bundler not running or not connected:
 
 ```bash
 # Start Metro manually
-task start
+task dev:start
 
 # In another terminal
-task run-android
+task android:run
 ```
 
 ### Emulator slow

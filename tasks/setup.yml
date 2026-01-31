@@ -55,22 +55,31 @@ tasks:
       - echo "✅ Base setup complete!"
       - echo ""
       - echo "Next steps:"
-      - echo "  - For iOS development: task ios:setup"
-      - echo "  - For Android development: task android:setup"
+      - echo "  - For iOS development - task ios:setup"
+      - echo "  - For Android development - task android:setup"
       - echo ""
       - echo "Then install dependencies:"
       - echo "  pnpm install"
+
+  e2e:
+    desc: E2E testing setup (Java, Maestro, idb-companion)
+    cmds:
+      - ./scripts/setup/e2e.sh install-java
+      - ./scripts/setup/e2e.sh install-maestro
+      - ./scripts/setup/e2e.sh install-idb-companion
+      - ./scripts/setup/e2e.sh verify-e2e-setup
 
   # ====================
   # Orchestrator Tasks (Entry Points)
   # ====================
 
   full:
-    desc: Complete setup (base + iOS + Android + verification)
+    desc: Complete setup (base + iOS + Android + E2E + verification)
     deps: [base]
     cmds:
-      - task: ios:setup
-      - task: android:setup
+      - task ios:setup
+      - task android:setup
+      - task: e2e
       - task: verify
       - echo ""
       - echo "✅ Full setup complete! Ready for development on all platforms"
@@ -81,20 +90,21 @@ tasks:
       - pnpm install
       - task: _env-files
       - echo "✅ Quick setup complete"
-      - echo "   Next: task ios:setup OR task android:setup"
+      - echo "   Next - task ios:setup OR task android:setup"
 
   verify:
     desc: Verify complete setup (all platforms, tools, environment)
     cmds:
       - task: verify-patches
       - task: env-check
-      - echo "TODO: Add scripts/setup/verify.sh in Phase 4"
-      - echo "✅ Setup verification complete (partial - full verification in Phase 4)"
+      - |
+        echo "TODO: Add scripts/setup/verify.sh in Phase 4"
+        echo "✅ Setup verification complete (partial - full verification in Phase 4)"
 
   check-prereqs:
     desc: Quick check of development prerequisites
     cmds:
-      - ./scripts/check-prerequisites.sh
+      - ./scripts/utils/check-prerequisites.sh
 
   verify-patches:
     desc: Verify all patches are applied correctly

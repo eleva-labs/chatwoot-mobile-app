@@ -6,13 +6,13 @@ This guide covers setting up your macOS environment for iOS development.
 
 ## Version Requirements
 
-| Tool | Required Version | Notes |
-|------|-----------------|-------|
-| Xcode | 15.0+ | Download from Mac App Store |
-| CocoaPods | 1.16.2+ | `sudo gem install cocoapods` |
-| Node.js | 20.19.6 | Managed by Volta |
-| Watchman | Latest | `brew install watchman` |
-| ccache | 4.10+ | Optional, for faster builds |
+| Tool      | Required Version | Notes                        |
+| --------- | ---------------- | ---------------------------- |
+| Xcode     | 15.0+            | Download from Mac App Store  |
+| CocoaPods | 1.16.2+          | `sudo gem install cocoapods` |
+| Node.js   | 20.19.6          | Managed by Volta             |
+| Watchman  | Latest           | `brew install watchman`      |
+| ccache    | 4.10+            | Optional, for faster builds  |
 
 ## Prerequisites
 
@@ -100,7 +100,7 @@ source ~/.zshrc
 ccache -s
 
 # After running a build, cache hits should appear
-task ccache-stats
+task utils:ccache-stats
 ```
 
 **Important:** For ccache to work with Xcode, launch Xcode from terminal:
@@ -191,10 +191,10 @@ ruby --version
 
 ```bash
 # Ensure environment is set up
-task setup-dev
+task setup:base
 
 # Run on simulator (SIMULATOR=1 is default in .env.example)
-task run-ios
+task ios:run
 ```
 
 ### How It Works
@@ -215,7 +215,7 @@ SIMULATOR=1
 
 ### Selecting a Simulator
 
-When running `task run-ios`, Expo will prompt you to select a simulator. You can also specify directly:
+When running `task ios:run`, Expo will prompt you to select a simulator. You can also specify directly:
 
 ```bash
 # List available simulators
@@ -248,7 +248,7 @@ expo run:ios --device "iPhone 15 Pro"
 For production builds, use EAS Build which handles signing automatically:
 
 ```bash
-task eas-build-ios
+task ios:eas
 ```
 
 ### Run on Device
@@ -258,7 +258,7 @@ task eas-build-ios
 3. Set `SIMULATOR=0` in your `.env` file
 4. Run:
    ```bash
-   task run-ios
+   task ios:run
    ```
 
 ## Push Notifications (Optional)
@@ -277,18 +277,18 @@ See [ENVIRONMENT.md](ENVIRONMENT.md) for Firebase setup details.
 
 ```bash
 # Run on simulator
-task run-ios
+task ios:run
 
 # Build native project only (no run)
-task build-ios
+task ios:build
 
 # Regenerate native project
-task generate
+task ios:generate
 
 # Clean and rebuild
-task clean
-task generate
-task run-ios
+task ios:clean
+task ios:generate
+task ios:run
 ```
 
 ## Xcode Tips
@@ -336,7 +336,7 @@ cd ios
 pod deintegrate
 pod install
 cd ..
-task run-ios
+task ios:run
 ```
 
 ### Simulator not appearing
@@ -352,17 +352,19 @@ open -a Simulator
 First build is slow (compiling native modules). Subsequent builds benefit from caching:
 
 **Verify ccache is working:**
+
 ```bash
 ccache -s  # Should show cache hits after second build
 ```
 
 **Use incremental builds:**
+
 ```bash
-task generate-soft   # Incremental (use for config changes)
-task generate-fast   # Skip pod install (fastest for testing)
+task ios:generate-soft   # Incremental (use for config changes)
 ```
 
 **If builds remain slow:**
+
 ```bash
 # Verify ccache PATH is set
 echo $PATH | grep ccache
@@ -377,27 +379,25 @@ xed ios/ChatscommerceDev.xcworkspace
 
 This project uses several optimizations for faster builds:
 
-| Feature | Impact | Verification Command |
-|---------|--------|---------------------|
-| ccache | 40-50% faster clean builds | `ccache -s` |
+| Feature               | Impact                       | Verification Command                               |
+| --------------------- | ---------------------------- | -------------------------------------------------- |
+| ccache                | 40-50% faster clean builds   | `ccache -s`                                        |
 | expo-build-disk-cache | Near-instant cached rebuilds | `ls node_modules/.expo-build-disk-cache` (SDK 53+) |
-| EAS Build caching | 30-40% faster cloud builds | Check EAS dashboard |
+| EAS Build caching     | 30-40% faster cloud builds   | Check EAS dashboard                                |
 
 ### Build Commands
 
-| Command | Description | Use Case |
-|---------|-------------|----------|
-| `task generate` | Clean rebuild | After SDK/dependency changes |
-| `task generate-soft` | Incremental rebuild | Config changes |
-| `task generate-fast` | Skip pod install | Quick testing |
+| Command                  | Description         | Use Case                     |
+| ------------------------ | ------------------- | ---------------------------- |
+| `task ios:generate`      | Clean rebuild       | After SDK/dependency changes |
+| `task ios:generate-soft` | Incremental rebuild | Config changes               |
 
 ### Cache Management
 
 ```bash
-task ccache-stats     # Show ccache statistics
-task ccache-clear     # Clear ccache
-task clean-ios-cache  # Clear iOS caches (DerivedData, Pods)
-task clean-all-caches # Clear ALL build caches
+task utils:ccache-stats     # Show ccache statistics
+task utils:ccache-clear     # Clear ccache
+task ios:clean              # Clear iOS caches (DerivedData, Pods)
 ```
 
 ## Next Steps
