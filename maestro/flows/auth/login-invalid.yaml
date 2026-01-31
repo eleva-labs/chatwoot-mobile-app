@@ -1,0 +1,40 @@
+# Login Flow - Invalid Credentials
+# ==================================
+# Tests error handling with invalid credentials
+#
+# Prerequisites:
+#   - App is installed on device/simulator
+
+appId: ${MAESTRO_APP_ID}
+---
+# Clear app state
+- clearState
+
+# Launch the app
+- launchApp:
+    clearKeychain: true
+
+# Wait for login screen
+- assertVisible:
+    id: 'login_screen'
+
+# Enter invalid email
+- tapOn:
+    id: 'email_input'
+- inputText: 'invalid@test.local'
+
+# Enter invalid password
+- tapOn:
+    id: 'password_input'
+- inputText: 'wrongpassword'
+
+# Tap login button
+- tapOn:
+    id: 'login_button'
+
+# Verify login screen is still visible (user not logged in)
+- assertVisible:
+    id: 'login_screen'
+
+# Take screenshot for verification
+- takeScreenshot: 'login_invalid_credentials'

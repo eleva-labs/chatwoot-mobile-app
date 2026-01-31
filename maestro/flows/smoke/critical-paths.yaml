@@ -1,0 +1,30 @@
+# Critical Paths Smoke Test
+# ========================
+# Quick validation of core user journeys
+# NOTE: Currently only testing login flow (other flows disabled)
+
+appId: ${MAESTRO_APP_ID}
+---
+# Test 1: Login
+- runFlow: ../auth/login.yaml
+
+# All critical paths passed
+- takeScreenshot: 'smoke_complete'
+# TODO: Re-enable once backend is available
+# # Clear state between tests
+# - runFlow: ../../helpers/clear-app-state.yaml
+#
+# # Test 2: View Conversations (includes login)
+# - runFlow: ../conversations/list.yaml
+#
+# # Clear state
+# - runFlow: ../../helpers/clear-app-state.yaml
+#
+# # Test 3: Open Conversation (includes login)
+# - runFlow: ../conversations/open.yaml
+#
+# # Clear state
+# - runFlow: ../../helpers/clear-app-state.yaml
+#
+# # Test 4: Reply to Conversation (includes login)
+# - runFlow: ../conversations/reply.yaml

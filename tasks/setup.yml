@@ -1,0 +1,132 @@
+# Base Setup Tasks
+# Foundation setup for all platforms: Node, pnpm, tools, direnv, environment
+version: '3'
+
+tasks:
+  # ==================== Internal Setup Tasks ====================
+
+  _node-volta:
+    desc: Install Volta and Node 20
+    internal: true
+    silent: true
+    cmds:
+      - ./scripts/setup/base.sh install-node-volta
+    preconditions:
+      - sh: command -v curl
+        msg: 'curl is required but not installed. Install curl first.'
+
+  _tools:
+    desc: Install base development tools (Watchman, Task, Expo CLI, pnpm)
+    internal: true
+    silent: true
+    deps:
+      - _node-volta
+    cmds:
+      - ./scripts/setup/base.sh install-tools-base
+
+  _direnv:
+    desc: Install and configure direnv with shell hook
+    internal: true
+    silent: true
+    cmds:
+      - ./scripts/setup/base.sh install-direnv
+
+  _env-files:
+    desc: Pull environment from EAS and create local config files
+    internal: true
+    silent: true
+    cmds:
+      - ./scripts/setup/base.sh setup-env-files
+    preconditions:
+      - sh: command -v pnpm
+        msg: "pnpm is required. Run 'task setup:base' first."
+
+  # ==================== Public Tasks ====================
+
+  base:
+    desc: Foundation setup (Node, pnpm, tools, direnv, environment)
+    deps:
+      - _node-volta
+      - _tools
+      - _direnv
+      - _env-files
+    cmds:
+      - echo ""
+      - echo "✅ Base setup complete!"
+      - echo ""
+      - echo "Next steps:"
+      - echo "  - For iOS development - task ios:setup"
+      - echo "  - For Android development - task android:setup"
+      - echo ""
+      - echo "Then install dependencies:"
+      - echo "  pnpm install"
+
+  e2e:
+    desc: E2E testing setup (Java, Maestro, idb-companion)
+    cmds:
+      - ./scripts/setup/e2e.sh install-java
+      - ./scripts/setup/e2e.sh install-maestro
+      - ./scripts/setup/e2e.sh install-idb-companion
+      - ./scripts/setup/e2e.sh verify-e2e-setup
+
+  # ====================
+  # Orchestrator Tasks (Entry Points)
+  # ====================
+
+  full:
+    desc: Complete setup (base + iOS + Android + E2E + verification)
+    deps: [base]
+    cmds:
+      - task ios:setup
+      - task android:setup
+      - task: e2e
+      - task: verify
+      - echo ""
+      - echo "✅ Full setup complete! Ready for development on all platforms"
+
+  quick:
+    desc: Minimal setup (dependencies + environment only)
+    cmds:
+      - pnpm install
+      - task: _env-files
+      - echo "✅ Quick setup complete"
+      - echo "   Next - task ios:setup OR task android:setup"
+
+  verify:
+    desc: Verify setup is complete and working
+    dir: '{{.ROOT_DIR}}'
+    cmds:
+      - ./scripts/setup/verify.sh
+
+  check-prereqs:
+    desc: 'Check prerequisites (supports --quick, --platform=ios|android|e2e)'
+    dir: '{{.ROOT_DIR}}'
+    cmds:
+      - ./scripts/utils/check-prerequisites.sh {{.CLI_ARGS}}
+
+  verify-patches:
+    desc: Verify all patches are applied correctly
+    cmds:
+      - echo "Checking patches..."
+      - |
+        if grep -q "@unknown default" node_modules/expo-localization/ios/LocalizationModule.swift 2>/dev/null; then
+          echo "  OK expo-localization PATCHED"
+        else
+          echo "  WARNING expo-localization NOT patched (run pnpm install)"
+        fi
+      - echo "Done."
+
+  env-check:
+    desc: Verify environment variables are loaded
+    silent: true
+    cmds:
+      - echo "Environment Variables:"
+      - echo "========================================================"
+      - echo "ENVIRONMENT=$ENVIRONMENT"
+      - echo "SIMULATOR=$SIMULATOR"
+      - echo "EXPO_PUBLIC_BASE_URL=$EXPO_PUBLIC_BASE_URL"
+      - echo ""
+      - echo "Firebase credentials:"
+      - ls -la credentials/android/ 2>/dev/null || echo "  (no android credentials)"
+      - ls -la credentials/ios/ 2>/dev/null || echo "  (no ios credentials)"
+      - echo "========================================================"

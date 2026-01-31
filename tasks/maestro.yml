@@ -1,0 +1,239 @@
+# Maestro E2E Testing Tasks
+# Mobile UI testing with Maestro framework
+# NOTE: MAESTRO_* variables are loaded from .env.maestro
+version: '3'
+
+tasks:
+  # ==================== Internal Prerequisite Tasks ====================
+
+  _ensure-simulator:
+    desc: Ensure iOS simulator is booted
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if xcrun simctl list devices booted | grep -q "{{.SIMULATOR}}"; then
+          echo "✓ Simulator '{{.SIMULATOR}}' already running"
+        else
+          echo "→ Booting simulator '{{.SIMULATOR}}'..."
+          xcrun simctl boot "{{.SIMULATOR}}" 2>/dev/null || true
+          sleep 3
+          echo "✓ Simulator booted"
+        fi
+
+  _ensure-emulator:
+    desc: Ensure Android emulator is booted
+    internal: true
+    silent: true
+    cmds:
+      - |
+        # Check if any emulator is already running
+        if adb devices | grep -q "emulator"; then
+          echo "✓ Android emulator already running"
+        else
+          # Get first available AVD
+          AVD=$(emulator -list-avds 2>/dev/null | head -1)
+          if [ -z "$AVD" ]; then
+            echo "✗ No Android Virtual Devices found"
+            echo "→ Create one with: task android:setup"
+            exit 1
+          fi
+          echo "→ Booting Android emulator: $AVD"
+          nohup emulator -avd "$AVD" -no-snapshot-load > /tmp/android-emulator.log 2>&1 &
+          echo "→ Waiting for emulator to boot..."
+          adb wait-for-device
+          # Wait for boot to complete
+          timeout=60
+          elapsed=0
+          while [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" != "1" ]; do
+            if [ $elapsed -ge $timeout ]; then
+              echo "✗ Emulator failed to boot after ${timeout}s"
+              exit 1
+            fi
+            sleep 2
+            elapsed=$((elapsed + 2))
+          done
+          sleep 5
+          echo "✓ Android emulator booted"
+        fi
+
+  _ensure-dev-server:
+    desc: Ensure Expo dev server is running
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if lsof -ti:8081 > /dev/null 2>&1; then
+          echo "✓ Dev server already running on port 8081"
+        else
+          echo "→ Starting Expo dev server in background..."
+          nohup pnpm run start > /tmp/expo-dev-server.log 2>&1 &
+          echo $! > /tmp/expo-dev-server.pid
+          echo "→ Waiting for dev server to be ready..."
+          timeout=30
+          elapsed=0
+          while ! lsof -ti:8081 > /dev/null 2>&1; do
+            if [ $elapsed -ge $timeout ]; then
+              echo "✗ Dev server failed to start after ${timeout}s"
+              exit 1
+            fi
+            sleep 1
+            elapsed=$((elapsed + 1))
+          done
+          sleep 2
+          echo "✓ Dev server ready on port 8081"
+        fi
+
+  _ensure-app-installed-ios:
+    desc: Ensure app is installed on iOS simulator
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if xcrun simctl listapps booted | grep -q "{{.MAESTRO_APP_ID}}"; then
+          echo "✓ App '{{.MAESTRO_APP_ID}}' is installed on iOS"
+        else
+          echo "✗ App '{{.MAESTRO_APP_ID}}' not found on iOS simulator"
+          echo "→ Please run 'task ios:run' first to install the app"
+          exit 1
+        fi
+
+  _ensure-app-installed-android:
+    desc: Ensure app is installed on Android emulator
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if adb shell pm list packages | grep -q "{{.MAESTRO_APP_ID}}"; then
+          echo "✓ App '{{.MAESTRO_APP_ID}}' is installed on Android"
+        else
+          echo "✗ App '{{.MAESTRO_APP_ID}}' not found on Android emulator"
+          echo "→ Please run 'task android:run' first to install the app"
+          exit 1
+        fi
+
+  # ==================== Public Tasks ====================
+
+  # iOS Tasks
+  test-ios:
+    desc: Run all Maestro tests on iOS - uses env from .env.maestro
+    deps: [_ensure-simulator, _ensure-dev-server, _ensure-app-installed-ios]
+    dir: maestro
+    cmds:
+      - maestro test flows/auth flows/conversations flows/inbox
+
+  test-ios-local:
+    desc: Run Maestro tests on iOS against local backend - localhost port 3000
+    deps: [_ensure-simulator, _ensure-dev-server, _ensure-app-installed-ios]
+    dir: maestro
+    env:
+      MAESTRO_BACKEND_URL: http://localhost:3000
+    cmds:
+      - maestro test flows/auth flows/conversations flows/inbox
+
+  test-ios-dev:
+    desc: Run Maestro tests on iOS against dev backend
+    deps: [_ensure-simulator, _ensure-dev-server, _ensure-app-installed-ios]
+    dir: maestro
+    env:
+      MAESTRO_BACKEND_URL: https://dev.app.chatscommerce.com
+    cmds:
+      - maestro test flows/auth/login.yaml
+
+  smoke-ios:
+    desc: Run Maestro smoke tests on iOS (single flow for quick validation)
+    deps: [_ensure-simulator, _ensure-dev-server, _ensure-app-installed-ios]
+    dir: maestro
+    cmds:
+      - maestro test flows/smoke/critical-paths.yaml
+
+  smoke-ios-dev:
+    desc: Run Maestro smoke tests on iOS against dev backend
+    deps: [_ensure-simulator, _ensure-dev-server, _ensure-app-installed-ios]
+    dir: maestro
+    env:
+      MAESTRO_BACKEND_URL: https://dev.app.chatscommerce.com
+    cmds:
+      - maestro test flows/smoke/critical-paths.yaml
+
+  # Android Tasks
+  test-android:
+    desc: Run all Maestro tests on Android - uses env from .env.maestro
+    deps: [_ensure-emulator, _ensure-dev-server, _ensure-app-installed-android]
+    dir: maestro
+    cmds:
+      - maestro test flows/auth flows/conversations flows/inbox
+
+  test-android-local:
+    desc: Run Maestro tests on Android against local backend - localhost port 3000
+    deps: [_ensure-emulator, _ensure-dev-server, _ensure-app-installed-android]
+    dir: maestro
+    env:
+      MAESTRO_BACKEND_URL: http://localhost:3000
+    cmds:
+      - maestro test flows/auth flows/conversations flows/inbox
+
+  test-android-dev:
+    desc: Run Maestro tests on Android against dev backend
+    deps: [_ensure-emulator, _ensure-dev-server, _ensure-app-installed-android]
+    dir: maestro
+    env:
+      MAESTRO_BACKEND_URL: https://dev.app.chatscommerce.com
+    cmds:
+      - maestro test flows/auth/login.yaml
+
+  smoke-android:
+    desc: Run Maestro smoke tests on Android (single flow for quick validation)
+    deps: [_ensure-emulator, _ensure-dev-server, _ensure-app-installed-android]
+    dir: maestro
+    cmds:
+      - maestro test flows/smoke/critical-paths.yaml
+
+  smoke-android-dev:
+    desc: Run Maestro smoke tests on Android against dev backend
+    deps: [_ensure-emulator, _ensure-dev-server, _ensure-app-installed-android]
+    dir: maestro
+    env:
+      MAESTRO_BACKEND_URL: https://dev.app.chatscommerce.com
+    cmds:
+      - maestro test flows/smoke/critical-paths.yaml
+
+  # Default Tasks (iOS for backwards compatibility)
+  test:
+    desc: Run all Maestro tests (iOS) - uses env from .env.maestro
+    deps: [test-ios]
+
+  test-local:
+    desc: Run Maestro tests against local backend (iOS)
+    deps: [test-ios-local]
+
+  test-dev:
+    desc: Run Maestro tests against dev backend (iOS)
+    deps: [test-ios-dev]
+
+  smoke:
+    desc: Run Maestro smoke tests (iOS)
+    deps: [smoke-ios]
+
+  smoke-dev:
+    desc: Run Maestro smoke tests against dev backend (iOS)
+    deps: [smoke-ios-dev]
+
+  studio:
+    desc: Launch Maestro Studio for exploratory testing
+    dir: maestro
+    cmds:
+      - maestro studio
+
+  doctor:
+    desc: Verify Maestro installation
+    cmds:
+      - maestro doctor
+
+  setup:
+    desc: Install Maestro and verify setup
+    cmds:
+      - ./scripts/setup/e2e.sh install-java
+      - ./scripts/setup/e2e.sh install-maestro
+      - ./scripts/setup/e2e.sh install-idb-companion
+      - ./scripts/setup/e2e.sh verify-e2e-setup

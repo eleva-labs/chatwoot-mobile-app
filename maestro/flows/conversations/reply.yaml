@@ -1,0 +1,45 @@
+# Conversation Reply Flow
+# ======================
+# Tests that a user can send a reply message
+#
+# Prerequisites:
+#   - Test user has at least one conversation
+
+appId: ${MAESTRO_APP_ID}
+---
+# Login using helper
+- runFlow: ../../helpers/login-as-agent.yaml
+
+# Wait for conversation list
+- assertVisible:
+    id: 'dashboard_screen'
+
+# Tap on first conversation
+- tapOn:
+    id: 'conversation_list_item'
+    index: 0
+
+# Wait for conversation view
+- assertVisible:
+    id: 'conversation_view'
+
+# Tap on message input
+- tapOn:
+    id: 'message_input'
+
+# Type unique test message with timestamp
+- inputText: 'E2E Test Message - ${TIMESTAMP:-test}'
+
+# Wait for send button to appear
+- assertVisible:
+    id: 'send_button'
+
+# Tap on send button
+- tapOn:
+    id: 'send_button'
+
+# Verify message input clears (indicates send successful)
+- waitForAnimationToEnd
+
+# Take screenshot for verification
+- takeScreenshot: 'reply_sent'

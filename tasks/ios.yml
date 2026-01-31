@@ -1,0 +1,144 @@
+# iOS Platform Tasks
+# All iOS development tasks: setup, build, run, clean, EAS
+version: '3'
+
+tasks:
+  # ==================== Internal Setup Tasks ====================
+
+  _check-macos:
+    desc: Verify running on macOS
+    internal: true
+    silent: true
+    preconditions:
+      - sh: 'test "$(uname -s)" = "Darwin"'
+        msg: |
+          iOS development requires macOS.
+          You're running on: {{OS}}
+
+          For Android-only development, use: task android:setup
+
+  _xcode-cli:
+    desc: Install Xcode Command Line Tools
+    internal: true
+    silent: true
+    deps:
+      - _check-macos
+    cmds:
+      - ./scripts/setup/ios.sh install-xcode-cli-tools
+
+  _cocoapods:
+    desc: Install CocoaPods
+    internal: true
+    silent: true
+    deps:
+      - _check-macos
+    cmds:
+      - ./scripts/setup/ios.sh install-cocoapods
+    preconditions:
+      - sh: command -v brew
+        msg: 'Homebrew is required. Install from https://brew.sh'
+
+  _ccache:
+    desc: Install ccache for build optimization
+    internal: true
+    silent: true
+    deps:
+      - _check-macos
+    cmds:
+      - ./scripts/setup/ios.sh install-ccache
+    preconditions:
+      - sh: command -v brew
+        msg: 'Homebrew is required. Install from https://brew.sh'
+
+  _simulator:
+    desc: Verify iOS simulator availability
+    internal: true
+    silent: true
+    deps:
+      - _check-macos
+    cmds:
+      - ./scripts/setup/ios.sh setup-ios-simulator
+    preconditions:
+      - sh: command -v xcrun
+        msg: 'Xcode Command Line Tools required. Run: task ios:_xcode-cli'
+
+  # ==================== Public Tasks ====================
+
+  setup:
+    desc: Setup iOS development (Xcode, CocoaPods, ccache, simulator)
+    deps:
+      - _check-macos
+    cmds:
+      - task: _xcode-cli
+      - task: _cocoapods
+      - task: _ccache
+      - task: _simulator
+      - echo ""
+      - echo "✅ iOS setup complete!"
+      - echo ""
+      - echo "Next steps:"
+      - echo "  1. Run 'task ios:generate' to create native iOS project"
+      - echo "  2. Run 'task ios:run' to build and run on iOS"
+
+  generate:
+    desc: Generate iOS native project (clean prebuild)
+    cmds:
+      - npx expo prebuild --clean --platform ios
+
+  generate-soft:
+    desc: Generate iOS native project (incremental, faster)
+    cmds:
+      - npx expo prebuild --platform ios
+
+  build:
+    desc: Build iOS without running
+    cmds:
+      - task: generate
+      - echo "✅ iOS project built (native files generated)"
+      - echo "   Run 'task ios:run' to launch on simulator"
+
+  run:
+    desc: Build and run on iOS (full rebuild)
+    cmds:
+      - pnpm run ios
+
+  start:
+    desc: Run iOS without rebuild (faster for iteration)
+    cmds:
+      - echo "Starting iOS app without rebuild..."
+      - pnpm run ios --no-build-cache
+
+  stop:
+    desc: Stop iOS Simulator
+    cmds:
+      - echo "🛑 Shutting down iOS Simulator..."
+      - xcrun simctl shutdown all 2>/dev/null || true
+      - killall Simulator 2>/dev/null || true
+      - echo "✅ iOS Simulator stopped"
+
+  clean:
+    desc: Clean iOS caches (DerivedData, Pods, ccache)
+    cmds:
+      - echo "🧹 Cleaning iOS caches..."
+      - rm -rf ~/Library/Developer/Xcode/DerivedData
+      - rm -rf ios/Pods ios/Podfile.lock ios/build
+      - ccache -C 2>/dev/null || true
+      - echo "✅ iOS caches cleared"
+      - echo "   Run 'task ios:generate' to rebuild"
+
+  eas:
+    desc: Build iOS on EAS cloud (production)
+    cmds:
+      - pnpm run eas:build:ios
+
+  eas-local:
+    desc: Build iOS locally via EAS (production)
+    cmds:
+      - pnpm run eas:build:ios:local
+
+  storybook:
+    desc: Run Storybook on iOS
+    env:
+      EXPO_STORYBOOK_ENABLED: 'true'
+    cmds:
+      - pnpm run ios

@@ -1,0 +1,68 @@
+# Login Flow - Successful Authentication
+# ======================================
+# Tests that a user can log in with valid credentials
+#
+# Prerequisites:
+#   - App is installed on device/simulator
+#   - Test user exists with valid credentials
+#
+# Environment Variables Required:
+#   - MAESTRO_E2E_USER_EMAIL
+#   - MAESTRO_E2E_USER_PASSWORD
+
+appId: ${MAESTRO_APP_ID}
+---
+- clearState
+
+- launchApp:
+    clearKeychain: true
+
+# Expo Dev Client handling (using runFlow+when:visible for iOS - optional:true is broken, GitHub #1807)
+- runFlow:
+    when:
+      visible: 'http://localhost:8081'
+    commands:
+      - tapOn:
+          text: 'http://localhost:8081'
+
+- runFlow:
+    when:
+      visible: 'Continue'
+    commands:
+      - tapOn:
+          text: 'Continue'
+
+# Dismiss Expo Dev Menu modal (tap X in top-right)
+- runFlow:
+    when:
+      visible: 'Toggle performance monitor'
+    commands:
+      - tapOn:
+          point: 95%,8%
+
+# Wait for and verify login screen is visible
+- assertVisible:
+    id: 'login_screen'
+
+# Enter email credentials
+- tapOn:
+    id: 'email_input'
+- inputText: ${MAESTRO_E2E_USER_EMAIL}
+
+# Enter password credentials
+- tapOn:
+    id: 'password_input'
+- inputText: ${MAESTRO_E2E_USER_PASSWORD}
+
+# Hide keyboard to reveal login button
+- hideKeyboard
+
+# Submit login form
+- tapOn:
+    id: 'login_button'
+
+# Verify successful login by checking onboarding screen
+- assertVisible: 'What type of store do you have?'
+
+# Capture success screenshot for test artifacts
+- takeScreenshot: 'login_success'

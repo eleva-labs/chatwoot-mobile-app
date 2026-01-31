@@ -1,0 +1,7 @@
+# Clear App State Helper
+# =======================
+# Clears app state for fresh test start
+
+appId: ${MAESTRO_APP_ID}
+---
+- clearState
