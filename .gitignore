@@ -1,56 +1,85 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# dependencies
+# ============================================================================
+# Dependencies
+# ============================================================================
 node_modules/
 
-# Expo
+# ============================================================================
+# Expo & React Native
+# ============================================================================
 .expo/
 dist/
 web-build/
 
-# Native
+# Native build output directories (created by expo prebuild/run)
+/android/
+/ios/
+
+# ============================================================================
+# Native Files & Certificates
+# ============================================================================
 *.orig.*
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
+*.pem
 
-# Metro
+# ============================================================================
+# Metro Bundler
+# ============================================================================
 .metro-health-check*
 
-# debug
+# ============================================================================
+# Logs & Debug
+# ============================================================================
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 
+# ============================================================================
 # macOS
+# ============================================================================
 .DS_Store
-*.pem
 
-# local env files
+# ============================================================================
+# Environment Variables
+# ============================================================================
+.env
+.env.local
 .env*.local
+dev.env
+prod.env
 
-# typescript
+# ============================================================================
+# TypeScript
+# ============================================================================
 *.tsbuildinfo
 
-# credentials for Firebase and Google services
+# ============================================================================
+# Firebase & Google Services Credentials
+# ============================================================================
 /credentials/
 /google-services.json
 /GoogleService-Info.plist
-
-.env
-.env.local
-dev.env
-prod.env
 android/app/google-services.json
 ios/GoogleService-Info.plist
 service-account-key.json
 
-# Native build output directories (created by expo prebuild/run)
-/android/
-/ios/
+# ============================================================================
+# Maestro UI Testing
+# ============================================================================
+# Ignore screenshots and test artifacts generated during Maestro test runs
+maestro/**/*.png
+maestro/**/*.jpg
+maestro/**/*.jpeg
+.maestro/tests/
 
+# ============================================================================
+# Documentation
+# ============================================================================
 # Temporary documentation
 /docs/temp/
 
