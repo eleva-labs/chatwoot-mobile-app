@@ -1,7 +1,18 @@
 {
   "name": "@chatwoot/mobile-app",
   "version": "4.0.19",
+  "packageManager": "pnpm@10.28.0",
+  "volta": {
+    "node": "22.22.0"
+  },
+  "engines": {
+    "node": ">=22.12.0 <25.0.0",
+    "pnpm": ">=10.0.0",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "eas-build-post-install": "bash scripts/eas-build-post-install.sh",
     "start": "expo start --dev-client",
     "start:production": "expo start --no-dev --minify",
