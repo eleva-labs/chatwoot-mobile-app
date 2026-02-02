@@ -166,36 +166,68 @@ detect_java_home() {
 # ==============================================================================
 # ANDROID_HOME DETECTION FUNCTION
 # ==============================================================================
-detect_android_home() {
-    local android_home=""
 
-    case "$OS" in
-        Darwin)
-            # macOS default location
-            if [[ -d "$HOME/Library/Android/sdk" ]]; then
-                android_home="$HOME/Library/Android/sdk"
-            fi
-            ;;
-        Linux)
-            # Linux default locations
-            if [[ -d "$HOME/Android/Sdk" ]]; then
-                android_home="$HOME/Android/Sdk"
-            elif [[ -d "$HOME/android-sdk" ]]; then
-                android_home="$HOME/android-sdk"
-            fi
-            ;;
-    esac
+# Validates that a directory contains actual Android SDK components
+# Returns 0 (true) if valid SDK found, 1 (false) otherwise
+is_valid_android_sdk() {
+    local path="$1"
 
-    # Return detected path or default expected path
-    if [[ -n "$android_home" ]]; then
-        echo "$android_home"
-    else
-        # Return expected default path even if not yet created
-        case "$OS" in
-            Darwin) echo "$HOME/Library/Android/sdk" ;;
-            Linux) echo "$HOME/Android/Sdk" ;;
-        esac
+    # Path must exist and be a directory
+    [[ -d "$path" ]] || return 1
+
+    # Check for SDK components (any of these indicates a valid SDK)
+    # - platform-tools/adb: Core Android debugging tool
+    # - platforms/: Contains Android platform versions
+    # - build-tools/: Contains build toolchain
+    # - cmdline-tools/: Contains SDK manager and other CLI tools
+    if [[ -f "$path/platform-tools/adb" ]] || \
+       [[ -d "$path/platforms" ]] || \
+       [[ -d "$path/build-tools" ]] || \
+       [[ -d "$path/cmdline-tools" ]]; then
+        return 0
     fi
+
+    return 1
+}
+
+# Detects ANDROID_HOME by checking multiple known locations in priority order
+# Returns the first valid SDK location found, or empty string if none found
+detect_android_home() {
+    # Define locations to check in priority order
+    local locations=(
+        "$ANDROID_HOME"                                    # 1. Existing env var (highest priority)
+        "$HOME/Library/Android/sdk"                        # 2. Android Studio default on macOS
+        "/opt/homebrew/share/android-commandlinetools"     # 3. Homebrew on Apple Silicon
+        "/usr/local/share/android-commandlinetools"        # 4. Homebrew on Intel Mac
+        "$HOME/Android/Sdk"                                # 5. Android Studio default on Linux
+        "$HOME/android-sdk"                                # 6. Alternative Linux location
+    )
+
+    # Check each location in order
+    for loc in "${locations[@]}"; do
+        # Skip empty values (e.g., if ANDROID_HOME is not set)
+        [[ -z "$loc" ]] && continue
+
+        # Return first valid SDK location found
+        if is_valid_android_sdk "$loc"; then
+            echo "$loc"
+            return 0
+        fi
+    done
+
+    # No valid SDK found - return empty string
+    # The caller should handle this case (e.g., prompt user to install)
+    return 1
+}
+
+# Returns the default expected ANDROID_HOME path for the current OS
+# Used when no SDK is found but we need to configure the path
+get_default_android_home() {
+    case "$OS" in
+        Darwin) echo "$HOME/Library/Android/sdk" ;;
+        Linux) echo "$HOME/Android/Sdk" ;;
+        *) echo "$HOME/Android/Sdk" ;;
+    esac
 }
 
 # ==============================================================================
@@ -291,9 +323,13 @@ else
     print_info "Detected JAVA_HOME: $JAVA_HOME_PATH"
 fi
 
-# Detect ANDROID_HOME
-ANDROID_HOME_PATH=$(detect_android_home)
-print_info "Using ANDROID_HOME: $ANDROID_HOME_PATH"
+# Detect ANDROID_HOME - try to find existing valid SDK, otherwise use default path
+ANDROID_HOME_PATH=$(detect_android_home) || ANDROID_HOME_PATH=$(get_default_android_home)
+if is_valid_android_sdk "$ANDROID_HOME_PATH"; then
+    print_success "Found valid Android SDK at: $ANDROID_HOME_PATH"
+else
+    print_info "Using ANDROID_HOME: $ANDROID_HOME_PATH (SDK not yet installed)"
+fi
 
 # Detect shell type for fish compatibility
 SHELL_NAME=$(basename "$SHELL")
@@ -366,13 +402,15 @@ else
     print_warning "Java verification pending - restart terminal first"
 fi
 
-# Check if Android SDK exists
-ANDROID_HOME_PATH=$(detect_android_home)
-if [[ -d "$ANDROID_HOME_PATH" ]]; then
-    print_success "ANDROID_HOME: $ANDROID_HOME_PATH"
+# Check if Android SDK exists and is valid
+ANDROID_HOME_PATH=$(detect_android_home) || ANDROID_HOME_PATH=$(get_default_android_home)
+if is_valid_android_sdk "$ANDROID_HOME_PATH"; then
+    print_success "ANDROID_HOME: $ANDROID_HOME_PATH (validated)"
 
     # Check for platform-tools
-    if [[ -d "$ANDROID_HOME_PATH/platform-tools" ]]; then
+    if [[ -f "$ANDROID_HOME_PATH/platform-tools/adb" ]]; then
+        print_success "Android platform-tools: Found (adb available)"
+    elif [[ -d "$ANDROID_HOME_PATH/platform-tools" ]]; then
         print_success "Android platform-tools: Found"
     else
         print_warning "Android platform-tools: Not yet installed"
@@ -384,8 +422,25 @@ if [[ -d "$ANDROID_HOME_PATH" ]]; then
     else
         print_warning "Android emulator: Not yet installed"
     fi
+
+    # Check for build-tools
+    if [[ -d "$ANDROID_HOME_PATH/build-tools" ]]; then
+        print_success "Android build-tools: Found"
+    else
+        print_warning "Android build-tools: Not yet installed"
+    fi
+
+    # Check for platforms
+    if [[ -d "$ANDROID_HOME_PATH/platforms" ]]; then
+        print_success "Android platforms: Found"
+    else
+        print_warning "Android platforms: Not yet installed"
+    fi
+elif [[ -d "$ANDROID_HOME_PATH" ]]; then
+    print_warning "ANDROID_HOME directory exists but no SDK components found: $ANDROID_HOME_PATH"
+    print_info "Run Android Studio SDK Manager to install SDK components"
 else
-    print_info "ANDROID_HOME configured but SDK not yet installed"
+    print_info "ANDROID_HOME configured but SDK not yet installed: $ANDROID_HOME_PATH"
     print_info "SDK will be installed when you set up Android Studio"
 fi
 

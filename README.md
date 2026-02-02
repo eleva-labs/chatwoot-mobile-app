@@ -218,13 +218,28 @@ pnpm run env:pull:prod  # Pull production environment
 | `pnpm run env:pull:dev` | Pull development environment variables |
 | `pnpm run env:pull:prod` | Pull production environment variables |
 
+**iOS Development:**
+| Script | Description |
+|--------|-------------|
+| `pnpm run ios:dev` | Run app on iOS simulator (dev mode) |
+| `pnpm run ios:pods` | Install CocoaPods dependencies |
+| `pnpm run ios:simulator` | Build for iOS simulator (no code signing) |
+| `pnpm run ios:clean` | Clean iOS build artifacts and pods |
+| `pnpm run ios:logs` | Stream logs from iOS simulator |
+| `pnpm run build:ios:local` | Build iOS locally (requires certificates) |
+| `pnpm run build:ios:prod` | Build iOS via EAS cloud |
+
+**Project Generation:**
+| Script | Description |
+|--------|-------------|
+| `pnpm run generate` | Generate fresh ios/ and android/ folders (clean prebuild) |
+| `pnpm run generate:soft` | Regenerate without cleaning existing native folders |
+
 **Building:**
 | Script | Description |
 |--------|-------------|
 | `pnpm run build:android:local` | Build Android locally |
 | `pnpm run build:android:prod` | Build Android via EAS |
-| `pnpm run build:ios:local` | Build iOS locally |
-| `pnpm run build:ios:prod` | Build iOS via EAS |
 
 **Quality:**
 | Script | Description |
@@ -271,8 +286,7 @@ When a Pull Request is merged to the `main` branch:
 
 ```bash
 # Clear caches and reinstall
-watchman watch-del-all
-pnpm store prune
+pnpm run clean
 pnpm install
 ```
 
@@ -280,8 +294,6 @@ Or restart with cache cleared:
 ```bash
 pnpm start --clear
 ```
-
-> **Note:** The `pnpm run clean` script has a known bug (uses yarn). Use the manual commands above instead.
 
 </details>
 

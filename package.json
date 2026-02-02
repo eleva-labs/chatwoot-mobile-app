@@ -3,7 +3,8 @@
   "version": "4.0.19",
   "packageManager": "pnpm@10.28.0",
   "volta": {
-    "node": "22.22.0"
+    "node": "22.22.0",
+    "pnpm": "10.28.0"
   },
   "engines": {
     "node": ">=22.12.0 <25.0.0",
@@ -16,7 +17,7 @@
     "eas-build-post-install": "bash scripts/eas-build-post-install.sh",
     "start": "expo start --dev-client",
     "start:production": "expo start --no-dev --minify",
-    "clean": "watchman watch-del-all && yarn cache clean",
+    "clean": "watchman watch-del-all && rm -rf node_modules ios android .expo && pnpm store prune",
     "test": "jest",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
@@ -29,7 +30,7 @@
     "build:android:prod": "dotenv -c -- eas build -p android --profile production",
     "ios:dev": "expo run:ios",
     "build:ios:local": "dotenv -c -- eas build -p ios --profile production --local",
-    "build:ios:prod": "dotenv -c -- eas build -p ios --profile production --local",
+    "build:ios:prod": "dotenv -c -- eas build -p ios --profile production",
     "storybook-generate": "sb-rn-get-stories",
     "start:storybook": "cross-env EXPO_STORYBOOK_ENABLED='true' expo start",
     "storybook:ios": "cross-env EXPO_STORYBOOK_ENABLED='true' pnpm run ios:dev",
@@ -38,7 +39,12 @@
     "env:pull:dev": "./scripts/pull-env.sh development",
     "env:pull:prod": "./scripts/pull-env.sh production",
     "android": "expo run:android",
-    "ios": "expo run:ios"
+    "android:build": "cd android && ./gradlew assembleDebug && cd ..",
+    "ios": "expo run:ios",
+    "ios:pods": "cd ios && pod install && cd ..",
+    "ios:simulator": "cd ios && xcodebuild -workspace ChatscommerceDev.xcworkspace -scheme ChatscommerceDev -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build",
+    "ios:clean": "rm -rf ios/build ios/Pods ios/Podfile.lock && cd ios && pod cache clean --all",
+    "ios:logs": "xcrun simctl spawn booted log stream --predicate 'subsystem contains \"com.chatscommerce\"' --level debug"
   },
   "dependencies": {
     "@ai-sdk/react": "^2.0.93",
