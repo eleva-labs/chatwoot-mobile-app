@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 08_setup_env.sh
+# 09_setup_env.sh
 # Sets up environment configuration file (.env)
 #
 # This script:

@@ -1,7 +1,14 @@
 # Process Documentation Index
 
-**Last Updated**: 2025-01-27
+**Last Updated**: 2026-02-02
 **Project**: Chatwoot Mobile App (React Native + Expo)
+
+---
+
+## Related Documentation
+
+- **[Setup Guide](../setup/README.md)** - Environment setup and configuration
+- **[README](../../README.md)** - Project overview and quick start
 
 ---
 
@@ -175,8 +182,16 @@ These directories are gitignored and won't be committed.
 
 ## Related Documentation
 
+- **[Setup Guide](../setup/README.md)** - Environment setup and configuration
+  - [Prerequisites](../setup/01-prerequisites.md)
+  - [Automated Setup](../setup/02-automated-setup.md)
+  - [Manual Setup](../setup/03-manual-setup.md)
+  - [Authentication](../setup/04-authentication.md)
+  - [Firebase Credentials](../setup/05-firebase-credentials.md)
+  - [Environment Variables](../setup/06-environment-variables.md)
+  - [Setup Troubleshooting](../setup/07-troubleshooting.md)
 - **[Project Rules](../../.cursor/rules/about.mdc)** - Development guidelines and conventions
-- **[README](../../README.md)** - Project overview and setup
+- **[README](../../README.md)** - Project overview and quick start
 - **[Expo Documentation](https://docs.expo.dev/)** - Expo framework documentation
 - **[React Native Documentation](https://reactnative.dev/)** - React Native documentation
 

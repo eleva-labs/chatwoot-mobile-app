@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 07_install_project_deps.sh
+# 08_install_project_deps.sh
 # Installs project dependencies via pnpm
 #
 # This script:

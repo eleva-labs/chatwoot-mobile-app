@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 09_verify_setup.sh
+# 11_verify_setup.sh
 # Verifies the development environment is correctly configured
 #
 # This script:
@@ -276,6 +276,67 @@ else
 fi
 
 # ==============================================================================
+# FIREBASE CREDENTIALS
+# ==============================================================================
+
+echo ""
+echo -e "${CYAN}${BOLD}Firebase Credentials:${NC}"
+
+CREDENTIALS_DIR="$PROJECT_ROOT/credentials"
+
+# Helper function to validate plist file
+validate_plist() {
+    local file="$1"
+    [[ -f "$file" ]] && grep -q "GOOGLE_APP_ID" "$file" 2>/dev/null && ! grep -q "YOUR_" "$file" 2>/dev/null && ! grep -q "placeholder-" "$file" 2>/dev/null
+}
+
+# Helper function to validate JSON file
+validate_json() {
+    local file="$1"
+    [[ -f "$file" ]] && grep -q "project_info" "$file" 2>/dev/null && ! grep -q "YOUR_" "$file" 2>/dev/null && ! grep -q "placeholder-" "$file" 2>/dev/null
+}
+
+# iOS Development
+IOS_DEV="$CREDENTIALS_DIR/ios/GoogleService-Info-dev.plist"
+if validate_plist "$IOS_DEV"; then
+    check_pass "iOS (dev)" "Valid"
+elif [[ -f "$IOS_DEV" ]]; then
+    check_warn "iOS (dev)" "Invalid or placeholder"
+else
+    check_warn "iOS (dev)" "Not found"
+fi
+
+# iOS Production
+IOS_PROD="$CREDENTIALS_DIR/ios/GoogleService-Info.plist"
+if validate_plist "$IOS_PROD"; then
+    check_pass "iOS (prod)" "Valid"
+elif [[ -f "$IOS_PROD" ]]; then
+    check_warn "iOS (prod)" "Invalid or placeholder"
+else
+    check_warn "iOS (prod)" "Not found"
+fi
+
+# Android Development
+ANDROID_DEV="$CREDENTIALS_DIR/android/google-services-dev.json"
+if validate_json "$ANDROID_DEV"; then
+    check_pass "Android (dev)" "Valid"
+elif [[ -f "$ANDROID_DEV" ]]; then
+    check_warn "Android (dev)" "Invalid or placeholder"
+else
+    check_warn "Android (dev)" "Not found"
+fi
+
+# Android Production
+ANDROID_PROD="$CREDENTIALS_DIR/android/google-services.json"
+if validate_json "$ANDROID_PROD"; then
+    check_pass "Android (prod)" "Valid"
+elif [[ -f "$ANDROID_PROD" ]]; then
+    check_warn "Android (prod)" "Invalid or placeholder"
+else
+    check_warn "Android (prod)" "Not found"
+fi
+
+# ==============================================================================
 # EXPO DOCTOR
 # ==============================================================================
 
@@ -354,7 +415,7 @@ if [[ $FAIL_COUNT -gt 0 ]] || [[ $WARN_COUNT -gt 0 ]]; then
     fi
 
     if [[ -z "$JAVA_HOME" ]] || ! command -v java &> /dev/null; then
-        echo "  - Install Java 17: Run ./scripts/setup/06_install_android_deps.sh"
+        echo "  - Install Java 17: Run ./scripts/setup/07_install_android_deps.sh"
     fi
 
     if [[ ! -d "$PROJECT_ROOT/node_modules" ]]; then
@@ -362,7 +423,15 @@ if [[ $FAIL_COUNT -gt 0 ]] || [[ $WARN_COUNT -gt 0 ]]; then
     fi
 
     if [[ ! -f "$PROJECT_ROOT/.env" ]]; then
-        echo "  - Configure environment: Run ./scripts/setup/08_setup_env.sh"
+        echo "  - Configure environment: Run ./scripts/setup/09_setup_env.sh"
+    fi
+
+    # Check if any Firebase credentials are missing
+    FIREBASE_MISSING=false
+    [[ ! -f "$PROJECT_ROOT/credentials/ios/GoogleService-Info-dev.plist" ]] && FIREBASE_MISSING=true
+    [[ ! -f "$PROJECT_ROOT/credentials/android/google-services-dev.json" ]] && FIREBASE_MISSING=true
+    if [[ "$FIREBASE_MISSING" == "true" ]]; then
+        echo "  - Configure Firebase: Run ./scripts/setup/10_setup_firebase.sh"
     fi
 
     if [[ -z "$VOLTA_HOME" ]] || [[ -z "$JAVA_HOME" ]] || [[ -z "$ANDROID_HOME" ]]; then

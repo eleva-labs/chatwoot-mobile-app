@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 05_install_ios_deps.sh - Install iOS Development Dependencies
+# 06_install_ios_deps.sh - Install iOS Development Dependencies
 # Installs Xcode Command Line Tools, Homebrew, CocoaPods, and Watchman.
 # Only runs on macOS - exits gracefully on other platforms.
 # Idempotent - safe to run multiple times.

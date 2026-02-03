@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 06_install_android_deps.sh - Install Android Development Dependencies
+# 07_install_android_deps.sh - Install Android Development Dependencies
 # Installs JDK 17 and configures JAVA_HOME, ANDROID_HOME, and PATH.
 # Works on both macOS and Linux.
 # Idempotent - safe to run multiple times.
