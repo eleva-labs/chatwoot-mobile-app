@@ -216,8 +216,8 @@ pnpm run generate
 pnpm start
 
 # Or run directly on a platform
-pnpm run ios:dev
-pnpm run android:dev
+pnpm run ios:run
+pnpm run android:run
 ```
 
 ## Environment Variables Summary

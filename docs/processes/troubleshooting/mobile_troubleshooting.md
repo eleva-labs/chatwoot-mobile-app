@@ -68,7 +68,7 @@ cd android
 cd ..
 
 # Rebuild
-pnpm run ios:dev  # or android:dev
+pnpm run ios:run  # or android:run
 ```
 
 **Prevention**: Keep native dependencies updated, regenerate after major dependency changes
@@ -501,16 +501,16 @@ pnpm run lint
 pnpm test
 
 # iOS development
-pnpm run ios:dev
+pnpm run ios:run
 
 # Android development
-pnpm run android:dev
+pnpm run android:run
 
 # Check Expo config
-pnpm run check:config
+pnpm run doctor:config
 
 # Expo doctor
-pnpm run run:doctor
+pnpm run doctor
 ```
 
 ### Log Locations

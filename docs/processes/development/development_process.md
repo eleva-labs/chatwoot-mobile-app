@@ -175,8 +175,8 @@ For each task:
 ### Continuous Validation
 - Run linting frequently (`pnpm run lint`)
 - Check TypeScript compilation (`npx tsc --noEmit`)
-- Test on iOS simulator (`pnpm run ios:dev`)
-- Test on Android emulator (`pnpm run android:dev`)
+- Test on iOS simulator (`pnpm run ios:run`)
+- Test on Android emulator (`pnpm run android:run`)
 - Keep coverage high
 
 ### Handle Issues
@@ -227,7 +227,7 @@ pnpm run lint
 **iOS Testing**:
 ```bash
 # Start iOS development build
-pnpm run ios:dev
+pnpm run ios:run
 
 # Test on physical device (requires setup)
 # Test on simulator
@@ -236,7 +236,7 @@ pnpm run ios:dev
 **Android Testing**:
 ```bash
 # Start Android development build
-pnpm run android:dev
+pnpm run android:run
 
 # Test on physical device (requires setup)
 # Test on emulator
@@ -381,10 +381,10 @@ npx prettier --write .
 pnpm start
 
 # iOS development
-pnpm run ios:dev
+pnpm run ios:run
 
 # Android development
-pnpm run android:dev
+pnpm run android:run
 
 # Run tests
 pnpm test
@@ -399,10 +399,10 @@ pnpm run lint
 pnpm run generate
 
 # Check Expo config
-pnpm run check:config
+pnpm run doctor:config
 
 # Expo doctor
-pnpm run run:doctor
+pnpm run doctor
 ```
 
 ### File Naming

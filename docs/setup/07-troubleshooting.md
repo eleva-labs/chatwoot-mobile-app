@@ -267,7 +267,7 @@ pnpm install
 
 ```bash
 # Run diagnostics
-pnpm run run:doctor
+pnpm run doctor
 
 # Common fix: regenerate native projects
 pnpm run generate

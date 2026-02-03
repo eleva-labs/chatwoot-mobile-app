@@ -152,10 +152,10 @@ pnpm install
 pnpm start
 
 # Start iOS simulator (in separate terminal)
-pnpm run ios:dev
+pnpm run ios:run
 
 # Start Android emulator (in separate terminal)
-pnpm run android:dev
+pnpm run android:run
 
 # Run tests
 pnpm test
@@ -263,7 +263,7 @@ test('component renders correctly', () => {
 **iOS Testing**:
 ```bash
 # Start iOS development build
-pnpm run ios:dev
+pnpm run ios:run
 
 # Test on physical device (requires setup)
 # Test on simulator
@@ -272,7 +272,7 @@ pnpm run ios:dev
 **Android Testing**:
 ```bash
 # Start Android development build
-pnpm run android:dev
+pnpm run android:run
 
 # Test on physical device (requires setup)
 # Test on emulator
@@ -334,10 +334,10 @@ pnpm test path/to/test.ts
 pnpm test
 
 # Re-test manually on iOS
-pnpm run ios:dev
+pnpm run ios:run
 
 # Re-test manually on Android
-pnpm run android:dev
+pnpm run android:run
 ```
 
 ### 5.3 Regression Testing
@@ -420,10 +420,10 @@ pnpm run lint
 
 ```bash
 # iOS development build
-pnpm run ios:dev
+pnpm run ios:run
 
 # Android development build
-pnpm run android:dev
+pnpm run android:run
 
 # Check iOS simulator
 xcrun simctl list devices

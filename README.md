@@ -72,8 +72,8 @@ pnpm start
 | Command | Description |
 |---------|-------------|
 | `pnpm start` | Start Expo dev server |
-| `pnpm run ios:dev` | Run on iOS simulator |
-| `pnpm run android:dev` | Run on Android emulator |
+| `pnpm run ios:run` | Run on iOS simulator |
+| `pnpm run android:run` | Run on Android emulator |
 | `pnpm run env:pull:dev` | Pull dev environment from EAS |
 | `pnpm run env:merge:dev` | Pull and merge (preserves local values) |
 | `pnpm test` | Run tests |
@@ -127,8 +127,8 @@ pnpm run build:ios:prod
 | Script | Description |
 |--------|-------------|
 | `pnpm start` | Start Expo dev server |
-| `pnpm run android:dev` | Run on Android (dev) |
-| `pnpm run ios:dev` | Run on iOS (dev) |
+| `pnpm run android:run` | Run on Android (dev) |
+| `pnpm run ios:run` | Run on iOS (dev) |
 | `pnpm run generate` | Generate native code |
 | `pnpm run generate:soft` | Soft prebuild |
 
@@ -144,7 +144,7 @@ pnpm run build:ios:prod
 | Script | Description |
 |--------|-------------|
 | `pnpm run ios:pods` | Install CocoaPods |
-| `pnpm run ios:simulator` | Build for simulator |
+| `pnpm run ios:sim` | Build for simulator |
 | `pnpm run ios:clean` | Clean iOS build |
 | `pnpm run ios:logs` | Stream simulator logs |
 
@@ -162,12 +162,12 @@ pnpm run build:ios:prod
 | `pnpm test` | Run tests |
 | `pnpm run lint` | Run ESLint |
 | `pnpm run format` | Format with Prettier |
-| `pnpm run run:doctor` | Expo diagnostics |
+| `pnpm run doctor` | Expo diagnostics |
 
 ### Storybook
 | Script | Description |
 |--------|-------------|
-| `pnpm run start:storybook` | Start Storybook |
+| `pnpm run storybook` | Start Storybook |
 | `pnpm run storybook:ios` | Storybook on iOS |
 | `pnpm run storybook:android` | Storybook on Android |
 

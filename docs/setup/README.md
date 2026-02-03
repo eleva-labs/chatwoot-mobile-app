@@ -101,8 +101,8 @@ Script 11 verifies the complete setup and provides a summary.
 | Verify setup | `./scripts/setup/11_verify_setup.sh` |
 | Pull dev environment | `pnpm run env:pull:dev` |
 | Start development | `pnpm start` |
-| Run on iOS | `pnpm run ios:dev` |
-| Run on Android | `pnpm run android:dev` |
+| Run on iOS | `pnpm run ios:run` |
+| Run on Android | `pnpm run android:run` |
 
 ---
 

@@ -15,39 +15,46 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "eas-build-post-install": "bash scripts/eas-build-post-install.sh",
+
     "start": "expo start --dev-client",
-    "start:production": "expo start --no-dev --minify",
+    "start:prod": "expo start --no-dev --minify",
     "clean": "watchman watch-del-all && rm -rf node_modules ios android .expo && pnpm store prune",
+
     "test": "jest",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\"",
+
     "generate": "npx expo prebuild --clean",
     "generate:soft": "npx expo prebuild",
-    "run:doctor": "npx expo-doctor",
-    "check:config": "npx expo-config check",
-    "android:dev": "expo run:android",
-    "build:android:local": "dotenv -c -- eas build -p android --profile production --local",
-    "build:android:prod": "dotenv -c -- eas build -p android --profile production",
-    "ios:dev": "expo run:ios",
-    "ios:dev:sim": "scripts/ios-simulator.sh",
+
+    "doctor": "npx expo-doctor",
+    "doctor:config": "npx expo-config check",
+
+    "ios:run": "expo run:ios",
+    "ios:sim": "scripts/ios-simulator.sh",
+    "ios:pods": "cd ios && pod install && cd ..",
+    "ios:clean": "rm -rf ios/build ios/Pods ios/Podfile.lock && cd ios && pod cache clean --all",
+    "ios:logs": "xcrun simctl spawn booted log stream --predicate 'subsystem contains \"com.chatscommerce\"' --level debug",
+
+    "android:run": "expo run:android",
+    "android:adb": "adb reverse tcp:9090 tcp:9090",
+
     "build:ios:local": "dotenv -c -- eas build -p ios --profile production --local",
     "build:ios:prod": "dotenv -c -- eas build -p ios --profile production",
-    "storybook-generate": "sb-rn-get-stories",
-    "start:storybook": "cross-env EXPO_STORYBOOK_ENABLED='true' expo start",
-    "storybook:ios": "cross-env EXPO_STORYBOOK_ENABLED='true' pnpm run ios:dev",
-    "storybook:android": "cross-env EXPO_STORYBOOK_ENABLED='true' pnpm run android:dev",
-    "adb:connect": "adb reverse tcp:9090 tcp:9090",
+    "build:android:local": "dotenv -c -- eas build -p android --profile production --local",
+    "build:android:prod": "dotenv -c -- eas build -p android --profile production",
+
+    "storybook": "cross-env EXPO_STORYBOOK_ENABLED='true' expo start",
+    "storybook:generate": "sb-rn-get-stories",
+    "storybook:ios": "cross-env EXPO_STORYBOOK_ENABLED='true' pnpm run ios:run",
+    "storybook:android": "cross-env EXPO_STORYBOOK_ENABLED='true' pnpm run android:run",
+
     "env:pull:dev": "./scripts/pull-env.sh development",
     "env:pull:prod": "./scripts/pull-env.sh production",
     "env:merge:dev": "./scripts/pull-env.sh development --merge",
-    "env:merge:prod": "./scripts/pull-env.sh production --merge",
-    "android": "expo run:android",
-    "android:build": "cd android && ./gradlew assembleDebug && cd ..",
-    "ios": "expo run:ios",
-    "ios:pods": "cd ios && pod install && cd ..",
-    "ios:simulator": "cd ios && xcodebuild -workspace ChatscommerceDev.xcworkspace -scheme ChatscommerceDev -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build",
-    "ios:clean": "rm -rf ios/build ios/Pods ios/Podfile.lock && cd ios && pod cache clean --all",
-    "ios:logs": "xcrun simctl spawn booted log stream --predicate 'subsystem contains \"com.chatscommerce\"' --level debug"
+    "env:merge:prod": "./scripts/pull-env.sh production --merge"
   },
   "dependencies": {
     "@ai-sdk/react": "^2.0.93",
