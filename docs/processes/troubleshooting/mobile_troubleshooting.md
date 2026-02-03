@@ -438,17 +438,17 @@ pnpm update
 
 **Solutions**:
 ```bash
-# Update Expo CLI
-npm install -g expo-cli@latest
-
 # Check Expo version
 npx expo --version
 
-# Clear Expo cache
-expo start --clear
+# Clear Expo cache and restart
+pnpm start --clear
+
+# Run Expo doctor for diagnostics
+pnpm run doctor
 ```
 
-**Prevention**: Keep Expo CLI updated, clear cache regularly
+**Prevention**: Keep Expo dependencies updated, clear cache regularly
 
 ---
 

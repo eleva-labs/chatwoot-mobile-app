@@ -79,6 +79,13 @@ pnpm start
 | `pnpm test` | Run tests |
 | `pnpm run lint` | Run ESLint |
 
+> **Note**: The following commands start long-running processes (Metro bundler) that stay active until stopped. Use `Ctrl+C` to stop, or run in a separate terminal:
+> - `pnpm start` - Starts Metro bundler
+> - `pnpm run ios:sim` - Builds and runs iOS on simulator (keeps Metro running)
+> - `pnpm run ios:run` - Runs iOS via Expo (keeps Metro running)
+> - `pnpm run android:run` - Runs Android via Expo (keeps Metro running)
+> - `pnpm run storybook` - Starts Storybook server
+
 ### Platform-Specific Setup
 
 **iOS (macOS only):**
