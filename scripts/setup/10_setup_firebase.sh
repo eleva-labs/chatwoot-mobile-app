@@ -30,6 +30,9 @@ if [[ -z "$PROJECT_ROOT" ]]; then
     PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 fi
 
+# Source env-utils for .env manipulation
+source "$PROJECT_ROOT/scripts/utils/env-utils.sh"
+
 # Check for non-interactive mode and auth status from earlier script
 NON_INTERACTIVE="${NON_INTERACTIVE:-false}"
 
@@ -198,10 +201,14 @@ download_firebase_credentials() {
         local ios_out="$IOS_DEV"
         local android_out="$ANDROID_DEV"
         local bundle_suffix=".dev"
+        local android_rel_path="./credentials/android/google-services-dev.json"
+        local ios_rel_path="./credentials/ios/GoogleService-Info-dev.plist"
     else
         local ios_out="$IOS_PROD"
         local android_out="$ANDROID_PROD"
         local bundle_suffix=""
+        local android_rel_path="./credentials/android/google-services.json"
+        local ios_rel_path="./credentials/ios/GoogleService-Info.plist"
     fi
 
     # List apps in the project
@@ -209,10 +216,15 @@ download_firebase_credentials() {
     firebase apps:list --project "$project_id" 2>/dev/null || true
     echo ""
 
+    # Track download success for env variable updates
+    local ios_download_success=false
+    local android_download_success=false
+
     # Download iOS config
     print_info "Downloading iOS configuration..."
     if firebase apps:sdkconfig ios --project "$project_id" --out "$ios_out" 2>/dev/null; then
         print_success "Downloaded iOS $env config to $ios_out"
+        ios_download_success=true
     else
         print_warning "Could not download iOS config"
         echo "  Ensure iOS app is registered with bundle ID: com.chatscommerce.app${bundle_suffix}"
@@ -222,10 +234,24 @@ download_firebase_credentials() {
     print_info "Downloading Android configuration..."
     if firebase apps:sdkconfig android --project "$project_id" --out "$android_out" 2>/dev/null; then
         print_success "Downloaded Android $env config to $android_out"
+        android_download_success=true
     else
         print_warning "Could not download Android config"
         echo "  Ensure Android app is registered with package name: com.chatscommerce.app${bundle_suffix}"
     fi
+
+    # Update .env with credential paths after successful downloads
+    if [[ -f "$PROJECT_ROOT/.env" ]]; then
+        if [[ "$android_download_success" == "true" ]]; then
+            set_env_value "GOOGLE_SERVICES_JSON" "$android_rel_path"
+            print_info "Set GOOGLE_SERVICES_JSON=$android_rel_path in .env"
+        fi
+        if [[ "$ios_download_success" == "true" ]]; then
+            set_env_value "GOOGLE_SERVICE_INFO_PLIST" "$ios_rel_path"
+            print_info "Set GOOGLE_SERVICE_INFO_PLIST=$ios_rel_path in .env"
+        fi
+    fi
+
     echo ""
 }
 
@@ -315,13 +341,35 @@ if [[ "$FIREBASE_CLI_AUTHENTICATED" == "true" ]] && [[ $TOTAL_VALID_INITIAL -lt 
         case "$download_choice" in
             1)
                 download_firebase_credentials "$FIREBASE_DEV_PROJECT" "dev"
+                # Save Firebase project ID to .env for future reference
+                if [[ -f "$PROJECT_ROOT/.env" ]]; then
+                    set_env_value "FIREBASE_PROJECT_ID" "$FIREBASE_DEV_PROJECT"
+                    print_info "Saved FIREBASE_PROJECT_ID=$FIREBASE_DEV_PROJECT to .env"
+                fi
                 ;;
             2)
                 download_firebase_credentials "$FIREBASE_PROD_PROJECT" "prod"
+                # Save Firebase project ID to .env for future reference
+                if [[ -f "$PROJECT_ROOT/.env" ]]; then
+                    set_env_value "FIREBASE_PROJECT_ID" "$FIREBASE_PROD_PROJECT"
+                    print_info "Saved FIREBASE_PROJECT_ID=$FIREBASE_PROD_PROJECT to .env"
+                fi
                 ;;
             3)
                 download_firebase_credentials "$FIREBASE_DEV_PROJECT" "dev"
                 download_firebase_credentials "$FIREBASE_PROD_PROJECT" "prod"
+                # For both, we save the dev project ID as the default (matches ENVIRONMENT=dev)
+                if [[ -f "$PROJECT_ROOT/.env" ]]; then
+                    # Get current ENVIRONMENT to decide which project ID to save
+                    current_env=$(get_env_value "ENVIRONMENT" 2>/dev/null || echo "dev")
+                    if [[ "$current_env" == "prod" || "$current_env" == "production" ]]; then
+                        set_env_value "FIREBASE_PROJECT_ID" "$FIREBASE_PROD_PROJECT"
+                        print_info "Saved FIREBASE_PROJECT_ID=$FIREBASE_PROD_PROJECT to .env (matching ENVIRONMENT=$current_env)"
+                    else
+                        set_env_value "FIREBASE_PROJECT_ID" "$FIREBASE_DEV_PROJECT"
+                        print_info "Saved FIREBASE_PROJECT_ID=$FIREBASE_DEV_PROJECT to .env (matching ENVIRONMENT=$current_env)"
+                    fi
+                fi
                 ;;
             *)
                 print_info "Skipping credential download"

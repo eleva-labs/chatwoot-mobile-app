@@ -15,19 +15,57 @@ React Native application providing real-time customer support for iOS and Androi
 
 ## Quick Start
 
+### 1. Clone and Configure Environment
+
 ```bash
 git clone <repo-url>
 cd chatwoot-mobile-app
+cp .env.example .env
+```
+
+> The `.env.example` file contains working defaults for local development. Most values work out-of-the-box.
+
+### 2. Run Automated Setup
+
+```bash
 ./scripts/setup/setup.sh
 ```
 
-After setup completes, restart your terminal and run:
+This installs Volta, Node.js, pnpm, Expo CLI, and platform dependencies. **Restart your terminal** after completion.
+
+### 3. Authenticate with Services
+
+```bash
+# Login to Expo Application Services
+eas login
+
+# Login to Firebase (for credential downloads)
+firebase login
+```
+
+### 4. Pull Team Secrets (Optional)
+
+If you have access to EAS secrets, pull them while preserving your local values:
+
+```bash
+pnpm run env:merge:dev
+```
+
+### 5. Download Firebase Credentials (Optional)
+
+If you need to download Firebase credentials:
+
+```bash
+./scripts/setup/10_setup_firebase.sh
+```
+
+### 6. Start Development
 
 ```bash
 pnpm start
 ```
 
-> **Note:** The setup script installs Volta, Node.js, pnpm, Expo CLI, and platform dependencies automatically. See [Setup Guide](docs/setup/README.md) for details.
+> **Note:** For detailed setup instructions, see [Setup Guide](docs/setup/README.md).
 
 ## Development
 
@@ -37,6 +75,7 @@ pnpm start
 | `pnpm run ios:dev` | Run on iOS simulator |
 | `pnpm run android:dev` | Run on Android emulator |
 | `pnpm run env:pull:dev` | Pull dev environment from EAS |
+| `pnpm run env:merge:dev` | Pull and merge (preserves local values) |
 | `pnpm test` | Run tests |
 | `pnpm run lint` | Run ESLint |
 
@@ -98,6 +137,8 @@ pnpm run build:ios:prod
 |--------|-------------|
 | `pnpm run env:pull:dev` | Pull dev environment |
 | `pnpm run env:pull:prod` | Pull prod environment |
+| `pnpm run env:merge:dev` | Pull dev and merge (preserves local values) |
+| `pnpm run env:merge:prod` | Pull prod and merge (preserves local values) |
 
 ### iOS
 | Script | Description |
@@ -155,7 +196,11 @@ Verify `ANDROID_HOME` and `JAVA_HOME` are set correctly.
 
 ### Environment issues
 ```bash
+# Pull fresh values (replaces local)
 pnpm run env:pull:dev
+
+# Or merge with local values (preserves local)
+pnpm run env:merge:dev
 ```
 Restart dev server after changes.
 

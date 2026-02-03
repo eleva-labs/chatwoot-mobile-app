@@ -28,6 +28,9 @@ source "$SCRIPT_DIR/setup.sh" --helpers-only 2>/dev/null || {
 # Use PROJECT_ROOT from environment or calculate it
 PROJECT_ROOT="${PROJECT_ROOT:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
 
+# Source env-utils for .env manipulation
+source "$PROJECT_ROOT/scripts/utils/env-utils.sh"
+
 print_header "Environment Setup"
 
 cd "$PROJECT_ROOT"
@@ -94,6 +97,29 @@ if [[ ! -f "$ENV_FILE" ]]; then
         print_info "Creating .env from template..."
         cp "$TEMPLATE_USED" "$ENV_FILE"
         print_success ".env created from $(basename "$TEMPLATE_USED")"
+
+        # Set default values using env-utils
+        print_info "Setting default environment values..."
+        set_env_value "ENVIRONMENT" "dev"
+        set_env_value "EXPO_STORYBOOK_ENABLED" "false"
+        set_env_value "SENTRY_DISABLE_AUTO_UPLOAD" "true"
+
+        # Auto-populate EAS project ID if not already set and we can get it
+        if command -v eas &> /dev/null && eas whoami &> /dev/null; then
+            # Try to get project ID from eas.json or app.json
+            if [[ -f "$PROJECT_ROOT/app.json" ]]; then
+                PROJECT_ID=$(grep -o '"projectId"[[:space:]]*:[[:space:]]*"[^"]*"' "$PROJECT_ROOT/app.json" 2>/dev/null | head -1 | sed 's/.*: *"\([^"]*\)".*/\1/')
+                if [[ -n "$PROJECT_ID" && "$PROJECT_ID" != "null" ]]; then
+                    current_val=$(get_env_value "EXPO_PUBLIC_PROJECT_ID" 2>/dev/null || echo "")
+                    if [[ -z "$current_val" ]]; then
+                        set_env_value "EXPO_PUBLIC_PROJECT_ID" "$PROJECT_ID"
+                        print_info "Auto-populated EXPO_PUBLIC_PROJECT_ID from app.json"
+                    fi
+                fi
+            fi
+        fi
+
+        print_success "Default values configured"
     else
         # No template found - create minimal .env
         print_warning "No template file found (.env.example or .env.development)"
