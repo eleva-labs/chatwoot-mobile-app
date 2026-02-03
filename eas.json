@@ -4,6 +4,17 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "ENVIRONMENT": "dev",
+        "EAS_BUILD_PROFILE": "simulator"
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "store",

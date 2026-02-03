@@ -71,6 +71,8 @@ const config = {
     credentialsProd: './credentials/ios/GoogleService-Info.plist',
     credentialsDev: './credentials/ios/GoogleService-Info-dev.plist',
     destination: './ios/GoogleService-Info.plist',
+    // Also copy to native project directory for direct xcodebuild builds
+    nativeDestination: './ios/ChatscommerceDev/GoogleService-Info.plist',
   },
 };
 
@@ -141,6 +143,21 @@ function processPlatform(platformName) {
   const platformConfig = config[platformName];
   const envVarValue = process.env[platformConfig.envVar];
 
+  /**
+   * Copy to all destinations (main and native if exists)
+   */
+  function copyToAllDestinations(source) {
+    let success = copyFile(source, platformConfig.destination);
+    // Also copy to native project directory if configured
+    if (platformConfig.nativeDestination) {
+      const nativeDir = path.dirname(platformConfig.nativeDestination);
+      if (fs.existsSync(nativeDir)) {
+        copyFile(source, platformConfig.nativeDestination);
+      }
+    }
+    return success;
+  }
+
   // Priority 1: EAS Secret File environment variable
   if (envVarValue) {
     logInfo(`Found ${platformConfig.envVar} environment variable`);
@@ -148,7 +165,7 @@ function processPlatform(platformName) {
     if (fs.existsSync(envVarValue)) {
       const validation = isValidCredentialFile(envVarValue);
       if (validation.valid) {
-        return copyFile(envVarValue, platformConfig.destination);
+        return copyToAllDestinations(envVarValue);
       } else {
         logWarning(`EAS secret file invalid: ${validation.reason}`);
       }
@@ -164,7 +181,7 @@ function processPlatform(platformName) {
   if (fs.existsSync(credentialsFile)) {
     const validation = isValidCredentialFile(credentialsFile);
     if (validation.valid) {
-      return copyFile(credentialsFile, platformConfig.destination);
+      return copyToAllDestinations(credentialsFile);
     } else {
       logWarning(`Credentials file invalid: ${validation.reason}`);
       logWarning('Please obtain valid Firebase credentials from the Firebase Console');

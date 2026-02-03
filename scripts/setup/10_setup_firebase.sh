@@ -213,16 +213,20 @@ download_firebase_credentials() {
 
     # List apps in the project
     print_info "Apps registered in $project_id:"
-    firebase apps:list --project "$project_id" 2>/dev/null || true
+    $FIREBASE_CMD apps:list --project "$project_id" 2>/dev/null || true
     echo ""
 
     # Track download success for env variable updates
     local ios_download_success=false
     local android_download_success=false
 
+    # Remove existing files first (firebase CLI won't overwrite)
+    [[ -f "$ios_out" ]] && rm -f "$ios_out"
+    [[ -f "$android_out" ]] && rm -f "$android_out"
+
     # Download iOS config
     print_info "Downloading iOS configuration..."
-    if firebase apps:sdkconfig ios --project "$project_id" --out "$ios_out" 2>/dev/null; then
+    if $FIREBASE_CMD apps:sdkconfig ios --project "$project_id" --out "$ios_out" 2>/dev/null; then
         print_success "Downloaded iOS $env config to $ios_out"
         ios_download_success=true
     else
@@ -232,7 +236,7 @@ download_firebase_credentials() {
 
     # Download Android config
     print_info "Downloading Android configuration..."
-    if firebase apps:sdkconfig android --project "$project_id" --out "$android_out" 2>/dev/null; then
+    if $FIREBASE_CMD apps:sdkconfig android --project "$project_id" --out "$android_out" 2>/dev/null; then
         print_success "Downloaded Android $env config to $android_out"
         android_download_success=true
     else
@@ -244,11 +248,33 @@ download_firebase_credentials() {
     if [[ -f "$PROJECT_ROOT/.env" ]]; then
         if [[ "$android_download_success" == "true" ]]; then
             set_env_value "GOOGLE_SERVICES_JSON" "$android_rel_path"
+            set_env_value "EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE" "$android_rel_path"
             print_info "Set GOOGLE_SERVICES_JSON=$android_rel_path in .env"
         fi
         if [[ "$ios_download_success" == "true" ]]; then
             set_env_value "GOOGLE_SERVICE_INFO_PLIST" "$ios_rel_path"
+            set_env_value "EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE" "$ios_rel_path"
             print_info "Set GOOGLE_SERVICE_INFO_PLIST=$ios_rel_path in .env"
+        fi
+    fi
+
+    # Copy to native directories if they exist (for local development)
+    if [[ "$ios_download_success" == "true" ]]; then
+        # Copy to ios/ root for Expo prebuild
+        if [[ -d "$PROJECT_ROOT/ios" ]]; then
+            cp "$ios_out" "$PROJECT_ROOT/ios/GoogleService-Info.plist"
+            print_success "Copied iOS config to ios/GoogleService-Info.plist"
+        fi
+        # Copy to native project directory for direct xcodebuild
+        if [[ -d "$PROJECT_ROOT/ios/ChatscommerceDev" ]]; then
+            cp "$ios_out" "$PROJECT_ROOT/ios/ChatscommerceDev/GoogleService-Info.plist"
+            print_success "Copied iOS config to ios/ChatscommerceDev/GoogleService-Info.plist"
+        fi
+    fi
+    if [[ "$android_download_success" == "true" ]]; then
+        if [[ -d "$PROJECT_ROOT/android/app" ]]; then
+            cp "$android_out" "$PROJECT_ROOT/android/app/google-services.json"
+            print_success "Copied Android config to android/app/google-services.json"
         fi
     fi
 
@@ -262,18 +288,28 @@ print_info "Checking Firebase CLI..."
 
 FIREBASE_CLI_AVAILABLE=false
 FIREBASE_CLI_AUTHENTICATED=false
+FIREBASE_CMD=""
 
+# Check for firebase CLI - first try direct command, then npx
 if command -v firebase &> /dev/null; then
+    FIREBASE_CMD="firebase"
     FIREBASE_VERSION=$(firebase --version 2>/dev/null)
-    print_success "Firebase CLI installed: $FIREBASE_VERSION"
+    print_success "Firebase CLI installed globally: $FIREBASE_VERSION"
     FIREBASE_CLI_AVAILABLE=true
+elif npx firebase-tools --version &> /dev/null 2>&1; then
+    FIREBASE_CMD="npx firebase-tools"
+    FIREBASE_VERSION=$($FIREBASE_CMD --version 2>/dev/null)
+    print_success "Firebase CLI available via npx: $FIREBASE_VERSION"
+    FIREBASE_CLI_AVAILABLE=true
+fi
 
+if [[ "$FIREBASE_CLI_AVAILABLE" == "true" ]]; then
     # Check if logged in
-    if firebase projects:list &> /dev/null; then
+    if $FIREBASE_CMD projects:list &> /dev/null 2>&1; then
         print_success "Firebase CLI authenticated"
         FIREBASE_CLI_AUTHENTICATED=true
     else
-        print_warning "Firebase CLI not authenticated (run: firebase login)"
+        print_warning "Firebase CLI not authenticated (run: $FIREBASE_CMD login)"
     fi
 else
     print_warning "Firebase CLI not installed"
@@ -327,7 +363,7 @@ if [[ "$FIREBASE_CLI_AUTHENTICATED" == "true" ]] && [[ $TOTAL_VALID_INITIAL -lt 
         # List available projects
         echo "Available Firebase projects:"
         echo ""
-        firebase projects:list 2>/dev/null | head -15 || print_warning "Could not list projects"
+        $FIREBASE_CMD projects:list 2>/dev/null | head -15 || print_warning "Could not list projects"
         echo ""
 
         echo "Which credentials would you like to download?"
@@ -456,15 +492,15 @@ if [[ "$FIREBASE_CLI_AVAILABLE" == "true" ]]; then
     echo "Or use Firebase CLI:"
     echo ""
     echo "  # Development credentials"
-    echo "  firebase apps:sdkconfig ios --project $FIREBASE_DEV_PROJECT \\"
+    echo "  $FIREBASE_CMD apps:sdkconfig ios --project $FIREBASE_DEV_PROJECT \\"
     echo "      --out credentials/ios/GoogleService-Info-dev.plist"
-    echo "  firebase apps:sdkconfig android --project $FIREBASE_DEV_PROJECT \\"
+    echo "  $FIREBASE_CMD apps:sdkconfig android --project $FIREBASE_DEV_PROJECT \\"
     echo "      --out credentials/android/google-services-dev.json"
     echo ""
     echo "  # Production credentials"
-    echo "  firebase apps:sdkconfig ios --project $FIREBASE_PROD_PROJECT \\"
+    echo "  $FIREBASE_CMD apps:sdkconfig ios --project $FIREBASE_PROD_PROJECT \\"
     echo "      --out credentials/ios/GoogleService-Info.plist"
-    echo "  firebase apps:sdkconfig android --project $FIREBASE_PROD_PROJECT \\"
+    echo "  $FIREBASE_CMD apps:sdkconfig android --project $FIREBASE_PROD_PROJECT \\"
     echo "      --out credentials/android/google-services.json"
     echo ""
 fi
