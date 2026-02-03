@@ -26,10 +26,10 @@ echo ""
 # 1. Copy Google Services files
 echo "📄 Step 1: Setting up Firebase configuration files..."
 
-if [ -f "scripts/copy-google-services.js" ]; then
-    node scripts/copy-google-services.js
+if [ -f "scripts/build/copy-firebase-credentials.js" ]; then
+    node scripts/build/copy-firebase-credentials.js
 else
-    echo "⚠️  Warning: scripts/copy-google-services.js not found"
+    echo "⚠️  Warning: scripts/build/copy-firebase-credentials.js not found"
     echo "   Firebase configuration may not be properly set up"
     echo "   Build will continue but may fail if Firebase is required"
 fi

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * copy-google-services.js
+ * copy-firebase-credentials.js
  *
  * Copies Firebase credential files to native directories for EAS builds.
- * This script runs during eas-build-pre-install to ensure Firebase files
+ * This script runs during eas-pre-install to ensure Firebase files
  * are in place before the native build starts.
  *
  * Priority order:

@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Script to pull environment variables from EAS
-# Usage: ./scripts/pull-env.sh <environment> [--merge]
-# Example: ./scripts/pull-env.sh development
-# Example: ./scripts/pull-env.sh production --merge
+# Usage: ./scripts/env/pull.sh <environment> [--merge]
+# Example: ./scripts/env/pull.sh development
+# Example: ./scripts/env/pull.sh production --merge
 #
 # Options:
 #   --merge    Merge EAS values with existing .env, preserving local-only values
 #              Without this flag, .env is completely replaced by EAS values
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 # Source env-utils for .env manipulation
 source "$PROJECT_ROOT/scripts/utils/env-utils.sh"
@@ -32,7 +32,7 @@ done
 
 if [ -z "$ENVIRONMENT" ]; then
     echo "❌ Error: Please specify environment (development or production)"
-    echo "Usage: ./scripts/pull-env.sh <environment> [--merge]"
+    echo "Usage: ./scripts/env/pull.sh <environment> [--merge]"
     echo ""
     echo "Options:"
     echo "  --merge    Merge EAS values with existing .env, preserving local-only values"

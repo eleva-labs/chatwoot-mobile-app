@@ -14,7 +14,7 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "eas-build-post-install": "bash scripts/eas-build-post-install.sh",
+    "eas-build-post-install": "bash scripts/build/eas-post-install.sh",
 
     "start": "expo start --dev-client",
     "start:prod": "expo start --no-dev --minify",
@@ -33,7 +33,7 @@
     "doctor:config": "npx expo-config check",
 
     "ios:run": "expo run:ios",
-    "ios:sim": "scripts/ios-simulator.sh",
+    "ios:sim": "scripts/dev/ios-simulator.sh",
     "ios:pods": "cd ios && pod install && cd ..",
     "ios:clean": "rm -rf ios/build ios/Pods ios/Podfile.lock && cd ios && pod cache clean --all",
     "ios:logs": "xcrun simctl spawn booted log stream --predicate 'subsystem contains \"com.chatscommerce\"' --level debug",
@@ -51,10 +51,10 @@
     "storybook:ios": "cross-env EXPO_STORYBOOK_ENABLED='true' pnpm run ios:run",
     "storybook:android": "cross-env EXPO_STORYBOOK_ENABLED='true' pnpm run android:run",
 
-    "env:pull:dev": "./scripts/pull-env.sh development",
-    "env:pull:prod": "./scripts/pull-env.sh production",
-    "env:merge:dev": "./scripts/pull-env.sh development --merge",
-    "env:merge:prod": "./scripts/pull-env.sh production --merge"
+    "env:pull:dev": "./scripts/env/pull.sh development",
+    "env:pull:prod": "./scripts/env/pull.sh production",
+    "env:merge:dev": "./scripts/env/pull.sh development --merge",
+    "env:merge:prod": "./scripts/env/pull.sh production --merge"
   },
   "dependencies": {
     "@ai-sdk/react": "^2.0.93",

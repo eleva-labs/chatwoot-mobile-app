@@ -360,7 +360,7 @@ notify_shell_reload "$CONFIG_FILE"
 echo ""
 print_header "Next Steps"
 echo "1. Restart your terminal (or run: source $CONFIG_FILE)"
-echo "2. Verify your .env file is configured (see ./scripts/pull-env.sh)"
+echo "2. Verify your .env file is configured (see ./scripts/env/pull.sh)"
 echo "3. Run 'pnpm start' to begin development"
 echo ""
 

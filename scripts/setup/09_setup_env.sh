@@ -127,7 +127,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
 
         cat > "$ENV_FILE" << 'EOF'
 # Chatwoot Mobile App Environment Configuration
-# Fill in the values below or use: ./scripts/pull-env.sh development
+# Fill in the values below or use: ./scripts/env/pull.sh development
 
 # App Configuration
 ENVIRONMENT=development
@@ -194,8 +194,8 @@ if [[ "$EAS_AUTHENTICATED" == "true" ]]; then
     echo "You have several options to configure your environment:"
     echo ""
     echo "  1. Pull from EAS (recommended for team members):"
-    echo "     ./scripts/pull-env.sh development"
-    echo "     ./scripts/pull-env.sh production"
+    echo "     ./scripts/env/pull.sh development"
+    echo "     ./scripts/env/pull.sh production"
     echo ""
     echo "  2. Manually edit .env file:"
     echo "     Open $ENV_FILE in your editor"
@@ -212,7 +212,7 @@ if [[ "$EAS_AUTHENTICATED" == "true" ]]; then
         case $eas_choice in
             1)
                 print_info "Pulling development environment from EAS..."
-                if "$PROJECT_ROOT/scripts/pull-env.sh" development; then
+                if "$PROJECT_ROOT/scripts/env/pull.sh" development; then
                     print_success "Environment variables pulled successfully!"
                 else
                     print_warning "Failed to pull from EAS. You can try manually later."
@@ -220,7 +220,7 @@ if [[ "$EAS_AUTHENTICATED" == "true" ]]; then
                 ;;
             2)
                 print_info "Pulling production environment from EAS..."
-                if "$PROJECT_ROOT/scripts/pull-env.sh" production; then
+                if "$PROJECT_ROOT/scripts/env/pull.sh" production; then
                     print_success "Environment variables pulled successfully!"
                 else
                     print_warning "Failed to pull from EAS. You can try manually later."
@@ -236,7 +236,7 @@ else
     echo ""
     echo "  Option 1: For team members with EAS access:"
     echo "    a) Login to EAS: eas login"
-    echo "    b) Pull env: ./scripts/pull-env.sh development"
+    echo "    b) Pull env: ./scripts/env/pull.sh development"
     echo ""
     echo "  Option 2: Manual configuration:"
     echo "    Edit $ENV_FILE and fill in the required values"
@@ -276,5 +276,5 @@ fi
 
 echo ""
 print_info "Remember: Never commit .env to version control!"
-print_info "Use EAS secrets or pull-env.sh for team collaboration"
+print_info "Use EAS secrets or scripts/env/pull.sh for team collaboration"
 echo ""
