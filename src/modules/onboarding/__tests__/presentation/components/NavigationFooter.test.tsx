@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+
 // eslint-disable-next-line import/no-unresolved
 import { render, fireEvent } from '@testing-library/react-native';
 import { NavigationFooter } from '../../../presentation/components/NavigationFooter';

@@ -6,7 +6,6 @@
 
 // Mock console methods BEFORE importing logger
 // Use jest.fn() to ensure mocks are properly tracked
-import { logger } from '../../../shared/utils/logger';
 
 const mockConsoleDebug = jest.fn();
 const mockConsoleInfo = jest.fn();
@@ -18,6 +17,8 @@ jest.spyOn(console, 'debug').mockImplementation(mockConsoleDebug);
 jest.spyOn(console, 'info').mockImplementation(mockConsoleInfo);
 jest.spyOn(console, 'warn').mockImplementation(mockConsoleWarn);
 jest.spyOn(console, 'error').mockImplementation(mockConsoleError);
+
+import { logger } from '../../../shared/utils/logger';
 
 describe('Logger', () => {
   beforeEach(() => {

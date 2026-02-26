@@ -9,6 +9,7 @@ import { MockOnboardingRepository } from '../../../infrastructure/repositories/M
 import { Locale } from '../../../domain/entities/Locale';
 import { NotFoundError } from '../../../domain/entities/Errors';
 
+
 // Mock console.log to avoid noise in tests
 const originalConsoleLog = console.log;
 beforeAll(() => {

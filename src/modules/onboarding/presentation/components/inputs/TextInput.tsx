@@ -78,13 +78,7 @@ export function TextInput({
         accessible
         accessibilityLabel={placeholder || 'Text input'}
         accessibilityHint={required ? 'Required field' : 'Optional field'}
-        accessibilityState={{
-          disabled: false,
-          selected: false,
-          checked: undefined,
-          busy: false,
-          expanded: undefined,
-        }}
+        accessibilityState={{ invalid: !!error }}
       />
 
       {/* Character counter */}
@@ -99,7 +93,8 @@ export function TextInput({
                 : 'text-gray-500',
           )}
           accessible
-          accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}>
+          accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}
+        >
           {characterCountStatus.remaining} character
           {characterCountStatus.remaining !== 1 ? 's' : ''} remaining
         </Text>
