@@ -15,9 +15,11 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { useThemeColors } from '@/theme';
 import { AICollapsible } from './AICollapsible';
 
 // Import domain types (single source of truth)
@@ -59,6 +61,43 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
 }) => {
   const { style, tokens, getCollapsible } = useAIStyles();
   const irisTokens = getCollapsible('iris');
+  const { colors } = useThemeColors();
+
+  // Markdown styles for reasoning content (smaller than main text)
+  const markdownStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        body: {
+          fontSize: 13,
+          lineHeight: 19,
+          color: colors.slate[12],
+          fontFamily: 'Inter-400-20',
+        },
+        paragraph: {
+          marginTop: 0,
+          marginBottom: 4,
+        },
+        strong: {
+          fontFamily: 'Inter-600-20',
+          fontWeight: '600',
+        },
+        em: {
+          fontStyle: 'italic',
+        },
+        code_inline: {
+          backgroundColor: colors.slate[3],
+          borderRadius: 4,
+          paddingHorizontal: 4,
+          fontFamily: 'monospace',
+          fontSize: 12,
+        },
+        link: {
+          color: colors.blue[9],
+          textDecorationLine: 'underline',
+        },
+      }),
+    [colors],
+  );
 
   // Extract reasoning text (handle both 'reasoning' and 'text' fields)
   const reasoningText = useMemo(() => {
@@ -81,6 +120,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
       defaultExpanded={defaultExpanded}
       icon={
         // Vue uses i-lucide-brain icon
+        // TODO: Replace emoji with Lucide Brain icon when icon library is migrated
         <Text style={style(irisTokens.iconActive)}>🧠</Text>
       }>
       <ScrollView
@@ -90,10 +130,13 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         nestedScrollEnabled={true}>
         {reasoningText ? (
           <View style={style('flex-row flex-wrap items-end')}>
-            {/* Text content using slate-12 like Vue's prose */}
-            <Text style={style('text-sm font-inter-normal-20 leading-5', tokens.text.primary)}>
+            {/* Markdown content for reasoning text */}
+            <Markdown
+              mergeStyle
+              markdownit={MarkdownIt({ linkify: true, typographer: true })}
+              style={markdownStyles}>
               {reasoningText}
-            </Text>
+            </Markdown>
             {/* Streaming cursor matching Vue's accent cursor */}
             {isStreaming && (
               <View style={style('w-1.5 h-3 ml-0.5 rounded-sm', irisTokens.cursor)} />

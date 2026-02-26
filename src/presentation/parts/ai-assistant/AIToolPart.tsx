@@ -57,6 +57,15 @@ interface StateDisplayConfig {
 // Constants (Matching Vue's color mapping)
 // ============================================================================
 
+/**
+ * Tool state to display configuration mapping.
+ * 
+ * NOTE: The web Vue implementation uses neutral 'slate' accent for all tool states.
+ * The mobile uses state-based colors (slate/teal/ruby) for better UX feedback.
+ * This is an intentional divergence from web for improved mobile readability.
+ */
+// TODO: Replace emoji icons with Lucide icons (wrench, clock, check-circle, x-circle)
+// when icon library is migrated
 const STATE_CONFIG: Record<DisplayState, StateDisplayConfig> = {
   pending: {
     icon: '⏳',
@@ -154,31 +163,28 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
   const state = useMemo(() => getDisplayState(part), [part]);
   const config = STATE_CONFIG[state];
 
-  // Get tool name and format it (handle optional toolName)
-  const toolName = useMemo(() => {
-    return formatToolName(part.toolName || 'Unknown Tool');
-  }, [part.toolName]);
-
-  // Get input/output content (handle optional args/result)
-  // Uses domain PART_TYPES constants instead of hardcoded strings
-  const content = useMemo(() => {
-    const isToolInput =
-      part.type === PART_TYPES.TOOL_CALL ||
-      part.type === PART_TYPES.TOOL_INVOCATION ||
-      part.type === PART_TYPES.TOOL_INPUT_AVAILABLE ||
-      part.type === PART_TYPES.TOOL_INPUT_STREAMING;
-
-    if (isToolInput) {
-      return {
-        label: 'Input',
-        data: (part as ToolCallPart).args || {},
-      };
-    }
-    return {
-      label: 'Output',
-      data: (part as ToolResultPart).result ?? null,
-    };
+  // Get input and output content separately
+  const hasInput = useMemo(() => {
+    return 'args' in part && part.args != null;
   }, [part]);
+
+  const hasOutput = useMemo(() => {
+    return 'result' in part && (part as ToolResultPart).result !== undefined;
+  }, [part]);
+
+  const inputData = useMemo(() => {
+    return hasInput ? (part as ToolCallPart).args : null;
+  }, [part, hasInput]);
+
+  const outputData = useMemo(() => {
+    return hasOutput ? (part as ToolResultPart).result : null;
+  }, [part, hasOutput]);
+
+  // Also check for toolName from output
+  const toolName = useMemo(() => {
+    const name = part.toolName || ((part as any).output?.tool_name as string) || 'Unknown Tool';
+    return formatToolName(name);
+  }, [part.toolName, part]);
 
   // Build title with state
   const title = `${toolName} • ${config.label}`;
@@ -191,26 +197,52 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
       defaultExpanded={defaultExpanded}
       icon={<Text>{config.icon}</Text>}>
       <View>
-        {/* Content label using slate colors */}
-        <Text
-          style={style('text-xs font-inter-semibold-20 mb-2 uppercase', tokens.tool.sectionLabel)}>
-          {content.label}
-        </Text>
-
-        {/* JSON content with slate background */}
-        <ScrollView
-          style={style('max-h-48')}
-          horizontal={false}
-          showsVerticalScrollIndicator={true}
-          nestedScrollEnabled={true}>
-          <View style={style('p-2 rounded-md', tokens.tool.jsonBackground)}>
-            <Text style={style('text-xs font-mono', tokens.tool.jsonText)} selectable>
-              {formatJson(content.data)}
+        {/* Input section */}
+        {hasInput && (
+          <View style={hasOutput ? style('mb-3') : undefined}>
+            <Text style={style('text-xs font-inter-semibold-20 mb-2 uppercase', tokens.tool.sectionLabel)}>
+              Input
             </Text>
+            <ScrollView
+              style={style('max-h-48')}
+              horizontal={false}
+              showsVerticalScrollIndicator={true}
+              nestedScrollEnabled={true}>
+              <View style={style('p-2 rounded-md', tokens.tool.jsonBackground)}>
+                <Text style={style('text-xs font-mono', tokens.tool.jsonText)} selectable>
+                  {formatJson(inputData)}
+                </Text>
+              </View>
+            </ScrollView>
           </View>
-        </ScrollView>
+        )}
 
-        {/* Error message for error state using ruby colors */}
+        {/* Output section */}
+        {hasOutput && (
+          <View>
+            <Text style={style('text-xs font-inter-semibold-20 mb-2 uppercase', tokens.tool.sectionLabel)}>
+              Output
+            </Text>
+            <ScrollView
+              style={style('max-h-48')}
+              horizontal={false}
+              showsVerticalScrollIndicator={true}
+              nestedScrollEnabled={true}>
+              <View style={style('p-2 rounded-md', tokens.tool.jsonBackground)}>
+                <Text style={style('text-xs font-mono', tokens.tool.jsonText)} selectable>
+                  {formatJson(outputData)}
+                </Text>
+              </View>
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Fallback: show something if neither input nor output */}
+        {!hasInput && !hasOutput && (
+          <Text style={style('text-xs italic', tokens.text.muted)}>No data available</Text>
+        )}
+
+        {/* Error message for error state */}
         {state === 'error' && part.type === PART_TYPES.TOOL_RESULT && (
           <View style={style('mt-2 p-2 rounded-md', tokens.tool.errorBackground)}>
             <Text style={style('text-xs font-inter-medium-24', tokens.tool.errorText)}>

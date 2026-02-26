@@ -8,6 +8,8 @@ import type { ToolPart } from '@/domain/types/ai-assistant/parts';
 export interface AIMessageBubbleProps {
   message: UIMessage;
   isStreaming?: boolean;
+  avatarName?: string;
+  avatarSrc?: string;
 }
 
 /**

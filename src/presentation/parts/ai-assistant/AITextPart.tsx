@@ -186,7 +186,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
         {isStreaming && (
           <Animated.View
             style={[
-              style('w-0.5 h-4 ml-1 rounded-sm'),
+              style('w-2 h-4 ml-0.5 rounded-sm'),
               { backgroundColor: cursorColor },
               cursorStyle,
             ]}
@@ -214,7 +214,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
       {isStreaming && (
         <Animated.View
           style={[
-            style('w-0.5 h-4 ml-1 rounded-sm'),
+            style('w-2 h-4 ml-0.5 rounded-sm'),
             { backgroundColor: cursorColor },
             cursorStyle,
           ]}

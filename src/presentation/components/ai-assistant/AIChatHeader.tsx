@@ -9,6 +9,7 @@ export interface AIChatHeaderProps {
   selectedBot: AIChatBot | null;
   sessionsCount: number;
   activeSessionId: string | null;
+  status?: 'ready' | 'submitted' | 'streaming' | 'error';
   onToggleSessions: () => void;
   onNewConversation: () => void;
   onClose: () => void;
@@ -19,6 +20,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
     selectedBot,
     sessionsCount,
     activeSessionId,
+    status,
     onToggleSessions,
     onNewConversation,
     onClose,
@@ -43,6 +45,20 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityLabel={selectedBot?.name || 'AI Assistant'}>
             {selectedBot?.name || 'AI Assistant'}
           </Text>
+          {status && (
+            <View style={style('flex-row items-center gap-1.5 ml-2')}>
+              <View style={style(
+                'w-2 h-2 rounded-full',
+                status === 'ready' && 'bg-teal-9',
+                status === 'submitted' && 'bg-amber-9',
+                status === 'streaming' && 'bg-amber-11',
+                status === 'error' && 'bg-ruby-9',
+              )} />
+              <Text style={style('text-xs', headerTokens.subtitle)}>
+                {status === 'ready' ? 'Ready' : status === 'submitted' ? 'Thinking...' : status === 'streaming' ? 'Streaming' : 'Error'}
+              </Text>
+            </View>
+          )}
           {sessionsCount > 0 && (
             <Pressable
               onPress={onToggleSessions}

@@ -12,7 +12,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
@@ -85,11 +85,15 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
     onToggle?.(newState);
   }, [isExpanded, onToggle]);
 
-  // Animated style for content height
+  // Animated style for content opacity + translateY
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
-      maxHeight: withTiming(isExpanded ? 400 : 0, ANIMATION_CONFIG),
       opacity: withTiming(isExpanded ? 1 : 0, ANIMATION_CONFIG),
+      transform: [
+        {
+          translateY: withTiming(isExpanded ? 0 : -8, ANIMATION_CONFIG),
+        },
+      ],
     };
   });
 
@@ -142,17 +146,29 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
         )}
 
         {/* Chevron (rotates 90deg like Vue) */}
+        {/* TODO: Replace with Lucide ChevronRight icon when icon library is migrated */}
         <Animated.View style={chevronAnimatedStyle}>
           <Text style={style('text-sm', colors.chevron)}>▶</Text>
         </Animated.View>
       </TouchableOpacity>
 
       {/* Collapsible Content - with left border accent like Vue */}
-      <Animated.View style={[contentAnimatedStyle, style('overflow-hidden')]}>
-        <View style={style('px-3 pb-3')}>
-          <View style={style('pl-4 border-l-2', colors.borderAccent)}>{children}</View>
-        </View>
-      </Animated.View>
+      {isExpanded && (
+        <Animated.View style={[contentAnimatedStyle, style('overflow-hidden')]}>
+          <View style={style('px-3 pb-3')}>
+            <View style={style('pl-4 border-l-2', colors.borderAccent)}>
+              {children}
+              {/* Collapse footer button */}
+              <Pressable
+                onPress={handleToggle}
+                style={style('flex-row items-center gap-1 pt-2')}>
+                <Text style={style('text-xs', colors.chevron)}>▲</Text>
+                <Text style={style('text-xs', colors.label)}>Collapse</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Animated.View>
+      )}
     </View>
   );
 };

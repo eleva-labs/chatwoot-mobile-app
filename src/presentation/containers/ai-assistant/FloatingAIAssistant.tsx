@@ -76,7 +76,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
     if (isExpanded) {
       return (
         <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-          <Animated.View style={[styles.chatContainer, chatInterfaceStyle]}>
+          <Animated.View style={[styles.chatContainer, chatInterfaceStyle, style(tokens.session.background)]}>
             <AIChatInterface agentBotId={agentBotId} onClose={handleClose} />
           </Animated.View>
         </View>
@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
   chatContainer: {
     width: '100%',
     height: '90%',
-    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: 'hidden',

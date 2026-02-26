@@ -32,6 +32,7 @@ import { selectUser } from '@/store/auth/authSelectors';
 import { AIChatHeader } from '@/presentation/components/ai-assistant/AIChatHeader';
 import { AIChatSessionPanel } from '@/presentation/components/ai-assistant/AIChatSessionPanel';
 import { AIChatMessagesList } from '@/presentation/components/ai-assistant/AIChatMessagesList';
+import { isTextPart, type MessagePart } from '@/domain/types/ai-assistant/parts';
 
 export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
   ({ agentBotId, onClose }) => {
@@ -49,6 +50,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     const {
       messages: streamingMessages,
       isLoading,
+      status,
       error,
       sendMessage,
       stop: cancel,
@@ -71,7 +73,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     );
 
     // Scroll management
-    const { listRef, handleScroll, scrollToBottom, shouldAutoScroll } = useAIChatScroll(
+    const { listRef, handleScroll, scrollToBottom, scrollToTop, shouldAutoScroll, isAtBottom, isAtTop } = useAIChatScroll(
       activeSessionId,
       isLoadingMessages,
       allMessages.length,
@@ -79,6 +81,22 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     );
 
     const { style, tokens } = useAIStyles();
+
+    // Error action handlers
+    const handleRetry = useCallback(async () => {
+      // Resend last user message
+      const lastUserMsg = listData.filter(m => m.role === 'user').pop();
+      if (lastUserMsg) {
+        const textPart = lastUserMsg.parts?.find(p => isTextPart(p as MessagePart));
+        if (textPart && 'text' in textPart) {
+          await sendMessage(textPart.text as string);
+        }
+      }
+    }, [listData, sendMessage]);
+
+    const handleFreshStart = useCallback(async () => {
+      setMessages([]);
+    }, [setMessages]);
 
     // Handle send message
     const handleSend = useCallback(
@@ -114,6 +132,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
             selectedBot={selectedBot}
             sessionsCount={sessions.length}
             activeSessionId={activeSessionId}
+            status={status}
             onToggleSessions={() => setShowSessions(!showSessions)}
             onNewConversation={handleNewConversation}
             onClose={onClose}
@@ -130,11 +149,21 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
           <AIChatMessagesList
             listData={listData}
             isLoading={isLoading}
+            status={status}
             isLoadingMessages={isLoadingMessages}
             activeSessionId={activeSessionId}
             error={error || null}
             listRef={listRef}
             onScroll={handleScroll as (event: { nativeEvent: unknown }) => void}
+            botAvatarName={selectedBot?.name}
+            botAvatarSrc={selectedBot?.avatar_url}
+            userAvatarName={user?.name}
+            isAtBottom={isAtBottom}
+            isAtTop={isAtTop}
+            onScrollToBottom={scrollToBottom}
+            onScrollToTop={scrollToTop}
+            onRetry={handleRetry}
+            onFreshStart={handleFreshStart}
           />
 
           <AIInputField

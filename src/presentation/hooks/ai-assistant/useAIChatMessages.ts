@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import type { UIMessage } from 'ai';
 import { useAppSelector } from '@/hooks';
 import { selectMessagesBySession } from '@/infrastructure/state/ai-assistant';
@@ -40,12 +40,25 @@ export function useAIChatMessages(
     return [];
   }, [backendMessages]);
 
+  // Stable fingerprint to avoid recalculating when streaming messages haven't meaningfully changed
+  // The SDK returns a new array reference on every render during streaming, even for the same content
+  const prevFingerprintRef = useRef<string>('');
+  const prevAllMessagesRef = useRef<UIMessage[]>([]);
+
   // Merge backend messages with streaming messages and sort
   const allMessages = useMemo(() => {
+    // Build a lightweight fingerprint to detect actual content changes
+    // Uses message count + last message id + last message parts length
+    const lastStreaming = streamingMessages[streamingMessages.length - 1];
+    const fingerprint = `${convertedMessages.length}:${streamingMessages.length}:${lastStreaming?.id || ''}:${lastStreaming?.parts?.length || 0}`;
+
+    // Return previous result if content hasn't meaningfully changed
+    if (fingerprint === prevFingerprintRef.current && prevAllMessagesRef.current.length > 0) {
+      return prevAllMessagesRef.current;
+    }
+    prevFingerprintRef.current = fingerprint;
+
     // Simple merge: rely on backend + SDK ordering; no manual sequencing/timestamps
-    // - Backend messages are historical (persisted)
-    // - Streaming messages include the current cycle (tokens only)
-    // - THOUGHTS are rendered in UI (not injected as messages)
     const merged = [...convertedMessages, ...streamingMessages];
     // Sort by createdAt if available (oldest first). If missing, keep insertion order.
     const withIndex = merged.map((m, idx) => ({ m, idx }));
@@ -58,12 +71,10 @@ export function useAIChatMessages(
       const bt = getCreatedAtMs(b.m);
       if (typeof at === 'number' && typeof bt === 'number') {
         if (at !== bt) return at - bt;
-        // user before assistant on tie
         if (a.m.role === 'user' && b.m.role !== 'user') return -1;
         if (a.m.role !== 'user' && b.m.role === 'user') return 1;
         return (a.m.id || '').localeCompare(b.m.id || '');
       }
-      // Fallback to original insertion order
       return a.idx - b.idx;
     });
     const sorted = withIndex.map(x => x.m);
@@ -74,6 +85,7 @@ export function useAIChatMessages(
       total: sorted.length,
     });
 
+    prevAllMessagesRef.current = sorted;
     return sorted;
   }, [convertedMessages, streamingMessages]);
 

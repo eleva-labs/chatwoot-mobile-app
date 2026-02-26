@@ -1,6 +1,6 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import type { NativeScrollEvent } from 'react-native';
-import { calculateDistanceFromBottom, isNearBottom } from '@/presentation/utils/ai-assistant';
+import { calculateDistanceFromBottom, isNearBottom, NEAR_BOTTOM_THRESHOLD } from '@/presentation/utils/ai-assistant';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FlashListRef = any;
@@ -9,7 +9,10 @@ export interface UseAIChatScrollReturn {
   listRef: React.RefObject<FlashListRef>;
   handleScroll: (event: { nativeEvent: NativeScrollEvent }) => void;
   scrollToBottom: (animated?: boolean) => void;
+  scrollToTop: (animated?: boolean) => void;
   shouldAutoScroll: () => boolean;
+  isAtBottom: boolean;
+  isAtTop: boolean;
 }
 
 /**
@@ -30,6 +33,14 @@ export function useAIChatScroll(
   const previousSessionIdRef = useRef<string | null>(activeSessionId || null);
   const hasScrolledForSessionRef = useRef<string | null>(null);
   const isProgrammaticScrollRef = useRef<boolean>(false);
+  const isNearBottomRef = useRef<boolean>(true);
+  const isNearTopRef = useRef<boolean>(true);
+
+  // Reactive state for UI scroll buttons
+  // Debounced to avoid infinite re-render loops during streaming
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const scrollStateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-scroll when a new conversation is loaded
   useEffect(() => {
@@ -149,7 +160,7 @@ export function useAIChatScroll(
             }
           }
         }
-      }, 100); // Debounce by 100ms to batch rapid updates
+      }, 32); // Debounce by ~2 frames for smoother streaming scroll
     }
 
     return () => {
@@ -169,14 +180,27 @@ export function useAIChatScroll(
     }
 
     const distanceFromBottom = calculateDistanceFromBottom(event);
+    const { contentOffset } = event.nativeEvent;
 
     // User is near bottom (within threshold) - enable auto-scroll
     // User has scrolled up - disable auto-scroll
-    if (isNearBottom(distanceFromBottom)) {
-      shouldAutoScrollRef.current = true;
-    } else {
-      shouldAutoScrollRef.current = false;
+    const nearBottom = isNearBottom(distanceFromBottom);
+    const nearTop = contentOffset.y <= NEAR_BOTTOM_THRESHOLD;
+
+    shouldAutoScrollRef.current = nearBottom;
+
+    // Update refs immediately (no re-render)
+    isNearBottomRef.current = nearBottom;
+    isNearTopRef.current = nearTop;
+
+    // Debounce reactive state updates to avoid re-render loops during streaming
+    if (scrollStateTimeoutRef.current) {
+      clearTimeout(scrollStateTimeoutRef.current);
     }
+    scrollStateTimeoutRef.current = setTimeout(() => {
+      setIsAtBottom(prev => (prev !== nearBottom ? nearBottom : prev));
+      setIsAtTop(prev => (prev !== nearTop ? nearTop : prev));
+    }, 150);
 
     // Clear any existing timeout
     if (scrollTimeoutRef.current) {
@@ -209,21 +233,37 @@ export function useAIChatScroll(
     [listDataLength],
   );
 
+  // Scroll to top programmatically
+  const scrollToTop = useCallback((animated = true) => {
+    if (listRef.current) {
+      isProgrammaticScrollRef.current = true;
+      try {
+        listRef.current.scrollToIndex({ index: 0, animated });
+      } catch (error) {
+        console.warn('[useAIChatScroll] scrollToTop failed:', error);
+      }
+    }
+  }, []);
+
   // Check if auto-scroll is enabled
   const shouldAutoScroll = useCallback(() => {
     return shouldAutoScrollRef.current;
   }, []);
 
-  // Cleanup timeout on unmount
+  // Cleanup timeouts on unmount
   useEffect(() => {
     const scrollTimeoutId = scrollTimeoutRef.current;
     const scrollTimeoutIdRefValue = scrollTimeoutIdRef.current;
+    const scrollStateTimeoutId = scrollStateTimeoutRef.current;
     return () => {
       if (scrollTimeoutId) {
         clearTimeout(scrollTimeoutId);
       }
       if (scrollTimeoutIdRefValue) {
         clearTimeout(scrollTimeoutIdRefValue);
+      }
+      if (scrollStateTimeoutId) {
+        clearTimeout(scrollStateTimeoutId);
       }
     };
   }, []);
@@ -232,6 +272,9 @@ export function useAIChatScroll(
     listRef,
     handleScroll,
     scrollToBottom,
+    scrollToTop,
     shouldAutoScroll,
+    isAtBottom,
+    isAtTop,
   };
 }

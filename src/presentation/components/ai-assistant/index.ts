@@ -4,6 +4,10 @@
  * Reusable UI components for the AI Assistant feature.
  */
 
+export { AIChatError } from './AIChatError';
+
+export { AIChatEmptyState } from './AIChatEmptyState';
+
 export { AIChatHeader } from './AIChatHeader';
 export type { AIChatHeaderProps } from './AIChatHeader';
 
