@@ -260,6 +260,8 @@ export function OnboardingModule({
   }
 
   // Error state
+  // TODO: Replace with a repository pattern (S3Repository / FileRepository) that falls back
+  // to a local bundled flow JSON when running locally, instead of always requiring S3.
   if (onboarding.error && !onboarding.flow) {
     return (
       <SafeAreaView style={themedStyles.style('flex-1 bg-white items-center justify-center p-4')}>
@@ -269,11 +271,20 @@ export function OnboardingModule({
         <Text style={themedStyles.style('text-gray-600 text-center mb-4')}>
           {onboarding.error.message}
         </Text>
-        <Button
-          text={t(TranslationKeys.RETRY)}
-          variant="primary"
-          handlePress={() => onboarding.loadFlow(locale)}
-        />
+        <View style={themedStyles.style('gap-3 w-full items-center')}>
+          <Button
+            text={t(TranslationKeys.RETRY)}
+            variant="primary"
+            handlePress={() => onboarding.loadFlow(locale)}
+          />
+          {onSkip && (
+            <Button
+              text={t(TranslationKeys.SKIP)}
+              variant="secondary"
+              handlePress={onSkip}
+            />
+          )}
+        </View>
       </SafeAreaView>
     );
   }

@@ -8,6 +8,7 @@ import { AppNavigator } from '@/navigation';
 import ErrorBoundaryScreen from '@/components-next/common/ErrorBoundaryScreen';
 import ErrorBoundary from '@/components-next/common/ErrorBoundary';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { ThemeProvider as RadixThemeProvider } from '@/theme/components/ThemeProvider';
 
 import i18n from '@/i18n';
 import { useEASUpdates } from '@/hooks/useEASUpdates';
@@ -41,14 +42,16 @@ const Chatwoot = () => {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider>
-          <React.Suspense fallback={null}>
-            <ErrorBoundary
-              fallbackRender={({ error, resetErrorBoundary }) => (
-                <ErrorBoundaryScreen error={error} onRetry={resetErrorBoundary} />
-              )}>
-              <AppNavigator />
-            </ErrorBoundary>
-          </React.Suspense>
+          <RadixThemeProvider>
+            <React.Suspense fallback={null}>
+              <ErrorBoundary
+                fallbackRender={({ error, resetErrorBoundary }) => (
+                  <ErrorBoundaryScreen error={error} onRetry={resetErrorBoundary} />
+                )}>
+                <AppNavigator />
+              </ErrorBoundary>
+            </React.Suspense>
+          </RadixThemeProvider>
         </ThemeProvider>
       </PersistGate>
     </Provider>

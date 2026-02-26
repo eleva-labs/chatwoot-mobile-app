@@ -13,16 +13,23 @@ export const extractDomain = ({ url }: { url: string }) => {
   if (!isValidUrl) {
     return url;
   }
-  const domain = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
-  if (
-    domain != null &&
-    domain.length > 2 &&
-    typeof domain[2] === 'string' &&
-    domain[2].length > 0
-  ) {
-    return domain[2];
+  try {
+    const parsed = new URL(url);
+    // Preserve host (includes port) for local development (e.g. localhost:3000)
+    return parsed.host;
+  } catch {
+    // Fallback to regex extraction
+    const domain = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+    if (
+      domain != null &&
+      domain.length > 2 &&
+      typeof domain[2] === 'string' &&
+      domain[2].length > 0
+    ) {
+      return domain[2];
+    }
+    return url;
   }
-  return url;
 };
 
 export const checkValidUrl = ({ url }: { url: string }) => {

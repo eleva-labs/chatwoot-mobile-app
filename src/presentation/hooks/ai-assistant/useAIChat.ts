@@ -164,11 +164,16 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   const sessionIdRef = useRef<string | null>(initialSessionId || null);
   const isMountedRef = useRef(true);
   const optionsRef = useRef(options);
+  const agentBotIdRef = useRef(agentBotId);
 
   // Keep refs in sync
   useEffect(() => {
     optionsRef.current = options;
   }, [options]);
+
+  useEffect(() => {
+    agentBotIdRef.current = agentBotId;
+  }, [agentBotId]);
 
   useEffect(() => {
     sessionIdRef.current = sessionId;
@@ -277,6 +282,13 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
         const lastMessage = messages[messages.length - 1];
         const accountId = config.getAccountId();
 
+        // Use ref to always get the latest agentBotId (avoids stale closure from useMemo)
+        const currentAgentBotId = agentBotIdRef.current;
+
+        if (!currentAgentBotId) {
+          throw new Error('No agent bot selected');
+        }
+
         // Chatwoot expects a specific request format
         const body: Record<string, unknown> = {
           messages: [
@@ -285,7 +297,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
               content: extractTextContent(lastMessage),
             },
           ],
-          agent_bot_id: agentBotId,
+          agent_bot_id: currentAgentBotId,
         };
 
         // Only include session ID if we have one (for continuing conversations)
@@ -301,7 +313,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
                 messages: body.messages,
               },
               store_id: accountId,
-              agent_system_id: agentBotId,
+              agent_system_id: currentAgentBotId,
             },
             headers,
           };
