@@ -3,18 +3,17 @@
  *
  * Main AI chat interface component.
  * Uses the modern useAIChat hook with DefaultChatTransport.
- * Reasoning/thoughts are extracted from message parts (domain pattern).
+ * Part rendering (reasoning, tools, text) is handled per-message by AIMessageBubble,
+ * matching the Vue AiChatPanel architecture.
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
-import type { UIMessage } from 'ai';
 import { tailwind } from '@/theme';
 import { useAppSelector } from '@/hooks';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-// Use the modern useAIChat hook (replaces deprecated useAIStreaming)
 import {
   useAIChat,
   useAIChatBot,
@@ -34,13 +33,6 @@ import { AIChatHeader } from '@/presentation/components/ai-assistant/AIChatHeade
 import { AIChatSessionPanel } from '@/presentation/components/ai-assistant/AIChatSessionPanel';
 import { AIChatMessagesList } from '@/presentation/components/ai-assistant/AIChatMessagesList';
 
-// Import domain helpers for extracting reasoning from message parts
-import {
-  getReasoningParts,
-  getToolParts,
-  type MessagePart,
-} from '@/domain/types/ai-assistant/parts';
-
 export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
   ({ agentBotId, onClose }) => {
     const insets = useSafeAreaInsets();
@@ -53,7 +45,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     // Bot management
     const { selectedBotId, selectedBot } = useAIChatBot(agentBotId, accountId);
 
-    // AI Chat using modern DefaultChatTransport (replaces deprecated useAIStreaming)
+    // AI Chat using modern DefaultChatTransport
     const {
       messages: streamingMessages,
       isLoading,
@@ -64,41 +56,18 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     } = useAIChat({
       agentBotId: selectedBotId,
       chatSessionId: activeSessionId || undefined,
-      // Note: Reasoning is now extracted from message.parts, not via callbacks
-      // The Rails proxy endpoint handles backend communication
     });
 
-    // Sessions management (needs setMessages for new conversation)
+    // Sessions management
     const { sessions, showSessions, setShowSessions, handleSelectSession, handleNewConversation } =
       useAIChatSessions(selectedBotId, accountId, agentBotId, setMessages);
 
-    // Extract reasoning text from the last assistant message (replaces useAIThoughts)
-    const { thoughtsText, isThoughtsVisible } = useMemo(() => {
-      // Find the last assistant message
-      const lastAssistantMessage = [...streamingMessages]
-        .reverse()
-        .find(m => m.role === 'assistant');
-
-      if (!lastAssistantMessage?.parts) {
-        return { thoughtsText: '', isThoughtsVisible: false };
-      }
-
-      // Extract reasoning parts using domain helper
-      const reasoningParts = getReasoningParts(lastAssistantMessage.parts as MessagePart[]);
-      const text = reasoningParts.map(p => p.reasoning || p.text || '').join('\n');
-
-      return {
-        thoughtsText: text,
-        isThoughtsVisible: text.length > 0,
-      };
-    }, [streamingMessages]);
-
-    // Messages management (simplified - no longer needs thoughts anchor)
+    // Messages management — no thoughts anchor needed since parts render per-message
     const { allMessages, listData } = useAIChatMessages(
       activeSessionId,
       streamingMessages,
-      isThoughtsVisible,
-      0, // streamingAnchorKey no longer needed
+      false, // isThoughtsVisible — no longer injecting separate thoughts anchor
+      0, // streamingAnchorKey — no longer needed
     );
 
     // Scroll management
@@ -123,12 +92,9 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
           return;
         }
 
-        // Reasoning is now automatically extracted from message parts
-        // No need to clear thoughts manually
-
         await sendMessage(text);
 
-        // Auto-scroll to bottom after sending (debounced)
+        // Auto-scroll to bottom after sending
         setTimeout(() => {
           if (shouldAutoScroll() && listData.length > 0) {
             scrollToBottom(true);
@@ -137,11 +103,6 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       },
       [sendMessage, isLoading, selectedBotId, scrollToBottom, shouldAutoScroll, listData.length],
     );
-
-    // Extract tool calls from messages using domain helper
-    const toolCalls = useMemo(() => {
-      return allMessages.flatMap((m: UIMessage) => getToolParts(m.parts as MessagePart[]));
-    }, [allMessages]);
 
     return (
       <KeyboardAvoidingView
@@ -172,10 +133,8 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
             isLoadingMessages={isLoadingMessages}
             activeSessionId={activeSessionId}
             error={error || null}
-            toolCalls={toolCalls}
             listRef={listRef}
             onScroll={handleScroll as (event: { nativeEvent: unknown }) => void}
-            thoughtsText={thoughtsText}
           />
 
           <AIInputField

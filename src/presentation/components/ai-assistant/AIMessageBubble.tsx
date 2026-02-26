@@ -1,115 +1,58 @@
-import React, { useEffect } from 'react';
-import { View, Text, ActivityIndicator, Platform } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from 'react-native-reanimated';
+/**
+ * AIMessageBubble Component
+ *
+ * Renders a single AI chat message with full part-based rendering.
+ * Follows the Vue AiChatPanel pattern for splitting message parts:
+ *
+ * Assistant messages:
+ *   - Reasoning parts → rendered OUTSIDE the bubble (collapsible)
+ *   - Tool parts → rendered OUTSIDE the bubble (collapsible, deduplicated)
+ *   - Text parts → rendered INSIDE the bubble (with markdown)
+ *
+ * User messages:
+ *   - All parts rendered INSIDE the bubble (plain text)
+ */
+
+import React, { useMemo } from 'react';
+import { View, ActivityIndicator, Platform } from 'react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import type { AIMessageBubbleProps } from '@/presentation/containers/ai-assistant/types';
-// Use domain constants and helpers instead of hardcoded strings
-import { PART_TYPES } from '@/domain/types/ai-assistant/constants';
-import { isTextPart, type MessagePart } from '@/domain/types/ai-assistant/parts';
+import { AIPartRenderer } from '@/presentation/parts/ai-assistant/AIPartRenderer';
+import {
+  getTextParts,
+  getReasoningParts,
+  getDeduplicatedToolParts,
+  type MessagePart,
+} from '@/domain/types/ai-assistant/parts';
 
 export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({ message, isStreaming }) => {
-  const { style, message: getMessageTokens, getCursor } = useAIStyles();
+  const { style, message: getMessageTokens } = useAIStyles();
   const isUser = message.role === 'user';
+  const isAssistant = message.role === 'assistant';
   const messageTokens = getMessageTokens(isUser ? 'user' : 'assistant');
-  const cursorToken = getCursor(isUser ? 'user' : 'assistant');
 
-  // Extract text content from message parts
-  // Handle both streaming and completed messages safely
-  const textContent = React.useMemo(() => {
-    try {
-      // First, try to get content from parts array (Vercel AI SDK format)
-      if (message.parts && Array.isArray(message.parts) && message.parts.length > 0) {
-        const extracted = message.parts
-          .filter(part => {
-            // Strictly filter: part must exist, be an object, and have a type
-            return part != null && typeof part === 'object' && part !== null && 'type' in part;
-          })
-          .map(part => {
-            try {
-              // Double-check part is valid before accessing properties
-              if (!part || typeof part !== 'object') {
-                return '';
-              }
+  const parts = (message.parts as MessagePart[] | undefined) ?? [];
 
-              // Use domain type guard instead of hardcoded string
-              if (isTextPart(part as MessagePart)) {
-                // Handle both 'text' and 'content' properties (Vercel AI SDK variations)
-                // Also check for 'delta' which might be used during streaming
-                // Use optional chaining and nullish coalescing for safety
-                const partRecord = part as Record<string, unknown>;
-                const text = typeof partRecord.text === 'string' ? partRecord.text : undefined;
-                const content =
-                  typeof partRecord.content === 'string' ? partRecord.content : undefined;
-                const delta = typeof partRecord.delta === 'string' ? partRecord.delta : undefined;
-                const result = text ?? content ?? delta ?? '';
-
-                if (__DEV__ && part.type === PART_TYPES.TEXT && !result && !isStreaming) {
-                  console.warn(
-                    '[AIMessageBubble] Part has type "text" but no text/content/delta:',
-                    {
-                      part,
-                      hasText: 'text' in part,
-                      hasContent: 'content' in part,
-                      hasDelta: 'delta' in part,
-                      partKeys: Object.keys(part || {}),
-                    },
-                  );
-                }
-                return result;
-              }
-              return '';
-            } catch (error) {
-              console.error('[AIMessageBubble] Error extracting text from part:', error, {
-                part,
-                partType: typeof part,
-                partKeys: part ? Object.keys(part) : 'null/undefined',
-              });
-              return '';
-            }
-          })
-          .filter(text => text !== '') // Remove empty strings
-          .join('');
-
-        if (extracted) {
-          return extracted;
-        }
-      }
-
-      // Fallback: check if message has content directly (alternative format)
-      const messageRecord = message as unknown as Record<string, unknown>;
-      if (messageRecord.content && typeof messageRecord.content === 'string') {
-        return messageRecord.content;
-      }
-      return '';
-    } catch (error) {
-      console.error('[AIMessageBubble] Error extracting text content:', error, message);
-      return '';
+  // Split parts by category (only for assistant messages, matching Vue pattern)
+  const { reasoningParts, toolParts, textParts } = useMemo(() => {
+    if (!isAssistant) {
+      return { reasoningParts: [], toolParts: [], textParts: parts };
     }
-  }, [message, isStreaming]);
+    return {
+      reasoningParts: getReasoningParts(parts),
+      toolParts: getDeduplicatedToolParts(parts),
+      textParts: getTextParts(parts),
+    };
+  }, [parts, isAssistant]);
 
-  // Show loading indicator for empty assistant messages that are streaming
-  const showLoading = !isUser && !textContent && isStreaming;
-  // Show cursor for streaming messages with content
-  const showCursor = !isUser && textContent && isStreaming;
+  // Determine if text content exists
+  const hasTextContent = useMemo(
+    () => textParts.some(p => ('text' in p ? (p.text as string)?.trim() : false)),
+    [textParts],
+  );
 
-  // Animate cursor opacity for blinking effect
-  const cursorOpacity = useSharedValue(1);
-  useEffect(() => {
-    if (showCursor) {
-      cursorOpacity.value = withRepeat(withTiming(0, { duration: 500 }), -1, true);
-    } else {
-      cursorOpacity.value = 1;
-    }
-  }, [showCursor, cursorOpacity]);
-
-  const cursorStyle = useAnimatedStyle(() => ({
-    opacity: cursorOpacity.value,
-  }));
+  // Show loading when assistant is streaming but has no text content yet
+  const showLoader = isAssistant && isStreaming && !hasTextContent;
 
   return (
     <View
@@ -117,34 +60,89 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({ message, isStr
       accessible
       accessibilityRole="text"
       accessibilityLabel={isUser ? 'Your message' : 'AI assistant message'}>
-      <View
-        style={style(
-          'px-4 py-3 rounded-2xl max-w-[80%] flex-row items-center',
-          messageTokens.background,
-          isUser ? 'rounded-tr-sm' : 'rounded-tl-sm',
-        )}>
-        {showLoading ? (
-          <ActivityIndicator size="small" color={Platform.OS === 'ios' ? '#4B5563' : '#9CA3AF'} />
-        ) : textContent ? (
-          <>
-            <Text style={style('text-base font-inter-normal-20 leading-5', messageTokens.text)}>
-              {textContent}
-            </Text>
-            {showCursor && (
-              <Animated.View style={[style('w-0.5 h-4 ml-1', cursorToken), cursorStyle]} />
-            )}
-          </>
-        ) : (
-          // Fallback: Show placeholder if text extraction failed
-          <Text
-            style={style(
-              'text-base font-inter-normal-20 leading-5 italic opacity-70',
-              messageTokens.text,
-            )}>
-            {__DEV__ ? `[Message ${message.id || 'no-id'}]` : '...'}
-          </Text>
-        )}
-      </View>
+      {isAssistant ? (
+        // Assistant: reasoning → tools → text bubble (matching Vue layout)
+        <View style={style('flex-col gap-1 w-full max-w-[85%]')}>
+          {/* Reasoning parts - outside bubble */}
+          {reasoningParts.map((part, idx) => (
+            <AIPartRenderer
+              key={`reasoning-${message.id}-${idx}`}
+              part={part}
+              role="assistant"
+              isStreaming={isStreaming && idx === reasoningParts.length - 1}
+              isLastPart={false}
+            />
+          ))}
+
+          {/* Tool parts - outside bubble */}
+          {toolParts.map(part => (
+            <AIPartRenderer
+              key={`tool-${'toolCallId' in part ? part.toolCallId : message.id}`}
+              part={part}
+              role="assistant"
+              isStreaming={isStreaming}
+              isLastPart={false}
+            />
+          ))}
+
+          {/* Text content - inside bubble */}
+          {showLoader ? (
+            <View
+              style={style(
+                'px-4 py-3 rounded-2xl rounded-tl-sm self-start',
+                messageTokens.background,
+              )}>
+              <ActivityIndicator
+                size="small"
+                color={Platform.OS === 'ios' ? '#4B5563' : '#9CA3AF'}
+              />
+            </View>
+          ) : hasTextContent ? (
+            <View
+              style={style(
+                'px-4 py-3 rounded-2xl rounded-tl-sm self-start',
+                messageTokens.background,
+              )}>
+              {textParts.map((part, idx) => (
+                <AIPartRenderer
+                  key={`text-${message.id}-${idx}`}
+                  part={part}
+                  role="assistant"
+                  isStreaming={isStreaming && idx === textParts.length - 1}
+                  isLastPart={idx === textParts.length - 1}
+                />
+              ))}
+            </View>
+          ) : null}
+        </View>
+      ) : (
+        // User: all parts inside bubble
+        <View
+          style={style(
+            'px-4 py-3 rounded-2xl rounded-tr-sm max-w-[80%]',
+            messageTokens.background,
+          )}>
+          {parts.length > 0 ? (
+            parts.map((part, idx) => (
+              <AIPartRenderer
+                key={`user-${message.id}-${idx}`}
+                part={part}
+                role="user"
+                isStreaming={false}
+                isLastPart={idx === parts.length - 1}
+              />
+            ))
+          ) : (
+            // Fallback: render content string directly if no parts
+            <AIPartRenderer
+              part={{ type: 'text', text: String((message as unknown as Record<string, unknown>).content ?? '') }}
+              role="user"
+              isStreaming={false}
+              isLastPart
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };

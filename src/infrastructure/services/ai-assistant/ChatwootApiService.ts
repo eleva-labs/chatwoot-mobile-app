@@ -41,9 +41,19 @@ export class ChatwootApiService extends ApiClient implements IChatwootApiService
 
   /**
    * Get the base URL for Chatwoot API requests
+   *
+   * Includes the account-scoped /api/v1/accounts/:id prefix to match
+   * the Rails routing structure (e.g. /api/v1/accounts/1/ai_chat/bots).
    */
   protected getBaseUrl(): string {
-    return this.settingsRepository.getInstallationUrl();
+    const installationUrl = this.settingsRepository.getInstallationUrl();
+    const accountId = this.authRepository.getAccountId();
+    if (!accountId) {
+      // Fallback to bare URL — requests will likely fail with 401/404,
+      // but this prevents a crash if called before auth is ready.
+      return installationUrl;
+    }
+    return `${installationUrl}/api/v1/accounts/${accountId}`;
   }
 
   // ============================================================================
