@@ -1,107 +1,110 @@
 /**
- * Theme Provider
+ * Unified Theme Provider
  *
- * This component provides theme context to the entire application,
- * managing theme state and providing theme-aware utilities.
+ * Merges the legacy ThemeContext and Radix ThemeProvider into a single provider.
+ * Manages theme state, rebuilds the tailwind singleton on theme changes,
+ * and provides theme-aware utilities to the component tree.
  */
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Appearance } from 'react-native';
-import { UnifiedColorScale, darkModeColorScales, lightModeColorScales } from '../colors/unified';
-import { SemanticColors, darkSemanticColors, lightSemanticColors } from '../colors/semantic';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ReactNode,
+} from 'react';
+import { useColorScheme } from 'react-native';
+import { UnifiedColorScale, getRadixScales } from '../colors/unified';
+import { SemanticColors, getSemanticColors } from '../colors/semantic';
+import { rebuildTailwind } from '../tailwind';
 
-// Theme context interface
+type ThemeMode = 'light' | 'dark' | 'system';
+
 export interface ThemeContextType {
+  /** Current theme mode setting */
+  theme: ThemeMode;
+  /** Whether dark mode is active (resolved from theme mode + system preference) */
   isDark: boolean;
+  /** Current Radix 12-step color scales for the active mode */
   colors: UnifiedColorScale;
+  /** Current semantic color mappings for the active mode */
   semanticColors: SemanticColors;
+  /** Toggle between light and dark (exits 'system' mode) */
   toggleTheme: () => void;
-  setTheme: (isDark: boolean) => void;
+  /** Set an explicit theme mode */
+  setTheme: (theme: ThemeMode) => void;
+  /** Monotonically increasing counter — changes on every theme rebuild */
+  themeVersion: number;
 }
 
-// Create theme context
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Theme provider props
 interface ThemeProviderProps {
   children: ReactNode;
-  initialTheme?: 'light' | 'dark' | 'system';
-  enableSystemTheme?: boolean;
 }
 
-// Theme provider component
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
-  children,
-  initialTheme = 'system',
-  enableSystemTheme = true,
-}) => {
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (initialTheme === 'system' && enableSystemTheme) {
-      return Appearance.getColorScheme() === 'dark';
-    }
-    return initialTheme === 'dark';
-  });
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const systemColorScheme = useColorScheme();
+  const [theme, setThemeState] = useState<ThemeMode>('system');
+  const themeVersionRef = useRef(0);
+  const [themeVersion, setThemeVersion] = useState(0);
 
-  // Listen to system theme changes
+  // Resolve isDark from theme mode + system preference
+  const isDark = theme === 'system' ? systemColorScheme === 'dark' : theme === 'dark';
+
+  // Rebuild tailwind when isDark changes
   useEffect(() => {
-    if (!enableSystemTheme || initialTheme !== 'system') return;
-
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setIsDark(colorScheme === 'dark');
-    });
-
-    return () => subscription?.remove();
-  }, [enableSystemTheme, initialTheme]);
+    rebuildTailwind(isDark);
+    themeVersionRef.current += 1;
+    setThemeVersion(themeVersionRef.current);
+  }, [isDark]);
 
   // Get current color scales
-  const colors: UnifiedColorScale = isDark ? darkModeColorScales : lightModeColorScales;
+  const colors = getRadixScales(isDark);
+  const semanticColors = getSemanticColors(isDark);
 
-  // Get semantic colors
-  const semanticColors: SemanticColors = isDark ? darkSemanticColors : lightSemanticColors;
+  const setTheme = useCallback((newTheme: ThemeMode) => {
+    setThemeState(newTheme);
+  }, []);
 
-  // Theme control functions
-  const toggleTheme = () => {
-    setIsDark(prev => !prev);
-  };
+  const toggleTheme = useCallback(() => {
+    setThemeState(prev => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
 
-  const setTheme = (dark: boolean) => {
-    setIsDark(dark);
-  };
-
-  // Context value
   const contextValue: ThemeContextType = {
+    theme,
     isDark,
     colors,
     semanticColors,
     toggleTheme,
     setTheme,
+    themeVersion,
   };
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };
 
-// Custom hook to use theme context
+// Custom hook to use theme context (replaces BOTH legacy useTheme and Radix useTheme)
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
-
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-
   return context;
 };
 
-// Hook to get theme-aware colors
+// Convenience hook — returns only { colors, semanticColors }
 export const useThemeColors = () => {
   const { colors, semanticColors } = useTheme();
   return { colors, semanticColors };
 };
 
-// Hook to get theme state
+// Convenience hook — returns only { isDark, toggleTheme, setTheme }
 export const useThemeState = () => {
   const { isDark, toggleTheme, setTheme } = useTheme();
   return { isDark, toggleTheme, setTheme };
 };
 
-// Export theme context for advanced usage
 export { ThemeContext };

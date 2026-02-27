@@ -1,37 +1,30 @@
 import { create } from 'twrnc';
-import { twConfig } from './tailwind.config';
+import { buildTwConfig } from './tailwind.config';
 
-// Create the base tailwind instance
-export const tailwind = create(twConfig);
+// Module-level mutable instance — starts as light mode
+let _tailwind = create(buildTwConfig(false));
 
-// Create a function that returns theme-aware styles
+/**
+ * Get the current tailwind instance.
+ * Use this when you need the latest instance inside callbacks or closures.
+ */
+export const getTailwind = () => _tailwind;
+
+/**
+ * Rebuild the tailwind instance for a new theme mode.
+ * Called by ThemeProvider when isDark changes.
+ *
+ * The ES module live binding via `export { _tailwind as tailwind }` ensures
+ * all importers of `tailwind` see the updated instance.
+ */
+export const rebuildTailwind = (isDark: boolean) => {
+  _tailwind = create(buildTwConfig(isDark));
+};
+
+// Named export — ES module live binding ensures importers see updates after rebuildTailwind()
+export { _tailwind as tailwind };
+
+// Backward compat — createThemedTailwind was used by the old tailwind.ts
 export const createThemedTailwind = (isDark: boolean) => {
-  return create({
-    ...twConfig,
-    theme: {
-      ...twConfig.theme,
-      extend: {
-        ...twConfig.theme.extend,
-        colors: {
-          ...twConfig.theme.extend.colors,
-          // Override base colors with theme-specific ones
-          background: isDark ? 'rgb(27, 27, 27)' : '#FFFFFF', // Matching LoginScreen exactly
-          foreground: isDark ? '#FFFFFF' : '#000000',
-          // Add semantic color mappings
-          primary: isDark
-            ? twConfig.theme.extend.colors.brandDark
-            : twConfig.theme.extend.colors.brand,
-          secondary: isDark
-            ? twConfig.theme.extend.colors.grayDark
-            : twConfig.theme.extend.colors.gray,
-          muted: isDark
-            ? twConfig.theme.extend.colors.slateDark
-            : twConfig.theme.extend.colors.slate,
-          accent: isDark
-            ? twConfig.theme.extend.colors.blueDark
-            : twConfig.theme.extend.colors.blue,
-        },
-      },
-    },
-  });
+  return create(buildTwConfig(isDark));
 };

@@ -16,6 +16,7 @@ import { AIChatError } from './AIChatError';
 import { AIChatEmptyState } from './AIChatEmptyState';
 import type { FlashListRef } from '@/presentation/hooks/ai-assistant/useAIChatScroll';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { tailwind } from '@/theme/tailwind';
 import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
@@ -164,7 +165,10 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
         {/* Panel-level loader for SUBMITTED state */}
         {(status === 'submitted' || (status === 'streaming' && !lastAssistantHasText)) && (
           <View style={style('flex-row items-center gap-2 px-4 py-3')}>
-            <ActivityIndicator size="small" color={Platform.OS === 'ios' ? '#4B5563' : '#9CA3AF'} />
+            <ActivityIndicator
+              size="small"
+              color={tailwind.color('text-slate-9') ?? 'rgb(139, 141, 152)'}
+            />
             <Text style={style('text-sm', tokens.text.muted)}>
               {status === 'submitted' ? 'Thinking...' : 'Generating...'}
             </Text>

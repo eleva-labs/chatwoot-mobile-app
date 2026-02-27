@@ -24,7 +24,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
-import { useThemeColors } from '@/theme';
+import { tailwind } from '@/theme/tailwind';
+import { useTheme } from '@/context/ThemeContext';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 
 // Import domain types (single source of truth)
@@ -65,7 +66,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   enableMarkdown = true,
 }) => {
   const { style } = useAIStyles();
-  const { colors } = useThemeColors();
+  const { themeVersion } = useTheme();
 
   const isUser = role === 'user';
   const text = part.text || '';
@@ -97,13 +98,19 @@ export const AITextPart: React.FC<AITextPartProps> = ({
     return true;
   };
 
-  // Get colors from Radix scale based on role
+  // Get colors from Radix scale via tailwind.color() (theme-aware singleton)
   // User: iris-12 text on iris-3 background
   // Assistant: slate-12 text on slate-3 background
-  const textColor = isUser ? colors.iris[12] : colors.slate[12];
-  const linkColor = colors.blue[9];
-  const codeBackground = isUser ? 'rgba(255,255,255,0.15)' : colors.slate[3];
-  const cursorColor = isUser ? colors.iris[12] : colors.slate[9];
+  const textColor = isUser
+    ? (tailwind.color('text-iris-12') ?? 'rgb(39, 41, 98)')
+    : (tailwind.color('text-slate-12') ?? 'rgb(28, 32, 36)');
+  const linkColor = tailwind.color('text-blue-9') ?? 'rgb(39, 129, 246)';
+  const codeBackground = isUser
+    ? 'rgba(255,255,255,0.15)'
+    : (tailwind.color('bg-slate-3') ?? 'rgb(240, 240, 243)');
+  const cursorColor = isUser
+    ? (tailwind.color('text-iris-12') ?? 'rgb(39, 41, 98)')
+    : (tailwind.color('text-slate-9') ?? 'rgb(139, 141, 152)');
 
   // Markdown styles based on role using Radix colors (memoized for performance)
   const markdownStyles = useMemo(
@@ -168,7 +175,9 @@ export const AITextPart: React.FC<AITextPartProps> = ({
           color: textColor,
         },
       }),
-    [textColor, linkColor, codeBackground],
+    // themeVersion ensures styles recompute when tailwind is rebuilt
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [textColor, linkColor, codeBackground, themeVersion],
   );
 
   // If no text and not streaming, return null

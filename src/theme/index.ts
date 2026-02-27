@@ -1,20 +1,25 @@
-// Legacy theme system (for backward compatibility)
-export * from './default';
-export { tailwind, createThemedTailwind } from './tailwind';
+// Theme system exports
+export { tailwind, getTailwind, rebuildTailwind, createThemedTailwind } from './tailwind';
+export { buildTwConfig, twConfig } from './tailwind.config';
 
-// Unified theme system exports
+// Color system
 export * from './colors/unified';
 export * from './colors/semantic';
+export { brandColors } from './colors/brand';
 
-// Token system (base types for feature tokens)
+// Token system
 export * from './colors/tokens';
 
-// Theme components (with specific exports to avoid conflicts)
-export {
-  ThemeProvider,
-  useTheme as useThemeContext,
-  useThemeColors,
-  useThemeState,
-} from './components/ThemeProvider';
+// Legacy theme (for backward compatibility — re-exports from unified)
+export * from './default';
+
+// Theme components
+export { ThemeProvider, useTheme, useThemeColors, useThemeState } from './components/ThemeProvider';
+
+// Backward compat alias
+export { useTheme as useThemeContext } from './components/ThemeProvider';
+
 export { createUnifiedTheme, createDefaultTheme } from './components/createTheme';
-export { useTheme } from './components/useTheme';
+
+// Text styles
+export * from './text-styles';

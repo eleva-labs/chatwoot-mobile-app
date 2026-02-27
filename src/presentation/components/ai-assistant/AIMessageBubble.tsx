@@ -14,8 +14,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, Text, Pressable, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { tailwind } from '@/theme/tailwind';
 import type { AIMessageBubbleProps } from '@/presentation/containers/ai-assistant/types';
 import { AIPartRenderer } from '@/presentation/parts/ai-assistant/AIPartRenderer';
 import { Avatar } from '@/components-next/common/avatar/Avatar';
@@ -110,7 +111,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               )}>
               <ActivityIndicator
                 size="small"
-                color={Platform.OS === 'ios' ? '#4B5563' : '#9CA3AF'}
+                color={tailwind.color('text-slate-9') ?? 'rgb(139, 141, 152)'}
               />
             </View>
           ) : hasTextContent ? (

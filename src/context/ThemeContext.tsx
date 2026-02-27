@@ -1,57 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
-
-type ThemeMode = 'light' | 'dark' | 'system';
-
-interface ThemeContextType {
-  theme: ThemeMode;
-  isDark: boolean;
-  setTheme: (theme: ThemeMode) => void;
-  toggleTheme: () => void;
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
-
-interface ThemeProviderProps {
-  children: React.ReactNode;
-}
-
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const systemColorScheme = useColorScheme();
-  const [theme, setTheme] = useState<ThemeMode>('system');
-
-  // Determine if we should use dark mode
-  const isDark = theme === 'system' ? systemColorScheme === 'dark' : theme === 'dark';
-
-  useEffect(() => {
-    // You can load the saved theme preference here
-    // For now, we'll use 'system' as default
-  }, []);
-
-  const handleSetTheme = (newTheme: ThemeMode) => {
-    setTheme(newTheme);
-    // You can save the theme preference here
-    // AsyncStorage.setItem('theme', newTheme);
-  };
-
-  const toggleTheme = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
-  };
-
-  const value: ThemeContextType = {
-    theme,
-    isDark,
-    setTheme: handleSetTheme,
-    toggleTheme,
-  };
-
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
-};
+/**
+ * Legacy ThemeContext — re-exports from unified ThemeProvider
+ *
+ * This file exists for backward compatibility. ~170+ files import useTheme from here.
+ * All functionality is now provided by the unified ThemeProvider in @/theme/components/ThemeProvider.
+ */
+export { ThemeProvider, useTheme } from '@/theme/components/ThemeProvider';

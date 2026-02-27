@@ -19,7 +19,8 @@ import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-nat
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import { useThemeColors } from '@/theme';
+import { tailwind } from '@/theme/tailwind';
+import { useTheme } from '@/context/ThemeContext';
 import { AICollapsible } from './AICollapsible';
 
 // Import domain types (single source of truth)
@@ -61,7 +62,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
 }) => {
   const { style, tokens, getCollapsible } = useAIStyles();
   const irisTokens = getCollapsible('iris');
-  const { colors } = useThemeColors();
+  const { themeVersion } = useTheme();
 
   // Markdown styles for reasoning content (smaller than main text)
   const markdownStyles = useMemo(
@@ -70,7 +71,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         body: {
           fontSize: 13,
           lineHeight: 19,
-          color: colors.slate[12],
+          color: tailwind.color('text-slate-12') ?? 'rgb(28, 32, 36)',
           fontFamily: 'Inter-400-20',
         },
         paragraph: {
@@ -85,18 +86,20 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
           fontStyle: 'italic',
         },
         code_inline: {
-          backgroundColor: colors.slate[3],
+          backgroundColor: tailwind.color('bg-slate-3') ?? 'rgb(240, 240, 243)',
           borderRadius: 4,
           paddingHorizontal: 4,
           fontFamily: 'monospace',
           fontSize: 12,
         },
         link: {
-          color: colors.blue[9],
+          color: tailwind.color('text-blue-9') ?? 'rgb(39, 129, 246)',
           textDecorationLine: 'underline',
         },
       }),
-    [colors],
+    // themeVersion ensures styles recompute when tailwind is rebuilt
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [themeVersion],
   );
 
   // Extract reasoning text (handle both 'reasoning' and 'text' fields)
@@ -147,7 +150,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
           <View style={style('flex-row items-center')}>
             <ActivityIndicator
               size="small"
-              color="#5B5BD6" // iris-9
+              color={tailwind.color('text-iris-9') ?? 'rgb(91, 91, 214)'}
               style={style('mr-2')}
             />
             <Text style={style('text-sm font-inter-normal-20 italic', tokens.text.secondary)}>

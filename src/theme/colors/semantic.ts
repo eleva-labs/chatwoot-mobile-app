@@ -3,9 +3,9 @@
  *
  * This file provides semantic color mappings that match the web application's
  * color system, ensuring consistent visual hierarchy and meaning across platforms.
+ *
+ * Values sourced from web app's _next-colors.scss CSS custom properties.
  */
-
-import { UnifiedColorScale } from './unified';
 
 // Semantic color interface
 export interface SemanticColors {
@@ -48,155 +48,186 @@ export interface SemanticColors {
   // Overlay colors
   overlay: string; // Modal overlays
   backdrop: string; // Backdrop overlays
+
+  // Surface solids (from --solid-* CSS vars)
+  solid1: string;
+  solid2: string;
+  solid3: string;
+  solidActive: string;
+  solidAmber: string;
+  solidBlue: string;
+  solidIris: string;
+
+  // Alpha overlays (from --alpha-* CSS vars)
+  alpha1: string;
+  alpha2: string;
+  alpha3: string;
+  blackAlpha1: string;
+  blackAlpha2: string;
+  whiteAlpha: string;
+
+  // Text semantic
+  textBlue: string;
+
+  // Border semantic
+  borderBlue: string;
 }
 
-// Create semantic colors from unified color scale
-export const createSemanticColors = (
-  colors: UnifiedColorScale,
-  isDark: boolean,
-): SemanticColors => {
+// Create semantic colors based on theme mode
+export const createSemanticColors = (isDark: boolean): SemanticColors => {
   if (isDark) {
-    return {
-      // Background colors (matching LoginScreen dark mode EXACTLY)
-      background: 'rgb(27, 27, 27)', // Using grayDark-50 to match LoginScreen exactly
-      surface: colors.slate[1], // --slate-1: 17 17 19
-      surfaceElevated: colors.slate[2], // --slate-2: 24 25 27
-      surfaceHover: colors.slate[3], // --slate-3: 33 34 37
-
-      // Text colors
-      textPrimary: colors.slate[12], // --slate-12: 237 238 240
-      textSecondary: colors.slate[11], // --slate-11: 176 180 186
-      textMuted: colors.slate[10], // --slate-10: 119 123 132
-      textInverse: colors.slate[1], // --slate-1: 17 17 19 (inverse)
-
-      // Interactive colors
-      primary: colors.iris[9], // --iris-9: 91 91 214 (primary brand)
-      primaryHover: colors.iris[8], // --iris-8: 89 88 177
-      primaryActive: colors.iris[7], // --iris-7: 74 74 149
-      accent: colors.blue[9], // --text-blue: 126 182 255
-      accentHover: colors.blue[9], // --text-blue: 126 182 255
-
-      // Status colors
-      success: colors.teal[9], // --teal-9: 18 165 148
-      warning: colors.amber[9], // --amber-9: 255 197 61
-      error: colors.ruby[9], // --ruby-9: 229 70 102
-      info: colors.blue[9], // --text-blue: 126 182 255
-
-      // Border colors
-      border: 'rgb(38, 38, 42)', // --border-weak: 38 38 42
-      borderStrong: 'rgb(52, 52, 52)', // --border-strong: 52 52 52
-      borderWeak: 'rgb(38, 38, 42)', // --border-weak: 38 38 42
-      borderContainer: 'rgba(236, 236, 236, 0)', // --border-container: 236, 236, 236, 0
-
-      // Input colors
-      input: colors.slate[2], // --slate-2: 24 25 27
-      inputBorder: 'rgb(38, 38, 42)', // --border-weak: 38 38 42
-      inputFocus: colors.iris[9], // --iris-9: 91 91 214
-
-      // Overlay colors
-      overlay: 'rgba(0, 0, 0, 0.6)', // Modal overlay
-      backdrop: 'rgba(0, 0, 0, 0.4)', // Backdrop overlay
-    };
+    return { ...darkSemanticColors };
   } else {
-    return {
-      // Background colors (light mode)
-      background: 'rgb(255, 255, 255)', // White background
-      surface: colors.slate[1], // Light surface
-      surfaceElevated: colors.slate[2], // Elevated surface
-      surfaceHover: colors.slate[3], // Hover surface
-
-      // Text colors
-      textPrimary: colors.slate[12], // Dark text
-      textSecondary: colors.slate[11], // Secondary text
-      textMuted: colors.slate[10], // Muted text
-      textInverse: colors.slate[1], // Light text
-
-      // Interactive colors
-      primary: colors.iris[9], // Brand color
-      primaryHover: colors.iris[8], // Brand hover
-      primaryActive: colors.iris[7], // Brand active
-      accent: colors.blue[9], // Accent color
-      accentHover: colors.blue[8], // Accent hover
-
-      // Status colors
-      success: colors.teal[9], // Success
-      warning: colors.amber[9], // Warning
-      error: colors.ruby[9], // Error
-      info: colors.blue[9], // Info
-
-      // Border colors
-      border: colors.slate[6], // Default border
-      borderStrong: colors.slate[8], // Strong border
-      borderWeak: colors.slate[4], // Weak border
-      borderContainer: colors.slate[3], // Container border
-
-      // Input colors
-      input: colors.slate[1], // Input background
-      inputBorder: colors.slate[6], // Input border
-      inputFocus: colors.iris[9], // Input focus
-
-      // Overlay colors
-      overlay: 'rgba(0, 0, 0, 0.4)', // Modal overlay
-      backdrop: 'rgba(0, 0, 0, 0.2)', // Backdrop overlay
-    };
+    return { ...lightSemanticColors };
   }
 };
 
-// Predefined semantic color sets (matching LoginScreen dark mode EXACTLY)
+// ============================================================================
+// Predefined Dark Mode Semantic Colors
+// Matching web app's _next-colors.scss :root.dark
+// ============================================================================
+
 export const darkSemanticColors: SemanticColors = {
-  background: 'rgb(27, 27, 27)', // Using grayDark-50 to match LoginScreen exactly
-  surface: 'rgb(17, 17, 19)', // --slate-1: 17 17 19
-  surfaceElevated: 'rgb(24, 25, 27)', // --slate-2: 24 25 27
-  surfaceHover: 'rgb(33, 34, 37)', // --slate-3: 33 34 37
-  textPrimary: 'rgb(237, 238, 240)', // --slate-12: 237 238 240
-  textSecondary: 'rgb(176, 180, 186)', // --slate-11: 176 180 186
-  textMuted: 'rgb(119, 123, 132)', // --slate-10: 119 123 132
-  textInverse: 'rgb(17, 17, 19)', // --slate-1: 17 17 19 (inverse)
-  primary: 'rgb(91, 91, 214)', // --iris-9: 91 91 214 (primary brand)
-  primaryHover: 'rgb(89, 88, 177)', // --iris-8: 89 88 177
-  primaryActive: 'rgb(74, 74, 149)', // --iris-7: 74 74 149
-  accent: 'rgb(126, 182, 255)', // --text-blue: 126 182 255
-  accentHover: 'rgb(126, 182, 255)', // --text-blue: 126 182 255
-  success: 'rgb(18, 165, 148)', // --teal-9: 18 165 148
-  warning: 'rgb(255, 197, 61)', // --amber-9: 255 197 61
-  error: 'rgb(229, 70, 102)', // --ruby-9: 229 70 102
-  info: 'rgb(126, 182, 255)', // --text-blue: 126 182 255
-  border: 'rgb(38, 38, 42)', // --border-weak: 38 38 42
-  borderStrong: 'rgb(52, 52, 52)', // --border-strong: 52 52 52
-  borderWeak: 'rgb(38, 38, 42)', // --border-weak: 38 38 42
-  borderContainer: 'rgba(236, 236, 236, 0)', // --border-container: 236, 236, 236, 0
-  input: 'rgb(24, 25, 27)', // --slate-2: 24 25 27
-  inputBorder: 'rgb(38, 38, 42)', // --border-weak: 38 38 42
-  inputFocus: 'rgb(91, 91, 214)', // --iris-9: 91 91 214
-  overlay: 'rgba(0, 0, 0, 0.6)', // Modal overlay
-  backdrop: 'rgba(0, 0, 0, 0.4)', // Backdrop overlay
+  // Background colors
+  background: 'rgb(18, 18, 19)', // --background-color dark
+  surface: 'rgb(17, 17, 19)', // slate-1
+  surfaceElevated: 'rgb(24, 25, 27)', // slate-2
+  surfaceHover: 'rgb(33, 34, 37)', // slate-3
+
+  // Text colors
+  textPrimary: 'rgb(237, 238, 240)', // slate-12
+  textSecondary: 'rgb(176, 180, 186)', // slate-11
+  textMuted: 'rgb(119, 123, 132)', // slate-10
+  textInverse: 'rgb(17, 17, 19)', // slate-1 (inverse)
+
+  // Interactive colors
+  primary: 'rgb(91, 91, 214)', // iris-9
+  primaryHover: 'rgb(89, 88, 177)', // iris-8
+  primaryActive: 'rgb(74, 74, 149)', // iris-7
+  accent: 'rgb(126, 182, 255)', // --text-blue dark
+  accentHover: 'rgb(126, 182, 255)', // --text-blue dark
+
+  // Status colors
+  success: 'rgb(18, 165, 148)', // teal-9
+  warning: 'rgb(255, 197, 61)', // amber-9
+  error: 'rgb(229, 70, 102)', // ruby-9
+  info: 'rgb(126, 182, 255)', // --text-blue dark
+
+  // Border colors
+  border: 'rgb(38, 38, 42)', // --border-weak dark
+  borderStrong: 'rgb(52, 52, 52)', // --border-strong dark
+  borderWeak: 'rgb(38, 38, 42)', // --border-weak dark
+  borderContainer: 'rgba(236, 236, 236, 0)', // --border-container dark
+
+  // Input colors
+  input: 'rgb(24, 25, 27)', // slate-2
+  inputBorder: 'rgb(38, 38, 42)', // --border-weak dark
+  inputFocus: 'rgb(91, 91, 214)', // iris-9
+
+  // Overlay colors
+  overlay: 'rgba(0, 0, 0, 0.6)',
+  backdrop: 'rgba(0, 0, 0, 0.4)',
+
+  // Surface solids
+  solid1: 'rgb(23, 23, 26)',
+  solid2: 'rgb(29, 30, 36)',
+  solid3: 'rgb(44, 45, 54)',
+  solidActive: 'rgb(53, 57, 66)',
+  solidAmber: 'rgb(42, 37, 30)',
+  solidBlue: 'rgb(16, 49, 91)',
+  solidIris: 'rgb(38, 42, 101)',
+
+  // Alpha overlays
+  alpha1: 'rgba(36, 36, 36, 0.8)',
+  alpha2: 'rgba(139, 147, 182, 0.15)',
+  alpha3: 'rgba(36, 38, 45, 0.9)',
+  blackAlpha1: 'rgba(0, 0, 0, 0.3)',
+  blackAlpha2: 'rgba(0, 0, 0, 0.2)',
+  whiteAlpha: 'rgba(255, 255, 255, 0.1)',
+
+  // Text semantic
+  textBlue: 'rgb(126, 182, 255)', // --text-blue dark
+
+  // Border semantic
+  borderBlue: 'rgba(39, 129, 246, 0.5)', // --border-blue
 };
 
+// ============================================================================
+// Predefined Light Mode Semantic Colors
+// Matching web app's _next-colors.scss :root (light)
+// ============================================================================
+
 export const lightSemanticColors: SemanticColors = {
-  background: 'rgb(255, 255, 255)',
-  surface: 'rgb(255, 255, 255)',
-  surfaceElevated: 'rgb(248, 250, 252)',
-  surfaceHover: 'rgb(241, 245, 249)',
-  textPrimary: 'rgb(2, 6, 23)',
-  textSecondary: 'rgb(15, 23, 42)',
-  textMuted: 'rgb(30, 41, 59)',
-  textInverse: 'rgb(255, 255, 255)',
-  primary: 'rgb(89, 88, 177)',
-  primaryHover: 'rgb(67, 56, 202)',
-  primaryActive: 'rgb(55, 48, 163)',
-  accent: 'rgb(59, 130, 246)',
-  accentHover: 'rgb(37, 99, 235)',
-  success: 'rgb(20, 184, 166)',
-  warning: 'rgb(245, 158, 11)',
-  error: 'rgb(220, 38, 127)',
-  info: 'rgb(59, 130, 246)',
-  border: 'rgb(148, 163, 184)',
-  borderStrong: 'rgb(100, 116, 139)',
-  borderWeak: 'rgb(226, 232, 240)',
-  borderContainer: 'rgb(241, 245, 249)',
-  input: 'rgb(255, 255, 255)',
-  inputBorder: 'rgb(148, 163, 184)',
-  inputFocus: 'rgb(89, 88, 177)',
+  // Background colors
+  background: 'rgb(253, 253, 253)', // --background-color light
+  surface: 'rgb(252, 252, 253)', // slate-1 light
+  surfaceElevated: 'rgb(249, 249, 251)', // slate-2 light
+  surfaceHover: 'rgb(240, 240, 243)', // slate-3 light
+
+  // Text colors
+  textPrimary: 'rgb(28, 32, 36)', // slate-12 light
+  textSecondary: 'rgb(96, 100, 108)', // slate-11 light
+  textMuted: 'rgb(128, 131, 141)', // slate-10 light
+  textInverse: 'rgb(252, 252, 253)', // slate-1 light (inverse)
+
+  // Interactive colors
+  primary: 'rgb(91, 91, 214)', // iris-9 light
+  primaryHover: 'rgb(81, 81, 205)', // iris-10 light
+  primaryActive: 'rgb(87, 83, 198)', // iris-11 light
+  accent: 'rgb(39, 129, 246)', // blue-9 light
+  accentHover: 'rgb(16, 115, 233)', // blue-10 light
+
+  // Status colors
+  success: 'rgb(18, 165, 148)', // teal-9 light
+  warning: 'rgb(255, 197, 61)', // amber-9 light
+  error: 'rgb(229, 70, 102)', // ruby-9 light
+  info: 'rgb(39, 129, 246)', // blue-9 light
+
+  // Border colors
+  border: 'rgb(217, 217, 224)', // slate-6 light
+  borderStrong: 'rgb(235, 235, 235)', // --border-strong light
+  borderWeak: 'rgb(234, 234, 234)', // --border-weak light
+  borderContainer: 'rgb(236, 236, 236)', // --border-container light
+
+  // Input colors
+  input: 'rgb(252, 252, 253)', // slate-1 light
+  inputBorder: 'rgb(217, 217, 224)', // slate-6 light
+  inputFocus: 'rgb(91, 91, 214)', // iris-9 light
+
+  // Overlay colors
   overlay: 'rgba(0, 0, 0, 0.4)',
   backdrop: 'rgba(0, 0, 0, 0.2)',
+
+  // Surface solids
+  solid1: 'rgb(255, 255, 255)',
+  solid2: 'rgb(255, 255, 255)',
+  solid3: 'rgb(255, 255, 255)',
+  solidActive: 'rgb(255, 255, 255)',
+  solidAmber: 'rgb(252, 232, 193)',
+  solidBlue: 'rgb(218, 236, 255)',
+  solidIris: 'rgb(230, 231, 255)',
+
+  // Alpha overlays
+  alpha1: 'rgba(67, 67, 67, 0.06)',
+  alpha2: 'rgba(201, 202, 207, 0.15)',
+  alpha3: 'rgba(255, 255, 255, 0.96)',
+  blackAlpha1: 'rgba(0, 0, 0, 0.12)',
+  blackAlpha2: 'rgba(0, 0, 0, 0.04)',
+  whiteAlpha: 'rgba(255, 255, 255, 0.8)',
+
+  // Text semantic
+  textBlue: 'rgb(8, 109, 224)', // --text-blue light
+
+  // Border semantic
+  borderBlue: 'rgba(39, 129, 246, 0.5)', // --border-blue
 };
+
+// ============================================================================
+// Helper
+// ============================================================================
+
+/**
+ * Get the semantic colors for the given theme mode.
+ */
+export const getSemanticColors = (isDark: boolean): SemanticColors =>
+  isDark ? darkSemanticColors : lightSemanticColors;
