@@ -43,10 +43,13 @@ const HeaderTitle = () => {
   const themedTailwind = useThemedStyles();
 
   return (
-    <Animated.View style={tailwind.style('flex-1')}>
+    <Animated.View style={[tailwind.style('items-center'), { flex: 2 }]}>
       <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.85}
         style={themedTailwind.style(
-          'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[17px] text-center text-gray-950',
+          'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[22px] text-center text-gray-12',
         )}>
         {i18n.t('CONVERSATION.HEADER.TITLE')}
       </Text>
@@ -135,7 +138,7 @@ const RightSection = ({
             {filtersAppliedCount > 0 && (
               <Animated.View
                 style={tailwind.style(
-                  'absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-brand-600',
+                  'absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-brand',
                 )}
               />
             )}
