@@ -1,6 +1,10 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
 import type { NativeScrollEvent } from 'react-native';
-import { calculateDistanceFromBottom, isNearBottom, NEAR_BOTTOM_THRESHOLD } from '@/presentation/utils/ai-assistant';
+import {
+  calculateDistanceFromBottom,
+  isNearBottom,
+  NEAR_BOTTOM_THRESHOLD,
+} from '@/presentation/utils/ai-assistant';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FlashListRef = any;
@@ -21,7 +25,7 @@ export interface UseAIChatScrollReturn {
 export function useAIChatScroll(
   activeSessionId: string | null,
   isLoadingMessages: boolean,
-  allMessagesLength: number,
+  messagesLength: number,
   listDataLength: number,
 ): UseAIChatScrollReturn {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +48,6 @@ export function useAIChatScroll(
 
   // Auto-scroll when a new conversation is loaded
   useEffect(() => {
-    // Check if session changed
     const sessionChanged = previousSessionIdRef.current !== activeSessionId;
 
     // Update ref to track session changes
@@ -60,7 +63,7 @@ export function useAIChatScroll(
     // 1. Messages just finished loading (not loading and have messages)
     // 2. We haven't scrolled for this session yet OR session just changed
     // 3. List ref is available
-    const messagesJustLoaded = !isLoadingMessages && allMessagesLength > 0;
+    const messagesJustLoaded = !isLoadingMessages && messagesLength > 0;
     const hasListRef = listRef.current !== null;
     const needsScroll = hasScrolledForSessionRef.current !== activeSessionId || sessionChanged;
     const shouldScroll = messagesJustLoaded && needsScroll && hasListRef;
@@ -77,23 +80,23 @@ export function useAIChatScroll(
       // Wait for list to render, then scroll to bottom
       // Use longer delay to ensure FlashList has rendered all items
       scrollTimeoutIdRef.current = setTimeout(() => {
-        if (listRef.current && allMessagesLength > 0) {
+        if (listRef.current && messagesLength > 0) {
           // Mark as programmatic scroll so handleScroll doesn't update shouldAutoScrollRef
           isProgrammaticScrollRef.current = true;
           try {
             // First try scrollToEnd - most reliable for FlashList
             listRef.current.scrollToEnd({ animated: true });
-            lastScrollLengthRef.current = allMessagesLength;
+            lastScrollLengthRef.current = messagesLength;
             hasScrolledForSessionRef.current = activeSessionId || null;
           } catch (error) {
             // If scrollToEnd fails, try scrollToIndex with actual last index
             console.warn('[useAIChatScroll] scrollToEnd failed for new conversation:', error);
             try {
-              // Get the actual last index - use allMessagesLength as proxy for listDataLength
+              // Get the actual last index - use messagesLength as proxy for listDataLength
               // listData is derived from allMessages, so length should be similar
-              const lastIndex = allMessagesLength > 0 ? allMessagesLength - 1 : 0;
+              const lastIndex = messagesLength > 0 ? messagesLength - 1 : 0;
               listRef.current.scrollToIndex({ index: lastIndex, animated: true });
-              lastScrollLengthRef.current = allMessagesLength;
+              lastScrollLengthRef.current = messagesLength;
               hasScrolledForSessionRef.current = activeSessionId || null;
             } catch (scrollEndError) {
               console.warn(
@@ -123,14 +126,14 @@ export function useAIChatScroll(
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSessionId, isLoadingMessages, allMessagesLength]);
+  }, [activeSessionId, isLoadingMessages, messagesLength]);
 
   // Auto-scroll when new messages arrive (during streaming)
   useEffect(() => {
     // Only auto-scroll if message count actually changed (not on every token update)
     if (
-      allMessagesLength !== lastScrollLengthRef.current &&
-      allMessagesLength > 0 &&
+      messagesLength !== lastScrollLengthRef.current &&
+      messagesLength > 0 &&
       shouldAutoScrollRef.current &&
       listRef.current
     ) {
@@ -148,13 +151,13 @@ export function useAIChatScroll(
             // Scroll to bottom (last index) for chronological order
             const lastIndex = listDataLength - 1;
             listRef.current.scrollToIndex({ index: lastIndex, animated: false });
-            lastScrollLengthRef.current = allMessagesLength;
+            lastScrollLengthRef.current = messagesLength;
           } catch (error) {
             // If scrollToIndex fails (e.g., item not yet rendered), try scrollToEnd
             console.warn('[useAIChatScroll] scrollToIndex failed:', error);
             try {
               listRef.current.scrollToEnd({ animated: false });
-              lastScrollLengthRef.current = allMessagesLength;
+              lastScrollLengthRef.current = messagesLength;
             } catch (scrollEndError) {
               console.warn('[useAIChatScroll] scrollToEnd also failed:', scrollEndError);
             }
@@ -169,7 +172,7 @@ export function useAIChatScroll(
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allMessagesLength, listDataLength]); // Only depend on length, not the array itself
+  }, [messagesLength, listDataLength]); // Only depend on length, not the array itself
 
   // Handle scroll events to detect user scrolling and track position
   const handleScroll = useCallback((event: { nativeEvent: NativeScrollEvent }) => {
@@ -250,20 +253,17 @@ export function useAIChatScroll(
     return shouldAutoScrollRef.current;
   }, []);
 
-  // Cleanup timeouts on unmount
+  // Cleanup timeouts on unmount — read refs inside cleanup to get current values
   useEffect(() => {
-    const scrollTimeoutId = scrollTimeoutRef.current;
-    const scrollTimeoutIdRefValue = scrollTimeoutIdRef.current;
-    const scrollStateTimeoutId = scrollStateTimeoutRef.current;
     return () => {
-      if (scrollTimeoutId) {
-        clearTimeout(scrollTimeoutId);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
       }
-      if (scrollTimeoutIdRefValue) {
-        clearTimeout(scrollTimeoutIdRefValue);
+      if (scrollTimeoutIdRef.current) {
+        clearTimeout(scrollTimeoutIdRef.current);
       }
-      if (scrollStateTimeoutId) {
-        clearTimeout(scrollStateTimeoutId);
+      if (scrollStateTimeoutRef.current) {
+        clearTimeout(scrollStateTimeoutRef.current);
       }
     };
   }, []);

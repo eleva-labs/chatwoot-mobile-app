@@ -14,12 +14,4 @@ export {
   validateMessage,
   validateAndNormalizeParts,
   validateAndNormalizeMessages,
-  createThoughtsAnchor,
-  injectThoughtsAnchor,
-  prepareListData,
 } from './aiChatMessageUtils';
-
-export {
-  convertBackendMessageToUIMessage,
-  convertBackendMessagesToUIMessages,
-} from './aiChatUtils';

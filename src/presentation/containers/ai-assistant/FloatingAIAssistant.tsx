@@ -76,7 +76,8 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
     if (isExpanded) {
       return (
         <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-          <Animated.View style={[styles.chatContainer, chatInterfaceStyle, style(tokens.session.background)]}>
+          <Animated.View
+            style={[styles.chatContainer, chatInterfaceStyle, style(tokens.session.background)]}>
             <AIChatInterface agentBotId={agentBotId} onClose={handleClose} />
           </Animated.View>
         </View>

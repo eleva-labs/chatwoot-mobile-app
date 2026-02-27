@@ -5,5 +5,4 @@
  * Implementations live in src/infrastructure/services/
  */
 
-export * from './ai-assistant';
 export * from './shared';

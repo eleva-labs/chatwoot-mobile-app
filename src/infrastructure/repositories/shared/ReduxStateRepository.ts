@@ -7,7 +7,7 @@
 
 import { injectable } from 'tsyringe';
 import type { IStateRepository } from '@/domain/interfaces/repositories/shared';
-import type { AIChatSession } from '@/domain/interfaces/mappers/ai-assistant';
+import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 import { getStore } from '@/store/storeAccessor';
 
 /**

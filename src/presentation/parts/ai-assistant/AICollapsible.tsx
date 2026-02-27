@@ -159,9 +159,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
             <View style={style('pl-4 border-l-2', colors.borderAccent)}>
               {children}
               {/* Collapse footer button */}
-              <Pressable
-                onPress={handleToggle}
-                style={style('flex-row items-center gap-1 pt-2')}>
+              <Pressable onPress={handleToggle} style={style('flex-row items-center gap-1 pt-2')}>
                 <Text style={style('text-xs', colors.chevron)}>▲</Text>
                 <Text style={style('text-xs', colors.label)}>Collapse</Text>
               </Pressable>

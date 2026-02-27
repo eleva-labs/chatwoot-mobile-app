@@ -50,11 +50,9 @@ export function ProgressBar({
         min: 0,
         max: 100,
         now: clampedProgress,
-      }}
-    >
+      }}>
       <View
-        style={[themedStyles.style('w-full bg-gray-200 rounded-full overflow-hidden'), { height }]}
-      >
+        style={[themedStyles.style('w-full bg-gray-200 rounded-full overflow-hidden'), { height }]}>
         <Animated.View
           style={[themedStyles.style('bg-brand-600 h-full rounded-full'), animatedStyle]}
         />

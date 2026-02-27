@@ -5,7 +5,6 @@
  * It tracks connection status and internet reachability.
  */
 
-
 // eslint-disable-next-line import/no-unresolved
 import { renderHook, act } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';

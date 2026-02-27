@@ -41,13 +41,7 @@ export {
 // ============================================================================
 // Hooks
 // ============================================================================
-export {
-  useAIChat,
-  useAIChatBot,
-  useAIChatMessages,
-  useAIChatSessions,
-  useAIChatScroll,
-} from './hooks/ai-assistant';
+export { useAIChat, useAIChatBot, useAIChatSessions, useAIChatScroll } from './hooks/ai-assistant';
 
 export type { UseAIChatOptions, UseAIChatReturn } from './hooks/ai-assistant';
 

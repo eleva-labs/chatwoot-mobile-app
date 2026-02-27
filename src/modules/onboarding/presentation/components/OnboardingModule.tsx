@@ -278,11 +278,7 @@ export function OnboardingModule({
             handlePress={() => onboarding.loadFlow(locale)}
           />
           {onSkip && (
-            <Button
-              text={t(TranslationKeys.SKIP)}
-              variant="secondary"
-              handlePress={onSkip}
-            />
+            <Button text={t(TranslationKeys.SKIP)} variant="secondary" handlePress={onSkip} />
           )}
         </View>
       </SafeAreaView>

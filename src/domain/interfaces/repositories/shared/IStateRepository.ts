@@ -8,7 +8,7 @@
  * (wrapping Redux store)
  */
 
-import type { AIChatSession } from '@/domain/interfaces/mappers/ai-assistant';
+import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 
 /**
  * Repository interface for global state management
