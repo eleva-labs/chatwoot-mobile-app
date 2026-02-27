@@ -14,7 +14,7 @@
  * - Cursor: slate-9 for assistant
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Linking } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -90,6 +90,21 @@ export const AITextPart: React.FC<AITextPartProps> = ({
     opacity: cursorOpacity.value,
   }));
 
+  // Workaround for react-native-markdown-display Yoga height under-reporting:
+  // The library's body View under-measures its height when paragraphs use
+  // flex-row + flex-wrap. We measure the actual rendered height via onLayout
+  // and set minHeight on the outer container to prevent clipping.
+  const [contentHeight, setContentHeight] = useState<number | undefined>(undefined);
+  const handleInnerLayout = useCallback((e: { nativeEvent: { layout: { height: number } } }) => {
+    const h = e.nativeEvent.layout.height;
+    setContentHeight(prev => (prev === undefined || h > prev) ? h : prev);
+  }, []);
+
+  // Reset measured height when text changes (e.g. message reuse or update)
+  useEffect(() => {
+    setContentHeight(undefined);
+  }, [text]);
+
   // Handle URL presses in markdown
   const handleLinkPress = (url: string) => {
     Linking.openURL(url).catch(err => {
@@ -122,10 +137,17 @@ export const AITextPart: React.FC<AITextPartProps> = ({
           letterSpacing: 0.2,
           color: textColor,
           fontFamily: 'Inter-400-20',
+          // Small safety margin; the onLayout minHeight fix handles the main
+          // Yoga height under-reporting issue.
+          paddingBottom: 4,
         },
         paragraph: {
           marginTop: 0,
           marginBottom: 0,
+          // Defense-in-depth: override the library's flex-row+wrap default to
+          // reduce Yoga height mis-measurement on paragraphs.
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
         },
         strong: {
           fontFamily: 'Inter-600-20',
@@ -207,8 +229,8 @@ export const AITextPart: React.FC<AITextPartProps> = ({
 
   // Render markdown for assistant messages
   return (
-    <View>
-      <View>
+    <View style={contentHeight ? { minHeight: contentHeight } : undefined}>
+      <View onLayout={handleInnerLayout}>
         <Markdown
           mergeStyle
           markdownit={MarkdownIt({

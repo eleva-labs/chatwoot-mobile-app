@@ -117,7 +117,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
           {showLoader ? (
             <View
               style={style(
-                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%]',
+                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%] overflow-hidden',
                 messageTokens.background,
               )}>
               <ActivityIndicator
