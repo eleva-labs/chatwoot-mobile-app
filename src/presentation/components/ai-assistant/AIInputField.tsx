@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Icon } from '@/components-next/common';
 import { SendIcon } from '@/svg-icons';
@@ -12,7 +11,6 @@ import i18n from '@/i18n';
 export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, onCancel }) => {
   const [text, setText] = useState('');
   const inputRef = useRef<TextInput>(null);
-  const insets = useSafeAreaInsets();
   const { style, tokens } = useAIStyles();
   const inputTokens = tokens.input;
   const [isFocused, setIsFocused] = useState(false);
@@ -35,8 +33,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
     <Animated.View
       layout={LinearTransition.springify().damping(20).stiffness(120)}
       style={[
-        style('px-4 py-3 border-t', inputTokens.containerBackground, inputTokens.containerBorder),
-        { paddingBottom: Math.max(insets.bottom + 32, 40) },
+        style('px-4 py-3 pb-4 border-t', inputTokens.containerBackground, inputTokens.containerBorder),
       ]}>
       <View
         style={style(

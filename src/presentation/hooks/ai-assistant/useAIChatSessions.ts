@@ -53,11 +53,8 @@ export function useAIChatSessions(
     activeSessionId ? selectMessagesBySession(state, activeSessionId) : EMPTY_MESSAGES,
   );
 
-  // Show sessions list by default if we have sessions
+  // Sessions panel visibility — controlled exclusively by user interaction (header toggle button)
   const [showSessions, setShowSessions] = useState(false);
-
-  // Track if we've already auto-shown the sessions list to prevent interference
-  const hasAutoShownRef = useRef(false);
 
   // Flag to suppress auto-select and the reactive message bridge after user explicitly
   // starts a new conversation. Lifecycle:
@@ -91,15 +88,9 @@ export function useAIChatSessions(
   // causes: setMessages → re-render → bridge fires again → infinite loop.
   const loadedBridgeKeyRef = useRef<string | null>(null);
 
-  // Auto-select latest session and show sessions list when sessions are loaded
+  // Auto-select latest session when sessions are loaded
   useEffect(() => {
     if (sessions && sessions.length > 0) {
-      // Auto-show sessions list only once when sessions are first loaded
-      if (!hasAutoShownRef.current) {
-        setShowSessions(true);
-        hasAutoShownRef.current = true;
-      }
-
       // Auto-select latest session if no active session is set
       // Sessions are sorted by most recent first
       if (!activeSessionId && sessions.length > 0 && !isNewConversationRef.current) {

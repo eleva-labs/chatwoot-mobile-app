@@ -11,6 +11,7 @@ import { useScaleAnimation } from '@/utils';
 import { useHaptic } from '@/utils';
 import { Icon } from '@/components-next/common';
 import { AIAssisst } from '@/svg-icons';
+import { TAB_BAR_HEIGHT } from '@/constants';
 import { AIChatInterface } from './AIChatInterface';
 import type { FloatingAIAssistantProps } from './types';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
@@ -77,7 +78,11 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
     if (isExpanded) {
       return (
         <View
-          style={[styles.container, style(tokens.session.background), { paddingTop: insets.top }]}>
+          style={[
+            styles.container,
+            style(tokens.session.background),
+            { paddingTop: insets.top, paddingBottom: TAB_BAR_HEIGHT },
+          ]}>
           <Animated.View style={[styles.chatContainer, chatInterfaceStyle]}>
             <AIChatInterface agentBotId={agentBotId} onClose={handleClose} />
           </Animated.View>
