@@ -2,13 +2,13 @@
  * useAIChat Hook
  *
  * Simplified AI chat hook using Vercel AI SDK's DefaultChatTransport with expo/fetch.
- * Replaces the custom ChatwootAITransportAdapter with standard SDK patterns.
+ * Uses AIChatService static methods for auth/endpoints and AsyncStorage for session persistence.
  *
  * Key features:
  * - Uses DefaultChatTransport for SSE streaming (no custom parsing needed)
  * - Integrates expo/fetch for React Native compatibility
- * - Handles Chatwoot-specific auth headers and request format via DI (useAIChatConfig)
- * - Manages session persistence via DI (useSessionStorage)
+ * - Handles Chatwoot-specific auth headers and request format via AIChatService
+ * - Manages session persistence via AsyncStorage
  * - Handles app background/foreground lifecycle
  *
  * @see https://ai-sdk.dev/docs/getting-started/expo
@@ -20,12 +20,16 @@ import type { UIMessage } from 'ai';
 import { fetch as expoFetch } from 'expo/fetch';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Use domain type guards instead of hardcoded strings
-import { isTextPart, type MessagePart, type TextPart } from '@/domain/types/ai-assistant/parts';
-import { createAIChatSessionId } from '@/domain/value-objects/ai-assistant';
-import { useAIChatConfig } from '../di/useAIChatConfig';
-import { useSessionStorage } from '../di/useSessionStorage';
+import { isTextPart, type MessagePart, type TextPart } from '@/types/ai-chat/parts';
+import { AIChatService } from '@/store/ai-chat/aiChatService';
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const AI_CHAT_SESSION_KEY = '@ai_chat_active_session';
 
 // ============================================================================
 // Types & Interfaces
@@ -39,8 +43,6 @@ export interface UseAIChatOptions {
   agentBotId?: number;
   /** Existing chat session ID (for resuming sessions) */
   chatSessionId?: string;
-  /** Optional direct backend URL (bypasses Rails proxy) */
-  aiBackendUrl?: string;
   /** Callback when an error occurs */
   onError?: (error: Error) => void;
   /** Callback when a message is completed */
@@ -100,7 +102,7 @@ async function parseErrorResponse(response: Response): Promise<string> {
 /**
  * Extract text content from a UIMessage
  * Handles both parts-based and content-based message formats
- * Uses domain type guards instead of hardcoded strings
+ * Uses type guards instead of hardcoded strings
  */
 function extractTextContent(message: UIMessage): string {
   // Handle parts-based format (SDK v5)
@@ -144,17 +146,9 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   const {
     agentBotId,
     chatSessionId: initialSessionId,
-    aiBackendUrl,
     onError,
     onFinish,
   } = options || {};
-
-  // ============================================================================
-  // DI Hooks
-  // ============================================================================
-
-  const config = useAIChatConfig();
-  const sessionStorage = useSessionStorage();
 
   // ============================================================================
   // State & Refs
@@ -183,61 +177,46 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   // Session Persistence
   // ============================================================================
 
-  // Load session from DI session storage on mount
+  // Load session from AsyncStorage on mount
   useEffect(() => {
     const loadSession = async () => {
       if (initialSessionId) {
-        // Use provided session ID
         setSessionId(initialSessionId);
         return;
       }
-
-      const result = await sessionStorage.getActiveAIChatSessionId();
-      if (result.isSuccess && isMountedRef.current) {
-        const storedId = result.getValue();
-        if (storedId) {
-          setSessionId(storedId as string);
+      try {
+        const stored = await AsyncStorage.getItem(AI_CHAT_SESSION_KEY);
+        if (stored && isMountedRef.current) {
+          setSessionId(stored);
         }
-      } else if (result.isFailure) {
-        console.warn('[useAIChat] Failed to load session from storage:', result.getError());
+      } catch (error) {
+        console.warn('[useAIChat] Failed to load session:', error);
       }
     };
-
     loadSession();
-  }, [initialSessionId, sessionStorage]);
+  }, [initialSessionId]);
 
-  // Save session to DI session storage when it changes
+  // Save session to AsyncStorage when it changes
   useEffect(() => {
     const saveSession = async () => {
       if (!sessionId) return;
-
-      const result = await sessionStorage.setActiveAIChatSessionId(
-        createAIChatSessionId(sessionId),
-      );
-      if (result.isSuccess) {
-        // Notify parent component
-        optionsRef.current?.onSessionIdExtracted?.(sessionId);
-      } else {
-        console.warn('[useAIChat] Failed to save session to storage:', result.getError());
+      try {
+        await AsyncStorage.setItem(AI_CHAT_SESSION_KEY, sessionId);
+      } catch (error) {
+        console.warn('[useAIChat] Failed to save session:', error);
       }
+      // Dispatch to Redux AFTER persistence attempt (success or failure)
+      optionsRef.current?.onSessionIdExtracted?.(sessionId);
     };
-
     saveSession();
-  }, [sessionId, sessionStorage]);
+  }, [sessionId]);
 
   // ============================================================================
   // Transport Configuration
   // ============================================================================
 
   const transport = useMemo(() => {
-    const accountId = config.getAccountId();
-
-    if (!accountId) {
-      console.warn('[useAIChat] No account ID available');
-    }
-
-    // Use config.buildStreamEndpoint for cleaner endpoint construction
-    const apiEndpoint = config.buildStreamEndpoint(aiBackendUrl);
+    const apiEndpoint = AIChatService.getStreamEndpoint();
 
     return new DefaultChatTransport({
       api: apiEndpoint,
@@ -255,10 +234,10 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
           throw new Error(errorMessage);
         }
 
-        // Extract session ID from response headers
+        // Extract session ID from response headers — defer state update to post-streaming
         const newSessionId = response.headers.get('X-Chat-Session-Id');
-        if (newSessionId && newSessionId !== sessionIdRef.current && isMountedRef.current) {
-          setSessionId(newSessionId);
+        if (newSessionId && newSessionId !== sessionIdRef.current) {
+          sessionIdRef.current = newSessionId; // update ref only, no re-render during streaming
         }
 
         return response as unknown as Response;
@@ -266,7 +245,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
 
       // Provide auth headers
       headers: () => ({
-        ...config.getAuthHeaders(),
+        ...AIChatService.getAuthHeaders(),
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       }),
@@ -280,7 +259,6 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
             : ((options.headers as Record<string, string>) ?? {});
 
         const lastMessage = messages[messages.length - 1];
-        const accountId = config.getAccountId();
 
         // Use ref to always get the latest agentBotId (avoids stale closure from useMemo)
         const currentAgentBotId = agentBotIdRef.current;
@@ -305,28 +283,19 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
           body.chat_session_id = sessionIdRef.current;
         }
 
-        // For Python backend, different format may be needed
-        if (aiBackendUrl) {
-          return {
-            body: {
-              agentInput: {
-                messages: body.messages,
-              },
-              store_id: accountId,
-              agent_system_id: currentAgentBotId,
-            },
-            headers,
-          };
-        }
-
         return { body, headers };
       },
     });
-  }, [agentBotId, aiBackendUrl, config]);
+  }, [agentBotId]); // ONLY agentBotId — no config, no aiBackendUrl
 
   // ============================================================================
   // SDK Hook Integration
   // ============================================================================
+
+  // IMPORTANT: The SDK's Chat class captures onFinish/onError at construction time
+  // and never updates them (see @ai-sdk/react useChat → new Chat(options) in useRef).
+  // This means these callbacks are stale closures after the first render.
+  // We use refs to read current values inside the callbacks to avoid staleness.
 
   const handleError = useCallback(
     (error: Error) => {
@@ -340,23 +309,39 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
 
       if (!shouldIgnore) {
         console.error('[useAIChat] Error:', error.message);
-        onError?.(error);
+        optionsRef.current?.onError?.(error);
       }
     },
-    [onError],
+    // Empty deps — reads from refs only. SDK captures this once at Chat construction.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const handleFinish = useCallback(
-    ({ message }: { message: UIMessage }) => {
+    ({ message, isAbort }: { message: UIMessage; isAbort: boolean }) => {
       if (isMountedRef.current) {
-        onFinish?.(message);
+        // Flush deferred session ID from ref → state now that streaming is done.
+        // Skip on abort (user cancelled / session switch) to avoid corrupting session state.
+        // Flush on error/disconnect — the backend already created the session.
+        if (!isAbort) {
+          const pendingSessionId = sessionIdRef.current;
+          // Note: we don't compare against sessionId state because this callback
+          // is captured once by the SDK (stale closure). Use ref instead.
+          if (pendingSessionId) {
+            setSessionId(pendingSessionId);
+          }
+        }
+        optionsRef.current?.onFinish?.(message);
       }
     },
-    [onFinish],
+    // Empty deps — reads from refs only. SDK captures this once at Chat construction.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
   const chat = useChat({
     transport,
+    experimental_throttle: 150,
     onError: handleError,
     onFinish: handleFinish,
   });
@@ -370,7 +355,6 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
       if (nextAppState === 'background' || nextAppState === 'inactive') {
         // Cancel streaming when app goes to background to save battery
         if (chat.status === 'streaming') {
-          console.log('[useAIChat] App backgrounded, stopping stream');
           chat.stop();
         }
       }
@@ -414,18 +398,23 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
         }
       }
     },
-    [chat, handleError],
+    // chat.sendMessage is a stable method from chatRef.current (SDK internal ref)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chat.sendMessage, handleError],
   );
 
   const clearSession = useCallback(async () => {
-    const result = await sessionStorage.clearActiveAIChatSessionId();
-    if (result.isSuccess && isMountedRef.current) {
+    try {
+      await AsyncStorage.removeItem(AI_CHAT_SESSION_KEY);
+    } catch (error) {
+      console.warn('[useAIChat] Failed to clear session:', error);
+    }
+    if (isMountedRef.current) {
       setSessionId(null);
       chat.setMessages([]);
-    } else if (result.isFailure) {
-      console.warn('[useAIChat] Failed to clear session:', result.getError());
     }
-  }, [chat, sessionStorage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chat.setMessages]);
 
   // ============================================================================
   // Return Value

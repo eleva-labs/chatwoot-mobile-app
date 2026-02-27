@@ -1,12 +1,12 @@
 /**
  * Hook for managing AI chat bot selection and fetching
  *
- * REFACTORED: Uses AIAssistantFactory instead of direct service calls
+ * Uses AIChatService static methods directly — no DI or Result pattern.
  */
 
-import { useState, useEffect, useMemo } from 'react';
-import type { AIChatBot } from '@/infrastructure/dto/ai-assistant';
-import { getDefaultAIAssistantDependencies } from '@/presentation/factory/ai-assistant';
+import { useState, useEffect } from 'react';
+import { AIChatService } from '@/store/ai-chat/aiChatService';
+import type { AIChatBot } from '@/store/ai-chat/aiChatTypes';
 
 export interface UseAIChatBotReturn {
   selectedBotId: number | undefined;
@@ -22,9 +22,6 @@ export function useAIChatBot(agentBotId?: number, accountId?: number): UseAIChat
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  // Get use case from factory
-  const { fetchBotsUseCase } = useMemo(() => getDefaultAIAssistantDependencies(), []);
-
   useEffect(() => {
     const fetchBots = async () => {
       if (!accountId) return;
@@ -32,47 +29,32 @@ export function useAIChatBot(agentBotId?: number, accountId?: number): UseAIChat
       setIsLoading(true);
       setError(null);
 
-      // Use the use case instead of direct service call
-      const result = await fetchBotsUseCase.execute({ accountId });
-
-      if (result.isSuccess) {
-        const bots = result.getValue();
+      try {
+        const response = await AIChatService.fetchBots();
+        const bots = response.bots;
 
         if (agentBotId) {
           const bot = bots.find(b => b.id === agentBotId);
           if (bot) {
             setSelectedBotId(agentBotId);
-            // Map domain entity to DTO format for backwards compatibility
-            setSelectedBot({
-              id: bot.id,
-              name: bot.name,
-              description: bot.description || '',
-              avatar_url: bot.avatarUrl || '',
-            } as AIChatBot);
+            setSelectedBot(bot); // Already in DTO format, no mapping needed
           }
         } else if (bots.length > 0) {
-          const firstBot = bots[0];
-          setSelectedBotId(firstBot.id);
-          setSelectedBot({
-            id: firstBot.id,
-            name: firstBot.name,
-            description: firstBot.description || '',
-            avatar_url: firstBot.avatarUrl || '',
-          } as AIChatBot);
+          setSelectedBotId(bots[0].id);
+          setSelectedBot(bots[0]);
         } else {
           console.warn('[useAIChatBot] No bots available');
         }
-      } else {
-        const err = result.getError();
+      } catch (err) {
         console.error('[useAIChatBot] Failed to fetch bots:', err);
-        setError(err);
+        setError(err instanceof Error ? err : new Error(String(err)));
       }
 
       setIsLoading(false);
     };
 
     fetchBots();
-  }, [agentBotId, accountId, fetchBotsUseCase]);
+  }, [agentBotId, accountId]);
 
   return {
     selectedBotId,

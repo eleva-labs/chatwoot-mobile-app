@@ -5,28 +5,33 @@
  * Uses the modern useAIChat hook with DefaultChatTransport.
  * Part rendering (reasoning, tools, text) is handled per-message by AIMessageBubble,
  * matching the Vue AiChatPanel architecture.
+ *
+ * Split into:
+ * - AIChatMessagesView (inner, memo'd) — owns scroll logic + message list rendering
+ * - AIChatInterface (container) — owns useAIChat, useAIChatSessions, Redux state
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import type { UIMessage } from 'ai';
 import { tailwind } from '@/theme';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@/hooks';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import {
   useAIChat,
   useAIChatBot,
   useAIChatSessions,
-  useAIChatMessages,
   useAIChatScroll,
 } from '@/presentation/hooks/ai-assistant';
+import { validateAndNormalizeMessages } from '@/presentation/utils/ai-assistant';
 import { AIInputField } from '@/presentation/components/ai-assistant/AIInputField';
 import type { AIChatInterfaceProps } from './types';
 import {
   selectIsLoadingSessions,
-  selectIsLoadingMessages,
   selectActiveSessionId,
+  setActiveSession,
 } from '@/infrastructure/state/ai-assistant';
 import { selectUser } from '@/store/auth/authSelectors';
 import { AIChatHeader } from '@/presentation/components/ai-assistant/AIChatHeader';
@@ -34,57 +39,49 @@ import { AIChatSessionPanel } from '@/presentation/components/ai-assistant/AICha
 import { AIChatMessagesList } from '@/presentation/components/ai-assistant/AIChatMessagesList';
 import { isTextPart, type MessagePart } from '@/domain/types/ai-assistant/parts';
 
-export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
-  ({ agentBotId, onClose }) => {
-    const insets = useSafeAreaInsets();
-    const user = useAppSelector(selectUser);
-    const accountId = user?.account_id;
-    const isLoadingSessions = useAppSelector(selectIsLoadingSessions);
-    const isLoadingMessages = useAppSelector(selectIsLoadingMessages);
-    const activeSessionId = useAppSelector(selectActiveSessionId);
+// ============================================================================
+// AIChatMessagesView — Inner component isolated from session management renders
+// ============================================================================
 
-    // Bot management
-    const { selectedBotId, selectedBot } = useAIChatBot(agentBotId, accountId);
-
-    // AI Chat using modern DefaultChatTransport
+/** Inner component for message display — isolated from session management renders */
+const AIChatMessagesView = React.memo<{
+  listData: UIMessage[];
+  isLoading: boolean;
+  status: 'ready' | 'submitted' | 'streaming' | 'error';
+  isLoadingMessages: boolean;
+  activeSessionId: string | null;
+  error: Error | null;
+  messagesLength: number;
+  selectedBot: { name?: string; avatar_url?: string } | undefined;
+  userName: string | undefined;
+  sendMessage: (text: string) => Promise<void>;
+  setMessages: (messages: UIMessage[] | ((messages: UIMessage[]) => UIMessage[])) => void;
+}>(
+  ({
+    listData,
+    isLoading,
+    status,
+    isLoadingMessages,
+    activeSessionId,
+    error,
+    messagesLength,
+    selectedBot,
+    userName,
+    sendMessage,
+    setMessages,
+  }) => {
+    // Scroll management lives here — only re-renders when messages/status change
     const {
-      messages: streamingMessages,
-      isLoading,
-      status,
-      error,
-      sendMessage,
-      stop: cancel,
-      setMessages,
-    } = useAIChat({
-      agentBotId: selectedBotId,
-      chatSessionId: activeSessionId || undefined,
-    });
+      listRef,
+      handleScroll,
+      scrollToBottom,
+      scrollToTop,
+      isAtBottom,
+      isAtTop,
+    } = useAIChatScroll(activeSessionId, isLoadingMessages, messagesLength, listData.length);
 
-    // Sessions management
-    const { sessions, showSessions, setShowSessions, handleSelectSession, handleNewConversation } =
-      useAIChatSessions(selectedBotId, accountId, agentBotId, setMessages);
-
-    // Messages management — no thoughts anchor needed since parts render per-message
-    const { allMessages, listData } = useAIChatMessages(
-      activeSessionId,
-      streamingMessages,
-      false, // isThoughtsVisible — no longer injecting separate thoughts anchor
-      0, // streamingAnchorKey — no longer needed
-    );
-
-    // Scroll management
-    const { listRef, handleScroll, scrollToBottom, scrollToTop, shouldAutoScroll, isAtBottom, isAtTop } = useAIChatScroll(
-      activeSessionId,
-      isLoadingMessages,
-      allMessages.length,
-      listData.length,
-    );
-
-    const { style, tokens } = useAIStyles();
-
-    // Error action handlers
+    // Error/retry handlers
     const handleRetry = useCallback(async () => {
-      // Resend last user message
       const lastUserMsg = listData.filter(m => m.role === 'user').pop();
       if (lastUserMsg) {
         const textPart = lastUserMsg.parts?.find(p => isTextPart(p as MessagePart));
@@ -98,10 +95,100 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       setMessages([]);
     }, [setMessages]);
 
+    return (
+      <AIChatMessagesList
+        listData={listData}
+        isLoading={isLoading}
+        status={status}
+        isLoadingMessages={isLoadingMessages}
+        activeSessionId={activeSessionId}
+        error={error ?? null}
+        listRef={listRef}
+        onScroll={handleScroll as (event: { nativeEvent: unknown }) => void}
+        botAvatarName={selectedBot?.name}
+        botAvatarSrc={selectedBot?.avatar_url}
+        userAvatarName={userName}
+        isAtBottom={isAtBottom}
+        isAtTop={isAtTop}
+        onScrollToBottom={scrollToBottom}
+        onScrollToTop={scrollToTop}
+        onRetry={handleRetry}
+        onFreshStart={handleFreshStart}
+      />
+    );
+  },
+);
+AIChatMessagesView.displayName = 'AIChatMessagesView';
+
+// ============================================================================
+// AIChatInterface — Container component
+// ============================================================================
+
+export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
+  ({ agentBotId, onClose }) => {
+    const insets = useSafeAreaInsets();
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
+    const accountId = user?.account_id;
+    const isLoadingSessions = useAppSelector(selectIsLoadingSessions);
+    const activeSessionId = useAppSelector(selectActiveSessionId);
+
+    // Bot management
+    const { selectedBotId, selectedBot } = useAIChatBot(agentBotId, accountId);
+
+    // Callback when session ID is extracted from response (deferred to post-streaming by Fix #1)
+    const onSessionIdExtracted = useCallback(
+      (sessionId: string) => {
+        dispatch(setActiveSession({ sessionId }));
+      },
+      [dispatch],
+    );
+
+    // AI Chat using modern DefaultChatTransport
+    const {
+      messages,
+      isLoading,
+      status,
+      error,
+      sendMessage,
+      stop: cancel,
+      setMessages,
+      clearSession,
+    } = useAIChat({
+      agentBotId: selectedBotId,
+      chatSessionId: activeSessionId || undefined,
+      onSessionIdExtracted,
+    });
+
+    // Sessions management — pass chatStatus to guard bridge effect during streaming
+    const {
+      sessions,
+      isLoadingMessages,
+      showSessions,
+      setShowSessions,
+      handleSelectSession,
+      handleNewConversation,
+    } = useAIChatSessions(
+      selectedBotId,
+      accountId,
+      agentBotId,
+      setMessages,
+      clearSession,
+      cancel,
+      status,
+    );
+
+    // Validate and normalize messages for safe FlashList rendering
+    const listData = useMemo(() => {
+      return validateAndNormalizeMessages(messages);
+    }, [messages]);
+
+    const { style, tokens } = useAIStyles();
+
     // Handle send message
     const handleSend = useCallback(
       async (text: string) => {
-        if (!text.trim() || isLoading) {
+        if (!text.trim() || isLoading || isLoadingMessages) {
           return;
         }
 
@@ -111,15 +198,8 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
         }
 
         await sendMessage(text);
-
-        // Auto-scroll to bottom after sending
-        setTimeout(() => {
-          if (shouldAutoScroll() && listData.length > 0) {
-            scrollToBottom(true);
-          }
-        }, 100);
       },
-      [sendMessage, isLoading, selectedBotId, scrollToBottom, shouldAutoScroll, listData.length],
+      [sendMessage, isLoading, isLoadingMessages, selectedBotId],
     );
 
     return (
@@ -146,29 +226,23 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
             isVisible={showSessions}
           />
 
-          <AIChatMessagesList
+          <AIChatMessagesView
             listData={listData}
             isLoading={isLoading}
             status={status}
             isLoadingMessages={isLoadingMessages}
             activeSessionId={activeSessionId}
-            error={error || null}
-            listRef={listRef}
-            onScroll={handleScroll as (event: { nativeEvent: unknown }) => void}
-            botAvatarName={selectedBot?.name}
-            botAvatarSrc={selectedBot?.avatar_url}
-            userAvatarName={user?.name}
-            isAtBottom={isAtBottom}
-            isAtTop={isAtTop}
-            onScrollToBottom={scrollToBottom}
-            onScrollToTop={scrollToTop}
-            onRetry={handleRetry}
-            onFreshStart={handleFreshStart}
+            error={error ?? null}
+            messagesLength={messages.length}
+            selectedBot={selectedBot ?? undefined}
+            userName={user?.name}
+            sendMessage={sendMessage}
+            setMessages={setMessages}
           />
 
           <AIInputField
             onSend={handleSend}
-            isLoading={isLoading}
+            isLoading={isLoading || isLoadingMessages}
             onCancel={isLoading ? cancel : undefined}
           />
         </View>
