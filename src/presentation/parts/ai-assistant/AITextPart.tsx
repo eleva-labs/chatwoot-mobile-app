@@ -28,7 +28,7 @@ import { useThemeColors } from '@/theme';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 
 // Import domain types (single source of truth)
-import type { TextPart } from '@/domain/types/ai-assistant/parts';
+import type { TextPart } from '@/types/ai-chat/parts';
 
 // Re-export for convenience
 export type { TextPart };

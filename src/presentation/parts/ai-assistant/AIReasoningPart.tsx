@@ -23,7 +23,7 @@ import { useThemeColors } from '@/theme';
 import { AICollapsible } from './AICollapsible';
 
 // Import domain types (single source of truth)
-import type { ReasoningPart } from '@/domain/types/ai-assistant/parts';
+import type { ReasoningPart } from '@/types/ai-chat/parts';
 
 // Re-export for convenience
 export type { ReasoningPart };

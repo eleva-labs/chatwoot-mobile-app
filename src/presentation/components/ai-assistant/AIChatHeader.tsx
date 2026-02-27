@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Icon } from '@/components-next/common';
 import { CloseIcon } from '@/svg-icons';
-import type { AIChatBot } from '@/infrastructure/dto/ai-assistant';
+import type { AIChatBot } from '@/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 
 export interface AIChatHeaderProps {
@@ -47,15 +47,23 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
           </Text>
           {status && (
             <View style={style('flex-row items-center gap-1.5 ml-2')}>
-              <View style={style(
-                'w-2 h-2 rounded-full',
-                status === 'ready' && 'bg-teal-9',
-                status === 'submitted' && 'bg-amber-9',
-                status === 'streaming' && 'bg-amber-11',
-                status === 'error' && 'bg-ruby-9',
-              )} />
+              <View
+                style={style(
+                  'w-2 h-2 rounded-full',
+                  status === 'ready' && 'bg-teal-9',
+                  status === 'submitted' && 'bg-amber-9',
+                  status === 'streaming' && 'bg-amber-11',
+                  status === 'error' && 'bg-ruby-9',
+                )}
+              />
               <Text style={style('text-xs', headerTokens.subtitle)}>
-                {status === 'ready' ? 'Ready' : status === 'submitted' ? 'Thinking...' : status === 'streaming' ? 'Streaming' : 'Error'}
+                {status === 'ready'
+                  ? 'Ready'
+                  : status === 'submitted'
+                    ? 'Thinking...'
+                    : status === 'streaming'
+                      ? 'Streaming'
+                      : 'Error'}
               </Text>
             </View>
           )}

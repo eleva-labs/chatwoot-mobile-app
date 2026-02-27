@@ -1,5 +1,5 @@
 import type { UIMessage } from 'ai';
-import type { AIChatMessage } from '@/infrastructure/dto/ai-assistant';
+import type { AIChatMessage } from '@/store/ai-chat/aiChatTypes';
 
 /**
  * Convert backend AIChatMessage to Vercel AI SDK UIMessage format
@@ -20,9 +20,9 @@ export function convertBackendMessageToUIMessage(message: AIChatMessage): UIMess
 
 /**
  * Convert array of backend messages to UIMessage array
- * Messages are typically returned newest first, so we reverse them
+ * Messages from Redux are already in chronological order (oldest first)
+ * because aiChatSlice.ts reverses the API response on store.
  */
 export function convertBackendMessagesToUIMessages(messages: AIChatMessage[]): UIMessage[] {
-  // Reverse to get chronological order (oldest first)
-  return messages.map(convertBackendMessageToUIMessage).reverse();
+  return messages.map(convertBackendMessageToUIMessage);
 }

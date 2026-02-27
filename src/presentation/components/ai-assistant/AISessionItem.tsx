@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import type { AIChatSession } from '@/infrastructure/dto/ai-assistant';
+import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 import { formatDistanceToNow } from 'date-fns';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 

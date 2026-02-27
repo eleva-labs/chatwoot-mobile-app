@@ -16,7 +16,7 @@ import { AIChatError } from './AIChatError';
 import { AIChatEmptyState } from './AIChatEmptyState';
 import type { FlashListRef } from '@/presentation/hooks/ai-assistant/useAIChatScroll';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import { isTextPart, type MessagePart } from '@/domain/types/ai-assistant/parts';
+import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,7 +75,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
       const lastMsg = listData[listData.length - 1];
       if (lastMsg.role !== 'assistant') return false;
       return (lastMsg.parts ?? []).some(
-        p => isTextPart(p as MessagePart) && 'text' in p && (p.text as string)?.trim()
+        p => isTextPart(p as MessagePart) && 'text' in p && (p.text as string)?.trim(),
       );
     }, [listData]);
 
@@ -84,7 +84,8 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
       ({ item, index }: { item: UIMessage; index: number }) => {
         try {
           // Determine if this is the last assistant message and currently streaming
-          const isStreaming = isLoading && item.role === 'assistant' && index === listData.length - 1;
+          const isStreaming =
+            isLoading && item.role === 'assistant' && index === listData.length - 1;
           return (
             <MemoizedAIMessageBubble
               message={item}
@@ -104,7 +105,15 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
           );
         }
       },
-      [isLoading, listData.length, style, tokens.tool.errorText, userAvatarName, botAvatarName, botAvatarSrc],
+      [
+        isLoading,
+        listData.length,
+        style,
+        tokens.tool.errorText,
+        userAvatarName,
+        botAvatarName,
+        botAvatarSrc,
+      ],
     );
 
     // Memoize key extractor - must be stable for FlashList
@@ -176,14 +185,18 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
         {!isAtBottom && (
           <Pressable
             onPress={onScrollToBottom}
-            style={style('absolute bottom-2 right-2 w-8 h-8 rounded-full bg-slate-3 items-center justify-center border border-slate-6')}>
+            style={style(
+              'absolute bottom-2 right-2 w-8 h-8 rounded-full bg-slate-3 items-center justify-center border border-slate-6',
+            )}>
             <Text style={style('text-sm text-slate-11')}>↓</Text>
           </Pressable>
         )}
         {!isAtTop && listData.length > 5 && (
           <Pressable
             onPress={onScrollToTop}
-            style={style('absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-3 items-center justify-center border border-slate-6')}>
+            style={style(
+              'absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-3 items-center justify-center border border-slate-6',
+            )}>
             <Text style={style('text-sm text-slate-11')}>↑</Text>
           </Pressable>
         )}

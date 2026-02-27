@@ -20,10 +20,10 @@ import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assist
 import { AICollapsible } from './AICollapsible';
 
 // Import domain types and constants (single source of truth)
-import type { ToolPart, ToolCallPart, ToolResultPart } from '@/domain/types/ai-assistant/parts';
-import type { ToolState } from '@/domain/types/ai-assistant/constants';
-import { PART_TYPES } from '@/domain/types/ai-assistant/constants';
-import { deriveToolDisplayState } from '@/domain/types/ai-assistant/parts';
+import type { ToolPart, ToolCallPart, ToolResultPart } from '@/types/ai-chat/parts';
+import type { ToolState } from '@/types/ai-chat/constants';
+import { PART_TYPES } from '@/types/ai-chat/constants';
+import { deriveToolDisplayState } from '@/types/ai-chat/parts';
 
 // Re-export for convenience
 export type { ToolPart, ToolCallPart, ToolResultPart, ToolState };
@@ -59,7 +59,7 @@ interface StateDisplayConfig {
 
 /**
  * Tool state to display configuration mapping.
- * 
+ *
  * NOTE: The web Vue implementation uses neutral 'slate' accent for all tool states.
  * The mobile uses state-based colors (slate/teal/ruby) for better UX feedback.
  * This is an intentional divergence from web for improved mobile readability.
@@ -200,7 +200,11 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
         {/* Input section */}
         {hasInput && (
           <View style={hasOutput ? style('mb-3') : undefined}>
-            <Text style={style('text-xs font-inter-semibold-20 mb-2 uppercase', tokens.tool.sectionLabel)}>
+            <Text
+              style={style(
+                'text-xs font-inter-semibold-20 mb-2 uppercase',
+                tokens.tool.sectionLabel,
+              )}>
               Input
             </Text>
             <ScrollView
@@ -220,7 +224,11 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
         {/* Output section */}
         {hasOutput && (
           <View>
-            <Text style={style('text-xs font-inter-semibold-20 mb-2 uppercase', tokens.tool.sectionLabel)}>
+            <Text
+              style={style(
+                'text-xs font-inter-semibold-20 mb-2 uppercase',
+                tokens.tool.sectionLabel,
+              )}>
               Output
             </Text>
             <ScrollView

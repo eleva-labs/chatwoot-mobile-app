@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Platform } from 'react-native';
 import { AISessionList } from './AISessionList';
-import type { AIChatSession } from '@/infrastructure/dto/ai-assistant';
+import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 
 export interface AIChatSessionPanelProps {

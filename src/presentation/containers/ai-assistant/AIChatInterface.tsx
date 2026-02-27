@@ -32,12 +32,12 @@ import {
   selectIsLoadingSessions,
   selectActiveSessionId,
   setActiveSession,
-} from '@/infrastructure/state/ai-assistant';
+} from '@/store/ai-chat';
 import { selectUser } from '@/store/auth/authSelectors';
 import { AIChatHeader } from '@/presentation/components/ai-assistant/AIChatHeader';
 import { AIChatSessionPanel } from '@/presentation/components/ai-assistant/AIChatSessionPanel';
 import { AIChatMessagesList } from '@/presentation/components/ai-assistant/AIChatMessagesList';
-import { isTextPart, type MessagePart } from '@/domain/types/ai-assistant/parts';
+import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
 
 // ============================================================================
 // AIChatMessagesView — Inner component isolated from session management renders

@@ -1,6 +1,6 @@
 import type { UIMessage } from 'ai';
 // Use domain types instead of SDK types for better type safety
-import type { ToolPart } from '@/domain/types/ai-assistant/parts';
+import type { ToolPart } from '@/types/ai-chat/parts';
 
 /**
  * Type for AI message bubble props

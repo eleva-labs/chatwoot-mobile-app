@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import type { AIChatSession } from '@/infrastructure/dto/ai-assistant';
+import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 import { AISessionItem } from './AISessionItem';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 

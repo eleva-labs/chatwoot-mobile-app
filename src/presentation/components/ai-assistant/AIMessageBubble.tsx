@@ -24,7 +24,7 @@ import {
   getReasoningParts,
   getDeduplicatedToolParts,
   type MessagePart,
-} from '@/domain/types/ai-assistant/parts';
+} from '@/types/ai-chat/parts';
 
 export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
   message,
@@ -62,10 +62,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
 
   return (
     <View
-      style={style(
-        'items-end gap-2 px-4 py-2',
-        isUser ? 'flex-row-reverse' : 'flex-row',
-      )}
+      style={style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
       accessible
       accessibilityRole="text"
       accessibilityLabel={isUser ? 'Your message' : 'AI assistant message'}>
@@ -167,7 +164,10 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
             ) : (
               // Fallback: render content string directly if no parts
               <AIPartRenderer
-                part={{ type: 'text', text: String((message as unknown as Record<string, unknown>).content ?? '') }}
+                part={{
+                  type: 'text',
+                  text: String((message as unknown as Record<string, unknown>).content ?? ''),
+                }}
                 role="user"
                 isStreaming={false}
                 isLastPart

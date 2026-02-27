@@ -29,7 +29,7 @@ import {
   type TextPart,
   type ReasoningPart,
   type ToolPart,
-} from '@/domain/types/ai-assistant/parts';
+} from '@/types/ai-chat/parts';
 
 // ============================================================================
 // Types
@@ -114,6 +114,6 @@ export {
   isToolComplete,
   isToolFailed,
   getMessageTextContent,
-} from '@/domain/types/ai-assistant/parts';
+} from '@/types/ai-chat/parts';
 
 export default AIPartRenderer;

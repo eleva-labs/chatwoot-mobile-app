@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import type { UIMessage } from 'ai';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 // Use domain type guards instead of hardcoded strings
-import { isTextPart, type MessagePart } from '@/domain/types/ai-assistant/parts';
+import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
 
 interface AIThoughtsViewProps {
   message: UIMessage;
