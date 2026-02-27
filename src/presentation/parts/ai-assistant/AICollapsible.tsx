@@ -6,12 +6,12 @@
  *
  * Follows Vue's AiCollapsiblePart patterns:
  * - Toggle expand/collapse on header press
- * - Auto-expand during streaming
+ * - Stays collapsed by default (user expands manually)
  * - Color accent support for different part types
  * - Animated chevron rotation
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 
@@ -32,7 +32,7 @@ export interface AICollapsibleProps {
   subtitle?: string;
   /** Whether the collapsible starts expanded */
   defaultExpanded?: boolean;
-  /** Auto-expand when streaming is active */
+  /** Whether streaming is active (affects icon/label styling) */
   isStreaming?: boolean;
   /** Accent color for the header (matches Vue's n-{color} system) */
   accentColor?: CollapsibleAccentColor;
@@ -71,13 +71,8 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const colors = getCollapsible(accentColor);
 
-  // Auto-expand when streaming starts (like Vue's watch on isStreaming)
-  useEffect(() => {
-    if (isStreaming && !isExpanded) {
-      setIsExpanded(true);
-      onToggle?.(true);
-    }
-  }, [isStreaming, isExpanded, onToggle]);
+  // Note: Previously auto-expanded when streaming started. Removed so reasoning
+  // bubbles stay collapsed by default — users can expand manually if interested.
 
   // Toggle handler
   const handleToggle = useCallback(() => {

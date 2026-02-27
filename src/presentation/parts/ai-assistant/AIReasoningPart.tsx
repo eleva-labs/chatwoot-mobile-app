@@ -6,7 +6,7 @@
  * - Collapsible container with iris (violet) accent
  * - "Thinking..." label during streaming
  * - "View reasoning" label after streaming
- * - Auto-expands during streaming
+ * - Stays collapsed by default (user can expand manually)
  *
  * Uses Radix UI color scales matching Vue:
  * - iris-9: Icon color during streaming
@@ -123,11 +123,18 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
       isStreaming={isStreaming}
       defaultExpanded={defaultExpanded}
       icon={
-        <View
-          style={[
-            style('w-2.5 h-2.5 rounded-full', irisTokens.iconActive ? 'bg-iris-9' : 'bg-slate-9'),
-          ]}
-        />
+        isStreaming ? (
+          <ActivityIndicator
+            size="small"
+            color={tailwind.color('text-iris-9') ?? 'rgb(91, 91, 214)'}
+          />
+        ) : (
+          <View
+            style={[
+              style('w-2.5 h-2.5 rounded-full', irisTokens.iconActive ? 'bg-iris-9' : 'bg-slate-9'),
+            ]}
+          />
+        )
       }>
       <ScrollView
         style={style('max-h-64')}
@@ -135,7 +142,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         showsVerticalScrollIndicator={true}
         nestedScrollEnabled={true}>
         {reasoningText ? (
-          <View style={style('flex-row flex-wrap items-end')}>
+          <View style={{ width: '100%' }}>
             {/* Markdown content for reasoning text */}
             <Markdown
               mergeStyle
@@ -145,7 +152,9 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
             </Markdown>
             {/* Streaming cursor matching Vue's accent cursor */}
             {isStreaming && (
-              <View style={style('w-1.5 h-3 ml-0.5 rounded-sm', irisTokens.cursor)} />
+              <View style={style('flex-row items-end')}>
+                <View style={style('w-1.5 h-3 ml-0.5 rounded-sm', irisTokens.cursor)} />
+              </View>
             )}
           </View>
         ) : (
