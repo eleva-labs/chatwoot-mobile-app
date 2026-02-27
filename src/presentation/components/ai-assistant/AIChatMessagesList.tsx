@@ -7,7 +7,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { View, Text, Platform, Pressable } from 'react-native';
+import { View, Text, Platform, Pressable, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import Animated, {
   useSharedValue,
@@ -67,6 +67,16 @@ const AnimatedFlashListAny: any = AnimatedFlashList;
 
 // Memoize message bubble component to prevent unnecessary re-renders
 const MemoizedAIMessageBubble = React.memo(AIMessageBubble);
+
+/** Separator between message bubbles for consistent vertical spacing */
+const ItemSeparator = React.memo(() => <View style={separatorStyles.separator} />);
+ItemSeparator.displayName = 'ItemSeparator';
+
+const separatorStyles = StyleSheet.create({
+  separator: {
+    height: 4,
+  },
+});
 
 export interface AIChatMessagesListProps {
   listData: UIMessage[];
@@ -170,7 +180,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
       return `msg-${item.role}-${index}-${createdAtMs}`;
     }, []);
 
-    const estimatedItemSize = useMemo(() => 100, []);
+    const estimatedItemSize = useMemo(() => 300, []);
 
     // Memoize extraData for FlashList
     const extraData = useMemo(() => {
@@ -198,6 +208,8 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             estimatedItemSize={estimatedItemSize}
+            ItemSeparatorComponent={ItemSeparator}
+            drawDistance={500}
             onScroll={onScroll}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}

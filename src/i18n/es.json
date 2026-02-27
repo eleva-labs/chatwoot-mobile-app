@@ -507,7 +507,7 @@
         "LOADING": "Cargando conversación...",
         "EMPTY_WITH_SESSION": "No hay mensajes en esta conversación",
         "EMPTY_NO_SESSION": "Inicia una conversación con el asistente de IA",
-        "ERROR_RENDERING": "Error al renderizar mensaje: {id}"
+        "ERROR_RENDERING": "Error al renderizar mensaje: %{id}"
       },
       "SESSIONS": {
         "LOADING": "Cargando sesiones...",
@@ -520,7 +520,7 @@
       },
       "TOOLS": {
         "SINGLE": "Usando herramienta...",
-        "MULTIPLE": "Usando {count} herramientas...",
+        "MULTIPLE": "Usando %{count} herramientas...",
         "INDICATOR": "Indicador de llamada de herramienta de IA",
         "PENDING": "Pendiente",
         "RUNNING": "Ejecutando",
@@ -568,8 +568,8 @@
       },
       "SESSIONS_PANEL": {
         "TITLE": "Conversaciones",
-        "COUNT_ONE": "{count} sesión",
-        "COUNT_OTHER": "{count} sesiones"
+        "COUNT_ONE": "%{count} sesión",
+        "COUNT_OTHER": "%{count} sesiones"
       },
       "SESSION_ITEM": {
         "TODAY": "Hoy",
@@ -577,8 +577,8 @@
       },
       "COLLAPSIBLE": {
         "COLLAPSE": "Colapsar",
-        "EXPANDED": "{title}, expandido",
-        "COLLAPSED": "{title}, colapsado"
+        "EXPANDED": "%{title}, expandido",
+        "COLLAPSED": "%{title}, colapsado"
       },
       "ACCESSIBILITY": {
         "USER_MESSAGE": "Tu mensaje",
@@ -593,7 +593,7 @@
         "OPEN": "Abrir Asistente de IA",
         "OPEN_HINT": "Abre la interfaz de chat del asistente de IA",
         "STOP_GENERATING": "Detener generación",
-        "SESSIONS_COUNT": "{count} sesiones",
+        "SESSIONS_COUNT": "%{count} sesiones",
         "COPY_MESSAGE": "Copiar mensaje",
         "LOADING_MESSAGES": "Cargando mensajes",
         "CLOSE_BACKDROP": "Cerrar Asistente de IA"

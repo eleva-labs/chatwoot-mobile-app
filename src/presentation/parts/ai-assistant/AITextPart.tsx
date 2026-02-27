@@ -207,8 +207,8 @@ export const AITextPart: React.FC<AITextPartProps> = ({
 
   // Render markdown for assistant messages
   return (
-    <View style={style('flex-row items-end')}>
-      <View style={style('flex-1')}>
+    <View>
+      <View>
         <Markdown
           mergeStyle
           markdownit={MarkdownIt({
@@ -221,13 +221,15 @@ export const AITextPart: React.FC<AITextPartProps> = ({
         </Markdown>
       </View>
       {isStreaming && (
-        <Animated.View
-          style={[
-            style('w-2 h-4 ml-0.5 rounded-sm'),
-            { backgroundColor: cursorColor },
-            cursorStyle,
-          ]}
-        />
+        <View style={style('flex-row justify-start')}>
+          <Animated.View
+            style={[
+              style('w-2 h-4 ml-0.5 rounded-sm'),
+              { backgroundColor: cursorColor },
+              cursorStyle,
+            ]}
+          />
+        </View>
       )}
     </View>
   );

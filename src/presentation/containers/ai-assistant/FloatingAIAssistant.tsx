@@ -76,17 +76,9 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
 
     if (isExpanded) {
       return (
-        <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-          {/* Backdrop tap to dismiss */}
-          <Pressable
-            onPress={handleClose}
-            style={styles.backdrop}
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_BACKDROP')}
-          />
-          <Animated.View
-            style={[styles.chatContainer, chatInterfaceStyle, style(tokens.session.background)]}>
+        <View
+          style={[styles.container, style(tokens.session.background), { paddingTop: insets.top }]}>
+          <Animated.View style={[styles.chatContainer, chatInterfaceStyle]}>
             <AIChatInterface agentBotId={agentBotId} onClose={handleClose} />
           </Animated.View>
         </View>
@@ -134,16 +126,9 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1000,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  backdrop: {
-    height: '10%',
   },
   chatContainer: {
-    width: '100%',
-    height: '90%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    flex: 1,
     overflow: 'hidden',
   },
   fabContainer: {

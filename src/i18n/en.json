@@ -530,7 +530,7 @@
         "LOADING": "Loading conversation...",
         "EMPTY_WITH_SESSION": "No messages in this conversation",
         "EMPTY_NO_SESSION": "Start a conversation with the AI assistant",
-        "ERROR_RENDERING": "Error rendering message: {id}"
+        "ERROR_RENDERING": "Error rendering message: %{id}"
       },
       "SESSIONS": {
         "LOADING": "Loading sessions...",
@@ -543,7 +543,7 @@
       },
       "TOOLS": {
         "SINGLE": "Using tool...",
-        "MULTIPLE": "Using {count} tools...",
+        "MULTIPLE": "Using %{count} tools...",
         "INDICATOR": "AI tool call indicator",
         "PENDING": "Pending",
         "RUNNING": "Running",
@@ -591,8 +591,8 @@
       },
       "SESSIONS_PANEL": {
         "TITLE": "Conversations",
-        "COUNT_ONE": "{count} session",
-        "COUNT_OTHER": "{count} sessions"
+        "COUNT_ONE": "%{count} session",
+        "COUNT_OTHER": "%{count} sessions"
       },
       "SESSION_ITEM": {
         "TODAY": "Today",
@@ -600,8 +600,8 @@
       },
       "COLLAPSIBLE": {
         "COLLAPSE": "Collapse",
-        "EXPANDED": "{title}, expanded",
-        "COLLAPSED": "{title}, collapsed"
+        "EXPANDED": "%{title}, expanded",
+        "COLLAPSED": "%{title}, collapsed"
       },
       "ACCESSIBILITY": {
         "USER_MESSAGE": "Your message",
@@ -616,7 +616,7 @@
         "OPEN": "Open AI Assistant",
         "OPEN_HINT": "Opens the AI assistant chat interface",
         "STOP_GENERATING": "Stop generating",
-        "SESSIONS_COUNT": "{count} sessions",
+        "SESSIONS_COUNT": "%{count} sessions",
         "COPY_MESSAGE": "Copy message",
         "LOADING_MESSAGES": "Loading messages",
         "CLOSE_BACKDROP": "Close AI Assistant"

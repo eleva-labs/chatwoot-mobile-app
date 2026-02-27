@@ -68,7 +68,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
 
   return (
     <View
-      style={style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
+      style={style('items-end gap-2 px-4 py-1.5', isUser ? 'flex-row-reverse' : 'flex-row')}
       accessible
       accessibilityRole="text"
       accessibilityLabel={
@@ -128,7 +128,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
           ) : hasTextContent ? (
             <View
               style={style(
-                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%]',
+                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%] overflow-hidden',
                 messageTokens.background,
               )}>
               {textParts.map((part, idx) => (

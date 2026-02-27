@@ -190,6 +190,15 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
 
     const { style, tokens } = useAIStyles();
 
+    // Session panel callbacks (stable refs for memo'd children)
+    const handleToggleSessions = useCallback(() => {
+      setShowSessions(prev => !prev);
+    }, [setShowSessions]);
+
+    const handleCloseSessions = useCallback(() => {
+      setShowSessions(false);
+    }, [setShowSessions]);
+
     // Handle send message
     const handleSend = useCallback(
       async (text: string) => {
@@ -218,18 +227,9 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
             sessionsCount={sessions.length}
             activeSessionId={activeSessionId}
             status={status}
-            onToggleSessions={() => setShowSessions(!showSessions)}
+            onToggleSessions={handleToggleSessions}
             onNewConversation={handleNewConversation}
             onClose={onClose}
-          />
-
-          <AIChatSessionPanel
-            sessions={sessions}
-            activeSessionId={activeSessionId}
-            onSelectSession={handleSelectSession}
-            isLoading={isLoadingSessions}
-            isVisible={showSessions}
-            onClose={() => setShowSessions(false)}
           />
 
           <AIChatMessagesView
@@ -252,6 +252,16 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
             onSend={handleSend}
             isLoading={isLoading || isLoadingMessages}
             onCancel={isLoading ? cancel : undefined}
+          />
+
+          {/* Session panel LAST so BottomSheet overlays on top */}
+          <AIChatSessionPanel
+            sessions={sessions}
+            activeSessionId={activeSessionId}
+            onSelectSession={handleSelectSession}
+            isLoading={isLoadingSessions}
+            isVisible={showSessions}
+            onClose={handleCloseSessions}
           />
         </View>
       </KeyboardAvoidingView>

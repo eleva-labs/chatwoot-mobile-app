@@ -69,12 +69,20 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
           {sessionsCount > 0 && (
             <Pressable
               onPress={onToggleSessions}
-              style={({ pressed }) => style('ml-3 p-2 rounded-full', pressed && 'bg-slate-3')}
+              style={({ pressed }) =>
+                style(
+                  'ml-3 p-2 rounded-full flex-row items-center gap-1.5',
+                  pressed && 'bg-slate-3',
+                )
+              }
               accessible
               accessibilityRole="button"
               accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SESSIONS_COUNT', {
                 count: sessionsCount,
               })}>
+              <Text style={style('text-sm font-inter-420-20', headerTokens.link)}>
+                {i18n.t('AI_ASSISTANT.CHAT.HEADER.SESSIONS')}
+              </Text>
               <View style={style('bg-slate-5 rounded-full px-1.5 min-w-[20px] items-center')}>
                 <Text style={style('text-xs font-inter-580-24', headerTokens.subtitle)}>
                   {sessionsCount}
