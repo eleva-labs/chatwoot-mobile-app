@@ -53,9 +53,7 @@ function mapParts(parts?: AIChatMessagePart[], fallbackContent?: string): UIMess
     return [];
   }
 
-  const mapped = parts
-    .map(mapPart)
-    .filter((p): p is NonNullable<typeof p> => p !== null);
+  const mapped = parts.map(mapPart).filter((p): p is NonNullable<typeof p> => p !== null);
 
   // If all parts were filtered out but we have content, use that
   if (mapped.length === 0 && fallbackContent) {

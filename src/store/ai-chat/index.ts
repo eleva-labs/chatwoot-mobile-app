@@ -14,9 +14,20 @@ export { aiChatActions } from './aiChatActions';
 // Selectors
 export * from './aiChatSelectors';
 
-// Types and schemas
+// Types (re-exports schema types) and schemas (parse functions + schema objects)
 export * from './aiChatTypes';
-export * from './aiChatSchemas';
+export {
+  AIChatBotApiSchema,
+  AIChatBotsResponseSchema,
+  AIChatSessionApiSchema,
+  AIChatSessionsResponseSchema,
+  AIChatMessagePartApiSchema,
+  AIChatMessageApiSchema,
+  AIChatMessagesResponseSchema,
+  parseBotsResponse,
+  parseSessionsResponse,
+  parseMessagesResponse,
+} from './aiChatSchemas';
 
 // Service class
 export { AIChatService } from './aiChatService';

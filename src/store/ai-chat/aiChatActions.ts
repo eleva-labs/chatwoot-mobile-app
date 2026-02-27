@@ -27,8 +27,7 @@ const createAIChatThunk = <TResponse, TPayload = void>(
       } catch (error) {
         if (error instanceof AxiosError && error.response) {
           return rejectWithValue({
-            message:
-              error.response.data?.message || error.response.data?.error || error.message,
+            message: error.response.data?.message || error.response.data?.error || error.message,
             errors: error.response.data?.errors,
           });
         }
@@ -54,24 +53,26 @@ export const aiChatActions = {
     return { messages: response.messages, sessionId: payload.sessionId };
   }),
 
-  createSession: createAIChatThunk<
-    { session: AIChatSession; key: string },
-    { agentBotId: number }
-  >('aiChat/createSession', async payload => {
-    // Session creation happens implicitly during first stream.
-    // This thunk is kept for explicit creation if needed.
-    const response = await AIChatService.fetchSessions({ agentBotId: payload.agentBotId, limit: 1 });
-    const session = response.sessions[0];
-    return { session, key: `agentBot_${payload.agentBotId}` };
-  }),
+  createSession: createAIChatThunk<{ session: AIChatSession; key: string }, { agentBotId: number }>(
+    'aiChat/createSession',
+    async payload => {
+      // Session creation happens implicitly during first stream.
+      // This thunk is kept for explicit creation if needed.
+      const response = await AIChatService.fetchSessions({
+        agentBotId: payload.agentBotId,
+        limit: 1,
+      });
+      const session = response.sessions[0];
+      return { session, key: `agentBot_${payload.agentBotId}` };
+    },
+  ),
 
   deleteSession: createAIChatThunk<
     { sessionId: string; key: string },
     { sessionId: string; agentBotId?: number }
   >('aiChat/deleteSession', async payload => {
     await AIChatService.deleteSession(payload.sessionId);
-    const key =
-      payload.agentBotId !== undefined ? `agentBot_${payload.agentBotId}` : 'default';
+    const key = payload.agentBotId !== undefined ? `agentBot_${payload.agentBotId}` : 'default';
     return { sessionId: payload.sessionId, key };
   }),
 };

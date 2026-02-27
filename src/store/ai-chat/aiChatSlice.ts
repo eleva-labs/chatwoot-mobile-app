@@ -58,7 +58,8 @@ const aiChatSlice = createSlice({
       })
       .addCase(aiChatActions.fetchSessions.rejected, (state, action) => {
         state.isLoadingSessions = false;
-        state.sessionsError = action.payload?.message || action.error?.message || 'Failed to fetch sessions';
+        state.sessionsError =
+          action.payload?.message || action.error?.message || 'Failed to fetch sessions';
       });
 
     // Fetch Messages
@@ -76,7 +77,8 @@ const aiChatSlice = createSlice({
       })
       .addCase(aiChatActions.fetchMessages.rejected, (state, action) => {
         state.isLoadingMessages = false;
-        state.messagesError = action.payload?.message || action.error?.message || 'Failed to fetch messages';
+        state.messagesError =
+          action.payload?.message || action.error?.message || 'Failed to fetch messages';
       });
 
     // Create Session
@@ -98,7 +100,8 @@ const aiChatSlice = createSlice({
       })
       .addCase(aiChatActions.createSession.rejected, (state, action) => {
         state.isLoadingSessions = false;
-        state.sessionsError = action.payload?.message || action.error?.message || 'Failed to create session';
+        state.sessionsError =
+          action.payload?.message || action.error?.message || 'Failed to create session';
       });
 
     // Delete Session
@@ -112,9 +115,7 @@ const aiChatSlice = createSlice({
         const { sessionId, key } = action.payload;
         // Remove the session from the list
         if (state.sessions[key]) {
-          state.sessions[key] = state.sessions[key].filter(
-            s => s.chat_session_id !== sessionId,
-          );
+          state.sessions[key] = state.sessions[key].filter(s => s.chat_session_id !== sessionId);
         }
         // Clear messages for this session
         delete state.messages[sessionId];
@@ -126,7 +127,8 @@ const aiChatSlice = createSlice({
       })
       .addCase(aiChatActions.deleteSession.rejected, (state, action) => {
         state.isLoadingSessions = false;
-        state.sessionsError = action.payload?.message || action.error?.message || 'Failed to delete session';
+        state.sessionsError =
+          action.payload?.message || action.error?.message || 'Failed to delete session';
       });
   },
 });

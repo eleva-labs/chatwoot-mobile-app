@@ -143,12 +143,7 @@ function extractTextContent(message: UIMessage): string {
  * ```
  */
 export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
-  const {
-    agentBotId,
-    chatSessionId: initialSessionId,
-    onError,
-    onFinish,
-  } = options || {};
+  const { agentBotId, chatSessionId: initialSessionId } = options || {};
 
   // ============================================================================
   // State & Refs
@@ -286,6 +281,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
         return { body, headers };
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agentBotId]); // ONLY agentBotId — no config, no aiBackendUrl
 
   // ============================================================================
