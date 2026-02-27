@@ -11,7 +11,7 @@
  */
 
 // Export tokens
-export { AI_ASSISTANT_TOKENS, SHARED_TOKENS, DI_TOKENS } from './tokens';
+export { SHARED_TOKENS } from './tokens';
 
 // Export bootstrap functions
 export {

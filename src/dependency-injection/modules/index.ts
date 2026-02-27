@@ -6,4 +6,3 @@
  */
 
 export { registerSharedModule } from './shared.module';
-export { registerAIAssistantModule } from './ai-assistant.module';

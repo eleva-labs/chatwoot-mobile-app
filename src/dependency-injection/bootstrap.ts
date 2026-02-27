@@ -11,8 +11,8 @@
  */
 
 import { container } from 'tsyringe';
-import { registerSharedModule, registerAIAssistantModule } from './modules';
-import { AI_ASSISTANT_TOKENS, SHARED_TOKENS } from './tokens';
+import { registerSharedModule } from './modules';
+import { SHARED_TOKENS } from './tokens';
 
 // ============================================================================
 // State
@@ -75,9 +75,6 @@ export function bootstrapDI(options: BootstrapOptions = {}): void {
     // Shared module first (other modules may depend on shared services)
     registerSharedModule(container);
 
-    // Feature modules
-    registerAIAssistantModule(container);
-
     // Mark as initialized
     isInitialized = true;
     initializationTimestamp = Date.now();
@@ -126,7 +123,7 @@ export interface ValidationResult {
  */
 export function validateContainerSetup(): ValidationResult {
   const errors: string[] = [];
-  const allTokens = [...Object.values(AI_ASSISTANT_TOKENS), ...Object.values(SHARED_TOKENS)];
+  const allTokens = [...Object.values(SHARED_TOKENS)];
 
   for (const token of allTokens) {
     try {
