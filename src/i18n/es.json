@@ -521,7 +521,64 @@
       "TOOLS": {
         "SINGLE": "Usando herramienta...",
         "MULTIPLE": "Usando {count} herramientas...",
-        "INDICATOR": "Indicador de llamada de herramienta de IA"
+        "INDICATOR": "Indicador de llamada de herramienta de IA",
+        "PENDING": "Pendiente",
+        "RUNNING": "Ejecutando",
+        "COMPLETED": "Completado",
+        "ERROR": "Error",
+        "UNKNOWN_TOOL": "Herramienta desconocida",
+        "INPUT": "Entrada",
+        "OUTPUT": "Salida",
+        "NO_DATA": "No hay datos disponibles",
+        "EXECUTION_FAILED": "La ejecución de la herramienta falló"
+      },
+      "EMPTY_STATE": {
+        "TITLE_WITH_SESSION": "No hay mensajes aún",
+        "TITLE_NO_SESSION": "Inicia una conversación",
+        "DESCRIPTION_WITH_SESSION": "Esta conversación está vacía",
+        "DESCRIPTION_NO_SESSION": "Haz una pregunta o describe en qué necesitas ayuda"
+      },
+      "SUGGESTED_PROMPTS": {
+        "SUMMARIZE": "Resume mis conversaciones recientes",
+        "DRAFT": "Ayúdame a redactar una respuesta",
+        "CAPABILITIES": "¿En qué puedes ayudarme?"
+      },
+      "STATUS": {
+        "THINKING": "Pensando...",
+        "ISSUE": "Problema"
+      },
+      "ERRORS": {
+        "NETWORK": "Error de red",
+        "RATE_LIMIT": "Límite de solicitudes",
+        "AUTH": "Error de autenticación",
+        "SERVER": "Error del servidor",
+        "UNKNOWN": "Algo salió mal",
+        "RETRY": "Reintentar",
+        "FRESH_START": "Nuevo inicio",
+        "DISMISS": "Descartar"
+      },
+      "REASONING": {
+        "THINKING": "Pensando...",
+        "VIEW_REASONING": "Ver razonamiento",
+        "PROCESSING": "Procesando..."
+      },
+      "COPY": {
+        "COPY": "Copiar",
+        "COPIED": "¡Copiado!"
+      },
+      "SESSIONS_PANEL": {
+        "TITLE": "Conversaciones",
+        "COUNT_ONE": "{count} sesión",
+        "COUNT_OTHER": "{count} sesiones"
+      },
+      "SESSION_ITEM": {
+        "TODAY": "Hoy",
+        "YESTERDAY": "Ayer"
+      },
+      "COLLAPSIBLE": {
+        "COLLAPSE": "Colapsar",
+        "EXPANDED": "{title}, expandido",
+        "COLLAPSED": "{title}, colapsado"
       },
       "ACCESSIBILITY": {
         "USER_MESSAGE": "Tu mensaje",
@@ -534,7 +591,12 @@
         "CLOSE": "Cerrar Asistente de IA",
         "CLOSE_HINT": "Cierra la interfaz de chat del asistente de IA",
         "OPEN": "Abrir Asistente de IA",
-        "OPEN_HINT": "Abre la interfaz de chat del asistente de IA"
+        "OPEN_HINT": "Abre la interfaz de chat del asistente de IA",
+        "STOP_GENERATING": "Detener generación",
+        "SESSIONS_COUNT": "{count} sesiones",
+        "COPY_MESSAGE": "Copiar mensaje",
+        "LOADING_MESSAGES": "Cargando mensajes",
+        "CLOSE_BACKDROP": "Cerrar Asistente de IA"
       }
     },
     "STATUS": {

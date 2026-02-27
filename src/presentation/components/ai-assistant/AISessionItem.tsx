@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
-import { formatDistanceToNow } from 'date-fns';
+import { isToday, isYesterday, format, formatDistanceToNow, differenceInDays } from 'date-fns';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import i18n from '@/i18n';
 
 interface SessionItemProps {
   session: AIChatSession;
@@ -12,19 +13,37 @@ interface SessionItemProps {
   onPress: () => void;
 }
 
+/**
+ * Formats a date string into a human-friendly session title.
+ * - Today: "Today, 2:30 PM"
+ * - Yesterday: "Yesterday, 4:15 PM"
+ * - Within 7 days: "3 days ago"
+ * - Older: "Feb 25, 2:15 PM"
+ */
+const formatSessionTitle = (dateString: string): string => {
+  try {
+    const date = new Date(dateString);
+    if (isToday(date)) {
+      return `${i18n.t('AI_ASSISTANT.CHAT.SESSION_ITEM.TODAY')}, ${format(date, 'h:mm a')}`;
+    }
+    if (isYesterday(date)) {
+      return `${i18n.t('AI_ASSISTANT.CHAT.SESSION_ITEM.YESTERDAY')}, ${format(date, 'h:mm a')}`;
+    }
+    if (differenceInDays(new Date(), date) < 7) {
+      return formatDistanceToNow(date, { addSuffix: true });
+    }
+    return format(date, 'MMM d, h:mm a');
+  } catch {
+    return i18n.t('AI_ASSISTANT.CHAT.SESSIONS.RECENTLY');
+  }
+};
+
 export const AISessionItem: React.FC<SessionItemProps> = React.memo(
   ({ session, isActive, isLastItem, onPress }) => {
     const { style, tokens } = useAIStyles();
     const sessionTokens = tokens.session;
 
-    const formatDate = useCallback((dateString: string) => {
-      try {
-        const date = new Date(dateString);
-        return formatDistanceToNow(date, { addSuffix: true });
-      } catch {
-        return 'Recently';
-      }
-    }, []);
+    const title = useMemo(() => formatSessionTitle(session.updated_at), [session.updated_at]);
 
     return (
       <Pressable onPress={onPress}>
@@ -45,10 +64,7 @@ export const AISessionItem: React.FC<SessionItemProps> = React.memo(
                   isActive ? sessionTokens.activeText : sessionTokens.title,
                   isActive && 'font-inter-580-24',
                 )}>
-                {formatDate(session.updated_at)}
-              </Text>
-              <Text style={style('text-sm mt-1', sessionTokens.subtitle)}>
-                {session.chat_session_id.slice(0, 8)}
+                {title}
               </Text>
             </View>
             {isActive && (

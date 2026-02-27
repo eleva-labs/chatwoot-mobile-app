@@ -11,7 +11,7 @@
  * - AIChatInterface (container) — owns useAIChat, useAIChatSessions, Redux state
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -28,11 +28,7 @@ import {
 import { validateAndNormalizeMessages } from '@/presentation/utils/ai-assistant';
 import { AIInputField } from '@/presentation/components/ai-assistant/AIInputField';
 import type { AIChatInterfaceProps } from './types';
-import {
-  selectIsLoadingSessions,
-  selectActiveSessionId,
-  setActiveSession,
-} from '@/store/ai-chat';
+import { selectIsLoadingSessions, selectActiveSessionId, setActiveSession } from '@/store/ai-chat';
 import { selectUser } from '@/store/auth/authSelectors';
 import { AIChatHeader } from '@/presentation/components/ai-assistant/AIChatHeader';
 import { AIChatSessionPanel } from '@/presentation/components/ai-assistant/AIChatSessionPanel';
@@ -56,6 +52,8 @@ const AIChatMessagesView = React.memo<{
   userName: string | undefined;
   sendMessage: (text: string) => Promise<void>;
   setMessages: (messages: UIMessage[] | ((messages: UIMessage[]) => UIMessage[])) => void;
+  onSendPrompt?: (text: string) => void;
+  onDismiss?: () => void;
 }>(
   ({
     listData,
@@ -69,16 +67,12 @@ const AIChatMessagesView = React.memo<{
     userName,
     sendMessage,
     setMessages,
+    onSendPrompt,
+    onDismiss,
   }) => {
     // Scroll management lives here — only re-renders when messages/status change
-    const {
-      listRef,
-      handleScroll,
-      scrollToBottom,
-      scrollToTop,
-      isAtBottom,
-      isAtTop,
-    } = useAIChatScroll(activeSessionId, isLoadingMessages, messagesLength, listData.length);
+    const { listRef, handleScroll, scrollToBottom, scrollToTop, isAtBottom, isAtTop } =
+      useAIChatScroll(activeSessionId, isLoadingMessages, messagesLength, listData.length);
 
     // Error/retry handlers
     const handleRetry = useCallback(async () => {
@@ -113,7 +107,9 @@ const AIChatMessagesView = React.memo<{
         onScrollToBottom={scrollToBottom}
         onScrollToTop={scrollToTop}
         onRetry={handleRetry}
+        onDismiss={onDismiss}
         onFreshStart={handleFreshStart}
+        onSendPrompt={onSendPrompt}
       />
     );
   },
@@ -159,6 +155,15 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       chatSessionId: activeSessionId || undefined,
       onSessionIdExtracted,
     });
+
+    // Error dismissal — track the dismissed error message so it stays hidden until a new error occurs
+    const [dismissedError, setDismissedError] = useState<string | null>(null);
+    const visibleError = error && error.message !== dismissedError ? error : null;
+    const handleDismiss = useCallback(() => {
+      if (error) {
+        setDismissedError(error.message);
+      }
+    }, [error]);
 
     // Sessions management — pass chatStatus to guard bridge effect during streaming
     const {
@@ -224,6 +229,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
             onSelectSession={handleSelectSession}
             isLoading={isLoadingSessions}
             isVisible={showSessions}
+            onClose={() => setShowSessions(false)}
           />
 
           <AIChatMessagesView
@@ -232,12 +238,14 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
             status={status}
             isLoadingMessages={isLoadingMessages}
             activeSessionId={activeSessionId}
-            error={error ?? null}
+            error={visibleError ?? null}
             messagesLength={messages.length}
             selectedBot={selectedBot ?? undefined}
             userName={user?.name}
             sendMessage={sendMessage}
             setMessages={setMessages}
+            onSendPrompt={handleSend}
+            onDismiss={handleDismiss}
           />
 
           <AIInputField

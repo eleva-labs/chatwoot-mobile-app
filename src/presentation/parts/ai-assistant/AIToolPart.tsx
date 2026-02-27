@@ -16,8 +16,12 @@
 import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
+import { Icon } from '@/components-next/common';
+import { CheckIcon, CloseIcon, LoadingIcon } from '@/svg-icons';
+import { tailwind } from '@/theme/tailwind';
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
 import { AICollapsible } from './AICollapsible';
+import i18n from '@/i18n';
 
 // Import domain types and constants (single source of truth)
 import type { ToolPart, ToolCallPart, ToolResultPart } from '@/types/ai-chat/parts';
@@ -48,8 +52,8 @@ export interface AIToolPartProps {
 type DisplayState = 'pending' | 'running' | 'completed' | 'error';
 
 interface StateDisplayConfig {
-  icon: string;
-  label: string;
+  iconElement: React.ReactNode;
+  labelKey: string;
   accentColor: AIAccentColor;
 }
 
@@ -64,27 +68,39 @@ interface StateDisplayConfig {
  * The mobile uses state-based colors (slate/teal/ruby) for better UX feedback.
  * This is an intentional divergence from web for improved mobile readability.
  */
-// TODO: Replace emoji icons with Lucide icons (wrench, clock, check-circle, x-circle)
-// when icon library is migrated
 const STATE_CONFIG: Record<DisplayState, StateDisplayConfig> = {
   pending: {
-    icon: '⏳',
-    label: 'Pending',
+    iconElement: (
+      <Icon
+        icon={<LoadingIcon stroke={tailwind.color('text-slate-10') ?? '#80838D'} />}
+        size={14}
+      />
+    ),
+    labelKey: 'AI_ASSISTANT.CHAT.TOOLS.PENDING',
     accentColor: 'slate', // Neutral state
   },
   running: {
-    icon: '⚙️',
-    label: 'Running',
+    iconElement: (
+      <Icon
+        icon={<LoadingIcon stroke={tailwind.color('text-slate-10') ?? '#80838D'} />}
+        size={14}
+      />
+    ),
+    labelKey: 'AI_ASSISTANT.CHAT.TOOLS.RUNNING',
     accentColor: 'slate', // Neutral state with streaming
   },
   completed: {
-    icon: '✅',
-    label: 'Completed',
+    iconElement: (
+      <Icon icon={<CheckIcon stroke={tailwind.color('text-teal-9') ?? '#12A594'} />} size={14} />
+    ),
+    labelKey: 'AI_ASSISTANT.CHAT.TOOLS.COMPLETED',
     accentColor: 'teal', // Success state (matches Vue's teal)
   },
   error: {
-    icon: '❌',
-    label: 'Error',
+    iconElement: (
+      <Icon icon={<CloseIcon stroke={tailwind.color('text-ruby-9') ?? '#E5484D'} />} size={14} />
+    ),
+    labelKey: 'AI_ASSISTANT.CHAT.TOOLS.ERROR',
     accentColor: 'ruby', // Error state (matches Vue's ruby)
   },
 };
@@ -98,7 +114,7 @@ const STATE_CONFIG: Record<DisplayState, StateDisplayConfig> = {
  * Converts snake_case or camelCase to Title Case
  */
 function formatToolName(name: string): string {
-  if (!name) return 'Unknown Tool';
+  if (!name) return i18n.t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL');
 
   return name
     .replace(/_/g, ' ')
@@ -182,12 +198,15 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
 
   // Also check for toolName from output
   const toolName = useMemo(() => {
-    const name = part.toolName || ((part as any).output?.tool_name as string) || 'Unknown Tool';
+    const name =
+      part.toolName ||
+      ((part as any).output?.tool_name as string) ||
+      i18n.t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL');
     return formatToolName(name);
   }, [part.toolName, part]);
 
   // Build title with state
-  const title = `${toolName} • ${config.label}`;
+  const title = `${toolName} • ${i18n.t(config.labelKey)}`;
 
   return (
     <AICollapsible
@@ -195,7 +214,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
       accentColor={config.accentColor}
       isStreaming={isStreaming && state === 'running'}
       defaultExpanded={defaultExpanded}
-      icon={<Text>{config.icon}</Text>}>
+      icon={config.iconElement}>
       <View>
         {/* Input section */}
         {hasInput && (
@@ -205,7 +224,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
                 'text-xs font-inter-semibold-20 mb-2 uppercase',
                 tokens.tool.sectionLabel,
               )}>
-              Input
+              {i18n.t('AI_ASSISTANT.CHAT.TOOLS.INPUT')}
             </Text>
             <ScrollView
               style={style('max-h-48')}
@@ -229,7 +248,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
                 'text-xs font-inter-semibold-20 mb-2 uppercase',
                 tokens.tool.sectionLabel,
               )}>
-              Output
+              {i18n.t('AI_ASSISTANT.CHAT.TOOLS.OUTPUT')}
             </Text>
             <ScrollView
               style={style('max-h-48')}
@@ -247,14 +266,16 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
 
         {/* Fallback: show something if neither input nor output */}
         {!hasInput && !hasOutput && (
-          <Text style={style('text-xs italic', tokens.text.muted)}>No data available</Text>
+          <Text style={style('text-xs italic', tokens.text.muted)}>
+            {i18n.t('AI_ASSISTANT.CHAT.TOOLS.NO_DATA')}
+          </Text>
         )}
 
         {/* Error message for error state */}
         {state === 'error' && part.type === PART_TYPES.TOOL_RESULT && (
           <View style={style('mt-2 p-2 rounded-md', tokens.tool.errorBackground)}>
             <Text style={style('text-xs font-inter-medium-24', tokens.tool.errorText)}>
-              Tool execution failed
+              {i18n.t('AI_ASSISTANT.CHAT.TOOLS.EXECUTION_FAILED')}
             </Text>
           </View>
         )}

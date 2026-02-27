@@ -5,7 +5,11 @@
  */
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { Icon } from '@/components-next/common';
+import { WarningIcon, LockIcon } from '@/svg-icons';
+import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import i18n from '@/i18n';
 
 type ErrorCategory = 'network' | 'rate_limit' | 'auth' | 'server' | 'unknown';
 
@@ -25,45 +29,62 @@ function categorizeError(message: string): ErrorCategory {
   return 'unknown';
 }
 
-const ERROR_CONFIG: Record<
-  ErrorCategory,
-  { title: string; icon: string; accentBg: string; accentBorder: string; accentText: string }
-> = {
+interface ErrorConfig {
+  titleKey: string;
+  iconType: 'warning' | 'lock';
+  accentBg: string;
+  accentBorder: string;
+  accentText: string;
+}
+
+const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   network: {
-    title: 'Network Error',
-    icon: '📡',
+    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.NETWORK',
+    iconType: 'warning',
     accentBg: 'bg-amber-3',
     accentBorder: 'border-amber-4',
     accentText: 'text-amber-11',
   },
   rate_limit: {
-    title: 'Rate Limited',
-    icon: '⏱',
+    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.RATE_LIMIT',
+    iconType: 'warning',
     accentBg: 'bg-amber-3',
     accentBorder: 'border-amber-4',
     accentText: 'text-amber-11',
   },
   auth: {
-    title: 'Authentication Error',
-    icon: '🔒',
+    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.AUTH',
+    iconType: 'lock',
     accentBg: 'bg-ruby-3',
     accentBorder: 'border-ruby-4',
     accentText: 'text-ruby-11',
   },
   server: {
-    title: 'Server Error',
-    icon: '⚠️',
+    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.SERVER',
+    iconType: 'warning',
     accentBg: 'bg-ruby-3',
     accentBorder: 'border-ruby-4',
     accentText: 'text-ruby-11',
   },
   unknown: {
-    title: 'Something went wrong',
-    icon: '⚠️',
+    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.UNKNOWN',
+    iconType: 'warning',
     accentBg: 'bg-ruby-3',
     accentBorder: 'border-ruby-4',
     accentText: 'text-ruby-11',
   },
+};
+
+/** Renders the appropriate SVG icon for an error category */
+const ErrorCategoryIcon: React.FC<{ config: ErrorConfig }> = ({ config }) => {
+  const iconColor = config.accentText.includes('amber')
+    ? (tailwind.color('text-amber-11') ?? '#AD5700')
+    : (tailwind.color('text-ruby-11') ?? '#CA3A31');
+
+  if (config.iconType === 'lock') {
+    return <Icon icon={<LockIcon />} size={16} />;
+  }
+  return <Icon icon={<WarningIcon stroke={iconColor} />} size={16} />;
 };
 
 export const AIChatError: React.FC<AIChatErrorProps> = ({
@@ -81,9 +102,11 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
     <View style={style('mx-4 mb-2 p-3 rounded-lg border', config.accentBg, config.accentBorder)}>
       {/* Header */}
       <View style={style('flex-row items-start gap-2')}>
-        <Text style={style('text-base mt-0.5')}>{config.icon}</Text>
+        <View style={style('mt-0.5')}>
+          <ErrorCategoryIcon config={config} />
+        </View>
         <View style={style('flex-1')}>
-          <Text style={style('text-sm font-medium text-slate-12')}>{config.title}</Text>
+          <Text style={style('text-sm font-medium text-slate-12')}>{i18n.t(config.titleKey)}</Text>
           <Text style={style('text-xs mt-1 text-slate-11')} numberOfLines={3}>
             {error.message || String(error)}
           </Text>
@@ -94,17 +117,23 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
       <View style={style('flex-row flex-wrap gap-2 mt-3')}>
         {canRetry && onRetry && (
           <Pressable onPress={onRetry} style={style('bg-iris-9 px-3 py-1.5 rounded-lg')}>
-            <Text style={style('text-xs font-medium text-white')}>Retry</Text>
+            <Text style={style('text-xs font-medium text-white')}>
+              {i18n.t('AI_ASSISTANT.CHAT.ERRORS.RETRY')}
+            </Text>
           </Pressable>
         )}
         {onFreshStart && (
           <Pressable onPress={onFreshStart} style={style('px-3 py-1.5 rounded-lg')}>
-            <Text style={style('text-xs text-slate-11')}>Fresh Start</Text>
+            <Text style={style('text-xs text-slate-11')}>
+              {i18n.t('AI_ASSISTANT.CHAT.ERRORS.FRESH_START')}
+            </Text>
           </Pressable>
         )}
         {onDismiss && (
           <Pressable onPress={onDismiss} style={style('ml-auto px-3 py-1.5')}>
-            <Text style={style('text-xs text-slate-10')}>Dismiss</Text>
+            <Text style={style('text-xs text-slate-10')}>
+              {i18n.t('AI_ASSISTANT.CHAT.ERRORS.DISMISS')}
+            </Text>
           </Pressable>
         )}
       </View>

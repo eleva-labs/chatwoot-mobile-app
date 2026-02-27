@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, TextInput, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Icon } from '@/components-next/common';
@@ -7,6 +7,7 @@ import { SendIcon } from '@/svg-icons';
 import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import type { AIInputFieldProps } from '@/presentation/containers/ai-assistant/types';
+import i18n from '@/i18n';
 
 export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, onCancel }) => {
   const [text, setText] = useState('');
@@ -47,7 +48,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           ref={inputRef}
           value={text}
           onChangeText={setText}
-          placeholder="Type a message..."
+          placeholder={i18n.t('AI_ASSISTANT.CHAT.INPUT.PLACEHOLDER')}
           placeholderTextColor={tailwind.color('text-slate-9') ?? '#696e77'}
           style={style(
             'flex-1 text-base font-inter-normal-20 min-h-[40px] max-h-[100px]',
@@ -62,7 +63,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           returnKeyType="send"
           textAlignVertical="center"
           accessible
-          accessibilityLabel="AI assistant message input"
+          accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.INPUT')}
         />
         {isLoading && onCancel ? (
           <Pressable
@@ -70,8 +71,10 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             style={({ pressed }) => style('ml-2 p-2 rounded-full', pressed && 'opacity-70')}
             accessible
             accessibilityRole="button"
-            accessibilityLabel="Cancel AI response">
-            <Text style={style('text-sm', inputTokens.cancelText)}>Cancel</Text>
+            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.STOP_GENERATING')}>
+            <View style={style('w-8 h-8 rounded-full bg-ruby-9 items-center justify-center')}>
+              <View style={style('w-3 h-3 rounded-sm bg-white')} />
+            </View>
           </Pressable>
         ) : (
           <Pressable
@@ -86,7 +89,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             }
             accessible
             accessibilityRole="button"
-            accessibilityLabel="Send message"
+            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SEND')}
             accessibilityState={{ disabled: !text.trim() || isLoading }}>
             <View
               style={style(

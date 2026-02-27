@@ -14,6 +14,7 @@ import { AIAssisst } from '@/svg-icons';
 import { AIChatInterface } from './AIChatInterface';
 import type { FloatingAIAssistantProps } from './types';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import i18n from '@/i18n';
 
 export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.memo(
   ({ agentBotId }) => {
@@ -76,6 +77,14 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
     if (isExpanded) {
       return (
         <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+          {/* Backdrop tap to dismiss */}
+          <Pressable
+            onPress={handleClose}
+            style={styles.backdrop}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_BACKDROP')}
+          />
           <Animated.View
             style={[styles.chatContainer, chatInterfaceStyle, style(tokens.session.background)]}>
             <AIChatInterface agentBotId={agentBotId} onClose={handleClose} />
@@ -104,8 +113,8 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
             ]}
             accessible
             accessibilityRole="button"
-            accessibilityLabel="Open AI Assistant"
-            accessibilityHint="Opens the AI assistant chat interface"
+            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN')}
+            accessibilityHint={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN_HINT')}
             {...handlers}>
             <Icon icon={<AIAssisst color="white" strokeOpacity={1} />} size={24} />
           </Pressable>
@@ -125,9 +134,10 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1000,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  backdrop: {
+    height: '10%',
   },
   chatContainer: {
     width: '100%',

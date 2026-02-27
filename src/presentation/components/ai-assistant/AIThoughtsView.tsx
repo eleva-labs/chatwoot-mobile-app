@@ -5,6 +5,7 @@ import type { UIMessage } from 'ai';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 // Use domain type guards instead of hardcoded strings
 import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
+import i18n from '@/i18n';
 
 interface AIThoughtsViewProps {
   message: UIMessage;
@@ -107,7 +108,7 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
         activeOpacity={0.7}>
         <View style={style('flex-row items-center flex-1')}>
           <Text style={style('text-sm font-inter-semibold-20', irisTokens.labelActive)}>
-            THOUGHTS...
+            {i18n.t('AI_ASSISTANT.CHAT.THOUGHTS.HEADER')}
           </Text>
           {formattedTime && (
             <Text style={style('ml-2 text-xs font-inter-normal-20', irisTokens.subtitle)}>
@@ -129,7 +130,7 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
             showsVerticalScrollIndicator={true}
             nestedScrollEnabled={true}>
             <Text style={style('text-sm font-inter-normal-20 leading-5', tokens.text.secondary)}>
-              {textContent || '[No content]'}
+              {textContent || i18n.t('AI_ASSISTANT.CHAT.THOUGHTS.NO_CONTENT')}
             </Text>
           </ScrollView>
         </View>

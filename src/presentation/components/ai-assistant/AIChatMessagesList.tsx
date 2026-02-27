@@ -7,17 +7,59 @@
  */
 
 import React, { useCallback, useMemo } from 'react';
-import { View, Text, Platform, ActivityIndicator, Pressable } from 'react-native';
+import { View, Text, Platform, Pressable } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+  withSequence,
+} from 'react-native-reanimated';
 import type { UIMessage } from 'ai';
 import { AIMessageBubble } from './AIMessageBubble';
 import { AIChatError } from './AIChatError';
 import { AIChatEmptyState } from './AIChatEmptyState';
+import { Avatar } from '@/components-next/common/avatar/Avatar';
 import type { FlashListRef } from '@/presentation/hooks/ai-assistant/useAIChatScroll';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { tailwind } from '@/theme/tailwind';
 import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
+import i18n from '@/i18n';
+
+/** Animated typing dot for the thinking indicator */
+const TypingDot: React.FC<{ delay: number }> = ({ delay }) => {
+  const opacity = useSharedValue(0.3);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      opacity.value = withRepeat(
+        withSequence(withTiming(1, { duration: 400 }), withTiming(0.3, { duration: 400 })),
+        -1,
+        false,
+      );
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [delay, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        {
+          width: 6,
+          height: 6,
+          borderRadius: 3,
+          backgroundColor: tailwind.color('bg-slate-9') ?? '#8B8D98',
+        },
+        animatedStyle,
+      ]}
+    />
+  );
+};
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,6 +87,7 @@ export interface AIChatMessagesListProps {
   onRetry?: () => void;
   onDismiss?: () => void;
   onFreshStart?: () => void;
+  onSendPrompt?: (text: string) => void;
 }
 
 export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
@@ -67,6 +110,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
     onRetry,
     onDismiss,
     onFreshStart,
+    onSendPrompt,
   }) => {
     const { style, tokens } = useAIStyles();
 
@@ -100,7 +144,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
           return (
             <View style={style('p-4 mb-3')}>
               <Text style={style('text-sm', tokens.tool.errorText)}>
-                Error rendering message: {item.id || 'unknown'}
+                {i18n.t('AI_ASSISTANT.CHAT.MESSAGES.ERROR_RENDERING', { id: item.id || 'unknown' })}
               </Text>
             </View>
           );
@@ -140,11 +184,13 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style('flex-1 items-center justify-center p-4')}
             accessible
             accessibilityRole="text"
-            accessibilityLabel="Loading messages">
-            <Text style={style(tokens.text.muted)}>Loading conversation...</Text>
+            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.LOADING_MESSAGES')}>
+            <Text style={style(tokens.text.muted)}>
+              {i18n.t('AI_ASSISTANT.CHAT.MESSAGES.LOADING')}
+            </Text>
           </View>
         ) : listData.length === 0 && status === 'ready' ? (
-          <AIChatEmptyState hasActiveSession={!!activeSessionId} />
+          <AIChatEmptyState hasActiveSession={!!activeSessionId} onSendPrompt={onSendPrompt} />
         ) : (
           <AnimatedFlashListAny
             ref={listRef}
@@ -162,16 +208,23 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
           />
         )}
 
-        {/* Panel-level loader for SUBMITTED state */}
+        {/* Typing indicator bubble for SUBMITTED state */}
         {(status === 'submitted' || (status === 'streaming' && !lastAssistantHasText)) && (
-          <View style={style('flex-row items-center gap-2 px-4 py-3')}>
-            <ActivityIndicator
-              size="small"
-              color={tailwind.color('text-slate-9') ?? 'rgb(139, 141, 152)'}
-            />
-            <Text style={style('text-sm', tokens.text.muted)}>
-              {status === 'submitted' ? 'Thinking...' : 'Generating...'}
-            </Text>
+          <View style={style('flex-row items-end gap-2 px-4 py-2')}>
+            <View style={[style('mb-1'), { flexShrink: 0 }]}>
+              <Avatar
+                name={botAvatarName || 'AI'}
+                src={botAvatarSrc ? { uri: botAvatarSrc } : undefined}
+                size="lg"
+              />
+            </View>
+            <View style={style('px-4 py-3 rounded-2xl rounded-bl-sm bg-slate-3')}>
+              <View style={style('flex-row items-center gap-1')}>
+                <TypingDot delay={0} />
+                <TypingDot delay={150} />
+                <TypingDot delay={300} />
+              </View>
+            </View>
           </View>
         )}
 

@@ -14,7 +14,9 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { useHaptic } from '@/utils';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { tailwind } from '@/theme/tailwind';
 import type { AIMessageBubbleProps } from '@/presentation/containers/ai-assistant/types';
@@ -26,6 +28,7 @@ import {
   getDeduplicatedToolParts,
   type MessagePart,
 } from '@/types/ai-chat/parts';
+import i18n from '@/i18n';
 
 export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
   message,
@@ -34,11 +37,13 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
   avatarSrc,
 }) => {
   const { style, message: getMessageTokens } = useAIStyles();
+  const [copiedId, setCopiedId] = React.useState<string | null>(null);
+  const haptic = useHaptic('success');
   const isUser = message.role === 'user';
   const isAssistant = message.role === 'assistant';
   const messageTokens = getMessageTokens(isUser ? 'user' : 'assistant');
 
-  const parts = (message.parts as MessagePart[] | undefined) ?? [];
+  const parts = useMemo(() => (message.parts as MessagePart[] | undefined) ?? [], [message.parts]);
 
   // Split parts by category (only for assistant messages, matching Vue pattern)
   const { reasoningParts, toolParts, textParts } = useMemo(() => {
@@ -66,11 +71,17 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
       style={style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
       accessible
       accessibilityRole="text"
-      accessibilityLabel={isUser ? 'Your message' : 'AI assistant message'}>
+      accessibilityLabel={
+        isUser
+          ? i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE')
+          : i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.AI_MESSAGE')
+      }>
       {/* Avatar */}
       <View style={[style('mb-1'), { flexShrink: 0 }]}>
         <Avatar
-          name={avatarName || (isUser ? 'User' : 'AI')}
+          name={
+            avatarName || (isUser ? i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : 'AI')
+          }
           src={avatarSrc ? { uri: avatarSrc } : undefined}
           size="lg"
         />
@@ -131,6 +142,33 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               ))}
             </View>
           ) : null}
+
+          {/* Copy button for completed assistant messages */}
+          {hasTextContent && !isStreaming && (
+            <Pressable
+              onPress={() => {
+                const fullText = textParts
+                  .filter(p => 'text' in p)
+                  .map(p => (p as { text: string }).text)
+                  .join('\n');
+                Clipboard.setString(fullText);
+                haptic?.();
+                setCopiedId(message.id);
+                setTimeout(() => setCopiedId(null), 2000);
+              }}
+              style={({ pressed }) =>
+                style('self-start mt-1 px-2 py-1 rounded-md', pressed && 'bg-slate-3')
+              }
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
+              <Text style={style('text-xs text-slate-9')}>
+                {copiedId === message.id
+                  ? i18n.t('AI_ASSISTANT.CHAT.COPY.COPIED')
+                  : i18n.t('AI_ASSISTANT.CHAT.COPY.COPY')}
+              </Text>
+            </Pressable>
+          )}
         </View>
       ) : (
         // User: all parts inside bubble

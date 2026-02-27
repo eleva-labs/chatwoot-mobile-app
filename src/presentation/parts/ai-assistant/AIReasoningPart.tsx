@@ -15,13 +15,14 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ScrollView, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { tailwind } from '@/theme/tailwind';
 import { useTheme } from '@/context/ThemeContext';
 import { AICollapsible } from './AICollapsible';
+import i18n from '@/i18n';
 
 // Import domain types (single source of truth)
 import type { ReasoningPart } from '@/types/ai-chat/parts';
@@ -46,9 +47,9 @@ export interface AIReasoningPartProps {
 // Constants
 // ============================================================================
 
-const LABELS = {
-  streaming: 'Thinking...',
-  completed: 'View reasoning',
+const LABEL_KEYS = {
+  streaming: 'AI_ASSISTANT.CHAT.REASONING.THINKING',
+  completed: 'AI_ASSISTANT.CHAT.REASONING.VIEW_REASONING',
 } as const;
 
 // ============================================================================
@@ -108,7 +109,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   }, [part]);
 
   // Dynamic title based on streaming state
-  const title = isStreaming ? LABELS.streaming : LABELS.completed;
+  const title = isStreaming ? i18n.t(LABEL_KEYS.streaming) : i18n.t(LABEL_KEYS.completed);
 
   // Don't render if no content and not streaming
   if (!reasoningText && !isStreaming) {
@@ -122,9 +123,11 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
       isStreaming={isStreaming}
       defaultExpanded={defaultExpanded}
       icon={
-        // Vue uses i-lucide-brain icon
-        // TODO: Replace emoji with Lucide Brain icon when icon library is migrated
-        <Text style={style(irisTokens.iconActive)}>🧠</Text>
+        <View
+          style={[
+            style('w-2.5 h-2.5 rounded-full', irisTokens.iconActive ? 'bg-iris-9' : 'bg-slate-9'),
+          ]}
+        />
       }>
       <ScrollView
         style={style('max-h-64')}
@@ -154,7 +157,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
               style={style('mr-2')}
             />
             <Text style={style('text-sm font-inter-normal-20 italic', tokens.text.secondary)}>
-              Processing...
+              {i18n.t('AI_ASSISTANT.CHAT.REASONING.PROCESSING')}
             </Text>
           </View>
         )}

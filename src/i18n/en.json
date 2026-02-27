@@ -544,7 +544,64 @@
       "TOOLS": {
         "SINGLE": "Using tool...",
         "MULTIPLE": "Using {count} tools...",
-        "INDICATOR": "AI tool call indicator"
+        "INDICATOR": "AI tool call indicator",
+        "PENDING": "Pending",
+        "RUNNING": "Running",
+        "COMPLETED": "Completed",
+        "ERROR": "Error",
+        "UNKNOWN_TOOL": "Unknown Tool",
+        "INPUT": "Input",
+        "OUTPUT": "Output",
+        "NO_DATA": "No data available",
+        "EXECUTION_FAILED": "Tool execution failed"
+      },
+      "EMPTY_STATE": {
+        "TITLE_WITH_SESSION": "No messages yet",
+        "TITLE_NO_SESSION": "Start a conversation",
+        "DESCRIPTION_WITH_SESSION": "This conversation is empty",
+        "DESCRIPTION_NO_SESSION": "Ask a question or describe what you need help with"
+      },
+      "SUGGESTED_PROMPTS": {
+        "SUMMARIZE": "Summarize my recent conversations",
+        "DRAFT": "Help me draft a response",
+        "CAPABILITIES": "What can you help me with?"
+      },
+      "STATUS": {
+        "THINKING": "Thinking...",
+        "ISSUE": "Issue"
+      },
+      "ERRORS": {
+        "NETWORK": "Network Error",
+        "RATE_LIMIT": "Rate Limited",
+        "AUTH": "Authentication Error",
+        "SERVER": "Server Error",
+        "UNKNOWN": "Something went wrong",
+        "RETRY": "Retry",
+        "FRESH_START": "Fresh Start",
+        "DISMISS": "Dismiss"
+      },
+      "REASONING": {
+        "THINKING": "Thinking...",
+        "VIEW_REASONING": "View reasoning",
+        "PROCESSING": "Processing..."
+      },
+      "COPY": {
+        "COPY": "Copy",
+        "COPIED": "Copied!"
+      },
+      "SESSIONS_PANEL": {
+        "TITLE": "Conversations",
+        "COUNT_ONE": "{count} session",
+        "COUNT_OTHER": "{count} sessions"
+      },
+      "SESSION_ITEM": {
+        "TODAY": "Today",
+        "YESTERDAY": "Yesterday"
+      },
+      "COLLAPSIBLE": {
+        "COLLAPSE": "Collapse",
+        "EXPANDED": "{title}, expanded",
+        "COLLAPSED": "{title}, collapsed"
       },
       "ACCESSIBILITY": {
         "USER_MESSAGE": "Your message",
@@ -557,7 +614,12 @@
         "CLOSE": "Close AI Assistant",
         "CLOSE_HINT": "Closes the AI assistant chat interface",
         "OPEN": "Open AI Assistant",
-        "OPEN_HINT": "Opens the AI assistant chat interface"
+        "OPEN_HINT": "Opens the AI assistant chat interface",
+        "STOP_GENERATING": "Stop generating",
+        "SESSIONS_COUNT": "{count} sessions",
+        "COPY_MESSAGE": "Copy message",
+        "LOADING_MESSAGES": "Loading messages",
+        "CLOSE_BACKDROP": "Close AI Assistant"
       }
     },
     "STATUS": {
