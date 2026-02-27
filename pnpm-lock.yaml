@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  web-streams-polyfill: ^4.2.0
+
 importers:
 
   .:
@@ -7586,10 +7589,6 @@ packages:
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
 
-  web-streams-polyfill@3.3.3:
-    resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
-    engines: {node: '>= 8'}
-
   web-streams-polyfill@4.2.0:
     resolution: {integrity: sha512-0rYDzGOh9EZpig92umN5g5D/9A1Kff7k0/mzPSSCY8jEQeYkgRMoY7LhbXtUCWzLCMX0TUE9aoHkjFNB7D9pfA==}
     engines: {node: '>= 8'}
@@ -12920,7 +12919,7 @@ snapshots:
     dependencies:
       expo: 52.0.48(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(graphql@16.8.1)(react-native-webview@13.16.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
       react-native: 0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)
-      web-streams-polyfill: 3.3.3
+      web-streams-polyfill: 4.2.0
 
   expo-font@13.0.4(expo@52.0.48(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(graphql@16.8.1)(react-native-webview@13.16.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -13073,7 +13072,7 @@ snapshots:
       fbemitter: 3.0.0
       react: 18.3.1
       react-native: 0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)
-      web-streams-polyfill: 3.3.3
+      web-streams-polyfill: 4.2.0
       whatwg-url-without-unicode: 8.0.0-3
     optionalDependencies:
       react-native-webview: 13.16.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
@@ -16624,8 +16623,6 @@ snapshots:
   wcwidth@1.0.1:
     dependencies:
       defaults: 1.0.4
-
-  web-streams-polyfill@3.3.3: {}
 
   web-streams-polyfill@4.2.0: {}
 
