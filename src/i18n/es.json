@@ -23,7 +23,7 @@
   },
   "LOGIN": {
     "TITLE": "Inicia sesión en tu cuenta",
-    "DESCRIPTION": "Estás conectado a {{baseUrl}}.",
+    "DESCRIPTION": "Estás conectado a %{baseUrl}.",
     "EMAIL": "Email",
     "PASSWORD": "Contraseña",
     "EMAIL_REQUIRED": "El email es requerido",
@@ -32,6 +32,10 @@
     "PASSWORD_ERROR": "Introduce una contraseña válida",
     "LOGIN": "Iniciar sesión",
     "LOGIN_LOADING": "Iniciar sesión...",
+    "LOGIN_VIA_SSO": "Iniciar sesión con SSO",
+    "SSO_AUTH_FAILED": "La autenticación SSO falló. Por favor, inténtalo de nuevo.",
+    "SSO_INVALID_RESPONSE": "Respuesta SSO inválida. Por favor, contacta al administrador.",
+    "SSO_UNEXPECTED_ERROR": "Ocurrió un error inesperado durante la autenticación SSO.",
     "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
     "RESET_HERE": "Restablecer aquí",
     "NO_ACCOUNT": "¿No tienes una cuenta?",
@@ -50,6 +54,24 @@
     "SUB_TITLE": "¡No te preocupes! Te cubrimos las espaldas",
     "API_SUCCESS": "El enlace para restablecer la contraseña ha sido enviado a tu correo electrónico"
   },
+  "MFA": {
+    "TITLE": "Autenticación de dos factores",
+    "TABS": {
+      "AUTHENTICATOR_APP": "Aplicación de autenticación",
+      "BACKUP_CODE": "Código de respaldo"
+    },
+    "INSTRUCTIONS": {
+      "AUTHENTICATOR": "Ingresa el código de 6 dígitos de tu aplicación de autenticación.",
+      "BACKUP": "Ingresa uno de tus códigos de respaldo."
+    },
+    "PLACEHOLDERS": {
+      "BACKUP_CODE": "Ingresa tu código de respaldo"
+    },
+    "BUTTONS": {
+      "VERIFY": "Verificar",
+      "VERIFYING": "Verificando..."
+    }
+  },
   "CONVERSATION": {
     "HEADER": {
       "TITLE": "Conversaciones",
@@ -65,13 +87,13 @@
       "SORT_BY": {
         "TITLE": "Ordenar por",
         "OPTIONS": {
-          "LATEST": "Latest",
+          "LATEST": "Más recientes",
           "SORT_ON_CREATED_AT": "Creado el",
           "SORT_ON_PRIORITY": "Prioridad"
         }
       },
       "STATUS": {
-        "TITLE": "Filter by status",
+        "TITLE": "Filtrar por estado",
         "OPTIONS": {
           "OPEN": "Abrir",
           "PENDING": "En espera",
@@ -83,7 +105,7 @@
       "ASSIGNEE_TYPE": {
         "TITLE": "Filtrar por tipo de asignado",
         "OPTIONS": {
-          "ME": "Me",
+          "ME": "Yo",
           "UNASSIGNED": "Sin asignar",
           "ALL": "Todo"
         }
@@ -97,8 +119,8 @@
         "SEARCH_AGENT": "Buscar agentes"
       },
       "STATUS": {
-        "HEADER_TITLE": "Assign status",
-        "TITLE": "Filter by status",
+        "HEADER_TITLE": "Asignar estado",
+        "TITLE": "Filtrar por estado",
         "OPTIONS": {
           "OPEN": "Abrir",
           "PENDING": "En espera",
@@ -132,9 +154,9 @@
     "PRIVATE_MSG_INPUT": "Esto será visible sólo para los agentes",
     "UNSUPPORTED_MESSAGE": "Este mensaje no es compatible. Puedes ver este mensaje en la aplicación de Facebook/Instagram.",
     "NOT_FOUND": {
-      "TITLE": "Unable to fetch conversation",
-      "RETRY": "Retry",
-      "BACK_TO_HOME": "Go back to home",
+      "TITLE": "No se pudo obtener la conversación",
+      "RETRY": "Reintentar",
+      "BACK_TO_HOME": "Volver al inicio",
       "DESCRIPTION": "Parece que no se pudo obtener la conversación correctamente. Podría deberse a un problema de red o la conversación ya no está disponible. Haga clic en el botón de reintentar para intentarlo nuevamente."
     },
     "BOT": "Bot",
@@ -163,10 +185,10 @@
     "DELETE_MESSAGE_SUCCESS": "Mensaje eliminado correctamente",
     "NO_CONTENT": "No hay contenido disponible",
     "ASSIGN_CHANGE": "Conversación cambiada de asignatario",
-    "TEAM_CHANGE": "Conversation Team changed",
-    "STATUS_CHANGE": "Conversation Status changed",
-    "PRIORITY_CHANGE": "Conversation Priority changed",
-    "PARTICIPANT_CHANGE": "Conversation Participant changed",
+    "TEAM_CHANGE": "Equipo de conversación cambiado",
+    "STATUS_CHANGE": "Estado de conversación cambiado",
+    "PRIORITY_CHANGE": "Prioridad de conversación cambiada",
+    "PARTICIPANT_CHANGE": "Participante de conversación cambiado",
     "CHANGE_STATUS": "Cambiar estado",
     "SEARCH_TEAM": "Buscar equipos",
     "PRIORITY": {
@@ -210,13 +232,13 @@
         "CONTENT": "ha compartido una url"
       },
       "contact": {
-        "CONTENT": "Shared a contact"
+        "CONTENT": "Contacto compartido"
       }
     },
     "LONG_PRESS_ACTIONS": {
       "COPY": "Copiar",
       "REPLY": "Responder",
-      "DELETE_MESSAGE": "Delete message"
+      "DELETE_MESSAGE": "Eliminar mensaje"
     },
     "EMAIL_HEADER": {
       "FROM": "Desde",
@@ -224,7 +246,7 @@
       "BCC": "Bcc",
       "CC": "Cc",
       "SUBJECT": "Asunto",
-      "EXPAND": "Expand email"
+      "EXPAND": "Expandir correo"
     },
     "ACTIONS": {
       "ASSIGNEE": {
@@ -233,11 +255,11 @@
         "EDIT": "Editar"
       },
       "TEAM": {
-        "EMPTY": "No team assigned",
+        "EMPTY": "Sin equipo asignado",
         "ASSIGN": "Asignar"
       },
       "PRIORITY": {
-        "EMPTY": "No priority added",
+        "EMPTY": "Sin prioridad asignada",
         "EDIT": "Editar"
       },
       "SHARE": "Compartir conversación"
@@ -289,7 +311,7 @@
     "LOGOUT": "Cerrar sesión",
     "SUBMIT": "Enviar",
     "SET_LANGUAGE": "Definir idioma",
-    "DEBUG_ACTIONS": "Debug Actions"
+    "DEBUG_ACTIONS": "Acciones de depuración"
   },
   "NOTIFICATION": {
     "HEADER_TITLE": "Notificaciones",
@@ -359,7 +381,7 @@
     "RATIONALE_SETTINGS": "Abrir Configuración"
   },
   "CONVERSATION_DETAILS": {
-    "TITLE": "Attributes",
+    "TITLE": "Atributos",
     "BROWSER": "Navegador",
     "OPERATING_SYSTEM": "Sistema operativo",
     "INITIATED_AT": "Iniciado a las",
@@ -372,12 +394,12 @@
     "TITLE": "Detalles de contacto",
     "EMAIL": "Email",
     "PHONE_NUMBER": "Número telefónico",
-    "CALL": "Call",
+    "CALL": "Llamar",
     "CONTACT_ATTRIBUTES": "Atributos de contacto",
     "VALUE_UNAVAILABLE": "No disponible"
   },
   "CONVERSATION_PARTICIPANTS": {
-    "TITLE": "Participants",
+    "TITLE": "Participantes",
     "TOTAL_PARTICIPANTS_TEXT": "%{count} personas están participando.",
     "TOTAL_PARTICIPANT_TEXT": "%{count} personas están participando.",
     "NO_PARTICIPANTS_TEXT": "Nadie está participando!.",
@@ -388,7 +410,7 @@
     "ADD_PARTICIPANTS": "Seleccionar participantes",
     "REMAINING_PARTICIPANTS_TEXT": "otros",
     "REMAINING_PARTICIPANT_TEXT": "otro",
-    "ADD_PARTICIPANT": "Add Participant"
+    "ADD_PARTICIPANT": "Agregar participante"
   },
   "CONTACT_ATTRIBUTES": {
     "TITLE": "Atributos de contacto"
@@ -476,23 +498,24 @@
       "FRT": "Primera respuesta",
       "NRT": "Tiempo de próxima respuesta",
       "RT": "Tiempo de resolución",
-      "SHOW_MORE": "{count} más",
-      "HIDE": "Esconder {count} filas"
+      "SHOW_MORE": "%{count} más",
+      "HIDE": "Esconder %{count} filas"
     }
   },
   "MACRO": {
     "TITLE": "Macros",
-    "SELECT_MACRO": "Select macro",
+    "SELECT_MACRO": "Seleccionar macro",
     "ACTIONS": {
-      "RUN": "Run"
+      "RUN": "Ejecutar"
     },
     "EXECUTION_SUCCESS": "Macro ejecutado correctamente",
-    "EXECUTION_ERROR": "Macro execution failed",
+    "EXECUTION_ERROR": "La ejecución del macro falló",
     "NO_MACROS": "No se encontraron macros"
   },
   "AI_ASSISTANT": {
     "CHAT": {
       "TITLE": "Asistente de IA",
+      "AVATAR_NAME": "IA",
       "INPUT": {
         "PLACEHOLDER": "Escribe un mensaje...",
         "CANCEL": "Cancelar",
@@ -614,6 +637,6 @@
     "RECORDING_ERROR": "Error de grabación"
   },
   "CLIPBOARD": {
-    "COPIED": "{item} copiado al portapapeles"
+    "COPIED": "%{item} copiado al portapapeles"
   }
 }

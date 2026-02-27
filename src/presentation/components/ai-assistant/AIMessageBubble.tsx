@@ -80,7 +80,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
       <View style={[style('mb-1'), { flexShrink: 0 }]}>
         <Avatar
           name={
-            avatarName || (isUser ? i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : 'AI')
+            avatarName || (isUser ? i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : i18n.t('AI_ASSISTANT.CHAT.AVATAR_NAME'))
           }
           src={avatarSrc ? { uri: avatarSrc } : undefined}
           size="lg"
