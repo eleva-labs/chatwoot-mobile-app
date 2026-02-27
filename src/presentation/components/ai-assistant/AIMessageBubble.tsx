@@ -14,7 +14,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { tailwind } from '@/theme/tailwind';
 import type { AIMessageBubbleProps } from '@/presentation/containers/ai-assistant/types';
@@ -72,7 +72,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
         <Avatar
           name={avatarName || (isUser ? 'User' : 'AI')}
           src={avatarSrc ? { uri: avatarSrc } : undefined}
-          size="xs"
+          size="lg"
         />
       </View>
 
@@ -106,7 +106,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
           {showLoader ? (
             <View
               style={style(
-                'px-4 py-3 rounded-2xl rounded-bl-sm self-start',
+                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%]',
                 messageTokens.background,
               )}>
               <ActivityIndicator
@@ -117,7 +117,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
           ) : hasTextContent ? (
             <View
               style={style(
-                'px-4 py-3 rounded-2xl rounded-bl-sm self-start',
+                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%]',
                 messageTokens.background,
               )}>
               {textParts.map((part, idx) => (
@@ -131,25 +131,13 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               ))}
             </View>
           ) : null}
-
-          {/* Message actions for assistant (disabled placeholders) */}
-          {isAssistant && hasTextContent && !isStreaming && (
-            <View style={style('flex-row items-center gap-0.5 mt-1')}>
-              <Pressable disabled style={style('p-1.5 rounded-md opacity-50')}>
-                <Text style={style('text-xs text-slate-10')}>Copy</Text>
-              </Pressable>
-              <Pressable disabled style={style('p-1.5 rounded-md opacity-50')}>
-                <Text style={style('text-xs text-slate-10')}>Regenerate</Text>
-              </Pressable>
-            </View>
-          )}
         </View>
       ) : (
         // User: all parts inside bubble
         <View style={style('flex-col items-end flex-1')}>
           <View
             style={style(
-              'px-4 py-3 rounded-2xl rounded-br-sm max-w-[80%]',
+              'px-4 py-2 rounded-2xl rounded-br-sm max-w-[80%]',
               messageTokens.background,
             )}>
             {parts.length > 0 ? (
@@ -175,8 +163,6 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               />
             )}
           </View>
-          {/* Spacer to match assistant action buttons height */}
-          <View style={style('h-7')} />
         </View>
       )}
     </View>

@@ -5,6 +5,9 @@
  */
 import React from 'react';
 import { View, Text } from 'react-native';
+import { Icon } from '@/components-next/common';
+import { ChatIcon } from '@/svg-icons';
+import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 
 interface AIChatEmptyStateProps {
@@ -17,8 +20,8 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({ hasActiveSes
   return (
     <View style={style('flex-1 items-center justify-center p-8')}>
       {/* Icon container */}
-      <View style={style('mb-4 rounded-full bg-slate-3 p-4')}>
-        <Text style={style('text-2xl')}>💬</Text>
+      <View style={style('mb-4 rounded-full bg-slate-2 p-4')}>
+        <Icon icon={<ChatIcon stroke={tailwind.color('text-slate-9') ?? '#8B8D98'} />} size={28} />
       </View>
 
       {/* Title */}
@@ -27,7 +30,7 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({ hasActiveSes
       </Text>
 
       {/* Description */}
-      <Text style={style('text-sm text-slate-11 text-center max-w-[300px]')}>
+      <Text style={style('text-sm text-slate-11 text-center max-w-[340px]')}>
         {hasActiveSession
           ? 'This conversation is empty'
           : 'Ask a question or describe what you need help with'}

@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Icon } from '@/components-next/common';
 import { SendIcon } from '@/svg-icons';
+import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import type { AIInputFieldProps } from '@/presentation/containers/ai-assistant/types';
 
@@ -13,6 +14,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
   const insets = useSafeAreaInsets();
   const { style, tokens } = useAIStyles();
   const inputTokens = tokens.input;
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSend = useCallback(() => {
     if (text.trim() && !isLoading) {
@@ -35,17 +37,24 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
         style('px-4 py-3 border-t', inputTokens.containerBackground, inputTokens.containerBorder),
         { paddingBottom: Math.max(insets.bottom + 32, 40) },
       ]}>
-      <View style={style('flex-row items-end rounded-2xl px-3 py-2', inputTokens.inputBackground)}>
+      <View
+        style={style(
+          'flex-row items-end rounded-2xl px-3 py-2 border',
+          inputTokens.inputBackground,
+          isFocused ? 'border-iris-9' : 'border-slate-6',
+        )}>
         <TextInput
           ref={inputRef}
           value={text}
           onChangeText={setText}
           placeholder="Type a message..."
-          placeholderTextColor="#696e77" // slate-9 equivalent
+          placeholderTextColor={tailwind.color('text-slate-9') ?? '#696e77'}
           style={style(
             'flex-1 text-base font-inter-normal-20 min-h-[40px] max-h-[100px]',
             inputTokens.inputText,
           )}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           multiline
           maxLength={5000}
           editable={!isLoading}
@@ -81,10 +90,10 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             accessibilityState={{ disabled: !text.trim() || isLoading }}>
             <View
               style={style(
-                'w-6 h-6 rounded-full items-center justify-center',
+                'w-8 h-8 rounded-full items-center justify-center',
                 inputTokens.sendButton,
               )}>
-              <Icon icon={<SendIcon />} size={16} />
+              <Icon icon={<SendIcon />} size={18} />
             </View>
           </Pressable>
         )}

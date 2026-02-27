@@ -99,7 +99,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
             onPress={handlePress}
             style={({ pressed }) => [
               styles.fab,
-              style('rounded-full shadow-lg', tokens.input.sendButton),
+              style('rounded-full', tokens.fab.background, tokens.fab.shadow),
               pressed && style('opacity-80'),
             ]}
             accessible

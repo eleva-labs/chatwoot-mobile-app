@@ -12,7 +12,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
@@ -116,10 +116,12 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
       accessibilityState={{ expanded: isExpanded }}
       accessibilityLabel={`${title}, ${isExpanded ? 'expanded' : 'collapsed'}`}>
       {/* Header - matching Vue's button styles */}
-      <TouchableOpacity
+      <Pressable
         onPress={handleToggle}
-        style={style('flex-row items-center gap-2 px-3 py-2')}
-        activeOpacity={0.7}>
+        style={({ pressed }) => [
+          style('flex-row items-center gap-2 px-3 py-2'),
+          pressed && style('opacity-70'),
+        ]}>
         {/* Icon with streaming animation color */}
         {icon && (
           <View
@@ -150,7 +152,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
         <Animated.View style={chevronAnimatedStyle}>
           <Text style={style('text-sm', colors.chevron)}>▶</Text>
         </Animated.View>
-      </TouchableOpacity>
+      </Pressable>
 
       {/* Collapsible Content - with left border accent like Vue */}
       {isExpanded && (

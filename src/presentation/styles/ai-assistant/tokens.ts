@@ -115,6 +115,16 @@ export interface AIInputTokens {
   cancelText: string;
 }
 
+/** FAB (Floating Action Button) tokens */
+export interface AIFabTokens {
+  /** FAB background */
+  background: string;
+  /** FAB icon color */
+  icon: string;
+  /** FAB shadow */
+  shadow: string;
+}
+
 /** Session list tokens */
 export interface AISessionTokens {
   /** List background */
@@ -165,7 +175,7 @@ export const aiTextTokens: AITextTokens = {
   link: 'text-blue-9',
   codeBackground: 'bg-slate-3',
   codeText: 'text-slate-11',
-  cursor: 'bg-slate-9',
+  cursor: 'bg-slate-11',
   cursorUser: 'bg-iris-12',
 };
 
@@ -204,9 +214,19 @@ export const aiInputTokens: AIInputTokens = {
   inputBackground: 'bg-slate-3',
   inputText: 'text-slate-12',
   inputPlaceholder: 'text-slate-9',
-  sendButton: 'bg-iris-9',
+  sendButton: 'bg-slate-12',
   sendButtonIcon: 'text-white',
   cancelText: 'text-ruby-9',
+};
+
+/**
+ * FAB tokens
+ * Used by FloatingAIAssistant for the floating action button
+ */
+export const aiFabTokens: AIFabTokens = {
+  background: 'bg-brand',
+  icon: 'text-white',
+  shadow: 'shadow-lg',
 };
 
 /**

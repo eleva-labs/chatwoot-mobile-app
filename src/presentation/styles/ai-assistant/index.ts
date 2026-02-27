@@ -25,6 +25,7 @@ export {
   type AIHeaderTokens,
   type AIInputTokens,
   type AISessionTokens,
+  type AIFabTokens,
   // Token objects
   aiMessageTokens,
   aiTextTokens,
@@ -33,6 +34,7 @@ export {
   aiHeaderTokens,
   aiInputTokens,
   aiSessionTokens,
+  aiFabTokens,
   // Helper functions
   getMessageTokens,
   getCollapsibleTokens,

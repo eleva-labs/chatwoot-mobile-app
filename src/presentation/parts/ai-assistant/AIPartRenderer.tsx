@@ -15,7 +15,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { useThemedStyles } from '@/hooks';
+import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { AITextPart } from './AITextPart';
 import { AIReasoningPart } from './AIReasoningPart';
 import { AIToolPart } from './AIToolPart';
@@ -64,7 +64,7 @@ export const AIPartRenderer: React.FC<AIPartRendererProps> = ({
   isStreaming = false,
   isLastPart = false,
 }) => {
-  const themedTailwind = useThemedStyles();
+  const { style } = useAIStyles();
 
   // Route to appropriate component based on part type
   if (isTextPart(part)) {
@@ -82,11 +82,8 @@ export const AIPartRenderer: React.FC<AIPartRendererProps> = ({
   // Handle unknown part types in development
   if (__DEV__) {
     return (
-      <View style={themedTailwind.style('p-2 rounded-md bg-yellow-100 dark:bg-yellow-900/30 my-1')}>
-        <Text
-          style={themedTailwind.style('text-xs font-mono text-yellow-700 dark:text-yellow-300')}>
-          Unknown part type: {part.type}
-        </Text>
+      <View style={style('p-2 rounded-md bg-amber-3 my-1')}>
+        <Text style={style('text-xs font-mono text-amber-11')}>Unknown part type: {part.type}</Text>
       </View>
     );
   }

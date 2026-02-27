@@ -28,29 +28,34 @@ export const AISessionItem: React.FC<SessionItemProps> = React.memo(
 
     return (
       <Pressable onPress={onPress}>
-        <Animated.View
-          style={style(
-            'flex-row items-center px-4 py-3',
-            !isLastItem && `border-b ${sessionTokens.border}`,
-            isActive && sessionTokens.activeBackground,
-          )}>
-          <View style={style('flex-1')}>
-            <Text
-              style={style(
-                'text-base font-inter-420-20',
-                isActive ? sessionTokens.activeText : sessionTokens.title,
-                isActive && 'font-inter-580-24',
-              )}>
-              {session.chat_session_id.slice(0, 8)}...
-            </Text>
-            <Text style={style('text-sm mt-1', sessionTokens.subtitle)}>
-              {formatDate(session.updated_at)}
-            </Text>
-          </View>
-          {isActive && (
-            <View style={style('w-2 h-2 rounded-full', sessionTokens.activeIndicator)} />
-          )}
-        </Animated.View>
+        {({ pressed }) => (
+          <Animated.View
+            style={[
+              style(
+                'flex-row items-center px-4 py-3',
+                !isLastItem && `border-b ${sessionTokens.border}`,
+                isActive && sessionTokens.activeBackground,
+              ),
+              pressed && style('opacity-70'),
+            ]}>
+            <View style={style('flex-1')}>
+              <Text
+                style={style(
+                  'text-base font-inter-420-20',
+                  isActive ? sessionTokens.activeText : sessionTokens.title,
+                  isActive && 'font-inter-580-24',
+                )}>
+                {formatDate(session.updated_at)}
+              </Text>
+              <Text style={style('text-sm mt-1', sessionTokens.subtitle)}>
+                {session.chat_session_id.slice(0, 8)}
+              </Text>
+            </View>
+            {isActive && (
+              <View style={style('w-2 h-2 rounded-full', sessionTokens.activeIndicator)} />
+            )}
+          </Animated.View>
+        )}
       </Pressable>
     );
   },

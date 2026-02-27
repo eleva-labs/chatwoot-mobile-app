@@ -31,6 +31,7 @@ import {
   aiHeaderTokens,
   aiInputTokens,
   aiSessionTokens,
+  aiFabTokens,
   // Helper functions
   getMessageTokens,
   getCollapsibleTokens,
@@ -45,6 +46,7 @@ import {
   type AIHeaderTokens,
   type AIInputTokens,
   type AISessionTokens,
+  type AIFabTokens,
 } from './tokens';
 
 // =============================================================================
@@ -69,6 +71,7 @@ export interface AIStylesResult {
     header: AIHeaderTokens;
     input: AIInputTokens;
     session: AISessionTokens;
+    fab: AIFabTokens;
   };
 
   /**
@@ -143,6 +146,7 @@ export const useAIStyles = (): AIStylesResult => {
         header: aiHeaderTokens,
         input: aiInputTokens,
         session: aiSessionTokens,
+        fab: aiFabTokens,
       },
 
       // Helper functions

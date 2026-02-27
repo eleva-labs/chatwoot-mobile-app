@@ -190,7 +190,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
           <Pressable
             onPress={onScrollToBottom}
             style={style(
-              'absolute bottom-2 right-2 w-8 h-8 rounded-full bg-slate-3 items-center justify-center border border-slate-6',
+              'absolute bottom-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6 shadow-md',
             )}>
             <Text style={style('text-sm text-slate-11')}>↓</Text>
           </Pressable>
@@ -199,7 +199,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
           <Pressable
             onPress={onScrollToTop}
             style={style(
-              'absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-3 items-center justify-center border border-slate-6',
+              'absolute top-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6 shadow-md',
             )}>
             <Text style={style('text-sm text-slate-11')}>↑</Text>
           </Pressable>

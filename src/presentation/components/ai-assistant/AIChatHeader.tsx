@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Icon } from '@/components-next/common';
 import { CloseIcon } from '@/svg-icons';
+import { tailwind } from '@/theme/tailwind';
 import type { AIChatBot } from '@/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 
@@ -98,7 +99,10 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityRole="button"
             accessibilityLabel="Close AI Assistant"
             accessibilityHint="Closes the AI assistant chat interface">
-            <Icon icon={<CloseIcon />} size={20} />
+            <Icon
+              icon={<CloseIcon stroke={tailwind.color('text-slate-10') ?? '#80838D'} />}
+              size={20}
+            />
           </Pressable>
         </View>
       </View>
