@@ -293,9 +293,9 @@ export const MessageTextInput = ({
               size={29}
               icon={
                 <Locked
-                  stroke={isDark ? '#FFFFFF' : 'black'}
+                  stroke={tailwind.color('text-gray-12') ?? '#202020'}
                   strokeOpacity={isDark ? '1' : '0.565'}
-                  fill={isDark ? '#374151' : 'white'}
+                  fill={tailwind.color('bg-gray-3') ?? '#f0f0f0'}
                 />
               }
             />
@@ -304,7 +304,7 @@ export const MessageTextInput = ({
               size={29}
               icon={
                 <Unlock
-                  stroke={isDark ? '#FFFFFF' : 'black'}
+                  stroke={tailwind.color('text-gray-12') ?? '#202020'}
                   strokeOpacity={isDark ? '1' : '0.565'}
                 />
               }
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
   listShadow:
     Platform.select({
       ios: {
-        shadowColor: '#00000040',
+        shadowColor: 'rgba(0,0,0,0.25)',
         shadowOffset: { width: 0, height: 0.15 },
         shadowRadius: 2,
         shadowOpacity: 0.35,

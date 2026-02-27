@@ -8,7 +8,7 @@
  * Send a test foreground notification
  */
 export async function sendTestForegroundNotification(): Promise<void> {
-  console.log('[TestNotifications] sendTestForegroundNotification called');
+  console.warn('[TestNotifications] sendTestForegroundNotification called');
   // TODO: Implement actual notification sending
 }
 
@@ -16,7 +16,7 @@ export async function sendTestForegroundNotification(): Promise<void> {
  * Check notification permissions
  */
 export async function checkNotificationPermissions(): Promise<boolean> {
-  console.log('[TestNotifications] checkNotificationPermissions called');
+  console.warn('[TestNotifications] checkNotificationPermissions called');
   // TODO: Implement actual permission check
   return true;
 }
@@ -25,7 +25,7 @@ export async function checkNotificationPermissions(): Promise<boolean> {
  * Get FCM token
  */
 export async function getFCMToken(): Promise<string | null> {
-  console.log('[TestNotifications] getFCMToken called');
+  console.warn('[TestNotifications] getFCMToken called');
   // TODO: Implement actual FCM token retrieval
   return null;
 }
@@ -34,13 +34,13 @@ export async function getFCMToken(): Promise<string | null> {
  * Run full notification test
  */
 export async function runNotificationTest(): Promise<void> {
-  console.log('[TestNotifications] Running notification test...');
+  console.warn('[TestNotifications] Running notification test...');
 
   const hasPermission = await checkNotificationPermissions();
-  console.log('[TestNotifications] Permission:', hasPermission);
+  console.warn('[TestNotifications] Permission:', hasPermission);
 
   const token = await getFCMToken();
-  console.log('[TestNotifications] FCM Token:', token);
+  console.warn('[TestNotifications] FCM Token:', token);
 
-  console.log('[TestNotifications] Test complete');
+  console.warn('[TestNotifications] Test complete');
 }

@@ -112,7 +112,7 @@ export const settingsSlice = createSlice({
         action.type === 'persist/REHYDRATE',
       (state, action) => {
         if (action.payload?.settings) {
-          console.log('🔄 Redux Persist REHYDRATE - Settings restored from storage:', {
+          console.warn('[Settings] Redux Persist REHYDRATE - Settings restored from storage:', {
             persistedBaseUrl: action.payload.settings.baseUrl,
             persistedInstallationUrl: action.payload.settings.installationUrl,
             currentEnvBaseUrl: process.env.EXPO_PUBLIC_BASE_URL,

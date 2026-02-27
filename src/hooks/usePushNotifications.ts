@@ -14,19 +14,19 @@ export const usePushNotifications = (installationUrl: string) => {
 
     // Wait for Firebase auto-initialization
     (async () => {
-      console.log('PushNotifications: Waiting for Firebase...');
+      console.warn('PushNotifications: Waiting for Firebase...');
       const ready = await waitForFirebaseInit({ timeoutMs: 5000, pollMs: 100 });
       const apps = getApps();
-      console.log('PushNotifications: Firebase ready?', ready, 'apps:', apps.length);
+      console.warn('PushNotifications: Firebase ready?', ready, 'apps:', apps.length);
       if (!ready) {
-        console.log('🚨 Firebase not initialized - skipping push notifications setup');
+        console.warn('Firebase not initialized - skipping push notifications setup');
         return;
       }
-      console.log('🔔 Setting up push notifications...');
+      console.warn('Setting up push notifications...');
 
       // Request permission and log status
       const perm = await Notifications.requestPermissionsAsync();
-      console.log('Notifications permission status:', perm);
+      console.warn('Notifications permission status:', perm);
       // Ensure Android default channel exists with MAX importance (Expo uses 'default' implicitly)
       if (Platform.OS === 'android') {
         await Notifications.setNotificationChannelAsync('default', {
@@ -40,7 +40,7 @@ export const usePushNotifications = (installationUrl: string) => {
           lightColor: '#ffffff',
         });
         const channels = await Notifications.getNotificationChannelsAsync();
-        console.log(
+        console.warn(
           'Available Android channels:',
           channels?.map(c => ({ id: c.id, importance: c.importance })),
         );
@@ -50,7 +50,7 @@ export const usePushNotifications = (installationUrl: string) => {
         // Foreground message handler
         const messaging = getMessaging(getApp());
         unsubscribeForeground = onMessage(messaging, async remoteMessage => {
-          console.log('🔔 Foreground notification received:', {
+          console.warn('Foreground notification received:', {
             title: remoteMessage.notification?.title,
             body: remoteMessage.notification?.body,
             data: remoteMessage.data,
@@ -68,9 +68,9 @@ export const usePushNotifications = (installationUrl: string) => {
           });
         });
 
-        console.log('✅ Push notifications setup completed');
+        console.warn('Push notifications setup completed');
       } catch (error) {
-        console.log('❌ Failed to setup push notifications:', error);
+        console.error('Failed to setup push notifications:', error);
       }
     })();
 

@@ -9,7 +9,6 @@ import { AIHeaderButton } from '@/components-next/ai-status/AIHeaderButton';
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
 import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
-import { useTheme } from '@/context';
 import { ChatDropdownMenu, DashboardList } from './DropdownMenu';
 import { SLAEvent } from '@/types/common';
 import { useRefsContext } from '@/context';
@@ -46,7 +45,6 @@ export const ChatHeader = ({
   onToggleChatStatus,
   onToggleAI,
 }: ChatHeaderProps) => {
-  const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const { slaEventsSheetRef } = useRefsContext();
 
@@ -71,7 +69,7 @@ export const ChatHeader = ({
             hitSlop={8}
             style={tailwind.style('h-8 w-8 flex  justify-center items-start')}
             onPress={onBackPress}>
-            <Icon icon={<ChevronLeft stroke={isDark ? '#FFFFFF' : undefined} />} size={24} />
+            <Icon icon={<ChevronLeft stroke={tailwind.color('text-gray-12') ?? '#202020'} />} size={24} />
           </Pressable>
           <Pressable
             onPress={onContactDetailsPress}
@@ -98,7 +96,7 @@ export const ChatHeader = ({
               <Pressable hitSlop={8} onPress={toggleSlaEventsSheet}>
                 <Icon
                   icon={
-                    <SLAIcon color={isSlaMissed ? '#E13D45' : isDark ? '#FFFFFF' : '#BBBBBB'} />
+                    <SLAIcon color={isSlaMissed ? '#E13D45' : (tailwind.color('text-gray-11') ?? '#646464')} />
                   }
                   size={24}
                 />
@@ -111,7 +109,7 @@ export const ChatHeader = ({
                   isResolved ? (
                     <ResolvedIcon strokeWidth={2} stroke={tailwind.color('bg-green-700')} />
                   ) : (
-                    <OpenIcon strokeWidth={2} stroke={isDark ? '#FFFFFF' : undefined} />
+                    <OpenIcon strokeWidth={2} stroke={tailwind.color('text-gray-12') ?? '#202020'} />
                   )
                 }
                 size={24}
@@ -121,7 +119,7 @@ export const ChatHeader = ({
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>
               <Icon
-                icon={<Overflow strokeWidth={2} stroke={isDark ? '#FFFFFF' : undefined} />}
+                icon={<Overflow strokeWidth={2} stroke={tailwind.color('text-gray-12') ?? '#202020'} />}
                 size={24}
               />
             </ChatDropdownMenu>

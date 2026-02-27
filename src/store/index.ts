@@ -59,8 +59,8 @@ const rootReducer = (state: ReturnType<typeof appReducer>, action: AnyAction) =>
       (envInstallationUrl && persistedSettings.installationUrl !== envInstallationUrl);
 
     if (urlMismatch && currentEnvironment) {
-      console.log(
-        '🚨 ENVIRONMENT MISMATCH DETECTED - Overriding persisted settings with environment variables:',
+      console.warn(
+        '[Store] Environment mismatch detected - Overriding persisted settings with environment variables:',
         {
           'Persisted baseUrl': persistedSettings.baseUrl,
           'Environment baseUrl': envBaseUrl,

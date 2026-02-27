@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet } from 'react-native';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const colors = require('@/theme/colors/light');
+import { tailwind } from '@/theme';
 
 interface AIHeaderButtonProps {
   isEnabled: boolean;
@@ -14,7 +13,9 @@ export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPre
       style={[
         styles.button,
         {
-          backgroundColor: isEnabled ? colors.brand[600] : colors.gray[300],
+          backgroundColor: isEnabled
+            ? (tailwind.color('bg-brand') ?? '#5d17ea')
+            : (tailwind.color('bg-gray-4') ?? '#e8e8e8'),
         },
       ]}
       onPress={onPress}
@@ -26,7 +27,9 @@ export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPre
         style={[
           styles.text,
           {
-            color: isEnabled ? '#FFFFFF' : colors.gray[600],
+            color: isEnabled
+              ? (tailwind.color('text-white') ?? '#FFFFFF')
+              : (tailwind.color('text-gray-11') ?? '#646464'),
           },
         ]}>
         AI

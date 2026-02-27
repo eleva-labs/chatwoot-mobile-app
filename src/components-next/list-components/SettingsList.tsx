@@ -5,6 +5,7 @@ import Animated from 'react-native-reanimated';
 import { CaretRight } from '@/svg-icons';
 import { GenericListType } from '@/types';
 import { Icon } from '@/components-next/common/icon';
+import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
 import { useTheme } from '@/context';
 
@@ -22,7 +23,6 @@ type ListItemProps = {
 const ListItem = (props: ListItemProps) => {
   const { listItem, index, isLastItem } = props;
   const themedTailwind = useThemedStyles();
-  const { isDark } = useTheme();
 
   return (
     <Pressable
@@ -64,7 +64,7 @@ const ListItem = (props: ListItemProps) => {
               {listItem.subtitle}
             </Animated.Text>
             {listItem.hasChevron ? (
-              <Icon icon={<CaretRight stroke={isDark ? '#FFFFFF' : undefined} />} size={20} />
+              <Icon icon={<CaretRight stroke={tailwind.color('text-gray-12') ?? '#202020'} />} size={20} />
             ) : null}
           </Animated.View>
         </Animated.View>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   listShadow:
     Platform.select({
       ios: {
-        shadowColor: '#00000040',
+        shadowColor: 'rgba(0,0,0,0.25)',
         shadowOffset: { width: 0, height: 0.15 },
         shadowRadius: 2,
         shadowOpacity: 0.35,

@@ -131,13 +131,6 @@ const ChatScreen = (props: ChatScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Log conversationId for deep-link testing convenience
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('DeepLinkTest: conversationId', conversationId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Track if opened from external ref (e.g., whatsapp)
   useEffect(() => {
     if (ref) {

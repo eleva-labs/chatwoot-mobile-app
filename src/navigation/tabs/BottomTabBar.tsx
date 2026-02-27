@@ -37,8 +37,7 @@ type TabBarIconsProps = {
 };
 
 const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
-  const { isDark } = useTheme();
-  const iconColor = isDark ? '#FFFFFF' : '#171717';
+  const iconColor = tailwind.color('text-gray-12') ?? '#171717';
 
   switch (route.name) {
     case 'Conversations':

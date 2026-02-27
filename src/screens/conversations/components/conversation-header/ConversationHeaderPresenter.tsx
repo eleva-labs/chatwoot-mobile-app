@@ -8,7 +8,6 @@ import i18n from '@/i18n';
 import { useScaleAnimation } from '@/utils';
 import { useHeaderAnimation } from '@/hooks/useHeaderAnimation';
 import { useThemedStyles } from '@/hooks';
-import { useTheme } from '@/context';
 
 type HeaderState = 'Search' | 'Filter' | 'Select' | 'none';
 
@@ -57,7 +56,6 @@ const HeaderTitle = () => {
 
 const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
-  const { isDark } = useTheme();
 
   if (currentState === 'Filter' || currentState === 'Search') return null;
   if (currentState !== 'Select') {
@@ -80,7 +78,7 @@ const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSecti
               isSelectedAll ? (
                 <CheckedIcon />
               ) : (
-                <UncheckedIcon stroke={isDark ? '#FFFFFF' : tailwind.color('text-gray-800')} />
+                <UncheckedIcon stroke={tailwind.color('text-gray-11') ?? '#646464'} />
               )
             }
           />
@@ -124,14 +122,13 @@ const RightSection = ({
   onRightIconPress,
 }: RightSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
-  const { isDark } = useTheme();
 
   return (
     <Animated.View style={tailwind.style('flex-1 items-end')}>
       <Pressable onPress={onRightIconPress} hitSlop={16}>
         {currentState === 'Filter' || currentState === 'Select' ? (
           <Animated.View exiting={exiting} entering={entering}>
-            <Icon size={24} icon={<CloseIcon stroke={isDark ? '#FFFFFF' : undefined} />} />
+            <Icon size={24} icon={<CloseIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />} />
           </Animated.View>
         ) : (
           <Animated.View exiting={exiting} entering={entering}>
@@ -142,7 +139,7 @@ const RightSection = ({
                 )}
               />
             )}
-            <Icon size={24} icon={<FilterIcon stroke={isDark ? '#FFFFFF' : undefined} />} />
+            <Icon size={24} icon={<FilterIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />} />
           </Animated.View>
         )}
       </Pressable>

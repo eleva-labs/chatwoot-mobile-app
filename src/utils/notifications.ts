@@ -26,7 +26,7 @@ export const sendTestForegroundNotification = async (): Promise<void> => {
       ],
     );
     // eslint-disable-next-line no-console
-    console.log('Test foreground notification sent successfully');
+    console.warn('Test foreground notification sent successfully');
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to send test foreground notification:', error);
@@ -38,7 +38,7 @@ export const checkNotificationPermissions = async (): Promise<number | null> => 
     const apps = getApps();
     if (apps.length === 0) {
       // eslint-disable-next-line no-console
-      console.log('Firebase not initialized - cannot check permissions');
+      console.warn('Firebase not initialized - cannot check permissions');
       return null;
     }
 
@@ -55,13 +55,13 @@ export const checkNotificationPermissions = async (): Promise<number | null> => 
     const label = permissionStatus[Number(authStatus)] ?? 'Unknown';
 
     // eslint-disable-next-line no-console
-    console.log('=== Notification Permission Status ===');
+    console.warn('=== Notification Permission Status ===');
     // eslint-disable-next-line no-console
-    console.log(`Platform: ${Platform.OS}`);
+    console.warn(`Platform: ${Platform.OS}`);
     // eslint-disable-next-line no-console
-    console.log(`Permission: ${label}`);
+    console.warn(`Permission: ${label}`);
     // eslint-disable-next-line no-console
-    console.log(`Status Code: ${authStatus}`);
+    console.warn(`Status Code: ${authStatus}`);
 
     return authStatus as unknown as number;
   } catch (error) {
@@ -76,18 +76,18 @@ export const getFCMToken = async (): Promise<string | null> => {
     const apps = getApps();
     if (apps.length === 0) {
       // eslint-disable-next-line no-console
-      console.log('Firebase not initialized - cannot get FCM token');
+      console.warn('Firebase not initialized - cannot get FCM token');
       return null;
     }
 
     const messaging = getMessaging(getApp());
     const token = await getToken(messaging);
     // eslint-disable-next-line no-console
-    console.log('=== FCM Token ===');
+    console.warn('=== FCM Token ===');
     // eslint-disable-next-line no-console
-    console.log(token);
+    console.warn(token);
     // eslint-disable-next-line no-console
-    console.log('================');
+    console.warn('================');
     return token;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -98,12 +98,12 @@ export const getFCMToken = async (): Promise<string | null> => {
 
 export const logNotificationListeners = (): (() => void) => {
   // eslint-disable-next-line no-console
-  console.log('=== Setting up notification listeners for testing ===');
+  console.warn('=== Setting up notification listeners for testing ===');
 
   const apps = getApps();
   if (apps.length === 0) {
     // eslint-disable-next-line no-console
-    console.log('Firebase not initialized - cannot setup notification listeners');
+    console.warn('Firebase not initialized - cannot setup notification listeners');
     return () => {};
   }
 
@@ -111,31 +111,31 @@ export const logNotificationListeners = (): (() => void) => {
     const messaging = getMessaging(getApp());
     const unsubscribeForeground = onMessage(messaging, async remoteMessage => {
       // eslint-disable-next-line no-console
-      console.log('Foreground notification received:', remoteMessage);
+      console.warn('Foreground notification received:', remoteMessage);
     });
 
     const unsubscribeBackground = onNotificationOpenedApp(messaging, remoteMessage => {
       // eslint-disable-next-line no-console
-      console.log('App opened from background notification:', remoteMessage);
+      console.warn('App opened from background notification:', remoteMessage);
     });
 
     getInitialNotification(messaging)
       .then(remoteMessage => {
         if (remoteMessage) {
           // eslint-disable-next-line no-console
-          console.log('App opened from cold start notification:', remoteMessage);
+          console.warn('App opened from cold start notification:', remoteMessage);
         }
       })
       .catch(error => {
         // eslint-disable-next-line no-console
-        console.log('Failed to get initial notification:', error);
+        console.error('Failed to get initial notification:', error);
       });
 
     return () => {
       unsubscribeForeground();
       unsubscribeBackground();
       // eslint-disable-next-line no-console
-      console.log('Notification test listeners cleaned up');
+      console.warn('Notification test listeners cleaned up');
     };
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -146,14 +146,14 @@ export const logNotificationListeners = (): (() => void) => {
 
 export const runNotificationTest = async (): Promise<() => void> => {
   // eslint-disable-next-line no-console
-  console.log('Starting comprehensive notification test...');
+  console.warn('Starting comprehensive notification test...');
 
   const apps = getApps();
   if (apps.length === 0) {
     // eslint-disable-next-line no-console
-    console.log('Firebase not initialized - cannot run notification tests');
+    console.warn('Firebase not initialized - cannot run notification tests');
     // eslint-disable-next-line no-console
-    console.log('Make sure Firebase is properly configured and initialized');
+    console.warn('Make sure Firebase is properly configured and initialized');
     return () => {};
   }
 
@@ -162,9 +162,9 @@ export const runNotificationTest = async (): Promise<() => void> => {
   const cleanup = logNotificationListeners();
   await sendTestForegroundNotification();
   // eslint-disable-next-line no-console
-  console.log('Notification test completed. Check logs above for results.');
+  console.warn('Notification test completed. Check logs above for results.');
   // eslint-disable-next-line no-console
-  console.log('To test background notifications, use Firebase Console with the FCM token above.');
+  console.warn('To test background notifications, use Firebase Console with the FCM token above.');
 
   return cleanup;
 };

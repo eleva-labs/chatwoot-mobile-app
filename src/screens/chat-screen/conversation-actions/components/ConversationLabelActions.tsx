@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   labelShadow:
     Platform.select({
       ios: {
-        shadowColor: '#00000040',
+        shadowColor: 'rgba(0,0,0,0.25)',
         shadowOffset: { width: 0, height: 0.15 },
         shadowRadius: 2,
         shadowOpacity: 0.35,

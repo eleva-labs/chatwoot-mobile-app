@@ -56,7 +56,7 @@ const DebugActionCell = ({ item, index, isLastItem }: DebugActionCellProps) => {
   const pushToken = useAppSelector(selectPushToken);
 
   useEffect(() => {
-    console.log('installationUrl', installationUrl);
+    console.warn('installationUrl', installationUrl);
   }, [installationUrl]);
 
   const hapticSelection = useHaptic();

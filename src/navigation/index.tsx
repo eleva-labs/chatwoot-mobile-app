@@ -48,15 +48,15 @@ const initializeFirebaseMessaging = () => {
     // Ensure Firebase is initialized (should be auto-initialized by plugin, but let's be explicit)
     const apps = getApps();
     if (!apps.length) {
-      console.log('Firebase not initialized, skipping messaging setup...');
+      console.warn('Firebase not initialized, skipping messaging setup...');
       return;
     }
 
-    console.log('Firebase already initialized, setting up messaging...');
+    console.warn('Firebase already initialized, setting up messaging...');
 
     const messaging = getMessaging(getApp());
     setBackgroundMessageHandler(messaging, async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
+      console.warn('Message handled in the background', remoteMessage);
 
       // Handle notification data
       const notification = findNotificationFromFCM({ message: remoteMessage });
@@ -68,10 +68,10 @@ const initializeFirebaseMessaging = () => {
       }
 
       // TODO: Process camelCaseNotification data for background tasks
-      console.log('Processed notification:', camelCaseNotification.id);
+      console.warn('Processed notification:', camelCaseNotification.id);
     });
   } catch (error) {
-    console.log('Firebase messaging initialization failed:', error);
+    console.error('Firebase messaging initialization failed:', error);
   }
 };
 
@@ -117,7 +117,7 @@ export const AppNavigationContainer = () => {
     (async () => {
       const ready = await waitForFirebaseInit({ timeoutMs: 5000, pollMs: 100 });
       if (!isMounted) return;
-      console.log('Navigation: Firebase ready?', ready, 'apps:', getApps().length);
+      console.warn('Navigation: Firebase ready?', ready, 'apps:', getApps().length);
       initializeFirebaseMessaging();
     })();
     return () => {
@@ -285,10 +285,10 @@ export const AppNavigationContainer = () => {
               }
             });
           } catch (error) {
-            console.log('Failed to setup notification listener in linking:', error);
+            console.error('Failed to setup notification listener in linking:', error);
           }
         } else {
-          console.log('Firebase not initialized, skipping notification listener in linking');
+          console.warn('Firebase not initialized, skipping notification listener in linking');
         }
       })();
 

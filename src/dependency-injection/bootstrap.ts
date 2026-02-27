@@ -56,7 +56,7 @@ export interface BootstrapOptions {
 export function bootstrapDI(options: BootstrapOptions = {}): void {
   if (isInitialized) {
     if (__DEV__ && options.verbose !== false) {
-      console.log('[DI Bootstrap] Already initialized, skipping');
+      console.warn('[DI Bootstrap] Already initialized, skipping');
     }
     return;
   }
@@ -65,7 +65,7 @@ export function bootstrapDI(options: BootstrapOptions = {}): void {
   const validate = options.validate ?? __DEV__;
 
   if (verbose) {
-    console.log('[DI Bootstrap] Starting initialization...');
+    console.warn('[DI Bootstrap] Starting initialization...');
   }
 
   const startTime = Date.now();
@@ -82,7 +82,7 @@ export function bootstrapDI(options: BootstrapOptions = {}): void {
     const duration = initializationTimestamp - startTime;
 
     if (verbose) {
-      console.log(`[DI Bootstrap] Initialization complete (${duration}ms)`);
+      console.warn(`[DI Bootstrap] Initialization complete (${duration}ms)`);
     }
 
     // Validate in DEV builds
@@ -92,7 +92,7 @@ export function bootstrapDI(options: BootstrapOptions = {}): void {
         console.error('[DI Bootstrap] Validation failed:');
         validation.errors.forEach(error => console.error(`  - ${error}`));
       } else if (verbose) {
-        console.log(
+        console.warn(
           `[DI Bootstrap] Validation passed (${validation.tokenCount} tokens registered)`,
         );
       }

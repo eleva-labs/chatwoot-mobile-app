@@ -240,7 +240,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_AVAILABILITY'),
-      icon: <SwitchIcon stroke={isDark ? '#FFFFFF' : undefined} />,
+      icon: <SwitchIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => openSheet(),
@@ -248,7 +248,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.NOTIFICATIONS'),
-      icon: <NotificationIcon stroke={isDark ? '#FFFFFF' : undefined} />,
+      icon: <NotificationIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />,
       subtitle: '',
       subtitleType: 'light',
       disabled: !hasConversationPermission,
@@ -258,7 +258,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_LANGUAGE'),
-      icon: <TranslateIcon stroke={isDark ? '#FFFFFF' : undefined} />,
+      icon: <TranslateIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />,
       subtitle: LANGUAGES[activeLocale as keyof typeof LANGUAGES],
       subtitleType: 'light',
       onPressListItem: () => languagesModalSheetRef.current?.present(),
@@ -266,7 +266,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.THEME'),
-      icon: <ThemeIcon color={isDark ? '#FFFFFF' : undefined} />,
+      icon: <ThemeIcon color={tailwind.color('text-gray-12') ?? '#202020'} />,
       subtitle: getThemeLabel(),
       subtitleType: 'light',
       onPressListItem: () => {
@@ -281,7 +281,7 @@ const SettingsScreen = () => {
     {
       hasChevron: enableAccountSwitch,
       title: i18n.t('SETTINGS.SWITCH_ACCOUNT'),
-      icon: <SwitchIcon stroke={isDark ? '#FFFFFF' : undefined} />,
+      icon: <SwitchIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />,
       subtitle: activeAccountName,
       subtitleType: 'light',
       onPressListItem: () => {
@@ -304,7 +304,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHAT_WITH_US'),
-      icon: <ChatwootIcon stroke={isDark ? '#FFFFFF' : undefined} />,
+      icon: <ChatwootIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => toggleWidget(true),

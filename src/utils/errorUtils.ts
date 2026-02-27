@@ -24,7 +24,7 @@ const errorHandler: ErrorHandler = (e, isFatal) => {
     );
   } else {
     // eslint-disable-next-line no-console
-    console.log(e);
+    console.error(e);
   }
 };
 

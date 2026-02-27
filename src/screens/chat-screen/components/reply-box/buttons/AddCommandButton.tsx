@@ -5,7 +5,6 @@ import { Icon } from '@/components-next/common';
 import { AddIcon } from '@/svg-icons';
 import { useScaleAnimation } from '@/utils';
 import { tailwind } from '@/theme';
-import { useTheme } from '@/context';
 import { AddCommandButtonProps } from '../types';
 
 export const AddCommandButton = ({
@@ -13,7 +12,6 @@ export const AddCommandButton = ({
   ...otherProps
 }: AddCommandButtonProps) => {
   const { animatedStyle, handlers } = useScaleAnimation();
-  const { isDark } = useTheme();
 
   const addIconAnimation = useAnimatedStyle(() => {
     return {
@@ -38,7 +36,7 @@ export const AddCommandButton = ({
             tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
             addIconAnimation,
           ]}>
-          <Icon icon={<AddIcon stroke={isDark ? '#FFFFFF' : undefined} />} size={24} />
+          <Icon icon={<AddIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />} size={24} />
         </Animated.View>
       </Pressable>
     </Animated.View>
