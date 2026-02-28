@@ -214,7 +214,7 @@ export const aiInputTokens: AIInputTokens = {
   inputBackground: 'bg-slate-3',
   inputText: 'text-slate-12',
   inputPlaceholder: 'text-slate-9',
-  sendButton: 'bg-slate-12',
+  sendButton: 'bg-iris-9',
   sendButtonIcon: 'text-white',
   cancelText: 'text-ruby-9',
 };

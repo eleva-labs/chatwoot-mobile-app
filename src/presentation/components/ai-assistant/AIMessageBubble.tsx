@@ -14,9 +14,10 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import { View, Pressable, ActivityIndicator } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useHaptic } from '@/utils';
+import { Copy, Check } from 'lucide-react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import type { AIMessageBubbleProps } from '@/presentation/containers/ai-assistant/types';
@@ -73,7 +74,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
 
   return (
     <View
-      style={style('items-end gap-2 px-4 py-1.5', isUser ? 'flex-row-reverse' : 'flex-row')}
+      style={style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
       accessible
       accessibilityRole="text"
       accessibilityLabel={
@@ -87,7 +88,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
           renderAvatarProp({
             name: avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME')),
             src: avatarSrc,
-            size: 40,
+            size: 28,
           })
         ) : (
           <Avatar
@@ -103,7 +104,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
       {/* Message content */}
       {isAssistant ? (
         // Assistant: reasoning → tools → text bubble (matching Vue layout)
-        <View style={style('flex-col gap-1 flex-1')}>
+        <View style={style('flex-col gap-1 w-4/5')}>
           {/* Reasoning parts - outside bubble */}
           {reasoningParts.map((part, idx) => (
             <AIPartRenderer
@@ -130,7 +131,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
           {showLoader ? (
             <View
               style={style(
-                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%] overflow-hidden',
+                'px-4 py-2 rounded-2xl rounded-bl-sm overflow-hidden',
                 messageTokens.background,
               )}>
               <ActivityIndicator
@@ -141,7 +142,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
           ) : hasTextContent ? (
             <View
               style={style(
-                'px-4 py-2 rounded-2xl rounded-bl-sm self-start max-w-[85%] overflow-hidden',
+                'px-4 py-2 rounded-2xl rounded-bl-sm overflow-hidden',
                 messageTokens.background,
               )}>
               {textParts.map((part, idx) => (
@@ -156,39 +157,37 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
             </View>
           ) : null}
 
-          {/* Copy button for completed assistant messages */}
+          {/* Action buttons for completed assistant messages */}
           {hasTextContent && !isStreaming && (
-            <Pressable
-              onPress={() => {
-                const fullText = textParts
-                  .filter(p => 'text' in p)
-                  .map(p => (p as { text: string }).text)
-                  .join('\n');
-                if (onCopyProp) {
-                  onCopyProp(fullText);
-                } else {
-                  Clipboard.setString(fullText);
-                }
-                if (onHapticProp) {
-                  onHapticProp();
-                } else {
-                  defaultHaptic?.();
-                }
-                setCopiedId(message.id);
-                setTimeout(() => setCopiedId(null), 2000);
-              }}
-              style={({ pressed }) =>
-                style('self-start mt-1 px-2 py-1 rounded-md', pressed && 'bg-slate-3')
-              }
-              accessible
-              accessibilityRole="button"
-              accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
-              <Text style={style('text-xs text-slate-9')}>
+            <View style={style('flex-row items-center gap-0.5 self-start mt-1')}>
+              {/* Copy button */}
+              <Pressable
+                onPress={() => {
+                  const fullText = textParts
+                    .filter(p => 'text' in p)
+                    .map(p => (p as { text: string }).text)
+                    .join('\n');
+                  if (onCopyProp) {
+                    onCopyProp(fullText);
+                  } else {
+                    Clipboard.setString(fullText);
+                  }
+                  if (onHapticProp) {
+                    onHapticProp();
+                  } else {
+                    defaultHaptic?.();
+                  }
+                  setCopiedId(message.id);
+                  setTimeout(() => setCopiedId(null), 2000);
+                }}
+                style={style('p-1.5 rounded-md')}
+                accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
                 {copiedId === message.id
-                  ? t('AI_ASSISTANT.CHAT.COPY.COPIED')
-                  : t('AI_ASSISTANT.CHAT.COPY.COPY')}
-              </Text>
-            </Pressable>
+                  ? <Check size={16} color={resolveColor('text-teal-9', '#12A594')} strokeWidth={2} />
+                  : <Copy size={16} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
+                }
+              </Pressable>
+            </View>
           )}
         </View>
       ) : (
@@ -222,6 +221,8 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               />
             )}
           </View>
+          {/* Spacer for vertical rhythm matching web */}
+          <View style={style('h-7')} />
         </View>
       )}
     </View>

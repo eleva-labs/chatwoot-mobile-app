@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import type { UIMessage } from 'ai';
 import { mapMessagesToUIMessages } from '@/store/ai-chat/aiChatMapper';
 import type { AIChatMessage } from '@/store/ai-chat/aiChatTypes';
+import { PART_TYPES } from '@/types/ai-chat/constants';
 
 export interface UseMessageBridgeOptions {
   activeSessionId: string | null;
@@ -43,6 +44,10 @@ export function useMessageBridge(options: UseMessageBridgeOptions): {
     setMessagesRef.current = setMessages;
   }, [setMessages]);
 
+  // Track the last SDK messages before bridge replacement, so we can preserve
+  // reasoning parts that the backend may not return.
+  const lastSdkMessagesRef = useRef<UIMessage[]>([]);
+
   // Bridge key fingerprint — INV-5
   const loadedBridgeKeyRef = useRef<string | null>(null);
 
@@ -64,7 +69,13 @@ export function useMessageBridge(options: UseMessageBridgeOptions): {
       if (loadedBridgeKeyRef.current === bridgeKey) return;
 
       const converted = mapMessagesToUIMessages(backendMessages);
-      setMessagesRef.current(converted);
+
+      // Preserve reasoning parts from SDK messages that backend messages lack.
+      // When streaming ends, the backend may not store reasoning parts, so we
+      // merge them from the last known SDK state to prevent disappearing.
+      const merged = mergeReasoningParts(converted, lastSdkMessagesRef.current);
+
+      setMessagesRef.current(merged);
       loadedBridgeKeyRef.current = bridgeKey;
     }
   }, [activeSessionId, isLoadingMessages, backendMessages, chatStatus, isNewConversation]);
@@ -73,5 +84,56 @@ export function useMessageBridge(options: UseMessageBridgeOptions): {
     loadedBridgeKeyRef.current = null;
   }, []);
 
+  // Capture current SDK messages whenever status transitions from streaming to ready.
+  // This gives us the last SDK state before the bridge overwrites.
+  const prevStatusRef = useRef(chatStatus);
+  useEffect(() => {
+    if (prevStatusRef.current === 'streaming' && chatStatus === 'ready') {
+      // Capture the current messages from SDK before the bridge replaces them.
+      // We use setMessages with a callback that returns the same value but lets us capture.
+      setMessagesRef.current((currentMessages: UIMessage[]) => {
+        lastSdkMessagesRef.current = currentMessages;
+        return currentMessages;
+      });
+    }
+    prevStatusRef.current = chatStatus;
+  }, [chatStatus]);
+
   return { resetBridgeKey };
+}
+
+/**
+ * Merge reasoning parts from SDK messages into backend messages.
+ * For each assistant message in the backend set, if it lacks reasoning parts
+ * but a matching SDK message (by id) has them, prepend the reasoning parts.
+ */
+function mergeReasoningParts(
+  backendMessages: UIMessage[],
+  sdkMessages: UIMessage[],
+): UIMessage[] {
+  if (sdkMessages.length === 0) return backendMessages;
+
+  const sdkMap = new Map(sdkMessages.map(m => [m.id, m]));
+
+  return backendMessages.map(msg => {
+    if (msg.role !== 'assistant') return msg;
+
+    const hasReasoning = msg.parts?.some(
+      p => (p as { type: string }).type === PART_TYPES.REASONING,
+    );
+    if (hasReasoning) return msg;
+
+    const sdkMsg = sdkMap.get(msg.id);
+    if (!sdkMsg) return msg;
+
+    const sdkReasoningParts = sdkMsg.parts?.filter(
+      p => (p as { type: string }).type === PART_TYPES.REASONING,
+    );
+    if (!sdkReasoningParts || sdkReasoningParts.length === 0) return msg;
+
+    return {
+      ...msg,
+      parts: [...sdkReasoningParts, ...(msg.parts || [])],
+    };
+  });
 }

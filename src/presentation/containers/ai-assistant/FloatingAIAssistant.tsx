@@ -9,8 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useScaleAnimation } from '@/utils';
 import { useHaptic } from '@/utils';
-import { Icon } from '@/components-next/common';
-import { AIAssisst } from '@/svg-icons';
+import { Sparkles } from 'lucide-react-native';
 import { AIChatInterface } from './AIChatInterface';
 import type { FloatingAIAssistantProps } from './types';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
@@ -123,7 +122,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN')}
             accessibilityHint={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN_HINT')}
             {...(enableScaleAnimation ? handlers : {})}>
-            {fabIcon ?? <Icon icon={<AIAssisst color="white" strokeOpacity={1} />} size={24} />}
+            {fabIcon ?? <Sparkles size={24} color="white" strokeWidth={2} />}
           </Pressable>
         </Animated.View>
       </Animated.View>

@@ -11,11 +11,13 @@ import { View, Text, Platform, Pressable, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import Animated from 'react-native-reanimated';
 import type { UIMessage } from 'ai';
+import { ChevronDown, ChevronUp } from 'lucide-react-native';
 import { AIMessageBubble } from './AIMessageBubble';
 import { AIChatError } from './AIChatError';
 import { AIChatEmptyState } from './AIChatEmptyState';
 import type { FlashListRef } from '@/presentation/hooks/ai-assistant/useAIChatScroll';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
@@ -31,7 +33,7 @@ ItemSeparator.displayName = 'ItemSeparator';
 
 const separatorStyles = StyleSheet.create({
   separator: {
-    height: 4,
+    height: 8,
   },
 });
 
@@ -81,6 +83,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
   }) => {
     const { style, tokens } = useAIStyles();
     const { t } = useAIi18n();
+    const resolveColor = useResolveColor();
 
     // Memoize render item
     const renderItem = useCallback(
@@ -162,7 +165,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             onScroll={onScroll}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={style('p-4')}
+            contentContainerStyle={style('py-4')}
             keyboardShouldPersistTaps="handled"
             extraData={extraData}
             removeClippedSubviews={Platform.OS === 'android'}
@@ -186,7 +189,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style(
               'absolute bottom-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6 shadow-md',
             )}>
-            <Text style={style('text-sm text-slate-11')}>↓</Text>
+            <ChevronDown size={16} color={resolveColor('text-slate-11', '#60646C')} strokeWidth={2} />
           </Pressable>
         )}
         {!isAtTop && listData.length > 5 && (
@@ -195,7 +198,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style(
               'absolute top-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6 shadow-md',
             )}>
-            <Text style={style('text-sm text-slate-11')}>↑</Text>
+            <ChevronUp size={16} color={resolveColor('text-slate-11', '#60646C')} strokeWidth={2} />
           </Pressable>
         )}
       </View>

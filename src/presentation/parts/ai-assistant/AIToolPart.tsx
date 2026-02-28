@@ -16,8 +16,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
-import { Icon } from '@/components-next/common';
-import { CheckIcon, CloseIcon, LoadingIcon } from '@/svg-icons';
+import { CircleCheck, CircleX, Wrench, LoaderCircle } from 'lucide-react-native';
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
 import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { AICollapsible } from './AICollapsible';
@@ -53,7 +52,7 @@ export interface AIToolPartProps {
 type DisplayState = 'pending' | 'running' | 'completed' | 'error';
 
 interface StateDisplayData {
-  iconName: 'loading' | 'check' | 'close';
+  iconName: 'wrench' | 'loader' | 'check' | 'close';
   iconColorToken: string;
   iconColorFallback: string;
   labelKey: string;
@@ -75,14 +74,14 @@ interface StateDisplayData {
  */
 const STATE_DATA: Record<DisplayState, StateDisplayData> = {
   pending: {
-    iconName: 'loading',
+    iconName: 'wrench',
     iconColorToken: 'text-slate-10',
     iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.PENDING',
     accentColor: 'slate',
   },
   running: {
-    iconName: 'loading',
+    iconName: 'loader',
     iconColorToken: 'text-slate-10',
     iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.RUNNING',
@@ -114,12 +113,14 @@ function renderStateIcon(
   resolveColor: (token: string, fallback: string) => string,
 ): React.ReactNode {
   const color = resolveColor(data.iconColorToken, data.iconColorFallback);
+  const iconProps = { size: 14, color, strokeWidth: 1.5 };
   const iconMap = {
-    loading: <LoadingIcon stroke={color} />,
-    check: <CheckIcon stroke={color} />,
-    close: <CloseIcon stroke={color} />,
+    wrench: <Wrench {...iconProps} />,
+    loader: <LoaderCircle {...iconProps} />,
+    check: <CircleCheck {...iconProps} />,
+    close: <CircleX {...iconProps} />,
   };
-  return <Icon icon={iconMap[data.iconName]} size={14} />;
+  return iconMap[data.iconName];
 }
 
 // ============================================================================
@@ -201,8 +202,8 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
     return formatToolName(name, t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL'));
   }, [part.toolName, part]);
 
-  // Build title with state
-  const title = `${toolName} • ${t(data.labelKey)}`;
+  // Build title — show only tool name (state is conveyed by icon color)
+  const title = toolName;
 
   return (
     <AICollapsible
@@ -227,7 +228,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
               horizontal={false}
               showsVerticalScrollIndicator={true}
               nestedScrollEnabled={true}>
-              <View style={style('p-2 rounded-md', tokens.tool.jsonBackground)}>
+              <View style={style('p-3 rounded-lg', tokens.tool.jsonBackground)}>
                 <Text style={style('text-xs font-mono', tokens.tool.jsonText)} selectable>
                   {formatJson(inputData)}
                 </Text>
@@ -251,7 +252,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
               horizontal={false}
               showsVerticalScrollIndicator={true}
               nestedScrollEnabled={true}>
-              <View style={style('p-2 rounded-md', tokens.tool.jsonBackground)}>
+              <View style={style('p-3 rounded-lg', tokens.tool.jsonBackground)}>
                 <Text style={style('text-xs font-mono', tokens.tool.jsonText)} selectable>
                   {formatJson(outputData)}
                 </Text>

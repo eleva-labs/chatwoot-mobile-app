@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
-import { Icon } from '@/components-next/common';
-import { SendIcon } from '@/svg-icons';
+import { Mic, Send } from 'lucide-react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import type { AIInputFieldProps } from '@/presentation/containers/ai-assistant/types';
@@ -50,7 +49,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           placeholder={t('AI_ASSISTANT.CHAT.INPUT.PLACEHOLDER')}
           placeholderTextColor={resolveColor('text-slate-9', '#696e77')}
           style={style(
-            'flex-1 text-base font-inter-normal-20 min-h-[40px] max-h-[100px]',
+            'flex-1 text-base font-inter-normal-20 min-h-[36px] max-h-[128px]',
             inputTokens.inputText,
           )}
           onFocus={() => setIsFocused(true)}
@@ -76,28 +75,43 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             </View>
           </Pressable>
         ) : (
-          <Pressable
-            onPress={handleSend}
-            disabled={!text.trim() || isLoading}
-            style={({ pressed }) =>
-              style(
-                'ml-2 p-2 rounded-full',
-                (!text.trim() || isLoading) && 'opacity-50',
-                pressed && 'opacity-70',
-              )
-            }
-            accessible
-            accessibilityRole="button"
-            accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SEND')}
-            accessibilityState={{ disabled: !text.trim() || isLoading }}>
-            <View
-              style={style(
-                'w-8 h-8 rounded-full items-center justify-center',
-                inputTokens.sendButton,
-              )}>
-              <Icon icon={<SendIcon />} size={18} />
-            </View>
-          </Pressable>
+          <View style={style('flex-row items-end')}>
+            {/* Disabled voice/mic button */}
+            <Pressable
+              disabled
+              style={style('ml-1 p-2 rounded-full opacity-50')}
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel="Voice input (coming soon)"
+              accessibilityState={{ disabled: true }}>
+              <View style={style('w-8 h-8 rounded-full items-center justify-center')}>
+                <Mic size={18} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
+              </View>
+            </Pressable>
+            {/* Send button */}
+            <Pressable
+              onPress={handleSend}
+              disabled={!text.trim() || isLoading}
+              style={({ pressed }) =>
+                style(
+                  'ml-1 p-2 rounded-full',
+                  (!text.trim() || isLoading) && 'opacity-50',
+                  pressed && 'opacity-70',
+                )
+              }
+              accessible
+              accessibilityRole="button"
+              accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SEND')}
+              accessibilityState={{ disabled: !text.trim() || isLoading }}>
+              <View
+                style={style(
+                  'w-8 h-8 rounded-full items-center justify-center',
+                  inputTokens.sendButton,
+                )}>
+                <Send size={18} color="white" strokeWidth={2} />
+              </View>
+            </Pressable>
+          </View>
         )}
       </View>
     </Animated.View>

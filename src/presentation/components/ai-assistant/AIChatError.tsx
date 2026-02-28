@@ -5,8 +5,7 @@
  */
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { Icon } from '@/components-next/common';
-import { WarningIcon, LockIcon } from '@/svg-icons';
+import { WifiOff, Clock, Lock, ServerCrash, CircleAlert, RefreshCw } from 'lucide-react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
@@ -24,17 +23,24 @@ interface AIChatErrorProps {
   onFreshStart?: () => void;
 }
 
-/** Renders the appropriate SVG icon for an error category */
+/** Map icon type to Lucide component */
+const ICON_COMPONENTS = {
+  'wifi-off': WifiOff,
+  'clock': Clock,
+  'lock': Lock,
+  'server-crash': ServerCrash,
+  'alert-circle': CircleAlert,
+} as const;
+
+/** Renders the appropriate Lucide icon for an error category */
 const ErrorCategoryIcon: React.FC<{ config: ErrorDisplayConfig }> = ({ config }) => {
   const resolveColor = useResolveColor();
   const iconColor = config.accentText.includes('amber')
     ? resolveColor('text-amber-11', '#AD5700')
     : resolveColor('text-ruby-11', '#CA3A31');
 
-  if (config.iconType === 'lock') {
-    return <Icon icon={<LockIcon />} size={16} />;
-  }
-  return <Icon icon={<WarningIcon stroke={iconColor} />} size={16} />;
+  const IconComponent = ICON_COMPONENTS[config.iconType];
+  return <IconComponent size={16} color={iconColor} strokeWidth={2} />;
 };
 
 export const AIChatError: React.FC<AIChatErrorProps> = ({
@@ -67,7 +73,10 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
       {/* Actions */}
       <View style={style('flex-row flex-wrap gap-2 mt-3')}>
         {canRetry && onRetry && (
-          <Pressable onPress={onRetry} style={style('bg-iris-9 px-3 py-1.5 rounded-lg')}>
+          <Pressable
+            onPress={onRetry}
+            style={style('bg-iris-9 px-3 py-1.5 rounded-lg flex-row items-center gap-1')}>
+            <RefreshCw size={12} color="white" strokeWidth={2} />
             <Text style={style('text-xs font-medium text-white')}>
               {t('AI_ASSISTANT.CHAT.ERRORS.RETRY')}
             </Text>

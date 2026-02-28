@@ -18,6 +18,7 @@ import React, { useMemo } from 'react';
 import { View, ScrollView, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
+import { Brain } from 'lucide-react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { useTheme } from '@/context/ThemeContext';
 import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
@@ -119,10 +120,8 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   // Dynamic title based on streaming state
   const title = isStreaming ? t(LABEL_KEYS.streaming) : t(LABEL_KEYS.completed);
 
-  // Don't render if no content and not streaming
-  if (!reasoningText && !isStreaming) {
-    return null;
-  }
+  // Always render if the part exists — matches web behavior.
+  // The part existing in the message means reasoning occurred.
 
   return (
     <AICollapsible
@@ -131,18 +130,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
       isStreaming={isStreaming}
       defaultExpanded={defaultExpanded}
       icon={
-        isStreaming ? (
-          <ActivityIndicator
-            size="small"
-            color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')}
-          />
-        ) : (
-          <View
-            style={[
-              style('w-2.5 h-2.5 rounded-full', irisTokens.iconActive ? 'bg-iris-9' : 'bg-slate-9'),
-            ]}
-          />
-        )
+        <Brain size={14} color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')} strokeWidth={1.5} />
       }>
       <ScrollView
         style={style('max-h-64')}

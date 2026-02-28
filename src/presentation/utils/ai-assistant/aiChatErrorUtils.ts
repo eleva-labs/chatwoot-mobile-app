@@ -27,7 +27,7 @@ export function categorizeError(message: string): ErrorCategory {
 
 export interface ErrorDisplayConfig {
   titleKey: string;
-  iconType: 'warning' | 'lock';
+  iconType: 'wifi-off' | 'clock' | 'lock' | 'server-crash' | 'alert-circle';
   accentBg: string;
   accentBorder: string;
   accentText: string;
@@ -41,14 +41,14 @@ export interface ErrorDisplayConfig {
 export const ERROR_DISPLAY_CONFIG: Record<ErrorCategory, ErrorDisplayConfig> = {
   network: {
     titleKey: 'AI_ASSISTANT.CHAT.ERRORS.NETWORK',
-    iconType: 'warning',
+    iconType: 'wifi-off',
     accentBg: 'bg-amber-3',
     accentBorder: 'border-amber-4',
     accentText: 'text-amber-11',
   },
   rate_limit: {
     titleKey: 'AI_ASSISTANT.CHAT.ERRORS.RATE_LIMIT',
-    iconType: 'warning',
+    iconType: 'clock',
     accentBg: 'bg-amber-3',
     accentBorder: 'border-amber-4',
     accentText: 'text-amber-11',
@@ -62,14 +62,14 @@ export const ERROR_DISPLAY_CONFIG: Record<ErrorCategory, ErrorDisplayConfig> = {
   },
   server: {
     titleKey: 'AI_ASSISTANT.CHAT.ERRORS.SERVER',
-    iconType: 'warning',
+    iconType: 'server-crash',
     accentBg: 'bg-ruby-3',
     accentBorder: 'border-ruby-4',
     accentText: 'text-ruby-11',
   },
   unknown: {
     titleKey: 'AI_ASSISTANT.CHAT.ERRORS.UNKNOWN',
-    iconType: 'warning',
+    iconType: 'alert-circle',
     accentBg: 'bg-ruby-3',
     accentBorder: 'border-ruby-4',
     accentText: 'text-ruby-11',

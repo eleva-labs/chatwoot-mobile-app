@@ -12,10 +12,12 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 
+import { ChevronRight, ChevronUp } from 'lucide-react-native';
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 // ============================================================================
@@ -69,6 +71,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
 }) => {
   const { style, getCollapsible } = useAIStyles();
   const { t } = useAIi18n();
+  const resolveColor = useResolveColor();
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const colors = getCollapsible(accentColor);
 
@@ -107,7 +110,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
 
   return (
     <View
-      style={style('rounded-xl border overflow-hidden w-full', colors.border, colors.background)}
+      style={style('rounded-xl border overflow-hidden w-full', 'border-slate-6/50', colors.background)}
       accessible
       accessibilityRole="button"
       accessibilityState={{ expanded: isExpanded }}
@@ -141,6 +144,14 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
           {title}
         </Text>
 
+        {/* Streaming spinner */}
+        {isStreaming && (
+          <ActivityIndicator
+            size="small"
+            color={resolveColor(colors.iconActive || 'text-slate-9', '#80838D')}
+          />
+        )}
+
         {/* Subtitle */}
         {subtitle && (
           <Text style={style('text-xs font-inter-normal-20', colors.subtitle)} numberOfLines={1}>
@@ -149,9 +160,8 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
         )}
 
         {/* Chevron (rotates 90deg like Vue) */}
-        {/* TODO: Replace with Lucide ChevronRight icon when icon library is migrated */}
-        <Animated.View style={chevronAnimatedStyle}>
-          <Text style={style('text-sm', colors.chevron)}>▶</Text>
+        <Animated.View style={[chevronAnimatedStyle, style('w-4 h-4 items-center justify-center')]}>
+          <ChevronRight size={14} color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')} strokeWidth={2} />
         </Animated.View>
       </Pressable>
 
@@ -159,11 +169,11 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
       {isExpanded && (
         <Animated.View style={[contentAnimatedStyle, style('overflow-hidden')]}>
           <View style={style('px-3 pb-3')}>
-            <View style={style('pl-4 border-l-2', colors.borderAccent)}>
+            <View style={style('pl-6 border-l-2', colors.borderAccent)}>
               {children}
               {/* Collapse footer button */}
               <Pressable onPress={handleToggle} style={style('flex-row items-center gap-1 pt-2')}>
-                <Text style={style('text-xs', colors.chevron)}>▲</Text>
+                <ChevronUp size={12} color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')} strokeWidth={2} />
                 <Text style={style('text-xs', colors.label)}>
                   {t('AI_ASSISTANT.CHAT.COLLAPSIBLE.COLLAPSE')}
                 </Text>

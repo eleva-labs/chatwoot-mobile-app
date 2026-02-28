@@ -170,6 +170,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      lucide-react-native:
+        specifier: ^0.575.0
+        version: 0.575.0(react-native-svg@15.14.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -5603,6 +5606,13 @@ packages:
   lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
+
+  lucide-react-native@0.575.0:
+    resolution: {integrity: sha512-kdGcjF4Rm1YKuNs3IaW5lDAqVKn9RBj1Fmjt3JBr08PMIXpVV7iL0ICNF/awiPZQicHlx/v9xgyZZS4TAFxDNg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-native: '*'
+      react-native-svg: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
 
   make-dir@2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
@@ -14459,6 +14469,12 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+
+  lucide-react-native@0.575.0(react-native-svg@15.14.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-native: 0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)
+      react-native-svg: 15.14.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
 
   make-dir@2.1.0:
     dependencies:
