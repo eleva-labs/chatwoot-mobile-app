@@ -11,7 +11,7 @@
  * - AIChatInterface (container) — owns useAIChat, useAIChatSessions, Redux state
  */
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -25,15 +25,26 @@ import {
   useAIChatSessions,
   useAIChatScroll,
 } from '@/presentation/hooks/ai-assistant';
+import { useMessageBridge } from '@/presentation/hooks/ai-assistant/useMessageBridge';
 import { validateAndNormalizeMessages } from '@/presentation/utils/ai-assistant';
 import { AIInputField } from '@/presentation/components/ai-assistant/AIInputField';
 import type { AIChatInterfaceProps } from './types';
-import { selectIsLoadingSessions, selectActiveSessionId, setActiveSession } from '@/store/ai-chat';
+import {
+  selectIsLoadingSessions,
+  selectActiveSessionId,
+  selectIsLoadingMessages,
+  selectMessagesBySession,
+  setActiveSession,
+} from '@/store/ai-chat';
+import type { AIChatMessage } from '@/store/ai-chat/aiChatTypes';
 import { selectUser } from '@/store/auth/authSelectors';
 import { AIChatHeader } from '@/presentation/components/ai-assistant/AIChatHeader';
 import { AIChatSessionPanel } from '@/presentation/components/ai-assistant/AIChatSessionPanel';
 import { AIChatMessagesList } from '@/presentation/components/ai-assistant/AIChatMessagesList';
 import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
+
+// Stable empty array reference to prevent unnecessary rerenders
+const EMPTY_MESSAGES: AIChatMessage[] = [];
 
 // ============================================================================
 // AIChatMessagesView — Inner component isolated from session management renders
@@ -128,6 +139,12 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     const accountId = user?.account_id;
     const isLoadingSessions = useAppSelector(selectIsLoadingSessions);
     const activeSessionId = useAppSelector(selectActiveSessionId);
+    const isLoadingMessages = useAppSelector(selectIsLoadingMessages);
+
+    // Backend messages for the active session (used by message bridge)
+    const backendMessages = useAppSelector(state =>
+      activeSessionId ? selectMessagesBySession(state, activeSessionId) : EMPTY_MESSAGES,
+    );
 
     // Bot management
     const { selectedBotId, selectedBot } = useAIChatBot(agentBotId, accountId);
@@ -165,23 +182,40 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       }
     }, [error]);
 
-    // Sessions management — pass chatStatus to guard bridge effect during streaming
+    // Bridge key reset ref — shared between sessions hook and message bridge.
+    // We use a ref so both hooks can reference it without circular dependencies.
+    const bridgeKeyResetRef = useRef<(() => void) | null>(null);
+    const handleBridgeKeyReset = useCallback(() => {
+      bridgeKeyResetRef.current?.();
+    }, []);
+
+    // Sessions management
     const {
       sessions,
-      isLoadingMessages,
+      isLoadingMessages: isLoadingSessionMessages,
       showSessions,
       setShowSessions,
       handleSelectSession,
       handleNewConversation,
-    } = useAIChatSessions(
-      selectedBotId,
-      accountId,
-      agentBotId,
-      setMessages,
+      isNewConversation,
+    } = useAIChatSessions(selectedBotId, accountId, agentBotId, {
+      stop: cancel,
       clearSession,
-      cancel,
-      status,
-    );
+      onBridgeKeyReset: handleBridgeKeyReset,
+    });
+
+    // Message bridge — loads backend messages into SDK when not streaming
+    const { resetBridgeKey } = useMessageBridge({
+      activeSessionId,
+      isLoadingMessages,
+      backendMessages,
+      chatStatus: status,
+      setMessages,
+      isNewConversation,
+    });
+
+    // Wire the bridge key reset to the ref so sessions hook can call it
+    bridgeKeyResetRef.current = resetBridgeKey;
 
     // Validate and normalize messages for safe FlashList rendering
     const listData = useMemo(() => {

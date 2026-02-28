@@ -55,6 +55,7 @@ ios/GoogleService-Info.plist
 service-account-key.json
 
 /docs/ignored/
+/docs/temp/
 
 # Log files
 *.txt

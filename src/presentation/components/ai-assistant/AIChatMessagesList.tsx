@@ -42,7 +42,7 @@ export interface AIChatMessagesListProps {
   isLoadingMessages: boolean;
   activeSessionId: string | null;
   error: Error | null;
-  listRef: React.RefObject<FlashListRef>;
+  listRef: React.RefObject<FlashListRef | null>;
   onScroll: (event: { nativeEvent: unknown }) => void;
   botAvatarName?: string;
   botAvatarSrc?: string;

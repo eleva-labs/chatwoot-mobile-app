@@ -25,6 +25,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isTextPart, type MessagePart, type TextPart } from '@/types/ai-chat/parts';
 import { AIChatService } from '@/store/ai-chat/aiChatService';
 
+/**
+ * STREAMING SAFETY INVARIANTS
+ *
+ * This hook maintains 3 of the 5 streaming invariants. See
+ * docs/architecture/ai-chat-architecture.md Section 2 for full documentation.
+ *
+ * INV-1: Session ID Ref-Then-State Deferral
+ *   sessionIdRef is updated during streaming (no re-render).
+ *   setSessionId() is called only in handleFinish (post-streaming).
+ *
+ * INV-3: Stable SDK Callback References (optionsRef pattern)
+ *   handleError and handleFinish have empty dependency arrays.
+ *   They read current values from refs, not closures.
+ *
+ * INV-4: Transport useMemo Non-Reactive Dependencies
+ *   Transport only depends on [agentBotId]. Auth headers and endpoint
+ *   are read imperatively inside callbacks via AIChatService.getAuthHeaders().
+ */
+
 // ============================================================================
 // Constants
 // ============================================================================
@@ -49,6 +68,8 @@ export interface UseAIChatOptions {
   onFinish?: (message: UIMessage) => void;
   /** Callback when session ID is extracted from response */
   onSessionIdExtracted?: (sessionId: string) => void;
+  /** Auto-send when tool results are added */
+  sendAutomaticallyWhen?: (opts: { messages: UIMessage[] }) => boolean | PromiseLike<boolean>;
 }
 
 /**
@@ -73,6 +94,17 @@ export interface UseAIChatReturn {
   clearSession: () => Promise<void>;
   /** Current session ID */
   sessionId: string | null;
+  /** Add tool output for tool-result flows */
+  addToolOutput: (opts: {
+    tool: string;
+    toolCallId: string;
+    output: unknown;
+  } | {
+    tool: string;
+    toolCallId: string;
+    state: 'output-error';
+    errorText: string;
+  }) => void;
 }
 
 // ============================================================================
@@ -340,6 +372,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
     experimental_throttle: 150,
     onError: handleError,
     onFinish: handleFinish,
+    sendAutomaticallyWhen: options?.sendAutomaticallyWhen,
   });
 
   // ============================================================================
@@ -426,6 +459,7 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
     setMessages: chat.setMessages,
     clearSession,
     sessionId,
+    addToolOutput: chat.addToolOutput,
   };
 }
 

@@ -6,17 +6,45 @@ import {
   NEAR_BOTTOM_THRESHOLD,
 } from '@/presentation/utils/ai-assistant';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FlashListRef = any;
+export interface FlashListRef {
+  scrollToEnd: (opts: { animated: boolean }) => void;
+  scrollToIndex: (opts: { index: number; animated: boolean }) => void;
+  scrollToOffset?: (opts: { offset: number; animated: boolean }) => void;
+}
 
 export interface UseAIChatScrollReturn {
-  listRef: React.RefObject<FlashListRef>;
+  listRef: React.RefObject<FlashListRef | null>;
   handleScroll: (event: { nativeEvent: NativeScrollEvent }) => void;
   scrollToBottom: (animated?: boolean) => void;
   scrollToTop: (animated?: boolean) => void;
   shouldAutoScroll: () => boolean;
   isAtBottom: boolean;
   isAtTop: boolean;
+}
+
+/**
+ * Safely attempt to scroll the FlashList.
+ * Uses a single try/catch with silent fallback instead of nested retries.
+ */
+function safeScroll(
+  listRef: React.RefObject<FlashListRef | null>,
+  target: 'end' | { index: number },
+  animated: boolean,
+): void {
+  if (!listRef.current) return;
+  try {
+    if (target === 'end') {
+      listRef.current.scrollToEnd({ animated });
+    } else {
+      listRef.current.scrollToIndex({ index: target.index, animated });
+    }
+  } catch {
+    try {
+      listRef.current.scrollToEnd({ animated });
+    } catch {
+      // Truly nothing to scroll to — silently ignore.
+    }
+  }
 }
 
 /**
@@ -28,8 +56,7 @@ export function useAIChatScroll(
   messagesLength: number,
   listDataLength: number,
 ): UseAIChatScrollReturn {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const listRef = useRef<any>(null);
+  const listRef = useRef<FlashListRef | null>(null);
   const shouldAutoScrollRef = useRef<boolean>(true);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const scrollTimeoutIdRef = useRef<NodeJS.Timeout | null>(null);
@@ -78,46 +105,14 @@ export function useAIChatScroll(
       }
 
       // Wait for list to render, then scroll to bottom
-      // Use longer delay to ensure FlashList has rendered all items
       scrollTimeoutIdRef.current = setTimeout(() => {
         if (listRef.current && messagesLength > 0) {
-          // Mark as programmatic scroll so handleScroll doesn't update shouldAutoScrollRef
           isProgrammaticScrollRef.current = true;
-          try {
-            // First try scrollToEnd - most reliable for FlashList
-            listRef.current.scrollToEnd({ animated: true });
-            lastScrollLengthRef.current = messagesLength;
-            hasScrolledForSessionRef.current = activeSessionId || null;
-          } catch (error) {
-            // If scrollToEnd fails, try scrollToIndex with actual last index
-            console.warn('[useAIChatScroll] scrollToEnd failed for new conversation:', error);
-            try {
-              // Get the actual last index - use messagesLength as proxy for listDataLength
-              // listData is derived from allMessages, so length should be similar
-              const lastIndex = messagesLength > 0 ? messagesLength - 1 : 0;
-              listRef.current.scrollToIndex({ index: lastIndex, animated: true });
-              lastScrollLengthRef.current = messagesLength;
-              hasScrolledForSessionRef.current = activeSessionId || null;
-            } catch (scrollEndError) {
-              console.warn(
-                '[useAIChatScroll] scrollToIndex also failed for new conversation:',
-                scrollEndError,
-              );
-              // Last resort: try again after a longer delay
-              setTimeout(() => {
-                if (listRef.current) {
-                  try {
-                    listRef.current.scrollToEnd({ animated: true });
-                    hasScrolledForSessionRef.current = activeSessionId || null;
-                  } catch (retryError) {
-                    console.warn('[useAIChatScroll] Retry scrollToEnd failed:', retryError);
-                  }
-                }
-              }, 300);
-            }
-          }
+          safeScroll(listRef, 'end', true);
+          lastScrollLengthRef.current = messagesLength;
+          hasScrolledForSessionRef.current = activeSessionId || null;
         }
-      }, 300); // Increased delay to ensure list is fully rendered
+      }, 300);
     }
 
     return () => {
@@ -145,25 +140,11 @@ export function useAIChatScroll(
       // Debounce scroll to prevent excessive calls during rapid streaming updates
       scrollTimeoutIdRef.current = setTimeout(() => {
         if (listRef.current && shouldAutoScrollRef.current && listDataLength > 0) {
-          // Mark as programmatic scroll so handleScroll doesn't update shouldAutoScrollRef
           isProgrammaticScrollRef.current = true;
-          try {
-            // Scroll to bottom (last index) for chronological order
-            const lastIndex = listDataLength - 1;
-            listRef.current.scrollToIndex({ index: lastIndex, animated: false });
-            lastScrollLengthRef.current = messagesLength;
-          } catch (error) {
-            // If scrollToIndex fails (e.g., item not yet rendered), try scrollToEnd
-            console.warn('[useAIChatScroll] scrollToIndex failed:', error);
-            try {
-              listRef.current.scrollToEnd({ animated: false });
-              lastScrollLengthRef.current = messagesLength;
-            } catch (scrollEndError) {
-              console.warn('[useAIChatScroll] scrollToEnd also failed:', scrollEndError);
-            }
-          }
+          safeScroll(listRef, { index: listDataLength - 1 }, false);
+          lastScrollLengthRef.current = messagesLength;
         }
-      }, 32); // Debounce by ~2 frames for smoother streaming scroll
+      }, 32);
     }
 
     return () => {
@@ -220,17 +201,7 @@ export function useAIChatScroll(
     (animated = true) => {
       if (listRef.current && listDataLength > 0) {
         isProgrammaticScrollRef.current = true;
-        try {
-          const lastIndex = listDataLength - 1;
-          listRef.current.scrollToIndex({ index: lastIndex, animated });
-        } catch (error) {
-          console.warn('[useAIChatScroll] scrollToIndex failed in scrollToBottom:', error);
-          try {
-            listRef.current.scrollToEnd({ animated });
-          } catch (scrollEndError) {
-            console.warn('[useAIChatScroll] scrollToEnd failed in scrollToBottom:', scrollEndError);
-          }
-        }
+        safeScroll(listRef, { index: listDataLength - 1 }, animated);
       }
     },
     [listDataLength],
@@ -240,11 +211,7 @@ export function useAIChatScroll(
   const scrollToTop = useCallback((animated = true) => {
     if (listRef.current) {
       isProgrammaticScrollRef.current = true;
-      try {
-        listRef.current.scrollToIndex({ index: 0, animated });
-      } catch (error) {
-        console.warn('[useAIChatScroll] scrollToTop failed:', error);
-      }
+      safeScroll(listRef, { index: 0 }, animated);
     }
   }, []);
 

@@ -22,6 +22,7 @@ import { tailwind } from '@/theme/tailwind';
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
 import { AICollapsible } from './AICollapsible';
 import i18n from '@/i18n';
+import { formatToolName, formatJson } from '@/presentation/utils/ai-assistant/aiChatFormatUtils';
 
 // Import domain types and constants (single source of truth)
 import type { ToolPart, ToolCallPart, ToolResultPart } from '@/types/ai-chat/parts';
@@ -51,8 +52,10 @@ export interface AIToolPartProps {
 
 type DisplayState = 'pending' | 'running' | 'completed' | 'error';
 
-interface StateDisplayConfig {
-  iconElement: React.ReactNode;
+interface StateDisplayData {
+  iconName: 'loading' | 'check' | 'close';
+  iconColorToken: string;
+  iconColorFallback: string;
   labelKey: string;
   accentColor: AIAccentColor;
 }
@@ -67,71 +70,57 @@ interface StateDisplayConfig {
  * NOTE: The web Vue implementation uses neutral 'slate' accent for all tool states.
  * The mobile uses state-based colors (slate/teal/ruby) for better UX feedback.
  * This is an intentional divergence from web for improved mobile readability.
+ *
+ * Data-only config — JSX is created at render time by renderStateIcon().
  */
-const STATE_CONFIG: Record<DisplayState, StateDisplayConfig> = {
+const STATE_DATA: Record<DisplayState, StateDisplayData> = {
   pending: {
-    iconElement: (
-      <Icon
-        icon={<LoadingIcon stroke={tailwind.color('text-slate-10') ?? '#80838D'} />}
-        size={14}
-      />
-    ),
+    iconName: 'loading',
+    iconColorToken: 'text-slate-10',
+    iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.PENDING',
-    accentColor: 'slate', // Neutral state
+    accentColor: 'slate',
   },
   running: {
-    iconElement: (
-      <Icon
-        icon={<LoadingIcon stroke={tailwind.color('text-slate-10') ?? '#80838D'} />}
-        size={14}
-      />
-    ),
+    iconName: 'loading',
+    iconColorToken: 'text-slate-10',
+    iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.RUNNING',
-    accentColor: 'slate', // Neutral state with streaming
+    accentColor: 'slate',
   },
   completed: {
-    iconElement: (
-      <Icon icon={<CheckIcon stroke={tailwind.color('text-teal-9') ?? '#12A594'} />} size={14} />
-    ),
+    iconName: 'check',
+    iconColorToken: 'text-teal-9',
+    iconColorFallback: '#12A594',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.COMPLETED',
-    accentColor: 'teal', // Success state (matches Vue's teal)
+    accentColor: 'teal',
   },
   error: {
-    iconElement: (
-      <Icon icon={<CloseIcon stroke={tailwind.color('text-ruby-9') ?? '#E5484D'} />} size={14} />
-    ),
+    iconName: 'close',
+    iconColorToken: 'text-ruby-9',
+    iconColorFallback: '#E5484D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.ERROR',
-    accentColor: 'ruby', // Error state (matches Vue's ruby)
+    accentColor: 'ruby',
   },
 };
+
+/**
+ * Create the icon element at render time (theme-aware).
+ * Called inside useMemo so icons update when theme changes.
+ */
+function renderStateIcon(data: StateDisplayData): React.ReactNode {
+  const color = tailwind.color(data.iconColorToken) ?? data.iconColorFallback;
+  const iconMap = {
+    loading: <LoadingIcon stroke={color} />,
+    check: <CheckIcon stroke={color} />,
+    close: <CloseIcon stroke={color} />,
+  };
+  return <Icon icon={iconMap[data.iconName]} size={14} />;
+}
 
 // ============================================================================
 // Helper Functions
 // ============================================================================
-
-/**
- * Format tool name for display
- * Converts snake_case or camelCase to Title Case
- */
-function formatToolName(name: string): string {
-  if (!name) return i18n.t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL');
-
-  return name
-    .replace(/_/g, ' ')
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .replace(/\b\w/g, char => char.toUpperCase());
-}
-
-/**
- * Safely stringify JSON with proper formatting
- */
-function formatJson(value: unknown): string {
-  try {
-    return JSON.stringify(value, null, 2);
-  } catch {
-    return String(value);
-  }
-}
 
 /**
  * Map domain ToolState to display state
@@ -177,7 +166,8 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
 
   // Derive state and display configuration using domain helper
   const state = useMemo(() => getDisplayState(part), [part]);
-  const config = STATE_CONFIG[state];
+  const data = STATE_DATA[state];
+  const iconElement = useMemo(() => renderStateIcon(data), [data]);
 
   // Get input and output content separately
   const hasInput = useMemo(() => {
@@ -200,21 +190,21 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
   const toolName = useMemo(() => {
     const name =
       part.toolName ||
-      ((part as any).output?.tool_name as string) ||
-      i18n.t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL');
-    return formatToolName(name);
+      ((part as ToolResultPart & { output?: { tool_name?: string } }).output?.tool_name as string) ||
+      '';
+    return formatToolName(name, i18n.t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL'));
   }, [part.toolName, part]);
 
   // Build title with state
-  const title = `${toolName} • ${i18n.t(config.labelKey)}`;
+  const title = `${toolName} • ${i18n.t(data.labelKey)}`;
 
   return (
     <AICollapsible
       title={title}
-      accentColor={config.accentColor}
+      accentColor={data.accentColor}
       isStreaming={isStreaming && state === 'running'}
       defaultExpanded={defaultExpanded}
-      icon={config.iconElement}>
+      icon={iconElement}>
       <View>
         {/* Input section */}
         {hasInput && (

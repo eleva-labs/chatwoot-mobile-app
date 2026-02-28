@@ -10,8 +10,12 @@ import { WarningIcon, LockIcon } from '@/svg-icons';
 import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import i18n from '@/i18n';
-
-type ErrorCategory = 'network' | 'rate_limit' | 'auth' | 'server' | 'unknown';
+import {
+  categorizeError,
+  ERROR_DISPLAY_CONFIG,
+  type ErrorCategory,
+  type ErrorDisplayConfig,
+} from '@/presentation/utils/ai-assistant/aiChatErrorUtils';
 
 interface AIChatErrorProps {
   error: Error;
@@ -20,63 +24,8 @@ interface AIChatErrorProps {
   onFreshStart?: () => void;
 }
 
-function categorizeError(message: string): ErrorCategory {
-  const lower = message.toLowerCase();
-  if (lower.includes('network') || lower.includes('fetch')) return 'network';
-  if (lower.includes('429') || lower.includes('rate')) return 'rate_limit';
-  if (lower.includes('401') || lower.includes('403')) return 'auth';
-  if (/5\d{2}/.test(message)) return 'server';
-  return 'unknown';
-}
-
-interface ErrorConfig {
-  titleKey: string;
-  iconType: 'warning' | 'lock';
-  accentBg: string;
-  accentBorder: string;
-  accentText: string;
-}
-
-const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
-  network: {
-    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.NETWORK',
-    iconType: 'warning',
-    accentBg: 'bg-amber-3',
-    accentBorder: 'border-amber-4',
-    accentText: 'text-amber-11',
-  },
-  rate_limit: {
-    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.RATE_LIMIT',
-    iconType: 'warning',
-    accentBg: 'bg-amber-3',
-    accentBorder: 'border-amber-4',
-    accentText: 'text-amber-11',
-  },
-  auth: {
-    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.AUTH',
-    iconType: 'lock',
-    accentBg: 'bg-ruby-3',
-    accentBorder: 'border-ruby-4',
-    accentText: 'text-ruby-11',
-  },
-  server: {
-    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.SERVER',
-    iconType: 'warning',
-    accentBg: 'bg-ruby-3',
-    accentBorder: 'border-ruby-4',
-    accentText: 'text-ruby-11',
-  },
-  unknown: {
-    titleKey: 'AI_ASSISTANT.CHAT.ERRORS.UNKNOWN',
-    iconType: 'warning',
-    accentBg: 'bg-ruby-3',
-    accentBorder: 'border-ruby-4',
-    accentText: 'text-ruby-11',
-  },
-};
-
 /** Renders the appropriate SVG icon for an error category */
-const ErrorCategoryIcon: React.FC<{ config: ErrorConfig }> = ({ config }) => {
+const ErrorCategoryIcon: React.FC<{ config: ErrorDisplayConfig }> = ({ config }) => {
   const iconColor = config.accentText.includes('amber')
     ? (tailwind.color('text-amber-11') ?? '#AD5700')
     : (tailwind.color('text-ruby-11') ?? '#CA3A31');
@@ -95,7 +44,7 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
 }) => {
   const { style } = useAIStyles();
   const category = useMemo(() => categorizeError(error.message || ''), [error.message]);
-  const config = ERROR_CONFIG[category];
+  const config = ERROR_DISPLAY_CONFIG[category];
   const canRetry = category !== 'auth';
 
   return (

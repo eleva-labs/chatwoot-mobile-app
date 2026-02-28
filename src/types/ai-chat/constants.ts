@@ -32,6 +32,10 @@ export const PART_TYPES = {
   // Source citations
   SOURCE: 'source',
 
+  // Source citations (web-only, for backward compat)
+  SOURCE_URL: 'source-url',
+  SOURCE_DOCUMENT: 'source-document',
+
   // Step indicators
   STEP_START: 'step-start',
 } as const;
@@ -53,6 +57,10 @@ export const TOOL_STATES = {
 
   // Tool execution failed
   OUTPUT_ERROR: 'output-error',
+
+  // Web-only states (for backward compat)
+  INPUT_START: 'tool-input-start',
+  OUTPUT_STREAMING: 'tool-output-streaming',
 
   // Legacy/fallback states
   PENDING: 'pending',
@@ -83,6 +91,20 @@ export const MESSAGE_ROLES = {
   ASSISTANT: 'assistant',
   SYSTEM: 'system',
   DATA: 'data',
+  TOOL: 'tool',
 } as const;
 
 export type MessageRole = (typeof MESSAGE_ROLES)[keyof typeof MESSAGE_ROLES];
+
+// Backward-compatible alias (web uses MESSAGE_ROLE singular)
+export const MESSAGE_ROLE = MESSAGE_ROLES;
+
+export const VOICE_INPUT_STATUS = {
+  IDLE: 'idle',
+  RECORDING: 'recording',
+  TRANSCRIBING: 'transcribing',
+  ERROR: 'error',
+  DISABLED: 'disabled',
+} as const;
+
+export type VoiceInputStatus = (typeof VOICE_INPUT_STATUS)[keyof typeof VOICE_INPUT_STATUS];

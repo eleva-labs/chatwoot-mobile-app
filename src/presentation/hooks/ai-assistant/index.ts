@@ -12,3 +12,6 @@ export { useAIChatBot } from './useAIChatBot';
 export { useAIChatSessions } from './useAIChatSessions';
 
 export { useAIChatScroll } from './useAIChatScroll';
+
+export { useMessageBridge } from './useMessageBridge';
+export type { UseMessageBridgeOptions } from './useMessageBridge';

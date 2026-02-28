@@ -15,3 +15,7 @@ export {
   validateAndNormalizeParts,
   validateAndNormalizeMessages,
 } from './aiChatMessageUtils';
+
+export { formatToolName, formatJson, formatSessionTitle } from './aiChatFormatUtils';
+export { categorizeError, ERROR_DISPLAY_CONFIG } from './aiChatErrorUtils';
+export type { ErrorCategory, ErrorDisplayConfig } from './aiChatErrorUtils';

@@ -5,16 +5,12 @@ import {
   selectSessionsByAgentBot,
   selectActiveSessionId,
   selectIsLoadingMessages,
-  selectMessagesBySession,
   setActiveSession,
 } from '@/store/ai-chat';
-import type { UIMessage } from 'ai';
-import type { AIChatSession, AIChatMessage } from '@/store/ai-chat/aiChatTypes';
-import { mapMessagesToUIMessages } from '@/store/ai-chat/aiChatMapper';
+import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 
-// Stable empty array references to prevent unnecessary rerenders
+// Stable empty array reference to prevent unnecessary rerenders
 const EMPTY_SESSIONS: AIChatSession[] = [];
-const EMPTY_MESSAGES: AIChatMessage[] = [];
 
 export interface UseAIChatSessionsReturn {
   sessions: AIChatSession[];
@@ -24,6 +20,7 @@ export interface UseAIChatSessionsReturn {
   setShowSessions: (show: boolean) => void;
   handleSelectSession: (sessionId: string) => void;
   handleNewConversation: () => void;
+  isNewConversation: boolean;
 }
 
 /**
@@ -33,11 +30,11 @@ export function useAIChatSessions(
   selectedBotId: number | undefined,
   accountId?: number,
   agentBotId?: number,
-  setMessages?: (messages: UIMessage[] | ((messages: UIMessage[]) => UIMessage[])) => void,
-  clearSession?: () => Promise<void>,
-  stop?: () => void,
-  /** Current chat status — used to guard the bridge effect during streaming */
-  chatStatus?: 'ready' | 'submitted' | 'streaming' | 'error',
+  options?: {
+    stop?: () => void;
+    clearSession?: () => Promise<void>;
+    onBridgeKeyReset?: () => void;
+  },
 ): UseAIChatSessionsReturn {
   const dispatch = useAppDispatch();
   const activeSessionId = useAppSelector(selectActiveSessionId);
@@ -46,11 +43,6 @@ export function useAIChatSessions(
   // Get sessions from Redux using memoized selectors
   const sessions = useAppSelector(state =>
     selectedBotId ? selectSessionsByAgentBot(state, selectedBotId) : EMPTY_SESSIONS,
-  );
-
-  // Read messages from Redux for the active session
-  const backendMessages = useAppSelector(state =>
-    activeSessionId ? selectMessagesBySession(state, activeSessionId) : EMPTY_MESSAGES,
   );
 
   // Sessions panel visibility — controlled exclusively by user interaction (header toggle button)
@@ -68,25 +60,19 @@ export function useAIChatSessions(
   // Stable refs for functions received from parent to prevent cascade re-renders
   // during streaming. The parent re-renders on every streaming tick due to
   // chat.messages updates, but this hook's effects should not re-fire.
-  const setMessagesRef = useRef(setMessages);
-  const clearSessionRef = useRef(clearSession);
-  const stopRef = useRef(stop);
+  const clearSessionRef = useRef(options?.clearSession);
+  const stopRef = useRef(options?.stop);
+  const onBridgeKeyResetRef = useRef(options?.onBridgeKeyReset);
 
   useEffect(() => {
-    setMessagesRef.current = setMessages;
-  }, [setMessages]);
+    clearSessionRef.current = options?.clearSession;
+  }, [options?.clearSession]);
   useEffect(() => {
-    clearSessionRef.current = clearSession;
-  }, [clearSession]);
+    stopRef.current = options?.stop;
+  }, [options?.stop]);
   useEffect(() => {
-    stopRef.current = stop;
-  }, [stop]);
-
-  // Track which session+messages combo we've already loaded into the SDK.
-  // This prevents the bridge from re-firing after setMessages() triggers an SDK
-  // re-render. Without this guard, any dep instability (e.g. selector cache miss)
-  // causes: setMessages → re-render → bridge fires again → infinite loop.
-  const loadedBridgeKeyRef = useRef<string | null>(null);
+    onBridgeKeyResetRef.current = options?.onBridgeKeyReset;
+  }, [options?.onBridgeKeyReset]);
 
   // Auto-select latest session when sessions are loaded
   useEffect(() => {
@@ -134,50 +120,6 @@ export function useAIChatSessions(
     }
   }, [dispatch, activeSessionId]);
 
-  // Reactive bridge: load backend messages into SDK when they arrive.
-  //
-  // IMPORTANT: This effect must be idempotent. Calling setMessages() triggers an SDK
-  // re-render (useSyncExternalStore). If any dependency gets a new reference on that
-  // re-render (e.g. backendMessages via selector cache miss), the effect would fire
-  // again → setMessages again → infinite loop ("Maximum update depth exceeded").
-  //
-  // The loadedBridgeKeyRef guard ensures we only call setMessages() ONCE per unique
-  // session+messages combination. The key is reset when activeSessionId changes
-  // (handled below) or when a new conversation starts.
-  useEffect(() => {
-    // Only load when:
-    // 1. We have an active session
-    // 2. Messages are no longer loading (fetch completed)
-    // 3. We have backend messages to load
-    // 4. setMessages is available
-    // 5. Not a new conversation (user explicitly started fresh)
-    // 6. Not actively streaming (bridge would be overwritten by SDK anyway)
-    if (
-      activeSessionId &&
-      !isLoadingMessages &&
-      backendMessages.length > 0 &&
-      setMessagesRef.current &&
-      !isNewConversationRef.current &&
-      chatStatus !== 'streaming' &&
-      chatStatus !== 'submitted'
-    ) {
-      // Build a stable key to check if we already loaded these exact messages.
-      // Using session ID + message count + first/last message IDs as a fingerprint.
-      const firstId = backendMessages[0]?.id ?? '';
-      const lastId = backendMessages[backendMessages.length - 1]?.id ?? '';
-      const bridgeKey = `${activeSessionId}:${backendMessages.length}:${firstId}:${lastId}`;
-
-      if (loadedBridgeKeyRef.current === bridgeKey) {
-        // Already loaded this exact set of messages — skip to prevent re-render loop
-        return;
-      }
-
-      const converted = mapMessagesToUIMessages(backendMessages);
-      setMessagesRef.current(converted);
-      loadedBridgeKeyRef.current = bridgeKey;
-    }
-  }, [activeSessionId, isLoadingMessages, backendMessages, chatStatus]);
-
   // Handle session selection
   const handleSelectSession = useCallback(
     (sessionId: string) => {
@@ -186,12 +128,9 @@ export function useAIChatSessions(
         return;
       }
       isNewConversationRef.current = false;
-      loadedBridgeKeyRef.current = null; // Reset so bridge loads new session's messages
+      onBridgeKeyResetRef.current?.(); // Reset so bridge loads new session's messages
       if (stopRef.current) {
         stopRef.current(); // Stop any active stream before switching
-      }
-      if (setMessagesRef.current) {
-        setMessagesRef.current([]);
       }
       dispatch(setActiveSession({ sessionId }));
       setShowSessions(false);
@@ -202,7 +141,7 @@ export function useAIChatSessions(
   // Handle new conversation
   const handleNewConversation = useCallback(async () => {
     isNewConversationRef.current = true;
-    loadedBridgeKeyRef.current = null; // Reset for future session loads
+    onBridgeKeyResetRef.current?.(); // Reset for future session loads
     if (stopRef.current) {
       stopRef.current(); // Stop any active stream
     }
@@ -221,5 +160,6 @@ export function useAIChatSessions(
     setShowSessions,
     handleSelectSession,
     handleNewConversation,
+    isNewConversation: isNewConversationRef.current,
   };
 }
