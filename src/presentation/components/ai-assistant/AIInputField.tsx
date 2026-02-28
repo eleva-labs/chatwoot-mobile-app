@@ -6,12 +6,13 @@ import { SendIcon } from '@/svg-icons';
 import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import type { AIInputFieldProps } from '@/presentation/containers/ai-assistant/types';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, onCancel }) => {
   const [text, setText] = useState('');
   const inputRef = useRef<TextInput>(null);
   const { style, tokens } = useAIStyles();
+  const { t } = useAIi18n();
   const inputTokens = tokens.input;
   const [isFocused, setIsFocused] = useState(false);
 
@@ -45,7 +46,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           ref={inputRef}
           value={text}
           onChangeText={setText}
-          placeholder={i18n.t('AI_ASSISTANT.CHAT.INPUT.PLACEHOLDER')}
+          placeholder={t('AI_ASSISTANT.CHAT.INPUT.PLACEHOLDER')}
           placeholderTextColor={tailwind.color('text-slate-9') ?? '#696e77'}
           style={style(
             'flex-1 text-base font-inter-normal-20 min-h-[40px] max-h-[100px]',
@@ -60,7 +61,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           returnKeyType="send"
           textAlignVertical="center"
           accessible
-          accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.INPUT')}
+          accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.INPUT')}
         />
         {isLoading && onCancel ? (
           <Pressable
@@ -68,7 +69,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             style={({ pressed }) => style('ml-2 p-2 rounded-full', pressed && 'opacity-70')}
             accessible
             accessibilityRole="button"
-            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.STOP_GENERATING')}>
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.STOP_GENERATING')}>
             <View style={style('w-8 h-8 rounded-full bg-ruby-9 items-center justify-center')}>
               <View style={style('w-3 h-3 rounded-sm bg-white')} />
             </View>
@@ -86,7 +87,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             }
             accessible
             accessibilityRole="button"
-            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SEND')}
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SEND')}
             accessibilityState={{ disabled: !text.trim() || isLoading }}>
             <View
               style={style(

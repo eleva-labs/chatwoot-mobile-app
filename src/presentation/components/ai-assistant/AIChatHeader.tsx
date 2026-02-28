@@ -5,7 +5,7 @@ import { CloseIcon, AddIcon } from '@/svg-icons';
 import { tailwind } from '@/theme/tailwind';
 import type { AIChatBot } from '@/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 export interface AIChatHeaderProps {
   selectedBot: AIChatBot | null;
@@ -28,6 +28,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
     onClose,
   }) => {
     const { style, tokens } = useAIStyles();
+    const { t } = useAIi18n();
     const headerTokens = tokens.header;
 
     return (
@@ -44,8 +45,8 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             style={style('text-lg font-inter-semibold-20', headerTokens.title)}
             accessible
             accessibilityRole="text"
-            accessibilityLabel={selectedBot?.name || i18n.t('AI_ASSISTANT.CHAT.TITLE')}>
-            {selectedBot?.name || i18n.t('AI_ASSISTANT.CHAT.TITLE')}
+            accessibilityLabel={selectedBot?.name || t('AI_ASSISTANT.CHAT.TITLE')}>
+            {selectedBot?.name || t('AI_ASSISTANT.CHAT.TITLE')}
           </Text>
           {status && status !== 'ready' && (
             <View style={style('flex-row items-center gap-1.5 ml-2')}>
@@ -60,8 +61,8 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               {status !== 'streaming' && (
                 <Text style={style('text-xs', headerTokens.subtitle)}>
                   {status === 'submitted'
-                    ? i18n.t('AI_ASSISTANT.CHAT.STATUS.THINKING')
-                    : i18n.t('AI_ASSISTANT.CHAT.STATUS.ISSUE')}
+                    ? t('AI_ASSISTANT.CHAT.STATUS.THINKING')
+                    : t('AI_ASSISTANT.CHAT.STATUS.ISSUE')}
                 </Text>
               )}
             </View>
@@ -77,11 +78,11 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               }
               accessible
               accessibilityRole="button"
-              accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SESSIONS_COUNT', {
+              accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SESSIONS_COUNT', {
                 count: sessionsCount,
               })}>
               <Text style={style('text-sm font-inter-420-20', headerTokens.link)}>
-                {i18n.t('AI_ASSISTANT.CHAT.HEADER.SESSIONS')}
+                {t('AI_ASSISTANT.CHAT.HEADER.SESSIONS')}
               </Text>
               <View style={style('bg-slate-5 rounded-full px-1.5 min-w-[20px] items-center')}>
                 <Text style={style('text-xs font-inter-580-24', headerTokens.subtitle)}>
@@ -98,7 +99,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               style={({ pressed }) => style('p-2 rounded-full', pressed && 'bg-slate-3')}
               accessible
               accessibilityRole="button"
-              accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.NEW_CONVERSATION')}>
+              accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.NEW_CONVERSATION')}>
               <Icon
                 icon={<AddIcon stroke={tailwind.color('text-slate-11') ?? '#60646C'} />}
                 size={20}
@@ -110,8 +111,8 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             style={({ pressed }) => style('p-2 rounded-full', pressed && 'opacity-70')}
             accessible
             accessibilityRole="button"
-            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE')}
-            accessibilityHint={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_HINT')}>
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE')}
+            accessibilityHint={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_HINT')}>
             <Icon
               icon={<CloseIcon stroke={tailwind.color('text-slate-10') ?? '#80838D'} />}
               size={20}

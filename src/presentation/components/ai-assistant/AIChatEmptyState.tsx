@@ -10,7 +10,7 @@ import { Icon } from '@/components-next/common';
 import { ChatIcon } from '@/svg-icons';
 import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 const SUGGESTED_PROMPT_KEYS = [
   'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.SUMMARIZE',
@@ -28,6 +28,7 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({
   onSendPrompt,
 }) => {
   const { style } = useAIStyles();
+  const { t } = useAIi18n();
 
   return (
     <View style={style('flex-1 items-center justify-center p-8')}>
@@ -39,22 +40,22 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({
       {/* Title */}
       <Text style={style('text-lg font-semibold text-slate-12 mb-2 text-center')}>
         {hasActiveSession
-          ? i18n.t('AI_ASSISTANT.CHAT.EMPTY_STATE.TITLE_WITH_SESSION')
-          : i18n.t('AI_ASSISTANT.CHAT.EMPTY_STATE.TITLE_NO_SESSION')}
+          ? t('AI_ASSISTANT.CHAT.EMPTY_STATE.TITLE_WITH_SESSION')
+          : t('AI_ASSISTANT.CHAT.EMPTY_STATE.TITLE_NO_SESSION')}
       </Text>
 
       {/* Description */}
       <Text style={style('text-sm text-slate-11 text-center max-w-[340px]')}>
         {hasActiveSession
-          ? i18n.t('AI_ASSISTANT.CHAT.EMPTY_STATE.DESCRIPTION_WITH_SESSION')
-          : i18n.t('AI_ASSISTANT.CHAT.EMPTY_STATE.DESCRIPTION_NO_SESSION')}
+          ? t('AI_ASSISTANT.CHAT.EMPTY_STATE.DESCRIPTION_WITH_SESSION')
+          : t('AI_ASSISTANT.CHAT.EMPTY_STATE.DESCRIPTION_NO_SESSION')}
       </Text>
 
       {/* Suggested prompt chips */}
       {!hasActiveSession && onSendPrompt && (
         <View style={style('mt-6 gap-2 w-full max-w-[340px]')}>
           {SUGGESTED_PROMPT_KEYS.map(key => {
-            const prompt = i18n.t(key);
+            const prompt = t(key);
             return (
               <Pressable
                 key={key}

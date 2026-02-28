@@ -47,6 +47,8 @@ export interface AITextPartProps {
   isStreaming?: boolean;
   /** Whether to render markdown or plain text */
   enableMarkdown?: boolean;
+  /** Optional custom markdown renderer. Default: react-native-markdown-display */
+  MarkdownRenderer?: React.ComponentType<{ children: string; style?: Record<string, unknown> }>;
 }
 
 // ============================================================================
@@ -64,6 +66,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   role = 'assistant',
   isStreaming = false,
   enableMarkdown = true,
+  MarkdownRenderer: CustomMarkdownRenderer,
 }) => {
   const { style } = useAIStyles();
   const { themeVersion } = useTheme();
@@ -231,16 +234,22 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   return (
     <View style={contentHeight ? { minHeight: contentHeight } : undefined}>
       <View onLayout={handleInnerLayout}>
-        <Markdown
-          mergeStyle
-          markdownit={MarkdownIt({
-            linkify: true,
-            typographer: true,
-          })}
-          onLinkPress={handleLinkPress}
-          style={markdownStyles}>
-          {text}
-        </Markdown>
+        {CustomMarkdownRenderer ? (
+          <CustomMarkdownRenderer style={markdownStyles as unknown as Record<string, unknown>}>
+            {text}
+          </CustomMarkdownRenderer>
+        ) : (
+          <Markdown
+            mergeStyle
+            markdownit={MarkdownIt({
+              linkify: true,
+              typographer: true,
+            })}
+            onLinkPress={handleLinkPress}
+            style={markdownStyles}>
+            {text}
+          </Markdown>
+        )}
       </View>
       {isStreaming && (
         <View style={style('flex-row justify-start')}>

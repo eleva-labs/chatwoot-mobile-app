@@ -22,7 +22,7 @@ import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { tailwind } from '@/theme/tailwind';
 import { useTheme } from '@/context/ThemeContext';
 import { AICollapsible } from './AICollapsible';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 // Import domain types (single source of truth)
 import type { ReasoningPart } from '@/types/ai-chat/parts';
@@ -41,6 +41,8 @@ export interface AIReasoningPartProps {
   isStreaming?: boolean;
   /** Whether to start expanded (Vue defaults to false, we match that) */
   defaultExpanded?: boolean;
+  /** Optional custom markdown renderer. Default: react-native-markdown-display */
+  MarkdownRenderer?: React.ComponentType<{ children: string; style?: Record<string, unknown> }>;
 }
 
 // ============================================================================
@@ -59,9 +61,11 @@ const LABEL_KEYS = {
 export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   part,
   isStreaming = false,
-  defaultExpanded = false, // Match Vue's autoExpandOnStream: false default
+  defaultExpanded = false,
+  MarkdownRenderer: CustomMarkdownRenderer,
 }) => {
   const { style, tokens, getCollapsible } = useAIStyles();
+  const { t } = useAIi18n();
   const irisTokens = getCollapsible('iris');
   const { themeVersion } = useTheme();
 
@@ -109,7 +113,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   }, [part]);
 
   // Dynamic title based on streaming state
-  const title = isStreaming ? i18n.t(LABEL_KEYS.streaming) : i18n.t(LABEL_KEYS.completed);
+  const title = isStreaming ? t(LABEL_KEYS.streaming) : t(LABEL_KEYS.completed);
 
   // Don't render if no content and not streaming
   if (!reasoningText && !isStreaming) {
@@ -144,12 +148,18 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         {reasoningText ? (
           <View style={{ width: '100%' }}>
             {/* Markdown content for reasoning text */}
-            <Markdown
-              mergeStyle
-              markdownit={MarkdownIt({ linkify: true, typographer: true })}
-              style={markdownStyles}>
-              {reasoningText}
-            </Markdown>
+            {CustomMarkdownRenderer ? (
+              <CustomMarkdownRenderer style={markdownStyles as unknown as Record<string, unknown>}>
+                {reasoningText}
+              </CustomMarkdownRenderer>
+            ) : (
+              <Markdown
+                mergeStyle
+                markdownit={MarkdownIt({ linkify: true, typographer: true })}
+                style={markdownStyles}>
+                {reasoningText}
+              </Markdown>
+            )}
             {/* Streaming cursor matching Vue's accent cursor */}
             {isStreaming && (
               <View style={style('flex-row items-end')}>
@@ -166,7 +176,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
               style={style('mr-2')}
             />
             <Text style={style('text-sm font-inter-normal-20 italic', tokens.text.secondary)}>
-              {i18n.t('AI_ASSISTANT.CHAT.REASONING.PROCESSING')}
+              {t('AI_ASSISTANT.CHAT.REASONING.PROCESSING')}
             </Text>
           </View>
         )}

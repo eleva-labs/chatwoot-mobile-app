@@ -16,7 +16,7 @@ import { AIChatError } from './AIChatError';
 import { AIChatEmptyState } from './AIChatEmptyState';
 import type { FlashListRef } from '@/presentation/hooks/ai-assistant/useAIChatScroll';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +80,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
     onSendPrompt,
   }) => {
     const { style, tokens } = useAIStyles();
+    const { t } = useAIi18n();
 
     // Memoize render item
     const renderItem = useCallback(
@@ -101,7 +102,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
           return (
             <View style={style('p-4 mb-3')}>
               <Text style={style('text-sm', tokens.tool.errorText)}>
-                {i18n.t('AI_ASSISTANT.CHAT.MESSAGES.ERROR_RENDERING', { id: item.id || 'unknown' })}
+                {t('AI_ASSISTANT.CHAT.MESSAGES.ERROR_RENDERING', { id: item.id || 'unknown' })}
               </Text>
             </View>
           );
@@ -112,6 +113,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
         listData.length,
         style,
         tokens.tool.errorText,
+        t,
         userAvatarName,
         botAvatarName,
         botAvatarSrc,
@@ -141,9 +143,9 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style('flex-1 items-center justify-center p-4')}
             accessible
             accessibilityRole="text"
-            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.LOADING_MESSAGES')}>
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.LOADING_MESSAGES')}>
             <Text style={style(tokens.text.muted)}>
-              {i18n.t('AI_ASSISTANT.CHAT.MESSAGES.LOADING')}
+              {t('AI_ASSISTANT.CHAT.MESSAGES.LOADING')}
             </Text>
           </View>
         ) : listData.length === 0 && status === 'ready' ? (

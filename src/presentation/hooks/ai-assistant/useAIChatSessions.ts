@@ -8,6 +8,7 @@ import {
   setActiveSession,
 } from '@/store/ai-chat';
 import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
+import type { SessionsStateAdapter } from '@/types/ai-chat/sessionsAdapter';
 
 // Stable empty array reference to prevent unnecessary rerenders
 const EMPTY_SESSIONS: AIChatSession[] = [];
@@ -24,12 +25,18 @@ export interface UseAIChatSessionsReturn {
 }
 
 /**
- * Hook for managing AI chat sessions
+ * Hook for managing AI chat sessions.
+ *
+ * Accepts an optional SessionsStateAdapter for commands. When provided,
+ * the adapter's setActiveSessionId is used alongside Redux dispatch.
+ *
+ * NOTE on reactivity: useAppSelector is still used for reactive subscriptions
+ * (sessions, activeSessionId, isLoadingMessages) because the adapter's
+ * imperative getters do NOT trigger React re-renders.
  */
 export function useAIChatSessions(
+  adapter: SessionsStateAdapter | undefined,
   selectedBotId: number | undefined,
-  accountId?: number,
-  agentBotId?: number,
   options?: {
     stop?: () => void;
     clearSession?: () => Promise<void>;
@@ -44,6 +51,12 @@ export function useAIChatSessions(
   const sessions = useAppSelector(state =>
     selectedBotId ? selectSessionsByAgentBot(state, selectedBotId) : EMPTY_SESSIONS,
   );
+
+  // Stable ref for adapter
+  const adapterRef = useRef(adapter);
+  useEffect(() => {
+    adapterRef.current = adapter;
+  }, [adapter]);
 
   // Sessions panel visibility — controlled exclusively by user interaction (header toggle button)
   const [showSessions, setShowSessions] = useState(false);

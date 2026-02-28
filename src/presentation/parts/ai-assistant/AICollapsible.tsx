@@ -16,7 +16,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 // ============================================================================
 // Types
@@ -68,6 +68,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
   onToggle,
 }) => {
   const { style, getCollapsible } = useAIStyles();
+  const { t } = useAIi18n();
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const colors = getCollapsible(accentColor);
 
@@ -112,8 +113,8 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
       accessibilityState={{ expanded: isExpanded }}
       accessibilityLabel={
         isExpanded
-          ? i18n.t('AI_ASSISTANT.CHAT.COLLAPSIBLE.EXPANDED', { title })
-          : i18n.t('AI_ASSISTANT.CHAT.COLLAPSIBLE.COLLAPSED', { title })
+          ? t('AI_ASSISTANT.CHAT.COLLAPSIBLE.EXPANDED', { title })
+          : t('AI_ASSISTANT.CHAT.COLLAPSIBLE.COLLAPSED', { title })
       }>
       {/* Header - matching Vue's button styles */}
       <Pressable
@@ -164,7 +165,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
               <Pressable onPress={handleToggle} style={style('flex-row items-center gap-1 pt-2')}>
                 <Text style={style('text-xs', colors.chevron)}>▲</Text>
                 <Text style={style('text-xs', colors.label)}>
-                  {i18n.t('AI_ASSISTANT.CHAT.COLLAPSIBLE.COLLAPSE')}
+                  {t('AI_ASSISTANT.CHAT.COLLAPSIBLE.COLLAPSE')}
                 </Text>
               </Pressable>
             </View>

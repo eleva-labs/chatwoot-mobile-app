@@ -3,7 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 import { formatSessionTitle } from '@/presentation/utils/ai-assistant/aiChatFormatUtils';
 
 interface SessionItemProps {
@@ -16,13 +16,14 @@ interface SessionItemProps {
 export const AISessionItem: React.FC<SessionItemProps> = React.memo(
   ({ session, isActive, isLastItem, onPress }) => {
     const { style, tokens } = useAIStyles();
+    const { t } = useAIi18n();
     const sessionTokens = tokens.session;
 
     const title = useMemo(() => formatSessionTitle(session.updated_at, {
-      today: i18n.t('AI_ASSISTANT.CHAT.SESSION_ITEM.TODAY'),
-      yesterday: i18n.t('AI_ASSISTANT.CHAT.SESSION_ITEM.YESTERDAY'),
-      recently: i18n.t('AI_ASSISTANT.CHAT.SESSIONS.RECENTLY'),
-    }), [session.updated_at]);
+      today: t('AI_ASSISTANT.CHAT.SESSION_ITEM.TODAY'),
+      yesterday: t('AI_ASSISTANT.CHAT.SESSION_ITEM.YESTERDAY'),
+      recently: t('AI_ASSISTANT.CHAT.SESSIONS.RECENTLY'),
+    }), [session.updated_at, t]);
 
     return (
       <Pressable onPress={onPress}>

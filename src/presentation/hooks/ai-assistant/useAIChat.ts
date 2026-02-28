@@ -1,14 +1,13 @@
 /**
  * useAIChat Hook
  *
- * Simplified AI chat hook using Vercel AI SDK's DefaultChatTransport with expo/fetch.
- * Uses AIChatService static methods for auth/endpoints and AsyncStorage for session persistence.
+ * AI chat hook using Vercel AI SDK's DefaultChatTransport.
+ * Accepts a ChatConfig for transport, persistence, and behavior configuration.
  *
  * Key features:
  * - Uses DefaultChatTransport for SSE streaming (no custom parsing needed)
- * - Integrates expo/fetch for React Native compatibility
- * - Handles Chatwoot-specific auth headers and request format via AIChatService
- * - Manages session persistence via AsyncStorage
+ * - Configurable transport (fetch, headers, endpoint) via ChatConfig
+ * - Configurable persistence via ChatConfig.persistence
  * - Handles app background/foreground lifecycle
  *
  * @see https://ai-sdk.dev/docs/getting-started/expo
@@ -17,13 +16,10 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import type { UIMessage } from 'ai';
-import { fetch as expoFetch } from 'expo/fetch';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { isTextPart, type MessagePart, type TextPart } from '@/types/ai-chat/parts';
-import { AIChatService } from '@/store/ai-chat/aiChatService';
+import type { ChatConfig } from '@/types/ai-chat/chatConfig';
 
 /**
  * STREAMING SAFETY INVARIANTS
@@ -40,8 +36,9 @@ import { AIChatService } from '@/store/ai-chat/aiChatService';
  *   They read current values from refs, not closures.
  *
  * INV-4: Transport useMemo Non-Reactive Dependencies
- *   Transport only depends on [agentBotId]. Auth headers and endpoint
- *   are read imperatively inside callbacks via AIChatService.getAuthHeaders().
+ *   Transport only depends on [config.transport, agentBotId]. Auth headers and
+ *   endpoint are read imperatively inside callbacks via config.transport.
+ *   The ChatConfig MUST be a stable module-scope constant or useMemo with empty deps.
  */
 
 // ============================================================================
@@ -108,52 +105,6 @@ export interface UseAIChatReturn {
 }
 
 // ============================================================================
-// Helper Functions
-// ============================================================================
-
-/**
- * Parse error response from the server
- * Extracts Chatwoot-specific error fields: error_details, error, message
- */
-async function parseErrorResponse(response: Response): Promise<string> {
-  try {
-    const text = await response.text();
-    try {
-      const json = JSON.parse(text);
-      // Chatwoot backend may return error_details, error, or message
-      return json.error_details || json.error || json.message || json.detail || text;
-    } catch {
-      // Not JSON, return text directly
-      return text || `HTTP ${response.status}`;
-    }
-  } catch {
-    return `HTTP ${response.status}: ${response.statusText}`;
-  }
-}
-
-/**
- * Extract text content from a UIMessage
- * Handles both parts-based and content-based message formats
- * Uses type guards instead of hardcoded strings
- */
-function extractTextContent(message: UIMessage): string {
-  // Handle parts-based format (SDK v5)
-  if (message.parts && Array.isArray(message.parts)) {
-    return message.parts
-      .filter((part): part is TextPart => isTextPart(part as MessagePart))
-      .map(part => part.text || '')
-      .join('');
-  }
-
-  // Fallback to content field if present
-  if ('content' in message && typeof message.content === 'string') {
-    return message.content;
-  }
-
-  return '';
-}
-
-// ============================================================================
 // Hook Implementation
 // ============================================================================
 
@@ -174,7 +125,7 @@ function extractTextContent(message: UIMessage): string {
  * await sendMessage('Hello, AI!');
  * ```
  */
-export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
+export function useAIChat(config: ChatConfig, options?: UseAIChatOptions): UseAIChatReturn {
   const { agentBotId, chatSessionId: initialSessionId } = options || {};
 
   // ============================================================================
@@ -204,7 +155,13 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   // Session Persistence
   // ============================================================================
 
-  // Load session from AsyncStorage on mount
+  // Stable ref for persistence to avoid re-triggering effects
+  const persistenceRef = useRef(config.persistence);
+  useEffect(() => {
+    persistenceRef.current = config.persistence;
+  }, [config.persistence]);
+
+  // Load session from persistence on mount
   useEffect(() => {
     const loadSession = async () => {
       if (initialSessionId) {
@@ -212,25 +169,25 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
         return;
       }
       try {
-        const stored = await AsyncStorage.getItem(AI_CHAT_SESSION_KEY);
+        const stored = await persistenceRef.current?.get(AI_CHAT_SESSION_KEY);
         if (stored && isMountedRef.current) {
           setSessionId(stored);
         }
-      } catch (error) {
-        console.warn('[useAIChat] Failed to load session:', error);
+      } catch {
+        // Failed to load session from persistence — start fresh
       }
     };
     loadSession();
   }, [initialSessionId]);
 
-  // Save session to AsyncStorage when it changes
+  // Save session to persistence when it changes
   useEffect(() => {
     const saveSession = async () => {
       if (!sessionId) return;
       try {
-        await AsyncStorage.setItem(AI_CHAT_SESSION_KEY, sessionId);
-      } catch (error) {
-        console.warn('[useAIChat] Failed to save session:', error);
+        await persistenceRef.current?.set(AI_CHAT_SESSION_KEY, sessionId);
+      } catch {
+        // Failed to save session — non-fatal
       }
       // Dispatch to Redux AFTER persistence attempt (success or failure)
       optionsRef.current?.onSessionIdExtracted?.(sessionId);
@@ -242,79 +199,94 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
   // Transport Configuration
   // ============================================================================
 
+  // Stable ref for transport to read inside callbacks
+  const transportRef = useRef(config.transport);
+  useEffect(() => {
+    transportRef.current = config.transport;
+  }, [config.transport]);
+
   const transport = useMemo(() => {
-    const apiEndpoint = AIChatService.getStreamEndpoint();
+    const { transport: t } = config;
+    const apiEndpoint = typeof t.streamEndpoint === 'function' ? t.streamEndpoint() : t.streamEndpoint;
+    const fetchFn = t.fetch ?? globalThis.fetch;
 
     return new DefaultChatTransport({
       api: apiEndpoint,
 
-      // Use expo/fetch for React Native streaming support
       fetch: async (url, fetchOptions) => {
-        const response = await expoFetch(
+        const response = await (fetchFn as (url: string | URL, init?: unknown) => Promise<Response>)(
           url as string,
-          fetchOptions as Parameters<typeof expoFetch>[1],
+          fetchOptions,
         );
 
-        // Check for errors and parse Chatwoot-specific error format
+        // Check for errors and parse backend-specific error format
         if (!response.ok) {
-          const errorMessage = await parseErrorResponse(response as unknown as Response);
+          const parseError = transportRef.current.parseError;
+          const errorMessage = parseError
+            ? await parseError(response)
+            : `HTTP ${response.status}`;
           throw new Error(errorMessage);
         }
 
         // Extract session ID from response headers — defer state update to post-streaming
-        const newSessionId = response.headers.get('X-Chat-Session-Id');
+        const extractSessionId = transportRef.current.extractSessionId;
+        const newSessionId = extractSessionId
+          ? extractSessionId(response)
+          : response.headers.get('X-Chat-Session-Id');
         if (newSessionId && newSessionId !== sessionIdRef.current) {
           sessionIdRef.current = newSessionId; // update ref only, no re-render during streaming
         }
 
-        return response as unknown as Response;
+        return response;
       },
 
-      // Provide auth headers
-      headers: () => ({
-        ...AIChatService.getAuthHeaders(),
-        'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
-      }),
+      headers: async () => {
+        const currentTransport = transportRef.current;
+        const h = await currentTransport.getHeaders();
+        return h;
+      },
 
-      // Transform request body to Chatwoot backend format
-      prepareSendMessagesRequest: async options => {
-        const { messages } = options;
+      prepareSendMessagesRequest: async sdkOptions => {
+        const { messages } = sdkOptions;
         const headers =
-          options.headers instanceof Headers
-            ? Object.fromEntries(options.headers.entries())
-            : ((options.headers as Record<string, string>) ?? {});
+          sdkOptions.headers instanceof Headers
+            ? Object.fromEntries(sdkOptions.headers.entries())
+            : ((sdkOptions.headers as Record<string, string>) ?? {});
 
         const lastMessage = messages[messages.length - 1];
-
-        // Use ref to always get the latest agentBotId (avoids stale closure from useMemo)
         const currentAgentBotId = agentBotIdRef.current;
 
         if (!currentAgentBotId) {
           throw new Error('No agent bot selected');
         }
 
-        // Chatwoot expects a specific request format
-        const body: Record<string, unknown> = {
-          messages: [
-            {
-              role: lastMessage.role,
-              content: extractTextContent(lastMessage),
+        // If config provides prepareRequest, use it; otherwise build default body
+        const currentTransport = transportRef.current;
+        if (currentTransport.prepareRequest) {
+          return currentTransport.prepareRequest({
+            messages,
+            lastMessage,
+            headers,
+            metadata: {
+              agentBotId: currentAgentBotId,
+              sessionId: sessionIdRef.current,
             },
-          ],
+          });
+        }
+
+        // Default fallback (should not normally be reached since chatwootChatConfig provides prepareRequest)
+        const body: Record<string, unknown> = {
+          messages: [{ role: lastMessage.role, content: '' }],
           agent_bot_id: currentAgentBotId,
         };
-
-        // Only include session ID if we have one (for continuing conversations)
         if (sessionIdRef.current) {
           body.chat_session_id = sessionIdRef.current;
         }
-
         return { body, headers };
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agentBotId]); // ONLY agentBotId — no config, no aiBackendUrl
+  }, [config.transport, agentBotId]);
 
   // ============================================================================
   // SDK Hook Integration
@@ -369,10 +341,10 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
 
   const chat = useChat({
     transport,
-    experimental_throttle: 150,
+    experimental_throttle: config.behavior?.streamThrottle ?? 150,
     onError: handleError,
     onFinish: handleFinish,
-    sendAutomaticallyWhen: options?.sendAutomaticallyWhen,
+    sendAutomaticallyWhen: options?.sendAutomaticallyWhen ?? config.behavior?.sendAutomaticallyWhen,
   });
 
   // ============================================================================
@@ -434,9 +406,9 @@ export function useAIChat(options?: UseAIChatOptions): UseAIChatReturn {
 
   const clearSession = useCallback(async () => {
     try {
-      await AsyncStorage.removeItem(AI_CHAT_SESSION_KEY);
-    } catch (error) {
-      console.warn('[useAIChat] Failed to clear session:', error);
+      await persistenceRef.current?.remove(AI_CHAT_SESSION_KEY);
+    } catch {
+      // Failed to clear session from persistence — non-fatal
     }
     if (isMountedRef.current) {
       setSessionId(null);

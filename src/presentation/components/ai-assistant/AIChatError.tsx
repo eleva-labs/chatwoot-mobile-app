@@ -9,7 +9,7 @@ import { Icon } from '@/components-next/common';
 import { WarningIcon, LockIcon } from '@/svg-icons';
 import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 import {
   categorizeError,
   ERROR_DISPLAY_CONFIG,
@@ -43,6 +43,7 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
   onFreshStart,
 }) => {
   const { style } = useAIStyles();
+  const { t } = useAIi18n();
   const category = useMemo(() => categorizeError(error.message || ''), [error.message]);
   const config = ERROR_DISPLAY_CONFIG[category];
   const canRetry = category !== 'auth';
@@ -55,7 +56,7 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
           <ErrorCategoryIcon config={config} />
         </View>
         <View style={style('flex-1')}>
-          <Text style={style('text-sm font-medium text-slate-12')}>{i18n.t(config.titleKey)}</Text>
+          <Text style={style('text-sm font-medium text-slate-12')}>{t(config.titleKey)}</Text>
           <Text style={style('text-xs mt-1 text-slate-11')} numberOfLines={3}>
             {error.message || String(error)}
           </Text>
@@ -67,21 +68,21 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
         {canRetry && onRetry && (
           <Pressable onPress={onRetry} style={style('bg-iris-9 px-3 py-1.5 rounded-lg')}>
             <Text style={style('text-xs font-medium text-white')}>
-              {i18n.t('AI_ASSISTANT.CHAT.ERRORS.RETRY')}
+              {t('AI_ASSISTANT.CHAT.ERRORS.RETRY')}
             </Text>
           </Pressable>
         )}
         {onFreshStart && (
           <Pressable onPress={onFreshStart} style={style('px-3 py-1.5 rounded-lg')}>
             <Text style={style('text-xs text-slate-11')}>
-              {i18n.t('AI_ASSISTANT.CHAT.ERRORS.FRESH_START')}
+              {t('AI_ASSISTANT.CHAT.ERRORS.FRESH_START')}
             </Text>
           </Pressable>
         )}
         {onDismiss && (
           <Pressable onPress={onDismiss} style={style('ml-auto px-3 py-1.5')}>
             <Text style={style('text-xs text-slate-10')}>
-              {i18n.t('AI_ASSISTANT.CHAT.ERRORS.DISMISS')}
+              {t('AI_ASSISTANT.CHAT.ERRORS.DISMISS')}
             </Text>
           </Pressable>
         )}

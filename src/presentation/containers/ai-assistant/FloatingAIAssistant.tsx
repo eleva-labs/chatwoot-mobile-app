@@ -11,19 +11,27 @@ import { useScaleAnimation } from '@/utils';
 import { useHaptic } from '@/utils';
 import { Icon } from '@/components-next/common';
 import { AIAssisst } from '@/svg-icons';
-import { TAB_BAR_HEIGHT } from '@/constants';
 import { AIChatInterface } from './AIChatInterface';
 import type { FloatingAIAssistantProps } from './types';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
+
+const DEFAULT_BOTTOM_INSET = 80;
 
 export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.memo(
-  ({ agentBotId }) => {
+  ({
+    agentBotId,
+    bottomInset = DEFAULT_BOTTOM_INSET,
+    fabIcon,
+    enableScaleAnimation = true,
+    enableHaptic = true,
+  }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const insets = useSafeAreaInsets();
     const haptic = useHaptic('selection');
     const { handlers, animatedStyle: scaleStyle } = useScaleAnimation();
     const { style, tokens } = useAIStyles();
+    const { t } = useAIi18n();
 
     // Animation values using Reanimated (useSharedValue for performance)
     const opacity = useSharedValue(0);
@@ -31,7 +39,9 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
     const fabScale = useSharedValue(1);
 
     const handlePress = useCallback(() => {
-      haptic?.();
+      if (enableHaptic) {
+        haptic?.();
+      }
       setIsExpanded(prev => {
         const newValue = !prev;
 
@@ -50,7 +60,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
 
         return newValue;
       });
-    }, [haptic, opacity, translateY, fabScale]);
+    }, [haptic, enableHaptic, opacity, translateY, fabScale]);
 
     const fabAnimatedStyle = useAnimatedStyle(() => ({
       transform: [{ scale: fabScale.value }],
@@ -81,7 +91,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
           style={[
             styles.container,
             style(tokens.session.background),
-            { paddingTop: insets.top, paddingBottom: TAB_BAR_HEIGHT },
+            { paddingTop: insets.top, paddingBottom: bottomInset },
           ]}>
           <Animated.View style={[styles.chatContainer, chatInterfaceStyle]}>
             <AIChatInterface agentBotId={agentBotId} onClose={handleClose} />
@@ -95,12 +105,12 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
         style={[
           styles.fabContainer,
           {
-            bottom: 80 + insets.bottom, // Above tab bar
+            bottom: bottomInset + insets.bottom,
             right: 16,
           },
           fabAnimatedStyle,
         ]}>
-        <Animated.View style={scaleStyle}>
+        <Animated.View style={enableScaleAnimation ? scaleStyle : undefined}>
           <Pressable
             onPress={handlePress}
             style={({ pressed }) => [
@@ -110,10 +120,10 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
             ]}
             accessible
             accessibilityRole="button"
-            accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN')}
-            accessibilityHint={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN_HINT')}
-            {...handlers}>
-            <Icon icon={<AIAssisst color="white" strokeOpacity={1} />} size={24} />
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN')}
+            accessibilityHint={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.OPEN_HINT')}
+            {...(enableScaleAnimation ? handlers : {})}>
+            {fabIcon ?? <Icon icon={<AIAssisst color="white" strokeOpacity={1} />} size={24} />}
           </Pressable>
         </Animated.View>
       </Animated.View>
@@ -121,7 +131,13 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
   },
   // Memo comparison function
   (prevProps, nextProps) => {
-    return prevProps.agentBotId === nextProps.agentBotId;
+    return (
+      prevProps.agentBotId === nextProps.agentBotId &&
+      prevProps.bottomInset === nextProps.bottomInset &&
+      prevProps.fabIcon === nextProps.fabIcon &&
+      prevProps.enableScaleAnimation === nextProps.enableScaleAnimation &&
+      prevProps.enableHaptic === nextProps.enableHaptic
+    );
   },
 );
 

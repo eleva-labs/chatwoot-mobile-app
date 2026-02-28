@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
 import { AISessionItem } from './AISessionItem';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 interface AISessionListProps {
   sessions: AIChatSession[];
@@ -16,13 +16,14 @@ interface AISessionListProps {
 export const AISessionList: React.FC<AISessionListProps> = React.memo(
   ({ sessions, activeSessionId, onSelectSession, isLoading }) => {
     const { style, tokens } = useAIStyles();
+    const { t } = useAIi18n();
     const sessionTokens = tokens.session;
 
     if (isLoading) {
       return (
         <View style={style('p-4 items-center justify-center')}>
           <Text style={style(sessionTokens.subtitle)}>
-            {i18n.t('AI_ASSISTANT.CHAT.SESSIONS.LOADING')}
+            {t('AI_ASSISTANT.CHAT.SESSIONS.LOADING')}
           </Text>
         </View>
       );
@@ -32,7 +33,7 @@ export const AISessionList: React.FC<AISessionListProps> = React.memo(
       return (
         <View style={style('p-4 items-center justify-center')}>
           <Text style={style(sessionTokens.subtitle)}>
-            {i18n.t('AI_ASSISTANT.CHAT.SESSIONS.EMPTY')}
+            {t('AI_ASSISTANT.CHAT.SESSIONS.EMPTY')}
           </Text>
         </View>
       );

@@ -19,6 +19,8 @@ import type { UIMessage } from 'ai';
 import { tailwind } from '@/theme';
 import { useAppSelector, useAppDispatch } from '@/hooks';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { chatwootChatConfig } from '@/ai/chatwootChatConfig';
+import { createChatwootSessionsAdapter } from '@/ai/chatwootSessionsAdapter';
 import {
   useAIChat,
   useAIChatBot,
@@ -26,7 +28,9 @@ import {
   useAIChatScroll,
 } from '@/presentation/hooks/ai-assistant';
 import { useMessageBridge } from '@/presentation/hooks/ai-assistant/useMessageBridge';
+import { AIChatProvider } from '@/presentation/hooks/ai-assistant/useAIChatProvider';
 import { validateAndNormalizeMessages } from '@/presentation/utils/ai-assistant';
+import i18n from '@/i18n';
 import { AIInputField } from '@/presentation/components/ai-assistant/AIInputField';
 import type { AIChatInterfaceProps } from './types';
 import {
@@ -146,6 +150,9 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       activeSessionId ? selectMessagesBySession(state, activeSessionId) : EMPTY_MESSAGES,
     );
 
+    // Sessions adapter (stable, created once)
+    const sessionsAdapter = useMemo(() => createChatwootSessionsAdapter(), []);
+
     // Bot management
     const { selectedBotId, selectedBot } = useAIChatBot(agentBotId, accountId);
 
@@ -157,7 +164,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       [dispatch],
     );
 
-    // AI Chat using modern DefaultChatTransport
+    // AI Chat using ChatConfig-based DefaultChatTransport
     const {
       messages,
       isLoading,
@@ -167,7 +174,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       stop: cancel,
       setMessages,
       clearSession,
-    } = useAIChat({
+    } = useAIChat(chatwootChatConfig, {
       agentBotId: selectedBotId,
       chatSessionId: activeSessionId || undefined,
       onSessionIdExtracted,
@@ -198,7 +205,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       handleSelectSession,
       handleNewConversation,
       isNewConversation,
-    } = useAIChatSessions(selectedBotId, accountId, agentBotId, {
+    } = useAIChatSessions(sessionsAdapter, selectedBotId, {
       stop: cancel,
       clearSession,
       onBridgeKeyReset: handleBridgeKeyReset,
@@ -224,12 +231,19 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
       return validateAndNormalizeMessages(messages);
     }, [messages]);
 
+    // Chatwoot i18n adapter — wraps the app's i18n system for the AI chat context
+    const chatwootI18n = useMemo(() => ({
+      t: (key: string, params?: Record<string, unknown>) => i18n.t(key, params),
+      get locale() { return i18n.locale; },
+      dir: 'ltr' as const,
+    }), []);
+
     const { style, tokens } = useAIStyles();
 
     // Session panel callbacks (stable refs for memo'd children)
     const handleToggleSessions = useCallback(() => {
-      setShowSessions(prev => !prev);
-    }, [setShowSessions]);
+      setShowSessions(!showSessions);
+    }, [setShowSessions, showSessions]);
 
     const handleCloseSessions = useCallback(() => {
       setShowSessions(false);
@@ -253,54 +267,56 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     );
 
     return (
-      <KeyboardAvoidingView
-        style={tailwind.style('flex-1')}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={insets.top}>
-        <View style={style('flex-1', tokens.session.background)}>
-          <AIChatHeader
-            selectedBot={selectedBot}
-            sessionsCount={sessions.length}
-            activeSessionId={activeSessionId}
-            status={status}
-            onToggleSessions={handleToggleSessions}
-            onNewConversation={handleNewConversation}
-            onClose={onClose}
-          />
+      <AIChatProvider i18n={chatwootI18n}>
+        <KeyboardAvoidingView
+          style={tailwind.style('flex-1')}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={insets.top}>
+          <View style={style('flex-1', tokens.session.background)}>
+            <AIChatHeader
+              selectedBot={selectedBot}
+              sessionsCount={sessions.length}
+              activeSessionId={activeSessionId}
+              status={status}
+              onToggleSessions={handleToggleSessions}
+              onNewConversation={handleNewConversation}
+              onClose={onClose}
+            />
 
-          <AIChatMessagesView
-            listData={listData}
-            isLoading={isLoading}
-            status={status}
-            isLoadingMessages={isLoadingMessages}
-            activeSessionId={activeSessionId}
-            error={visibleError ?? null}
-            messagesLength={messages.length}
-            selectedBot={selectedBot ?? undefined}
-            userName={user?.name}
-            sendMessage={sendMessage}
-            setMessages={setMessages}
-            onSendPrompt={handleSend}
-            onDismiss={handleDismiss}
-          />
+            <AIChatMessagesView
+              listData={listData}
+              isLoading={isLoading}
+              status={status}
+              isLoadingMessages={isLoadingMessages}
+              activeSessionId={activeSessionId}
+              error={visibleError ?? null}
+              messagesLength={messages.length}
+              selectedBot={selectedBot ?? undefined}
+              userName={user?.name}
+              sendMessage={sendMessage}
+              setMessages={setMessages}
+              onSendPrompt={handleSend}
+              onDismiss={handleDismiss}
+            />
 
-          <AIInputField
-            onSend={handleSend}
-            isLoading={isLoading || isLoadingMessages}
-            onCancel={isLoading ? cancel : undefined}
-          />
+            <AIInputField
+              onSend={handleSend}
+              isLoading={isLoading || isLoadingMessages}
+              onCancel={isLoading ? cancel : undefined}
+            />
 
-          {/* Session panel LAST so BottomSheet overlays on top */}
-          <AIChatSessionPanel
-            sessions={sessions}
-            activeSessionId={activeSessionId}
-            onSelectSession={handleSelectSession}
-            isLoading={isLoadingSessions}
-            isVisible={showSessions}
-            onClose={handleCloseSessions}
-          />
-        </View>
-      </KeyboardAvoidingView>
+            {/* Session panel LAST so BottomSheet overlays on top */}
+            <AIChatSessionPanel
+              sessions={sessions}
+              activeSessionId={activeSessionId}
+              onSelectSession={handleSelectSession}
+              isLoading={isLoadingSessions}
+              isVisible={showSessions}
+              onClose={handleCloseSessions}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </AIChatProvider>
     );
   },
   // Memo comparison function

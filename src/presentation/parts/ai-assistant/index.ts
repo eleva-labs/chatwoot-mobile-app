@@ -37,11 +37,4 @@ export {
   type AIPartRendererProps,
   type MessagePart,
   type UnknownPart,
-  // Helper functions
-  filterPartsByType,
-  getTextParts,
-  getReasoningParts,
-  getToolParts,
-  hasReasoningParts,
-  hasToolParts,
 } from './AIPartRenderer';

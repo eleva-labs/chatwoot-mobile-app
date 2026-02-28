@@ -5,7 +5,7 @@ import type { UIMessage } from 'ai';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 // Use domain type guards instead of hardcoded strings
 import { isTextPart, type MessagePart } from '@/types/ai-chat/parts';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 interface AIThoughtsViewProps {
   message: UIMessage;
@@ -14,6 +14,7 @@ interface AIThoughtsViewProps {
 
 export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timestamp }) => {
   const { style, getCollapsible, tokens } = useAIStyles();
+  const { t } = useAIi18n();
   const irisTokens = getCollapsible('iris');
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -108,7 +109,7 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
         activeOpacity={0.7}>
         <View style={style('flex-row items-center flex-1')}>
           <Text style={style('text-sm font-inter-semibold-20', irisTokens.labelActive)}>
-            {i18n.t('AI_ASSISTANT.CHAT.THOUGHTS.HEADER')}
+            {t('AI_ASSISTANT.CHAT.THOUGHTS.HEADER')}
           </Text>
           {formattedTime && (
             <Text style={style('ml-2 text-xs font-inter-normal-20', irisTokens.subtitle)}>
@@ -130,7 +131,7 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
             showsVerticalScrollIndicator={true}
             nestedScrollEnabled={true}>
             <Text style={style('text-sm font-inter-normal-20 leading-5', tokens.text.secondary)}>
-              {textContent || i18n.t('AI_ASSISTANT.CHAT.THOUGHTS.NO_CONTENT')}
+              {textContent || t('AI_ASSISTANT.CHAT.THOUGHTS.NO_CONTENT')}
             </Text>
           </ScrollView>
         </View>

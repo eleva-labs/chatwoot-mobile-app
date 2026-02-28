@@ -28,17 +28,21 @@ import {
   getDeduplicatedToolParts,
   type MessagePart,
 } from '@/types/ai-chat/parts';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
   message,
   isStreaming,
   avatarName,
   avatarSrc,
+  renderAvatar: renderAvatarProp,
+  onCopy: onCopyProp,
+  onHaptic: onHapticProp,
 }) => {
   const { style, message: getMessageTokens } = useAIStyles();
+  const { t } = useAIi18n();
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
-  const haptic = useHaptic('success');
+  const defaultHaptic = useHaptic('success');
   const isUser = message.role === 'user';
   const isAssistant = message.role === 'assistant';
   const messageTokens = getMessageTokens(isUser ? 'user' : 'assistant');
@@ -73,18 +77,26 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
       accessibilityRole="text"
       accessibilityLabel={
         isUser
-          ? i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE')
-          : i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.AI_MESSAGE')
+          ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE')
+          : t('AI_ASSISTANT.CHAT.ACCESSIBILITY.AI_MESSAGE')
       }>
       {/* Avatar */}
       <View style={[style('mb-1'), { flexShrink: 0 }]}>
-        <Avatar
-          name={
-            avatarName || (isUser ? i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : i18n.t('AI_ASSISTANT.CHAT.AVATAR_NAME'))
-          }
-          src={avatarSrc ? { uri: avatarSrc } : undefined}
-          size="lg"
-        />
+        {renderAvatarProp ? (
+          renderAvatarProp({
+            name: avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME')),
+            src: avatarSrc,
+            size: 40,
+          })
+        ) : (
+          <Avatar
+            name={
+              avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME'))
+            }
+            src={avatarSrc ? { uri: avatarSrc } : undefined}
+            size="lg"
+          />
+        )}
       </View>
 
       {/* Message content */}
@@ -151,8 +163,16 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
                   .filter(p => 'text' in p)
                   .map(p => (p as { text: string }).text)
                   .join('\n');
-                Clipboard.setString(fullText);
-                haptic?.();
+                if (onCopyProp) {
+                  onCopyProp(fullText);
+                } else {
+                  Clipboard.setString(fullText);
+                }
+                if (onHapticProp) {
+                  onHapticProp();
+                } else {
+                  defaultHaptic?.();
+                }
                 setCopiedId(message.id);
                 setTimeout(() => setCopiedId(null), 2000);
               }}
@@ -161,11 +181,11 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               }
               accessible
               accessibilityRole="button"
-              accessibilityLabel={i18n.t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
+              accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
               <Text style={style('text-xs text-slate-9')}>
                 {copiedId === message.id
-                  ? i18n.t('AI_ASSISTANT.CHAT.COPY.COPIED')
-                  : i18n.t('AI_ASSISTANT.CHAT.COPY.COPY')}
+                  ? t('AI_ASSISTANT.CHAT.COPY.COPIED')
+                  : t('AI_ASSISTANT.CHAT.COPY.COPY')}
               </Text>
             </Pressable>
           )}

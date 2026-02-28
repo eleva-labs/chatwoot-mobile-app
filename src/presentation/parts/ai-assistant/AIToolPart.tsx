@@ -21,7 +21,7 @@ import { CheckIcon, CloseIcon, LoadingIcon } from '@/svg-icons';
 import { tailwind } from '@/theme/tailwind';
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
 import { AICollapsible } from './AICollapsible';
-import i18n from '@/i18n';
+import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 import { formatToolName, formatJson } from '@/presentation/utils/ai-assistant/aiChatFormatUtils';
 
 // Import domain types and constants (single source of truth)
@@ -163,6 +163,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
   defaultExpanded = false,
 }) => {
   const { style, tokens } = useAIStyles();
+  const { t } = useAIi18n();
 
   // Derive state and display configuration using domain helper
   const state = useMemo(() => getDisplayState(part), [part]);
@@ -192,11 +193,11 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
       part.toolName ||
       ((part as ToolResultPart & { output?: { tool_name?: string } }).output?.tool_name as string) ||
       '';
-    return formatToolName(name, i18n.t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL'));
+    return formatToolName(name, t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL'));
   }, [part.toolName, part]);
 
   // Build title with state
-  const title = `${toolName} • ${i18n.t(data.labelKey)}`;
+  const title = `${toolName} • ${t(data.labelKey)}`;
 
   return (
     <AICollapsible
@@ -214,7 +215,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
                 'text-xs font-inter-semibold-20 mb-2 uppercase',
                 tokens.tool.sectionLabel,
               )}>
-              {i18n.t('AI_ASSISTANT.CHAT.TOOLS.INPUT')}
+              {t('AI_ASSISTANT.CHAT.TOOLS.INPUT')}
             </Text>
             <ScrollView
               style={style('max-h-48')}
@@ -238,7 +239,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
                 'text-xs font-inter-semibold-20 mb-2 uppercase',
                 tokens.tool.sectionLabel,
               )}>
-              {i18n.t('AI_ASSISTANT.CHAT.TOOLS.OUTPUT')}
+              {t('AI_ASSISTANT.CHAT.TOOLS.OUTPUT')}
             </Text>
             <ScrollView
               style={style('max-h-48')}
@@ -257,7 +258,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
         {/* Fallback: show something if neither input nor output */}
         {!hasInput && !hasOutput && (
           <Text style={style('text-xs italic', tokens.text.muted)}>
-            {i18n.t('AI_ASSISTANT.CHAT.TOOLS.NO_DATA')}
+            {t('AI_ASSISTANT.CHAT.TOOLS.NO_DATA')}
           </Text>
         )}
 
@@ -265,7 +266,7 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
         {state === 'error' && part.type === PART_TYPES.TOOL_RESULT && (
           <View style={style('mt-2 p-2 rounded-md', tokens.tool.errorBackground)}>
             <Text style={style('text-xs font-inter-medium-24', tokens.tool.errorText)}>
-              {i18n.t('AI_ASSISTANT.CHAT.TOOLS.EXECUTION_FAILED')}
+              {t('AI_ASSISTANT.CHAT.TOOLS.EXECUTION_FAILED')}
             </Text>
           </View>
         )}
