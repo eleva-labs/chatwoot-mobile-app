@@ -11,7 +11,7 @@
  * - AIChatInterface (container) — owns useAIChat, useAIChatSessions, Redux state
  */
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -215,7 +215,9 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     });
 
     // Wire the bridge key reset to the ref so sessions hook can call it
-    bridgeKeyResetRef.current = resetBridgeKey;
+    useEffect(() => {
+      bridgeKeyResetRef.current = resetBridgeKey;
+    }, [resetBridgeKey]);
 
     // Validate and normalize messages for safe FlashList rendering
     const listData = useMemo(() => {

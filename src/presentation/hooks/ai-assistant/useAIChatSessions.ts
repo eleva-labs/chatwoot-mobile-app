@@ -55,7 +55,11 @@ export function useAIChatSessions(
   //   - Set FALSE when activeSessionId becomes truthy (backend returned X-Chat-Session-Id)
   // Without this, setting activeSessionId=null triggers auto-select which immediately
   // re-selects the latest session, and the bridge would reload old messages into the SDK.
+  //
+  // Both ref (for synchronous reads within callbacks) and state (for reactive
+  // dependency in the message bridge effect — INV-5) are maintained in sync.
   const isNewConversationRef = useRef(false);
+  const [isNewConversation, setIsNewConversation] = useState(false);
 
   // Stable refs for functions received from parent to prevent cascade re-renders
   // during streaming. The parent re-renders on every streaming tick due to
@@ -88,11 +92,12 @@ export function useAIChatSessions(
     }
   }, [sessions, activeSessionId, dispatch]);
 
-  // Clear isNewConversationRef when activeSessionId becomes truthy
+  // Clear isNewConversation when activeSessionId becomes truthy
   // (i.e. backend returned X-Chat-Session-Id for the new conversation)
   useEffect(() => {
     if (activeSessionId && isNewConversationRef.current) {
       isNewConversationRef.current = false;
+      setIsNewConversation(false);
     }
   }, [activeSessionId]);
 
@@ -128,6 +133,7 @@ export function useAIChatSessions(
         return;
       }
       isNewConversationRef.current = false;
+      setIsNewConversation(false);
       onBridgeKeyResetRef.current?.(); // Reset so bridge loads new session's messages
       if (stopRef.current) {
         stopRef.current(); // Stop any active stream before switching
@@ -141,6 +147,7 @@ export function useAIChatSessions(
   // Handle new conversation
   const handleNewConversation = useCallback(async () => {
     isNewConversationRef.current = true;
+    setIsNewConversation(true);
     onBridgeKeyResetRef.current?.(); // Reset for future session loads
     if (stopRef.current) {
       stopRef.current(); // Stop any active stream
@@ -160,6 +167,6 @@ export function useAIChatSessions(
     setShowSessions,
     handleSelectSession,
     handleNewConversation,
-    isNewConversation: isNewConversationRef.current,
+    isNewConversation,
   };
 }
