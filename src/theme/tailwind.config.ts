@@ -78,6 +78,7 @@ export const buildTwConfig = (isDark: boolean) => {
           transparent: 'transparent',
         },
         fontSize: {
+          xxs: '10px',
           xs: '12px',
           cxs: '13px',
           md: '15px',

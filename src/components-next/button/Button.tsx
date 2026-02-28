@@ -26,8 +26,8 @@ const getButtonStyles = (
       : 'bg-brand-600'
     : isDestructive
       ? 'bg-ruby-2' // Pastel red background for destructive secondary
-      : 'bg-gray-50';
-  const pressedStyles = isPrimary ? 'opacity-95' : pressed ? 'bg-gray-100' : '';
+      : 'bg-slate-2';
+  const pressedStyles = isPrimary ? 'opacity-95' : pressed ? 'bg-slate-3' : '';
 
   return themedTailwind.style(baseStyles, variantStyles, pressedStyles);
 };
@@ -44,7 +44,7 @@ const getTextStyles = (
       : 'text-white'
     : isDestructive
       ? 'text-ruby-11' // Pastel red for secondary destructive
-      : 'text-gray-950';
+      : 'text-slate-12';
 
   return themedTailwind.style(baseStyles, colorStyles);
 };

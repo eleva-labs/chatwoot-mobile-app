@@ -22,8 +22,8 @@ const getButtonStyles = (
   themedTailwind: ReturnType<typeof import('@/hooks').useThemedStyles>,
 ) => {
   const baseStyles = 'py-[11px] flex-row items-center justify-center rounded-[13px] gap-4';
-  const variantStyles = isPrimary ? 'bg-brand-600' : 'bg-gray-50';
-  const pressedStyles = isPrimary ? 'opacity-95' : pressed ? 'bg-gray-100' : '';
+  const variantStyles = isPrimary ? 'bg-brand-600' : 'bg-slate-2';
+  const pressedStyles = isPrimary ? 'opacity-95' : pressed ? 'bg-slate-3' : '';
 
   return themedTailwind.style(baseStyles, variantStyles, pressedStyles);
 };

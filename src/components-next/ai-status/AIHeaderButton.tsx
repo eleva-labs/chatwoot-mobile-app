@@ -15,7 +15,7 @@ export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPre
         {
           backgroundColor: isEnabled
             ? (tailwind.color('bg-brand') ?? '#5d17ea')
-            : (tailwind.color('bg-gray-4') ?? '#e8e8e8'),
+            : (tailwind.color('bg-slate-4') ?? '#e8e8e8'),
         },
       ]}
       onPress={onPress}
@@ -29,7 +29,7 @@ export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPre
           {
             color: isEnabled
               ? (tailwind.color('text-white') ?? '#FFFFFF')
-              : (tailwind.color('text-gray-11') ?? '#646464'),
+              : (tailwind.color('text-slate-11') ?? '#646464'),
           },
         ]}>
         AI
