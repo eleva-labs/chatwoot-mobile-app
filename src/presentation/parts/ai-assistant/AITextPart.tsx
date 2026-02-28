@@ -24,9 +24,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
-import { tailwind } from '@/theme/tailwind';
 import { useTheme } from '@/context/ThemeContext';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 
 // Import domain types (single source of truth)
 import type { TextPart } from '@/types/ai-chat/parts';
@@ -70,6 +70,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
 }) => {
   const { style } = useAIStyles();
   const { themeVersion } = useTheme();
+  const resolveColor = useResolveColor();
 
   const isUser = role === 'user';
   const text = part.text || '';
@@ -116,19 +117,19 @@ export const AITextPart: React.FC<AITextPartProps> = ({
     return true;
   };
 
-  // Get colors from Radix scale via tailwind.color() (theme-aware singleton)
+  // Get colors from theme context (extraction-ready)
   // User: iris-12 text on iris-3 background
   // Assistant: slate-12 text on slate-3 background
   const textColor = isUser
-    ? (tailwind.color('text-iris-12') ?? 'rgb(39, 41, 98)')
-    : (tailwind.color('text-slate-12') ?? 'rgb(28, 32, 36)');
-  const linkColor = tailwind.color('text-blue-9') ?? 'rgb(39, 129, 246)';
+    ? resolveColor('text-iris-12', 'rgb(39, 41, 98)')
+    : resolveColor('text-slate-12', 'rgb(28, 32, 36)');
+  const linkColor = resolveColor('text-blue-9', 'rgb(39, 129, 246)');
   const codeBackground = isUser
     ? 'rgba(255,255,255,0.15)'
-    : (tailwind.color('bg-slate-3') ?? 'rgb(240, 240, 243)');
+    : resolveColor('bg-slate-3', 'rgb(240, 240, 243)');
   const cursorColor = isUser
-    ? (tailwind.color('text-iris-12') ?? 'rgb(39, 41, 98)')
-    : (tailwind.color('text-slate-9') ?? 'rgb(139, 141, 152)');
+    ? resolveColor('text-iris-12', 'rgb(39, 41, 98)')
+    : resolveColor('text-slate-9', 'rgb(139, 141, 152)');
 
   // Markdown styles based on role using Radix colors (memoized for performance)
   const markdownStyles = useMemo(

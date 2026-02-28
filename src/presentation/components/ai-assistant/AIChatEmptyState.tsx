@@ -8,8 +8,8 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Icon } from '@/components-next/common';
 import { ChatIcon } from '@/svg-icons';
-import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 const SUGGESTED_PROMPT_KEYS = [
@@ -29,12 +29,13 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({
 }) => {
   const { style } = useAIStyles();
   const { t } = useAIi18n();
+  const resolveColor = useResolveColor();
 
   return (
     <View style={style('flex-1 items-center justify-center p-8')}>
       {/* Icon container */}
       <View style={style('mb-4 rounded-full bg-slate-2 p-4')}>
-        <Icon icon={<ChatIcon stroke={tailwind.color('text-slate-9') ?? '#8B8D98'} />} size={28} />
+        <Icon icon={<ChatIcon stroke={resolveColor('text-slate-9', '#8B8D98')} />} size={28} />
       </View>
 
       {/* Title */}

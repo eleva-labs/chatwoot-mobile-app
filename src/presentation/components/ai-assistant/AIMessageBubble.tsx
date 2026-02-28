@@ -18,7 +18,7 @@ import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useHaptic } from '@/utils';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import { tailwind } from '@/theme/tailwind';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import type { AIMessageBubbleProps } from '@/presentation/containers/ai-assistant/types';
 import { AIPartRenderer } from '@/presentation/parts/ai-assistant/AIPartRenderer';
 import { Avatar } from '@/components-next/common/avatar/Avatar';
@@ -41,6 +41,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
 }) => {
   const { style, message: getMessageTokens } = useAIStyles();
   const { t } = useAIi18n();
+  const resolveColor = useResolveColor();
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const defaultHaptic = useHaptic('success');
   const isUser = message.role === 'user';
@@ -134,7 +135,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               )}>
               <ActivityIndicator
                 size="small"
-                color={tailwind.color('text-slate-9') ?? 'rgb(139, 141, 152)'}
+                color={resolveColor('text-slate-9', 'rgb(139, 141, 152)')}
               />
             </View>
           ) : hasTextContent ? (

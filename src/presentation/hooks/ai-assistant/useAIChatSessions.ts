@@ -27,12 +27,14 @@ export interface UseAIChatSessionsReturn {
 /**
  * Hook for managing AI chat sessions.
  *
- * Accepts an optional SessionsStateAdapter for commands. When provided,
- * the adapter's setActiveSessionId is used alongside Redux dispatch.
+ * Accepts an optional SessionsStateAdapter for decoupled data access.
+ * When provided, the adapter's command methods (fetchSessions, fetchMessages,
+ * setActiveSessionId) are used instead of direct Redux dispatch.
  *
  * NOTE on reactivity: useAppSelector is still used for reactive subscriptions
  * (sessions, activeSessionId, isLoadingMessages) because the adapter's
  * imperative getters do NOT trigger React re-renders.
+ * The adapter is used for imperative commands only.
  */
 export function useAIChatSessions(
   adapter: SessionsStateAdapter | undefined,
@@ -99,7 +101,11 @@ export function useAIChatSessions(
       if (!activeSessionId && sessions.length > 0 && !isNewConversationRef.current) {
         const latestSession = sessions[0];
         if (latestSession?.chat_session_id) {
-          dispatch(setActiveSession({ sessionId: latestSession.chat_session_id }));
+          if (adapterRef.current) {
+            adapterRef.current.setActiveSessionId(latestSession.chat_session_id);
+          } else {
+            dispatch(setActiveSession({ sessionId: latestSession.chat_session_id }));
+          }
         }
       }
     }
@@ -115,26 +121,36 @@ export function useAIChatSessions(
   }, [activeSessionId]);
 
   // Fetch sessions on mount or when bot is selected
+  // Uses adapter when available for decoupling; falls back to Redux dispatch
   useEffect(() => {
     if (selectedBotId) {
-      dispatch(
-        aiChatActions.fetchSessions({
-          agentBotId: selectedBotId,
-          limit: 25,
-        }),
-      );
+      if (adapterRef.current) {
+        adapterRef.current.fetchSessions({ agentBotId: selectedBotId, limit: 25 });
+      } else {
+        dispatch(
+          aiChatActions.fetchSessions({
+            agentBotId: selectedBotId,
+            limit: 25,
+          }),
+        );
+      }
     }
   }, [dispatch, selectedBotId]);
 
   // Load messages when session is selected
+  // Uses adapter when available for decoupling; falls back to Redux dispatch
   useEffect(() => {
     if (activeSessionId) {
-      dispatch(
-        aiChatActions.fetchMessages({
-          sessionId: activeSessionId,
-          limit: 100,
-        }),
-      );
+      if (adapterRef.current) {
+        adapterRef.current.fetchMessages({ sessionId: activeSessionId, limit: 100 });
+      } else {
+        dispatch(
+          aiChatActions.fetchMessages({
+            sessionId: activeSessionId,
+            limit: 100,
+          }),
+        );
+      }
     }
   }, [dispatch, activeSessionId]);
 
@@ -151,7 +167,11 @@ export function useAIChatSessions(
       if (stopRef.current) {
         stopRef.current(); // Stop any active stream before switching
       }
-      dispatch(setActiveSession({ sessionId }));
+      if (adapterRef.current) {
+        adapterRef.current.setActiveSessionId(sessionId);
+      } else {
+        dispatch(setActiveSession({ sessionId }));
+      }
       setShowSessions(false);
     },
     [dispatch, activeSessionId],
@@ -165,7 +185,11 @@ export function useAIChatSessions(
     if (stopRef.current) {
       stopRef.current(); // Stop any active stream
     }
-    dispatch(setActiveSession({ sessionId: null }));
+    if (adapterRef.current) {
+      adapterRef.current.setActiveSessionId(null);
+    } else {
+      dispatch(setActiveSession({ sessionId: null }));
+    }
     // clearSession handles both setSessionId(null) and setMessages([])
     if (clearSessionRef.current) {
       await clearSessionRef.current();

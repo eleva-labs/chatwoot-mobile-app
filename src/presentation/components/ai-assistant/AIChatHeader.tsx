@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Icon } from '@/components-next/common';
 import { CloseIcon, AddIcon } from '@/svg-icons';
-import { tailwind } from '@/theme/tailwind';
 import type { AIChatBot } from '@/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
 export interface AIChatHeaderProps {
@@ -29,6 +29,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
   }) => {
     const { style, tokens } = useAIStyles();
     const { t } = useAIi18n();
+    const resolveColor = useResolveColor();
     const headerTokens = tokens.header;
 
     return (
@@ -101,7 +102,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               accessibilityRole="button"
               accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.NEW_CONVERSATION')}>
               <Icon
-                icon={<AddIcon stroke={tailwind.color('text-slate-11') ?? '#60646C'} />}
+                icon={<AddIcon stroke={resolveColor('text-slate-11', '#60646C')} />}
                 size={20}
               />
             </Pressable>
@@ -114,7 +115,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE')}
             accessibilityHint={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_HINT')}>
             <Icon
-              icon={<CloseIcon stroke={tailwind.color('text-slate-10') ?? '#80838D'} />}
+              icon={<CloseIcon stroke={resolveColor('text-slate-10', '#80838D')} />}
               size={20}
             />
           </Pressable>

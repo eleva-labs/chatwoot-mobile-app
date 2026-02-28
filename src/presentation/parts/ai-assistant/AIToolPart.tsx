@@ -18,8 +18,8 @@ import { View, Text, ScrollView } from 'react-native';
 
 import { Icon } from '@/components-next/common';
 import { CheckIcon, CloseIcon, LoadingIcon } from '@/svg-icons';
-import { tailwind } from '@/theme/tailwind';
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { AICollapsible } from './AICollapsible';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 import { formatToolName, formatJson } from '@/presentation/utils/ai-assistant/aiChatFormatUtils';
@@ -107,9 +107,13 @@ const STATE_DATA: Record<DisplayState, StateDisplayData> = {
 /**
  * Create the icon element at render time (theme-aware).
  * Called inside useMemo so icons update when theme changes.
+ * Accepts a resolveColor function for extraction readiness.
  */
-function renderStateIcon(data: StateDisplayData): React.ReactNode {
-  const color = tailwind.color(data.iconColorToken) ?? data.iconColorFallback;
+function renderStateIcon(
+  data: StateDisplayData,
+  resolveColor: (token: string, fallback: string) => string,
+): React.ReactNode {
+  const color = resolveColor(data.iconColorToken, data.iconColorFallback);
   const iconMap = {
     loading: <LoadingIcon stroke={color} />,
     check: <CheckIcon stroke={color} />,
@@ -164,11 +168,12 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
 }) => {
   const { style, tokens } = useAIStyles();
   const { t } = useAIi18n();
+  const resolveColor = useResolveColor();
 
   // Derive state and display configuration using domain helper
   const state = useMemo(() => getDisplayState(part), [part]);
   const data = STATE_DATA[state];
-  const iconElement = useMemo(() => renderStateIcon(data), [data]);
+  const iconElement = useMemo(() => renderStateIcon(data, resolveColor), [data, resolveColor]);
 
   // Get input and output content separately
   const hasInput = useMemo(() => {

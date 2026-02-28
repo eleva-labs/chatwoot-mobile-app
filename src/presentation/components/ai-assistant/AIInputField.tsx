@@ -3,8 +3,8 @@ import { View, TextInput, Pressable } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Icon } from '@/components-next/common';
 import { SendIcon } from '@/svg-icons';
-import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import type { AIInputFieldProps } from '@/presentation/containers/ai-assistant/types';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
@@ -13,6 +13,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
   const inputRef = useRef<TextInput>(null);
   const { style, tokens } = useAIStyles();
   const { t } = useAIi18n();
+  const resolveColor = useResolveColor();
   const inputTokens = tokens.input;
   const [isFocused, setIsFocused] = useState(false);
 
@@ -47,7 +48,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           value={text}
           onChangeText={setText}
           placeholder={t('AI_ASSISTANT.CHAT.INPUT.PLACEHOLDER')}
-          placeholderTextColor={tailwind.color('text-slate-9') ?? '#696e77'}
+          placeholderTextColor={resolveColor('text-slate-9', '#696e77')}
           style={style(
             'flex-1 text-base font-inter-normal-20 min-h-[40px] max-h-[100px]',
             inputTokens.inputText,

@@ -19,8 +19,8 @@ import { View, ScrollView, ActivityIndicator, StyleSheet, Text } from 'react-nat
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
-import { tailwind } from '@/theme/tailwind';
 import { useTheme } from '@/context/ThemeContext';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { AICollapsible } from './AICollapsible';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
@@ -68,6 +68,11 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   const { t } = useAIi18n();
   const irisTokens = getCollapsible('iris');
   const { themeVersion } = useTheme();
+  const resolveColor = useResolveColor();
+
+  const reasoningTextColor = resolveColor('text-slate-12', 'rgb(28, 32, 36)');
+  const reasoningCodeBg = resolveColor('bg-slate-3', 'rgb(240, 240, 243)');
+  const reasoningLinkColor = resolveColor('text-blue-9', 'rgb(39, 129, 246)');
 
   // Markdown styles for reasoning content (smaller than main text)
   const markdownStyles = useMemo(
@@ -76,7 +81,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         body: {
           fontSize: 13,
           lineHeight: 19,
-          color: tailwind.color('text-slate-12') ?? 'rgb(28, 32, 36)',
+          color: reasoningTextColor,
           fontFamily: 'Inter-400-20',
         },
         paragraph: {
@@ -91,20 +96,19 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
           fontStyle: 'italic',
         },
         code_inline: {
-          backgroundColor: tailwind.color('bg-slate-3') ?? 'rgb(240, 240, 243)',
+          backgroundColor: reasoningCodeBg,
           borderRadius: 4,
           paddingHorizontal: 4,
           fontFamily: 'monospace',
           fontSize: 12,
         },
         link: {
-          color: tailwind.color('text-blue-9') ?? 'rgb(39, 129, 246)',
+          color: reasoningLinkColor,
           textDecorationLine: 'underline',
         },
       }),
     // themeVersion ensures styles recompute when tailwind is rebuilt
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [themeVersion],
+    [reasoningTextColor, reasoningCodeBg, reasoningLinkColor, themeVersion],
   );
 
   // Extract reasoning text (handle both 'reasoning' and 'text' fields)
@@ -130,7 +134,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         isStreaming ? (
           <ActivityIndicator
             size="small"
-            color={tailwind.color('text-iris-9') ?? 'rgb(91, 91, 214)'}
+            color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')}
           />
         ) : (
           <View
@@ -172,7 +176,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
           <View style={style('flex-row items-center')}>
             <ActivityIndicator
               size="small"
-              color={tailwind.color('text-iris-9') ?? 'rgb(91, 91, 214)'}
+              color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')}
               style={style('mr-2')}
             />
             <Text style={style('text-sm font-inter-normal-20 italic', tokens.text.secondary)}>

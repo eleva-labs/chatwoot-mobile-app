@@ -7,8 +7,8 @@ import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Icon } from '@/components-next/common';
 import { WarningIcon, LockIcon } from '@/svg-icons';
-import { tailwind } from '@/theme/tailwind';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
+import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 import {
   categorizeError,
@@ -26,9 +26,10 @@ interface AIChatErrorProps {
 
 /** Renders the appropriate SVG icon for an error category */
 const ErrorCategoryIcon: React.FC<{ config: ErrorDisplayConfig }> = ({ config }) => {
+  const resolveColor = useResolveColor();
   const iconColor = config.accentText.includes('amber')
-    ? (tailwind.color('text-amber-11') ?? '#AD5700')
-    : (tailwind.color('text-ruby-11') ?? '#CA3A31');
+    ? resolveColor('text-amber-11', '#AD5700')
+    : resolveColor('text-ruby-11', '#CA3A31');
 
   if (config.iconType === 'lock') {
     return <Icon icon={<LockIcon />} size={16} />;
