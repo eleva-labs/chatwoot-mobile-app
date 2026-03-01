@@ -12,8 +12,7 @@ import { Image, ImageBackground } from 'expo-image';
 
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { messageTimestamp } from '@/utils';
-import { getAvatarSource } from '@/utils';
+import { getAvatarSource, messageTimestamp } from '@/utils';
 import { Avatar } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';

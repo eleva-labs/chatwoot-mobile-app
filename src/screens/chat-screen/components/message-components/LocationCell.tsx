@@ -4,8 +4,7 @@ import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { messageTimestamp } from '@/utils';
-import { getAvatarSource } from '@/utils';
+import { getAvatarSource, messageTimestamp } from '@/utils';
 import { Avatar, Icon } from '@/components-next/common';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { MESSAGE_STATUS, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@/constants';

@@ -11,8 +11,7 @@ import {
 
 import { tailwind } from '@/theme';
 import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { messageTimestamp } from '@/utils';
-import { getAvatarSource } from '@/utils';
+import { getAvatarSource, messageTimestamp } from '@/utils';
 import { Avatar, Icon, Slider } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';

@@ -140,6 +140,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                     if (attachment.fileType === 'image') {
                       return isAnInstagramStory && isInstagramStoryExpired ? (
                         <Animated.View
+                          key={`expired-${index}`}
                           style={tailwind.style(
                             'flex flex-row items-center justify-center py-8 bg-slate-3 gap-1',
                           )}>
