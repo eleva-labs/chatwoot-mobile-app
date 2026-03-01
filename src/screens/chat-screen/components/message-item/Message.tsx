@@ -76,7 +76,7 @@ const variantTextMap: Record<string, string> = {
   [MESSAGE_VARIANTS.USER]: 'text-slate-11',
   [MESSAGE_VARIANTS.BOT]: 'text-slate-11',
   [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-11',
-  [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-11',
+  [MESSAGE_VARIANTS.PRIVATE]: 'text-slate-11',
   [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
 };
 

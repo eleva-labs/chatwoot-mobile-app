@@ -197,7 +197,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                   <Text
                     style={tailwind.style(
                       'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
-                      isPrivate ? 'pl-1 text-amber-11' : '',
+                      isPrivate ? 'pl-1 text-slate-11' : '',
                       !isPrivate && isIncoming ? 'text-slate-11' : '',
                       !isPrivate && isOutgoing ? 'text-slate-11' : '',
                     )}>

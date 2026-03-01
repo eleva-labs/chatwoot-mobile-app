@@ -33,7 +33,7 @@ export const PrivateTextCell = (props: PrivateTextCellProps) => {
         <Icon icon={<LockIcon />} size={12} />
         <Text
           style={tailwind.style(
-            'text-xs font-inter-420-20 tracking-[0.32px] pl-1 text-amber-11',
+            'text-xs font-inter-420-20 tracking-[0.32px] pl-1 text-slate-11',
           )}>
           {messageTimestamp(timeStamp)}
         </Text>
