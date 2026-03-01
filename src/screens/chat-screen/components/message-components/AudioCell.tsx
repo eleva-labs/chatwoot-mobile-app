@@ -222,8 +222,8 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
             style={[
               tailwind.style(
                 'relative flex flex-row items-center w-[300px] pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
-                isIncoming ? 'bg-brand-600' : '',
-                isOutgoing ? 'bg-slate-3' : '',
+                isIncoming ? 'bg-slate-4' : '',
+                isOutgoing ? 'bg-solid-blue' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -241,7 +241,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
               <Text
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
-                  isIncoming ? 'text-whiteA-A11' : '',
+                  isIncoming ? 'text-slate-11' : '',
                   isOutgoing ? 'text-slate-11' : '',
                 )}>
                 {unixTimestampToReadableTime(timeStamp)}

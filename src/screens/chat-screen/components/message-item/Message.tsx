@@ -61,33 +61,42 @@ type MessageWrapperProps = {
   channel?: Channel;
 };
 
+/**
+ * Variant styling maps aligned with web BaseBubble.vue:
+ *
+ * AGENT (outgoing, right) => bg-n-solid-blue   => bg-solid-blue
+ * USER  (incoming, left)  => bg-n-slate-4      => bg-slate-4
+ * BOT/TEMPLATE            => bg-n-solid-iris   => bg-solid-iris
+ * PRIVATE                 => bg-n-solid-amber  => bg-solid-amber
+ * ERROR                   => bg-n-ruby-4       => bg-ruby-4
+ */
 const variantTextMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-slate-11',
-  [MESSAGE_VARIANTS.USER]: 'text-white',
-  [MESSAGE_VARIANTS.BOT]: 'text-slate-11',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-11',
-  [MESSAGE_VARIANTS.ERROR]: 'text-white',
+  [MESSAGE_VARIANTS.AGENT]: 'text-slate-12',
+  [MESSAGE_VARIANTS.USER]: 'text-slate-12',
+  [MESSAGE_VARIANTS.BOT]: 'text-slate-12',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-12',
+  [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
 };
 
 const variantBaseMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'bg-slate-3',
-  [MESSAGE_VARIANTS.PRIVATE]: 'bg-amber-100',
-  [MESSAGE_VARIANTS.USER]: 'bg-brand-600',
-  [MESSAGE_VARIANTS.BOT]: 'bg-brand-100',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'bg-brand-100',
-  [MESSAGE_VARIANTS.ERROR]: 'bg-ruby-700',
+  [MESSAGE_VARIANTS.AGENT]: 'bg-solid-blue',
+  [MESSAGE_VARIANTS.PRIVATE]: 'bg-solid-amber',
+  [MESSAGE_VARIANTS.USER]: 'bg-slate-4',
+  [MESSAGE_VARIANTS.BOT]: 'bg-solid-iris',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'bg-solid-iris',
+  [MESSAGE_VARIANTS.ERROR]: 'bg-ruby-4',
   [MESSAGE_VARIANTS.EMAIL]: 'bg-slate-3',
-  [MESSAGE_VARIANTS.UNSUPPORTED]: 'bg-amber-100 border border-dashed border-amber-700',
+  [MESSAGE_VARIANTS.UNSUPPORTED]: 'bg-solid-amber border border-dashed border-amber-12',
 };
 
 const variantBorderMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'border-slate-4',
+  [MESSAGE_VARIANTS.AGENT]: 'border-slate-6',
   [MESSAGE_VARIANTS.USER]: 'border-slate-4',
   [MESSAGE_VARIANTS.BOT]: 'border-slate-4',
   [MESSAGE_VARIANTS.TEMPLATE]: 'border-slate-4',
-  [MESSAGE_VARIANTS.ERROR]: 'border-slate-4',
+  [MESSAGE_VARIANTS.ERROR]: 'border-ruby-6',
   [MESSAGE_VARIANTS.EMAIL]: 'border-slate-4',
-  [MESSAGE_VARIANTS.UNSUPPORTED]: 'border-slate-4',
+  [MESSAGE_VARIANTS.UNSUPPORTED]: 'border-amber-12',
 };
 
 const MessageWrapper = ({

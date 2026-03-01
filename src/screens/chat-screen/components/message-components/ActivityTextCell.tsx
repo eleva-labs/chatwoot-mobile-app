@@ -15,7 +15,7 @@ export const ActivityTextCell = (props: ActivityTextCellProps) => {
     <Animated.View style={tailwind.style('flex flex-row flex-wrap justify-center py-1 px-10')}>
       <Animated.Text
         style={tailwind.style(
-          'text-cxs font-inter-420-20 tracking-[0.32px] leading-[18px] text-blackA-A11 text-center',
+          'text-cxs font-inter-420-20 tracking-[0.32px] leading-[18px] text-slate-11 text-center',
         )}>
         {text} {unixTimestampToReadableTime(timeStamp)}
       </Animated.Text>

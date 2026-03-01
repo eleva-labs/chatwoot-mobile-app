@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 
 import { avatarTheme, tailwind } from '@/theme';
+import { useTheme } from '@/theme';
+import { getAvatarColorsByName } from '@/theme/colors/avatar';
 import { Channel } from '@/types';
 import { cx, styleAdapter } from '@/utils';
 
@@ -112,11 +114,16 @@ export const Avatar: React.FC<Partial<AvatarProps>> = props => {
     ...boxProps
   } = props;
 
+  const { isDark } = useTheme();
   const isSquared = squared;
   const isSourceAvailable = !!src;
 
   const [imageAvailable, setImageAvailable] = useState(isSourceAvailable);
   const loadFallback = () => setImageAvailable(false);
+
+  // Use name-based avatar colors matching web Avatar.vue
+  const showInitials = !imageAvailable || !src;
+  const avatarColors = showInitials && name ? getAvatarColorsByName(name, isDark) : null;
 
   return (
     <View
@@ -125,6 +132,7 @@ export const Avatar: React.FC<Partial<AvatarProps>> = props => {
         tailwind.style(
           cx(avatarTheme.base, avatarTheme.size[size], !isSquared ? avatarTheme.circular : ''),
         ),
+        avatarColors ? { backgroundColor: avatarColors.bg } : undefined,
         styleAdapter(style),
       ]}
       {...boxProps}>
@@ -146,6 +154,7 @@ export const Avatar: React.FC<Partial<AvatarProps>> = props => {
                 'font-inter-medium-24',
               ),
             ),
+            avatarColors ? { color: avatarColors.text } : undefined,
           ]}
           adjustsFontSizeToFit
           allowFontScaling={false}>

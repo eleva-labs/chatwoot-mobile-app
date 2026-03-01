@@ -13,11 +13,11 @@ type MarkdownBubbleProps = {
 
 const variantTextMap = {
   [MESSAGE_VARIANTS.AGENT]: 'text-slate-12',
-  [MESSAGE_VARIANTS.USER]: 'text-white',
+  [MESSAGE_VARIANTS.USER]: 'text-slate-12',
   [MESSAGE_VARIANTS.BOT]: 'text-slate-12',
   [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-12',
-  [MESSAGE_VARIANTS.ERROR]: 'text-white',
-  [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-950 font-inter-medium-24',
+  [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
+  [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-12 font-inter-medium-24',
 };
 
 export const MarkdownBubble = (props: MarkdownBubbleProps) => {

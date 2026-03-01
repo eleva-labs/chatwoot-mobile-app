@@ -52,7 +52,7 @@ export const PrivateTextCell = (props: PrivateTextCellProps) => {
     <Animated.View
       style={[
         tailwind.style(
-          'relative max-w-[300px] pl-2 pr-2.5 py-2 rounded-t-2xl rounded-bl-2xl overflow-hidden bg-amber-100',
+          'relative max-w-[300px] pl-2 pr-2.5 py-2 rounded-t-2xl rounded-bl-2xl overflow-hidden bg-solid-amber',
           `max-w-[${TEXT_MAX_WIDTH}px]`,
           // singleLineShortText ? "flex flex-row" : "",
         ),
@@ -81,7 +81,7 @@ export const PrivateTextCell = (props: PrivateTextCellProps) => {
         <Icon icon={<LockIcon />} size={12} />
         <Text
           style={tailwind.style(
-            'text-xs font-inter-420-20 tracking-[0.32px] pl-1 text-blackA-A10',
+            'text-xs font-inter-420-20 tracking-[0.32px] pl-1 text-amber-12',
           )}>
           {unixTimestampToReadableTime(timeStamp)}
         </Text>

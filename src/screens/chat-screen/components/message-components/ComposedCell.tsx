@@ -117,9 +117,9 @@ export const ComposedCell = (props: ComposedCellProps) => {
               tailwind.style(
                 'relative pl-3 pr-2.5 py-2 h-full rounded-2xl overflow-hidden',
                 isEmailMessage ? `max-w-[${EMAIL_MESSAGE_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`,
-                isIncoming ? 'bg-brand-600' : '',
-                isOutgoing ? 'bg-slate-3' : '',
-                isPrivate ? ' bg-amber-100' : '',
+                isIncoming ? 'bg-slate-4' : '',
+                isOutgoing ? 'bg-solid-blue' : '',
+                isPrivate ? ' bg-solid-amber' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -219,7 +219,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                   <Text
                     style={tailwind.style(
                       'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
-                      isIncoming ? 'text-whiteA-A11' : '',
+                      isIncoming ? 'text-slate-11' : '',
                       isOutgoing ? 'text-slate-11' : '',
                       isPrivate ? 'pl-1' : '',
                     )}>

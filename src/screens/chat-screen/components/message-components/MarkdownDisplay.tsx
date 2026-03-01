@@ -22,10 +22,10 @@ export const MarkdownDisplay = (props: MarkdownDisplayProps) => {
   };
 
   const textStyle = themedTailwind.style(
-    isIncoming ? 'text-white' : '',
+    isIncoming ? 'text-slate-12' : '',
     isOutgoing || isBotText ? 'text-slate-12' : '',
-    isPrivate ? 'text-amber-950 font-inter-medium-24' : '',
-    isMessageFailed ? 'text-white' : '',
+    isPrivate ? 'text-amber-12 font-inter-medium-24' : '',
+    isMessageFailed ? 'text-ruby-12' : '',
   );
 
   const styles = StyleSheet.create({

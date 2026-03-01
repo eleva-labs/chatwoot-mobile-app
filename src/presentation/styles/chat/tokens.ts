@@ -3,27 +3,43 @@
  * Follows the same pattern as AI assistant tokens.
  * All values are Tailwind class strings that auto-switch with theme.
  */
+/**
+ * Token mapping aligned with web BaseBubble.vue variantBaseMap:
+ *
+ * Web AGENT (outgoing from agent, right side) => bg-n-solid-blue
+ * Web USER  (incoming from contact, left side) => bg-n-slate-4
+ * Web BOT/TEMPLATE                            => bg-n-solid-iris
+ * Web PRIVATE                                 => bg-n-solid-amber
+ * Web ERROR                                   => bg-n-ruby-4
+ * Web ACTIVITY                                => bg-n-alpha-1
+ *
+ * Mobile equivalents use the same semantic color tokens registered
+ * in tailwind.config.ts (solid-blue, solid-iris, solid-amber).
+ */
 export const chatMessageTokens = {
+  /** Incoming from contact (left side) — web: bg-n-slate-4 */
   incoming: {
-    background: 'bg-slate-3',
+    background: 'bg-slate-4',
     text: 'text-slate-12',
     border: 'border-slate-4',
     timestamp: 'text-slate-11',
     deliveryStatus: 'text-slate-11',
   },
+  /** Outgoing from agent (right side) — web: bg-n-solid-blue */
   outgoing: {
-    background: 'bg-iris-3',
-    text: 'text-iris-12',
-    border: 'border-iris-6',
-    timestamp: 'text-iris-10',
-    deliveryStatus: 'text-iris-10',
+    background: 'bg-solid-blue',
+    text: 'text-slate-12',
+    border: 'border-slate-6',
+    timestamp: 'text-slate-11',
+    deliveryStatus: 'text-slate-11',
   },
   activity: {
-    background: 'bg-slate-2',
+    background: 'bg-alpha-1',
     text: 'text-slate-11',
   },
+  /** Private note — web: bg-n-solid-amber */
   private: {
-    background: 'bg-amber-3',
+    background: 'bg-solid-amber',
     text: 'text-amber-12',
     border: 'border-amber-6',
   },
@@ -34,12 +50,15 @@ export const chatMessageTokens = {
     body: 'text-slate-12',
     border: 'border-slate-6',
   },
+  /** Error — web: bg-n-ruby-4 */
   error: {
-    text: 'text-slate-12',
-    border: 'border-slate-4',
+    background: 'bg-ruby-4',
+    text: 'text-ruby-12',
+    border: 'border-ruby-6',
   },
+  /** Bot/template — web: bg-n-solid-iris */
   bot: {
-    background: 'bg-slate-3',
+    background: 'bg-solid-iris',
     text: 'text-slate-12',
     border: 'border-slate-4',
     timestamp: 'text-slate-11',

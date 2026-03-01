@@ -45,7 +45,7 @@ type MessageTextInputProps = {
 type AgentSuggestion = Omit<Agent, 'id'> & Suggestion;
 
 const Unlock = ({
-  stroke = '#202020',
+  stroke = 'currentColor',
   strokeOpacity = '0.565',
 }: {
   stroke?: string;
@@ -66,9 +66,9 @@ const Unlock = ({
 };
 
 const Locked = ({
-  stroke = '#202020',
+  stroke = 'currentColor',
   strokeOpacity = '0.565',
-  fill = '#f0f0f0',
+  fill = 'currentColor',
 }: {
   stroke?: string;
   strokeOpacity?: string;
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   listShadow:
     Platform.select({
       ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
+        shadowColor: 'rgba(0,0,0,0.25)', // Intentional: shadow alpha, universal across themes
         shadowOffset: { width: 0, height: 0.15 },
         shadowRadius: 2,
         shadowOpacity: 0.35,

@@ -91,9 +91,9 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
         themedTailwind.style(
           'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
           isEmailMessage ? `max-w-[${EMAIL_MESSAGE_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`,
-          isIncoming ? 'bg-brand-600' : '',
-          isOutgoing ? 'bg-slate-3' : '',
-          isMessageFailed ? 'bg-ruby-700' : '',
+          isIncoming ? 'bg-slate-4' : '',
+          isOutgoing ? 'bg-solid-blue' : '',
+          isMessageFailed ? 'bg-ruby-4' : '',
           isAvatarRendered
             ? isOutgoing
               ? 'rounded-br-none'
@@ -127,9 +127,9 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
         <Text
           style={tailwind.style(
             'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
-            isIncoming ? 'text-whiteA-A11' : '',
+            isIncoming ? 'text-slate-11' : '',
             isOutgoing ? 'text-slate-11' : '',
-            isMessageFailed ? 'text-whiteA-A11' : '',
+            isMessageFailed ? 'text-ruby-12' : '',
           )}>
           {unixTimestampToReadableTime(timeStamp)}
         </Text>

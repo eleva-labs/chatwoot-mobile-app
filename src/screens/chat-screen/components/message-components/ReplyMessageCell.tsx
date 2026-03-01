@@ -60,8 +60,8 @@ export const ReplyMessageCell = (props: ReplyMessageCellProps) => {
         tailwind.style(
           'relative max-w-[300px] pl-2 pr-2.5 py-2 mb-2 rounded-[10px] overflow-hidden -ml-[5px]',
           `max-w-[${TEXT_MAX_WIDTH}px]`,
-          isIncoming ? 'bg-blackA-A7' : '',
-          isOutgoing ? 'bg-solid-1' : '',
+          isIncoming ? 'bg-alpha-black1' : '',
+          isOutgoing ? 'bg-alpha-1' : '',
           // singleLineShortText ? "flex flex-row" : "",
         ),
       ]}>
@@ -70,7 +70,7 @@ export const ReplyMessageCell = (props: ReplyMessageCellProps) => {
         <Animated.View style={tailwind.style('pl-2.5')}>
           <Animated.Text
             style={tailwind.style(
-              'text-cxs font-inter-420-20 leading-[14.95px] tracking-[0.32px] text-blackA-A11',
+              'text-cxs font-inter-420-20 leading-[14.95px] tracking-[0.32px] text-slate-11',
             )}>
             Replying to {replyMessageItem?.sender?.name}
           </Animated.Text>
