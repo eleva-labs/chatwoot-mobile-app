@@ -183,6 +183,12 @@
     "COPY_MESSAGE": "Mensaje copiado al portapapeles",
     "STORY_NOT_AVAILABLE": "Esta historia ya no está disponible",
     "IMAGE_LOAD_ERROR": "Error al cargar",
+    "ADD_MENU": {
+      "PHOTOS": "Fotos",
+      "CAMERA": "Cámara",
+      "ATTACH_FILE": "Adjuntar archivo",
+      "MACROS": "Macros"
+    },
     "DELETE_MESSAGE_SUCCESS": "Mensaje eliminado correctamente",
     "NO_CONTENT": "No hay contenido disponible",
     "ASSIGN_CHANGE": "Conversación cambiada de asignatario",

@@ -14,6 +14,7 @@ import { useHaptic, useScaleAnimation } from '@/utils';
 import { Icon } from '@/components-next/common';
 import { MAXIMUM_FILE_UPLOAD_SIZE } from '@/constants';
 import i18n from '@/i18n';
+import i18n from '@/i18n';
 import { showToast } from '@/utils/toastUtils';
 import { findFileSize } from '@/utils/fileUtils';
 import type { AppDispatch } from '@/store';
@@ -147,22 +148,26 @@ const handleAttachFile = async (dispatch: AppDispatch) => {
 const ADD_MENU_OPTIONS = [
   {
     icon: <PhotosIcon />,
-    title: 'Photos',
+    key: 'photos',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.PHOTOS'),
     handlePress: handleOpenPhotosLibrary,
   },
   {
     icon: <CameraIcon />,
-    title: 'Camera',
+    key: 'camera',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.CAMERA'),
     handlePress: handleLaunchCamera,
   },
   {
     icon: <AttachFileIcon />,
-    title: 'Attach File',
+    key: 'attach_file',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.ATTACH_FILE'),
     handlePress: handleAttachFile,
   },
   {
     icon: <MacrosIcon />,
-    title: 'Macros',
+    key: 'macros',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.MACROS'),
     handlePress: () => {},
   },
 ];
@@ -200,7 +205,7 @@ const MenuOption = (props: MenuOptionProps) => {
   const handlePress = () => {
     hapticSelection?.();
     menuOption?.handlePress(dispatch);
-    if (menuOption.title === 'Macros') {
+    if (menuOption.key === 'macros') {
       macrosListSheetRef.current?.present();
     }
   };
@@ -216,7 +221,7 @@ const MenuOption = (props: MenuOptionProps) => {
             style={tailwind.style(
               'text-base font-inter-normal-20 leading-[18px] tracking-[0.24px] text-slate-12 pl-5',
             )}>
-            {menuOption.title}
+            {menuOption.getTitle()}
           </Text>
         </Animated.View>
       </Pressable>
@@ -236,7 +241,7 @@ export const CommandOptionsMenu = () => {
       exiting={SlideOutDown.springify().damping(38).stiffness(240)}
       style={tailwind.style('mx-1 pt-2 items-start', `h-[${containerHeight}px]`)}>
       {ADD_MENU_OPTIONS.map((menuOption, index) => {
-        return <MenuOption key={menuOption.title} {...{ menuOption, index }} />;
+        return <MenuOption key={menuOption.key} {...{ menuOption, index }} />;
       })}
     </Animated.View>
   );

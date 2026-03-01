@@ -183,6 +183,12 @@
     "COPY_MESSAGE": "Message copied to clipboard",
     "STORY_NOT_AVAILABLE": "This story is no longer available",
     "IMAGE_LOAD_ERROR": "Loading failed",
+    "ADD_MENU": {
+      "PHOTOS": "Photos",
+      "CAMERA": "Camera",
+      "ATTACH_FILE": "Attach File",
+      "MACROS": "Macros"
+    },
     "DELETE_MESSAGE_SUCCESS": "Message deleted successfully",
     "NO_CONTENT": "No content available",
     "ASSIGN_CHANGE": "Conversation Assignee changed",
