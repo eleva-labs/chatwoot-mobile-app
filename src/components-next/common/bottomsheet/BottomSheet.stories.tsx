@@ -23,7 +23,7 @@ export default {
     Story => (
       <BottomSheetModalProvider>
         <RefsProvider>
-          <View style={tailwind.style('flex-1 bg-white p-4')}>
+          <View style={tailwind.style('flex-1 bg-solid-1 p-4')}>
             <Story />
           </View>
         </RefsProvider>

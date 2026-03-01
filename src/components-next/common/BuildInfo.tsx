@@ -14,6 +14,6 @@ export const BuildInfo: React.FC = () => {
   const text = buildNumber ? `${versionText}  •  Build Number: ${buildNumber}` : versionText;
 
   return (
-    <Animated.Text style={themedTailwind.style('text-sm text-gray-700')}>{text}</Animated.Text>
+    <Animated.Text style={themedTailwind.style('text-sm text-slate-11')}>{text}</Animated.Text>
   );
 };

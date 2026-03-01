@@ -23,7 +23,7 @@ export function ErrorBoundaryScreen({ error, onRetry }: ErrorBoundaryScreenProps
   }
 
   return (
-    <SafeAreaView style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView style={tailwind.style('flex-1 bg-solid-1')}>
       <View style={tailwind.style('flex-1 items-center justify-center px-6')}>
         <Text style={tailwind.style('text-xl font-inter-580-24 text-slate-900 mb-2')}>
           Something went wrong

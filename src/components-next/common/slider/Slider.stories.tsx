@@ -101,7 +101,7 @@ const HalfwayProgressSlider = (args: SliderProps) => {
 export const Basic: Story = {
   render: args => <SliderWithState {...args} />,
   args: {
-    trackColor: 'bg-gray-500',
+    trackColor: 'bg-slate-9',
     filledTrackColor: 'bg-blue-700',
     knobStyle: 'border-blue-700',
   },
@@ -110,7 +110,7 @@ export const Basic: Story = {
 export const HalfwayProgress: Story = {
   render: args => <HalfwayProgressSlider {...args} />,
   args: {
-    trackColor: 'bg-gray-500',
+    trackColor: 'bg-slate-9',
     filledTrackColor: 'bg-blue-700',
     knobStyle: 'border-blue-700',
   },
