@@ -1,15 +1,15 @@
 /* eslint-disable react/display-name */
 import React, { memo, useState } from 'react';
-import { Dimensions, ImageURISource, Text } from 'react-native';
+import { Dimensions, Text } from 'react-native';
 import { LinearTransition } from 'react-native-reanimated';
 import { isEqual } from 'lodash';
 
-import { Avatar } from '@/components-next/common';
 import { AnimatedNativeView, NativeView } from '@/components-next/native-components';
 import { AIStatusIcon } from '@/components-next';
 import { tailwind } from '@/theme';
 import { Agent, Conversation, ConversationAdditionalAttributes, Label, Message } from '@/types';
 import { useThemedStyles } from '@/hooks';
+import Svg, { Path } from 'react-native-svg';
 
 import { ConversationLastMessage } from './ConversationLastMessage';
 import { PriorityIndicator, ChannelIndicator } from '@/components-next/list-components';
@@ -53,6 +53,15 @@ const checkIfPropsAreSame = (
   const arePropsEqual = isEqual(prev, next);
   return arePropsEqual;
 };
+
+const PersonIcon = ({ color }: { color: string }) => (
+  <Svg width={10} height={10} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+      fill={color}
+    />
+  </Svg>
+);
 
 const UnreadBadge = ({ count }: { count: number }) => {
   if (count <= 0) return null;
@@ -111,24 +120,31 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
       layout={LinearTransition.springify().damping(28).stiffness(200)}
       style={themedTailwind.style('flex-1 gap-0.5 py-3 border-b border-b-slate-3')}>
       <AnimatedNativeView style={tailwind.style('flex flex-row justify-between items-end h-7')}>
-        <AnimatedNativeView style={tailwind.style('flex flex-row items-end h-7 gap-1')}>
+        <AnimatedNativeView
+          style={tailwind.style('flex flex-row items-center h-7 flex-1 min-w-0 mr-2')}>
           <Text
             numberOfLines={1}
             style={themedTailwind.style(
               `text-sm ${hasUnread ? 'font-inter-semibold-20' : 'font-inter-medium-24'} text-slate-12 capitalize`,
-              // Calculated based on the widths of other content,
-              // We might have to do a 10-20px offset based on the max width of the timestamp
-              `max-w-[${width - 250}px]`,
+              `max-w-[${width - (assignee ? 300 : 250)}px]`,
             )}>
             {senderName}
           </Text>
-          {/* <ConversationId id={conversationId} /> */}
           {assignee ? (
-            <Avatar
-              size="sm"
-              name={assignee.name as string}
-              src={{ uri: assignee.thumbnail } as ImageURISource}
-            />
+            <NativeView style={tailwind.style('flex flex-row items-center flex-shrink min-w-0')}>
+              <Text
+                style={themedTailwind.style('text-xs text-slate-10 mx-1')}>
+                ·
+              </Text>
+              <PersonIcon color={themedTailwind.style('text-slate-10').color as string} />
+              <Text
+                numberOfLines={1}
+                style={themedTailwind.style(
+                  'text-xs font-inter-normal-28 text-slate-10 ml-0.5',
+                )}>
+                {assignee.name}
+              </Text>
+            </NativeView>
           ) : null}
         </AnimatedNativeView>
         <AnimatedNativeView style={tailwind.style('flex flex-col items-end')}>
@@ -137,10 +153,10 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
             {inbox && (
               <ChannelIndicator inbox={inbox} additionalAttributes={additionalAttributes} />
             )}
+            <AIStatusIcon isEnabled={isAIEnabled ?? false} size={12} />
             <LastActivityTime timestamp={timestamp} />
           </AnimatedNativeView>
           <AnimatedNativeView style={tailwind.style('flex flex-row items-center gap-1 mt-0.5')}>
-            <AIStatusIcon isEnabled={isAIEnabled ?? false} size={16} />
             <UnreadBadge count={unreadCount ?? 0} />
           </AnimatedNativeView>
         </AnimatedNativeView>
@@ -181,16 +197,6 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
               )}
               {hasLabels && <LabelIndicator labels={labels} allLabels={allLabels} />}
             </AnimatedNativeView>
-
-            {assignee ? (
-              <AnimatedNativeView>
-                <Avatar
-                  size="sm"
-                  name={assignee.name as string}
-                  src={{ uri: assignee.thumbnail } as ImageURISource}
-                />
-              </AnimatedNativeView>
-            ) : null}
           </AnimatedNativeView>
         </AnimatedNativeView>
       ) : (

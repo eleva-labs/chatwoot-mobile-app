@@ -6,7 +6,6 @@ import i18n from '@/i18n';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { conversationActions } from '@/store/conversation/conversationActions';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { selectContactById } from '@/store/contact/contactSelectors';
 import { contactActions } from '@/store/contact/contactActions';
 import { CONVERSATION_STATUS } from '@/constants';
 import { ConversationStatus } from '@/types/common/ConversationStatus';
@@ -36,11 +35,11 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
   const currentUser = useAppSelector(selectUser);
   const dashboardApps = useAppSelector(selectAllDashboardApps);
 
-  // Get contact information for AI status
   const contactId = conversation?.meta?.sender?.id;
-  const contact = useAppSelector(state => (contactId ? selectContactById(state, contactId) : null));
-  // @ts-expect-error - customAttributes is not typed
-  const isAIEnabled = contact?.customAttributes?.aiEnabled === true;
+
+  // Read AI status from conversation's custom_attributes (aligned with web logic)
+  // @ts-expect-error - customAttributes values can be boolean despite Record<string, string> type
+  const isAIEnabled = conversation?.customAttributes?.aiEnabled === true || conversation?.customAttributes?.aiEnabled === 'true';
 
   const appliedSla = conversation?.appliedSla;
 
