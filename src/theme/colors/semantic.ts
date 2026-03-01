@@ -71,6 +71,10 @@ export interface SemanticColors {
 
   // Border semantic
   borderBlue: string;
+
+  // Warning banner (theme-independent, same in both modes)
+  warningBannerBg: string;
+  warningBannerText: string;
 }
 
 // Create semantic colors based on theme mode
@@ -150,6 +154,10 @@ export const darkSemanticColors: SemanticColors = {
 
   // Border semantic
   borderBlue: 'rgba(39, 129, 246, 0.5)', // --border-blue
+
+  // Warning banner (same in both modes)
+  warningBannerBg: 'rgb(72, 38, 20)',
+  warningBannerText: 'rgb(255, 231, 179)',
 };
 
 // ============================================================================
@@ -220,6 +228,10 @@ export const lightSemanticColors: SemanticColors = {
 
   // Border semantic
   borderBlue: 'rgba(39, 129, 246, 0.5)', // --border-blue
+
+  // Warning banner (same in both modes)
+  warningBannerBg: 'rgb(72, 38, 20)',
+  warningBannerText: 'rgb(255, 231, 179)',
 };
 
 // ============================================================================

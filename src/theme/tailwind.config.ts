@@ -64,6 +64,12 @@ export const buildTwConfig = (isDark: boolean) => {
           // Semantic text colors
           'blue-text': semanticColors.textBlue,
 
+          // Warning banner (theme-independent)
+          'warning-banner': {
+            bg: semanticColors.warningBannerBg,
+            text: semanticColors.warningBannerText,
+          },
+
           // Alpha/overlay colors
           'alpha-1': semanticColors.alpha1,
           'alpha-2': semanticColors.alpha2,
