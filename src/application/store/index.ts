@@ -15,9 +15,10 @@ import { setStore } from './storeAccessor';
 import { contactListenerMiddleware } from './contact/contactListener';
 
 // Disable this in testing environment
-const shouldLoadDebugger = __DEV__ && !process.env.JEST_WORKER_ID;
+// Reactotron disabled - uncomment and install reactotron-react-native to enable
+const shouldLoadDebugger = false; // __DEV__ && !process.env.JEST_WORKER_ID;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const reactotronInstance = shouldLoadDebugger ? require('../../ReactotronConfig').default : null;
+const reactotronInstance = null; // shouldLoadDebugger ? require('../../ReactotronConfig').default : null;
 
 const CURRENT_VERSION = 2;
 
