@@ -210,7 +210,7 @@ const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
   return (
     <View
       style={tailwind.style(
-        `flex-1 bg-white pt-6 ${Platform.OS === 'android' ? 'pt-12' : 'pt-6'}`,
+        `flex-1 bg-solid-1 pt-6 ${Platform.OS === 'android' ? 'pt-12' : 'pt-6'}`,
       )}>
       <ContactDetailsScreenHeader
         name={name || contactName || ''}

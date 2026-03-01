@@ -31,10 +31,10 @@ const ACTION_WIDTH = (SCREEN_WIDTH - 32 - 12 * 3) / 4;
 
 const conversationActionOptions: ConversationActionOptionsType[] = [
   {
-    backgroundActionColor: 'bg-gray-100',
-    backgroundActionPressedColor: 'bg-gray-200',
-    borderActionColor: 'bg-gray-700',
-    actionIcon: <OpenIcon stroke={tailwind.color('text-gray-700') as string} />,
+    backgroundActionColor: 'bg-slate-3',
+    backgroundActionPressedColor: 'bg-slate-4',
+    borderActionColor: 'bg-slate-11',
+    actionIcon: <OpenIcon stroke={tailwind.color('text-slate-11') as string} />,
     actionText: 'open',
     actionStatus: 'open',
   },
@@ -134,7 +134,7 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
         <Icon icon={conversationAction.actionIcon} size={32} />
         <Animated.Text
           style={tailwind.style(
-            'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] text-center pt-5 capitalize text-gray-950 ',
+            'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] text-center pt-5 capitalize text-slate-12 ',
           )}>
           {conversationAction.actionText}
         </Animated.Text>

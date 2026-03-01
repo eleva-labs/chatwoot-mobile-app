@@ -114,7 +114,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
       <Animated.View style={tailwind.style('pl-4')}>
         <Animated.Text
           style={tailwind.style(
-            'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-gray-700',
+            'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
           )}>
           Labels
         </Animated.Text>
@@ -128,7 +128,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
           style={({ pressed }) => [
             styles.labelShadow,
             tailwind.style(
-              'flex flex-row items-center bg-white px-3 py-[7px] rounded-lg mr-2 mt-3',
+              'flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3',
               pressed ? 'bg-blue-100' : '',
             ),
           ]}>
