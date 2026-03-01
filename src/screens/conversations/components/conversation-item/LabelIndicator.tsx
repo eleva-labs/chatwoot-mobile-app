@@ -19,14 +19,20 @@ interface LayoutChangeEvent {
   };
 }
 
-const LabelText = ({ labelText, labelColor }: { labelText: string; labelColor: string }) => {
+const LabelPill = ({ labelText, labelColor }: { labelText: string; labelColor: string }) => {
   const themedTailwind = useThemedStyles();
   return (
-    <NativeView style={tailwind.style('flex-row items-center py-[3px]')}>
-      <NativeView style={tailwind.style('h-[5px] w-[5px] rounded-full', `bg-[${labelColor}]`)} />
+    <NativeView
+      style={themedTailwind.style(
+        'flex-row items-center gap-1 h-5 py-0.5 px-1 rounded border border-slate-6 bg-transparent',
+      )}>
+      <NativeView
+        style={tailwind.style('h-2 w-2 rounded-sm', `bg-[${labelColor}]`)}
+      />
       <Text
+        numberOfLines={1}
         style={themedTailwind.style(
-          'pl-1 text-sm font-inter-420-20 leading-[16px] text-slate-11',
+          'text-xs font-inter-420-20 text-slate-11',
         )}>
         {labelText}
       </Text>
@@ -47,13 +53,14 @@ export const LabelIndicator = ({ labels, allLabels }: { labels: string[]; allLab
       (state, label) => {
         if (!labels.includes(label.title)) return state; // Skip labels not in `labels`
 
-        const labelWidth = label.title.length * 8 + 12; // Approximate width of the label
+        // Approximate pill width: text chars * 7 + dot(8) + gaps(8) + padding(8) + border(2)
+        const labelWidth = label.title.length * 7 + 26;
 
         if (state.totalWidth + labelWidth <= availableWidth) {
           // Add the label to the result and update the total width
           return {
             result: [...state.result, label],
-            totalWidth: state.totalWidth + labelWidth,
+            totalWidth: state.totalWidth + labelWidth + 4, // 4px gap between pills
           };
         }
         // Stop adding labels if the total width exceeds the available space
@@ -73,11 +80,9 @@ export const LabelIndicator = ({ labels, allLabels }: { labels: string[]; allLab
         const { width } = event.nativeEvent.layout;
         setContainerWidth(width);
       }}>
-      <NativeView style={tailwind.style('flex-row items-center overflow-hidden')}>
+      <NativeView style={tailwind.style('flex-row items-center overflow-hidden gap-1')}>
         {activeLabels.map((label, index) => (
-          <NativeView key={index} style={tailwind.style(index !== 0 ? 'pl-1.5' : '')}>
-            <LabelText labelText={label.title} labelColor={label.color} />
-          </NativeView>
+          <LabelPill key={index} labelText={label.title} labelColor={label.color} />
         ))}
       </NativeView>
     </AnimatedNativeView>

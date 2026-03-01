@@ -68,11 +68,11 @@ const UnreadBadge = ({ count }: { count: number }) => {
   return (
     <NativeView
       style={tailwind.style(
-        'h-4 min-w-[16px] px-1 flex justify-center items-center rounded-full bg-teal-9',
+        'h-5 min-w-[20px] px-1 flex justify-center items-center rounded-full bg-teal-9',
       )}>
       <Text
         style={tailwind.style(
-          'text-xxs font-inter-semibold-20 leading-none text-center text-white',
+          'text-sm font-inter-semibold-20 leading-5 text-center text-white',
         )}>
         {count > 9 ? '9+' : count}
       </Text>
@@ -118,10 +118,11 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
   return (
     <AnimatedNativeView
       layout={LinearTransition.springify().damping(28).stiffness(200)}
-      style={themedTailwind.style('flex-1 gap-0.5 py-3 border-b border-b-slate-3')}>
-      <AnimatedNativeView style={tailwind.style('flex flex-row justify-between items-end h-7')}>
+      style={themedTailwind.style('flex-1 py-3 border-b border-b-slate-3')}>
+      {/* Row 1: Contact name + assignee | Timestamp */}
+      <AnimatedNativeView style={tailwind.style('flex flex-row justify-between items-center')}>
         <AnimatedNativeView
-          style={tailwind.style('flex flex-row items-center h-7 flex-1 min-w-0 mr-2')}>
+          style={tailwind.style('flex flex-row items-center flex-1 min-w-0 pr-16')}>
           <Text
             numberOfLines={1}
             style={themedTailwind.style(
@@ -147,60 +148,17 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
             </NativeView>
           ) : null}
         </AnimatedNativeView>
-        <AnimatedNativeView style={tailwind.style('flex flex-col items-end')}>
-          <AnimatedNativeView style={tailwind.style('flex flex-row items-center gap-2')}>
-            {hasPriority ? <PriorityIndicator {...{ priority }} /> : null}
-            {inbox && (
-              <ChannelIndicator inbox={inbox} additionalAttributes={additionalAttributes} />
-            )}
-            <AIStatusIcon isEnabled={isAIEnabled ?? false} size={12} />
-            <LastActivityTime timestamp={timestamp} />
-          </AnimatedNativeView>
-          <AnimatedNativeView style={tailwind.style('flex flex-row items-center gap-1 mt-0.5')}>
-            <UnreadBadge count={unreadCount ?? 0} />
-          </AnimatedNativeView>
+        <AnimatedNativeView style={tailwind.style('absolute right-0 flex flex-row items-center gap-1')}>
+          {hasPriority ? <PriorityIndicator {...{ priority }} /> : null}
+          {inbox && (
+            <ChannelIndicator inbox={inbox} additionalAttributes={additionalAttributes} />
+          )}
+          <LastActivityTime timestamp={timestamp} />
         </AnimatedNativeView>
       </AnimatedNativeView>
-      {hasLabels || hasSLA ? (
-        <AnimatedNativeView style={tailwind.style('flex flex-col items-center gap-1')}>
-          <AnimatedNativeView
-            style={tailwind.style('flex flex-row w-full justify-between items-center gap-2')}>
-            {typingText ? (
-              <TypingMessage typingText={typingText} />
-            ) : (
-              <ConversationLastMessage
-                numberOfLines={1}
-                lastMessage={lastMessage as Message}
-                hasUnread={hasUnread}
-              />
-            )}
-          </AnimatedNativeView>
-          <AnimatedNativeView
-            style={tailwind.style('flex flex-row h-6 justify-between items-center gap-2')}>
-            <AnimatedNativeView style={tailwind.style('flex flex-row flex-1 gap-2 items-center')}>
-              {hasSLA && (
-                <SLAIndicator
-                  slaPolicyId={slaPolicyId}
-                  appliedSla={appliedSla as SLA}
-                  appliedSlaConversationDetails={
-                    appliedSlaConversationDetails as {
-                      firstReplyCreatedAt: number;
-                      waitingSince: number;
-                      status: string;
-                    }
-                  }
-                  onSLAStatusChange={setShouldShowSLA}
-                />
-              )}
-              {hasLabels && hasSLA && (
-                <NativeView style={tailwind.style('w-[1px] h-3 bg-slate-5')} />
-              )}
-              {hasLabels && <LabelIndicator labels={labels} allLabels={allLabels} />}
-            </AnimatedNativeView>
-          </AnimatedNativeView>
-        </AnimatedNativeView>
-      ) : (
-        <AnimatedNativeView style={tailwind.style('flex flex-row items-center gap-2')}>
+      {/* Row 2: Last message | AI icon + Unread badge */}
+      <AnimatedNativeView style={tailwind.style('flex flex-row justify-between items-center mt-0.5')}>
+        <AnimatedNativeView style={tailwind.style('flex-1 min-w-0 pr-16')}>
           {typingText ? (
             <TypingMessage typingText={typingText} />
           ) : (
@@ -210,6 +168,38 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
               hasUnread={hasUnread}
             />
           )}
+        </AnimatedNativeView>
+        <AnimatedNativeView style={tailwind.style('absolute right-0 flex flex-row items-center gap-1')}>
+          <NativeView style={tailwind.style('w-3 items-center justify-center')}>
+            <AIStatusIcon isEnabled={isAIEnabled ?? false} size={12} />
+          </NativeView>
+          <UnreadBadge count={unreadCount ?? 0} />
+        </AnimatedNativeView>
+      </AnimatedNativeView>
+      {/* Row 3: Labels + SLA (if any) */}
+      {(hasLabels || hasSLA) && (
+        <AnimatedNativeView
+          style={tailwind.style('flex flex-row items-center mt-0.5')}>
+          <AnimatedNativeView style={tailwind.style('flex flex-row flex-1 gap-1 items-center')}>
+            {hasSLA && (
+              <SLAIndicator
+                slaPolicyId={slaPolicyId}
+                appliedSla={appliedSla as SLA}
+                appliedSlaConversationDetails={
+                  appliedSlaConversationDetails as {
+                    firstReplyCreatedAt: number;
+                    waitingSince: number;
+                    status: string;
+                  }
+                }
+                onSLAStatusChange={setShouldShowSLA}
+              />
+            )}
+            {hasLabels && hasSLA && (
+              <NativeView style={tailwind.style('w-[1px] h-3 bg-slate-5')} />
+            )}
+            {hasLabels && <LabelIndicator labels={labels} allLabels={allLabels} />}
+          </AnimatedNativeView>
         </AnimatedNativeView>
       )}
     </AnimatedNativeView>
