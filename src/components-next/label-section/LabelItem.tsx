@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { tailwind } from '@/theme';
 import { Label } from '@/types';
+import { LabelPill } from './LabelPill';
 
 type LabelItemProps = {
   item: Label;
@@ -13,35 +13,8 @@ type LabelItemProps = {
 export const LabelItem = (props: LabelItemProps) => {
   const { item } = props;
   return (
-    <Animated.View
-      style={[
-        styles.labelShadow,
-        tailwind.style('flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3'),
-        Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
-      ]}>
-      <Animated.View style={tailwind.style('h-2 w-2 rounded-full', `bg-[${item.color}]`)} />
-      <Animated.Text
-        style={tailwind.style(
-          'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] pl-1.5 text-slate-12',
-        )}>
-        {item.title}
-      </Animated.Text>
+    <Animated.View style={tailwind.style('mr-2 mt-3')}>
+      <LabelPill labelText={item.title} labelColor={item.color} />
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  labelShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});

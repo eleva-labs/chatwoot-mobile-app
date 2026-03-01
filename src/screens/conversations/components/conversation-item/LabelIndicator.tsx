@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Text } from 'react-native';
 import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
 import { AnimatedNativeView, NativeView } from '@/components-next/native-components';
+import { LabelPill } from '@/components-next/label-section/LabelPill';
 import { Label } from '@/types';
 
 interface LabelState {
@@ -18,23 +17,6 @@ interface LayoutChangeEvent {
     };
   };
 }
-
-const LabelPill = ({ labelText, labelColor }: { labelText: string; labelColor: string }) => {
-  const themedTailwind = useThemedStyles();
-  return (
-    <NativeView
-      style={themedTailwind.style(
-        'flex-row items-center gap-1 h-5 py-0.5 px-1 rounded border border-slate-6 bg-transparent',
-      )}>
-      <NativeView style={tailwind.style('h-2 w-2 rounded-sm', `bg-[${labelColor}]`)} />
-      <Text
-        numberOfLines={1}
-        style={themedTailwind.style('text-xs font-inter-420-20 text-slate-11')}>
-        {labelText}
-      </Text>
-    </NativeView>
-  );
-};
 
 export const LabelIndicator = ({ labels, allLabels }: { labels: string[]; allLabels: Label[] }) => {
   // Store the container width
