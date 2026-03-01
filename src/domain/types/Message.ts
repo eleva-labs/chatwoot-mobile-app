@@ -68,7 +68,7 @@ export type MessageContentAttributes = {
 export interface Message {
   id: number;
   attachments: ImageMetadata[];
-  content: string;
+  content: string | null;
   contentAttributes?: MessageContentAttributes | null;
   contentType: ContentType;
   conversationId: number;
