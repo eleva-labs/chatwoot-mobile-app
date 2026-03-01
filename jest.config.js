@@ -11,6 +11,7 @@ module.exports = {
     '/node_modules/',
     '/__tests__/helpers/',
     '/__tests__/setup\\.ts$',
+    '/docs/ignored/',
   ],
   setupFilesAfterEnv: ['<rootDir>/src/modules/onboarding/__tests__/setup.ts'],
   testEnvironment: 'node',

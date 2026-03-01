@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 
-import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
 import { NativeView } from '@/components-next/native-components';
 import { formatTimeToShortForm, formatRelativeTime } from '@/utils/dateTimeUtils';
@@ -13,12 +12,16 @@ const DAY_IN_MS = HOUR_IN_MS * 24;
 
 type LastActivityTimeProps = {
   timestamp: number;
+  createdAt?: number;
 };
 
-export const LastActivityTime = ({ timestamp }: LastActivityTimeProps) => {
+export const LastActivityTime = ({ timestamp, createdAt }: LastActivityTimeProps) => {
   const themedTailwind = useThemedStyles();
   const [lastActivityTime, setLastActivityTime] = useState(
     formatTimeToShortForm(formatRelativeTime(timestamp)),
+  );
+  const [createdAtTime, setCreatedAtTime] = useState(
+    createdAt ? formatTimeToShortForm(formatRelativeTime(createdAt)) : '',
   );
 
   useEffect(() => {
@@ -31,6 +34,9 @@ export const LastActivityTime = ({ timestamp }: LastActivityTimeProps) => {
 
     const updateTime = () => {
       setLastActivityTime(formatTimeToShortForm(formatRelativeTime(timestamp)));
+      if (createdAt) {
+        setCreatedAtTime(formatTimeToShortForm(formatRelativeTime(createdAt)));
+      }
     };
 
     const timer = setTimeout(function refresh() {
@@ -43,14 +49,12 @@ export const LastActivityTime = ({ timestamp }: LastActivityTimeProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const displayText = createdAtTime ? `${createdAtTime} · ${lastActivityTime}` : lastActivityTime;
+
   return (
     <NativeView>
-      <Text
-        style={themedTailwind.style(
-          'text-xs font-inter-420-20 leading-[14px] tracking-[0.24px] text-gray-700',
-        )}
-      >
-        {lastActivityTime}
+      <Text style={themedTailwind.style('text-xxs font-inter-420-20 leading-4 text-slate-10')}>
+        {displayText}
       </Text>
     </NativeView>
   );

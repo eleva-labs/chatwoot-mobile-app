@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
+import { tailwind } from '@/theme';
 import Animated, {
   Easing,
   FadeIn,
@@ -23,8 +24,8 @@ export const AnimatedCodeNumber: React.FC<AnimatedCodeNumberProps> = ({
   highlighted,
   status,
 }) => {
-  const correctColor = 'hsl(151, 40.2%, 54.1%)'; // green-600
-  const defaultColor = 'hsl(0, 0%, 89.5%)'; // gray-300
+  const correctColor = tailwind.color('text-teal-9') ?? 'hsl(151, 40.2%, 54.1%)';
+  const defaultColor = tailwind.color('text-slate-6') ?? 'hsl(0, 0%, 89.5%)';
 
   const rBoxStyle = useAnimatedStyle(() => {
     return {
@@ -50,8 +51,7 @@ export const AnimatedCodeNumber: React.FC<AnimatedCodeNumberProps> = ({
               // I want the animation to start fast, then decelerate at the end (opposite of the previous one)
               .easing(Easing.bezier(0.6, 0.1, 0.4, 0.8).factory())
               .build()}
-            style={[styles.text, { color: 'hsl(0, 0%, 39.3%)' }]}
-          >
+            style={[styles.text, { color: 'hsl(0, 0%, 39.3%)' }]}>
             {code}
           </Animated.Text>
         </Animated.View>

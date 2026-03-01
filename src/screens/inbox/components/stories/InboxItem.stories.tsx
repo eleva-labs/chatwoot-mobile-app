@@ -54,7 +54,7 @@ const baseInboxItem = {
 
 const Title = ({ title }: { title: string }) => (
   <View style={tailwind.style('flex items-center justify-center')}>
-    <Text style={tailwind.style('text-md font-medium italic text-gray-800')}>{title}</Text>
+    <Text style={tailwind.style('text-md font-medium italic text-slate-12')}>{title}</Text>
   </View>
 );
 

@@ -8,6 +8,7 @@ import { LabelTag } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { Label } from '@/types';
 import { BottomSheetBackdrop, Icon, SearchBar } from '@/components-next';
+import i18n from '@/i18n';
 import { useAppSelector } from '@/hooks';
 import { filterLabels } from '@/store/label/labelSelectors';
 import { useAppDispatch } from '@/hooks';
@@ -114,33 +115,35 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
       <Animated.View style={tailwind.style('pl-4')}>
         <Animated.Text
           style={tailwind.style(
-            'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-gray-700',
-          )}
-        >
-          Labels
+            'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
+          )}>
+          {i18n.t('CONVERSATION.ACTIONS.LABELS.TITLE')}
         </Animated.Text>
       </Animated.View>
       <Animated.View style={tailwind.style('flex flex-row flex-wrap pl-4')}>
-        {conversationLabels.map((label, index) => (
-          <LabelItem key={index} index={index} item={label} />
+        {conversationLabels.map(label => (
+          <Animated.View key={label.title} style={tailwind.style('mr-2 mt-3')}>
+            <LabelItem title={label.title} color={label.color} />
+          </Animated.View>
         ))}
         <Pressable
           onPress={handleAddLabelPress}
           style={({ pressed }) => [
             styles.labelShadow,
             tailwind.style(
-              'flex flex-row items-center bg-white px-3 py-[7px] rounded-lg mr-2 mt-3',
-              pressed ? 'bg-blue-100' : '',
+              'flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3',
+              pressed ? 'bg-iris-3' : '',
             ),
-          ]}
-        >
+            Platform.OS === 'android' && {
+              backgroundColor: tailwind.color('bg-solid-1') ?? 'white',
+            },
+          ]}>
           <Icon icon={<LabelTag />} size={16} />
           <Animated.Text
             style={tailwind.style(
-              'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px] pl-1.5 text-blue-800',
-            )}
-          >
-            Add
+              'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px] pl-1.5 text-iris-11',
+            )}>
+            {i18n.t('CONVERSATION.ACTIONS.LABELS.ADD')}
           </Animated.Text>
         </Pressable>
       </Animated.View>
@@ -150,17 +153,17 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
+        backgroundStyle={tailwind.style('bg-solid-1')}
         enablePanDownToClose
         snapPoints={[316]}
         keyboardBehavior="interactive"
         keyboardBlurBehavior="restore"
-        onChange={handleChange}
-      >
+        onChange={handleChange}>
         <SearchBar
           isInsideBottomSheet
           onSubmitEditing={handleOnSubmitEditing}
           onChangeText={handleChangeText}
-          placeholder="Search labels"
+          placeholder={i18n.t('CONVERSATION.LABELS.SEARCH_PLACEHOLDER')}
           returnKeyLabel="done"
           returnKeyType="done"
         />
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
   labelShadow:
     Platform.select({
       ios: {
-        shadowColor: '#00000040',
+        shadowColor: 'rgba(0,0,0,0.25)',
         shadowOffset: { width: 0, height: 0.15 },
         shadowRadius: 2,
         shadowOpacity: 0.35,
@@ -190,7 +193,6 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 4,
-        backgroundColor: 'white',
       },
     }) || {}, // Add fallback empty object
 });

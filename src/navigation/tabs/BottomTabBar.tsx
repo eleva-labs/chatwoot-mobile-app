@@ -37,8 +37,7 @@ type TabBarIconsProps = {
 };
 
 const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
-  const { isDark } = useTheme();
-  const iconColor = isDark ? '#FFFFFF' : '#171717';
+  const iconColor = tailwind.color('text-slate-12') ?? '#171717';
 
   switch (route.name) {
     case 'Conversations':
@@ -112,8 +111,7 @@ const TabItem = (props: any) => {
   );
   return (
     <Animated.View
-      style={[tailwind.style('justify-center items-center flex-1 bg-transparent'), animatedStyle]}
-    >
+      style={[tailwind.style('justify-center items-center flex-1 bg-transparent'), animatedStyle]}>
       <Pressable
         hitSlop={hitSlop}
         {...handlers}
@@ -122,8 +120,7 @@ const TabItem = (props: any) => {
         accessibilityLabel={options.tabBarAccessibilityLabel}
         testID={options.tabBarTestID}
         onPress={onPress}
-        onLongPress={onLongPress}
-      >
+        onLongPress={onLongPress}>
         <TabBarIcons focused={isFocused} route={route} />
       </Pressable>
     </Animated.View>
@@ -175,19 +172,18 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
       style={Platform.select({
         ios: [
           themedTailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-8 bg-white',
+            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-8 bg-solid-1',
             `h-[${tabBarHeight}px]`,
           ),
         ],
         android: [
           themedTailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] py-[11px] bg-white',
+            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] py-[11px] bg-solid-1',
             `h-[${tabBarHeight}px]`,
           ),
         ],
-      })}
-    >
-      <Animated.View style={themedTailwind.style('absolute inset-0 h-[1px] bg-gray-200')} />
+      })}>
+      <Animated.View style={themedTailwind.style('absolute inset-0 h-[1px] bg-slate-6')} />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;

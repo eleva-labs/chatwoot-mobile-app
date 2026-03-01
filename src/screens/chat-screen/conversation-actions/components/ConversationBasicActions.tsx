@@ -12,6 +12,7 @@ import { OpenIcon, ResolvedFilledIcon, PendingFilledIcon, SnoozedFilledIcon } fr
 import { tailwind } from '@/theme';
 import { useHaptic, useScaleAnimation } from '@/utils';
 import { ConversationStatus } from '@/types';
+import i18n from '@/i18n';
 
 import { ConversationActionType } from '../ConversationActions';
 
@@ -23,6 +24,7 @@ type ConversationActionOptionsType = {
   borderActionColor: string;
   actionIcon: React.JSX.Element;
   actionText: ConversationStateType;
+  actionI18nKey: string;
   actionStatus: ConversationStatus | 'open';
 };
 
@@ -31,35 +33,39 @@ const ACTION_WIDTH = (SCREEN_WIDTH - 32 - 12 * 3) / 4;
 
 const conversationActionOptions: ConversationActionOptionsType[] = [
   {
-    backgroundActionColor: 'bg-gray-100',
-    backgroundActionPressedColor: 'bg-gray-200',
-    borderActionColor: 'bg-gray-700',
-    actionIcon: <OpenIcon stroke={tailwind.color('text-gray-700') as string} />,
+    backgroundActionColor: 'bg-slate-3',
+    backgroundActionPressedColor: 'bg-slate-4',
+    borderActionColor: 'bg-slate-11',
+    actionIcon: <OpenIcon stroke={tailwind.color('text-slate-11') as string} />,
     actionText: 'open',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.OPEN',
     actionStatus: 'open',
   },
   {
-    backgroundActionColor: 'bg-amber-100',
-    backgroundActionPressedColor: 'bg-amber-200',
-    borderActionColor: 'bg-amber-700',
+    backgroundActionColor: 'bg-amber-3',
+    backgroundActionPressedColor: 'bg-amber-4',
+    borderActionColor: 'bg-amber-9',
     actionIcon: <PendingFilledIcon />,
     actionText: 'pending',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.PENDING',
     actionStatus: 'pending',
   },
   {
-    backgroundActionColor: 'bg-indigo-100',
-    backgroundActionPressedColor: 'bg-indigo-200',
-    borderActionColor: 'bg-indigo-700',
+    backgroundActionColor: 'bg-iris-3',
+    backgroundActionPressedColor: 'bg-iris-4',
+    borderActionColor: 'bg-iris-9',
     actionIcon: <SnoozedFilledIcon />,
     actionText: 'snooze',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.SNOOZE',
     actionStatus: 'snoozed',
   },
   {
-    backgroundActionColor: 'bg-green-100',
-    backgroundActionPressedColor: 'bg-green-200',
-    borderActionColor: 'bg-green-700',
+    backgroundActionColor: 'bg-teal-3',
+    backgroundActionPressedColor: 'bg-teal-4',
+    borderActionColor: 'bg-teal-9',
     actionIcon: <ResolvedFilledIcon />,
     actionText: 'resolve',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.RESOLVE',
     actionStatus: 'resolved',
   },
 ];
@@ -112,8 +118,7 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
       style={[
         tailwind.style('flex-1', index !== conversationActionOptions.length - 1 ? 'mr-3' : ''),
         animatedStyle,
-      ]}
-    >
+      ]}>
       <Pressable
         key={index}
         style={({ pressed }) => [
@@ -125,8 +130,7 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
           ),
         ]}
         onPress={handleActionOptionPress}
-        {...handlers}
-      >
+        {...handlers}>
         <Animated.View
           style={[
             tailwind.style('absolute inset-0 border-2 rounded-xl'),
@@ -136,10 +140,9 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
         <Icon icon={conversationAction.actionIcon} size={32} />
         <Animated.Text
           style={tailwind.style(
-            'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] text-center pt-5 capitalize text-gray-950 ',
-          )}
-        >
-          {conversationAction.actionText}
+            'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] text-center pt-5 text-slate-12 ',
+          )}>
+          {i18n.t(conversationAction.actionI18nKey)}
         </Animated.Text>
       </Pressable>
     </Animated.View>

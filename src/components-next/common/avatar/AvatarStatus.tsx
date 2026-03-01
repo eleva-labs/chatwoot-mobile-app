@@ -74,13 +74,11 @@ const TypingComponent: React.FC<TypingStatusProps> = ({ size, parentsBackground 
           borderColor: tailwind.color(parentsBackground),
           backgroundColor: tailwind.color(parentsBackground),
         },
-      ]}
-    >
+      ]}>
       <View
         style={tailwind.style(
           cx(avatarTheme.status.typing.base, avatarTheme.status.typing.size[size]),
-        )}
-      >
+        )}>
         {delays.map(value => (
           <AnimatedDot key={value} size={size} delay={value} />
         ))}
@@ -104,9 +102,9 @@ export const AvatarStatus: React.FC<Pick<AvatarProps, 'status' | 'size' | 'paren
               bottom: avatarTheme.status.position[size],
               right: avatarTheme.status.position[size],
               borderColor: tailwind.color(parentsBackground),
+              backgroundColor: tailwind.color(parentsBackground),
             },
-          ]}
-        >
+          ]}>
           <View
             style={tailwind.style(
               cx(avatarTheme.status.active.base, avatarTheme.status.active.size[size]),

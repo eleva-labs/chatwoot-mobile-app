@@ -59,11 +59,11 @@ class BaseActionCableConnector {
   };
 
   private handleConnected = (): void => {
-    console.log('Connected to ActionCable');
+    console.warn('Connected to ActionCable');
   };
 
   private handleDisconnected = (): void => {
-    console.log('Disconnected from ActionCable');
+    console.warn('Disconnected from ActionCable');
   };
 }
 

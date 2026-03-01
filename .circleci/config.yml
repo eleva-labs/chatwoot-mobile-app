@@ -8,31 +8,51 @@ jobs:
       - image: cimg/node:20.9.0
     steps:
       - checkout
+
       - run:
           name: Setup Working Directory
           command: |
             ls -la
             pwd
+
       - restore_cache:
-          name: Restore Yarn Package Cache
+          name: Restore pnpm Package Cache
           keys:
-            - yarn-packages-v1-{{ checksum "package.json" }}
-            - yarn-packages-v1-
+            - pnpm-packages-v1-{{ checksum "pnpm-lock.yaml" }}
+            - pnpm-packages-v1-
+
+      - run:
+          name: Install pnpm
+          command: |
+            npm install --global corepack@latest
+            corepack enable
+            corepack prepare pnpm@9.0.0 --activate
+            pnpm config set store-dir .pnpm-store
+
       - run:
           name: Install Dependencies
-          command: yarn install
+          command: pnpm install --frozen-lockfile
+
       - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-v1-{{ checksum "package.json" }}
+          name: Save pnpm Package Cache
+          key: pnpm-packages-v1-{{ checksum "pnpm-lock.yaml" }}
           paths:
-            - .yarn/cache
-            - .yarn/unplugged
-            - node_modules
+            - .pnpm-store
+
       - run:
-          command: yarn run test
-          name: Run YARN tests
+          name: Type Check
+          command: pnpm exec tsc --noEmit
+
+      - run:
+          name: Lint
+          command: pnpm run lint
+
+      - run:
+          name: Run tests
+          command: pnpm run test
 
 workflows:
+  version: 2
   test_my_app:
     jobs:
       - build-and-test

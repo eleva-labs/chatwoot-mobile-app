@@ -4,9 +4,37 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "base": {
+      "cache": {
+        "disabled": false,
+        "key": "v1",
+        "cacheDefaultPaths": true,
+        "customPaths": [
+          "./ios/Podfile.lock"
+        ]
+      }
+    },
+    "development:simulator": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "cache": {
+        "key": "dev-sim-v1"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "ENVIRONMENT": "dev"
+      }
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "store",
+      "cache": {
+        "key": "dev-v1"
+      },
       "env": {
         "ENVIRONMENT": "dev",
         "EAS_BUILD_PROFILE": "development",
@@ -28,8 +56,34 @@
         "image": "latest"
       }
     },
+    "preview": {
+      "extends": "base",
+      "distribution": "internal",
+      "cache": {
+        "key": "preview-v1"
+      },
+      "env": {
+        "ENVIRONMENT": "dev",
+        "EAS_BUILD_PROFILE": "preview",
+        "SENTRY_ORG": "eleva-labs",
+        "SENTRY_PROJECT": "chatscommerce"
+      },
+      "environment": "preview",
+      "channel": "preview",
+      "ios": {
+        "image": "latest"
+      },
+      "android": {
+        "image": "latest",
+        "buildType": "apk"
+      }
+    },
     "production": {
+      "extends": "base",
       "autoIncrement": true,
+      "cache": {
+        "key": "prod-v1"
+      },
       "env": {
         "ENVIRONMENT": "prod",
         "SENTRY_ORG": "eleva-labs",
@@ -41,6 +95,9 @@
       "android": {
         "buildType": "app-bundle",
         "gradleCommand": ":app:bundleRelease",
+        "image": "latest"
+      },
+      "ios": {
         "image": "latest"
       }
     }

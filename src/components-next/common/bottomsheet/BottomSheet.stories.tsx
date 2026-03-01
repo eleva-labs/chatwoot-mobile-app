@@ -23,7 +23,7 @@ export default {
     Story => (
       <BottomSheetModalProvider>
         <RefsProvider>
-          <View style={tailwind.style('flex-1 bg-white p-4')}>
+          <View style={tailwind.style('flex-1 bg-solid-1 p-4')}>
             <Story />
           </View>
         </RefsProvider>
@@ -58,8 +58,7 @@ export const LanguageSelectorSheet = () => {
         animationConfigs={animationConfigs}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('overflow-hidden')}
-        snapPoints={['70%']}
-      >
+        snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText="Select Language" />
           <LanguageList

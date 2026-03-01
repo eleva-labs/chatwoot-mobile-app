@@ -1,3 +1,4 @@
+packages: []
 patchedDependencies:
   ai@5.0.93: patches/ai@5.0.93.patch
   '@react-native-firebase/analytics': patches/@react-native-firebase__analytics.patch

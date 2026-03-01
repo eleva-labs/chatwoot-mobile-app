@@ -19,7 +19,7 @@ export interface ThemeAwareConfig {
 
 // Create theme-aware Tailwind instance
 export const createUnifiedTheme = (config: ThemeAwareConfig) => {
-  const { isDark, colors, semanticColors } = config;
+  const { colors, semanticColors } = config;
 
   return create({
     ...twConfig,
@@ -120,6 +120,7 @@ export const createUnifiedTheme = (config: ThemeAwareConfig) => {
 
 // Create theme-aware Tailwind instance with default config
 export const createDefaultTheme = (isDark: boolean) => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
   const colors = isDark
     ? require('../colors/unified').darkModeColorScales
     : require('../colors/unified').lightModeColorScales;
@@ -127,6 +128,7 @@ export const createDefaultTheme = (isDark: boolean) => {
   const semanticColors = isDark
     ? require('../colors/semantic').darkSemanticColors
     : require('../colors/semantic').lightSemanticColors;
+  /* eslint-enable @typescript-eslint/no-require-imports */
 
   return createUnifiedTheme({
     isDark,

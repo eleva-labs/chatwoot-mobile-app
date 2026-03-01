@@ -58,15 +58,14 @@ export const Basic: Story = {
 
 const Title = ({ title }: { title: string }) => (
   <View style={tailwind.style('flex items-center justify-center')}>
-    <Text style={tailwind.style('text-md font-medium italic text-gray-800')}>{title}</Text>
+    <Text style={tailwind.style('text-md font-medium italic text-slate-12')}>{title}</Text>
   </View>
 );
 
 export const AllVariants: Story = {
   render: () => (
     <ScrollView
-      contentContainerStyle={tailwind.style('flex flex-col justify-center items-center gap-2')}
-    >
+      contentContainerStyle={tailwind.style('flex flex-col justify-center items-center gap-2')}>
       <Title title="Conversation with all fields" />
       <ConversationItem
         {...conversationWithAllFields}

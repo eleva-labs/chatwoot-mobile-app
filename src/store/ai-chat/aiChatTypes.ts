@@ -1,64 +1,53 @@
-import type { AIChatSession, AIChatMessage } from '@/domain/ai/types';
-
 /**
- * API Response types
+ * AI Chat Redux Types
+ *
+ * Redux state shape, payload types, and re-exported schema types.
+ * Consumers import from here for both Redux and DTO types.
  */
-export interface AIChatSessionsAPIResponse {
-  sessions: AIChatSession[];
-}
 
-export interface AIChatMessagesAPIResponse {
-  messages: AIChatMessage[];
-}
+import type { AIChatSession, AIChatMessage } from './aiChatSchemas';
 
-/**
- * Redux state types
- */
+// Re-export schema types so consumers only need one import
+export type { AIChatBot, AIChatSession, AIChatMessage, AIChatMessagePart } from './aiChatSchemas';
+
+// Re-export response types for service consumers
+export type {
+  AIChatBotsResponse,
+  AIChatSessionsResponse,
+  AIChatMessagesResponse,
+} from './aiChatSchemas';
+
+// === Redux State Shape ===
+
 export interface AIChatState {
-  // Sessions organized by agentBotId (for Rails) or storeId (for Python backend)
-  sessions: {
-    [key: string]: AIChatSession[];
-  };
-  // Messages organized by sessionId
-  messages: {
-    [sessionId: string]: AIChatMessage[];
-  };
-  // Loading states
+  /** Sessions organized by agentBotId key (e.g., "agentBot_123") */
+  sessions: Record<string, AIChatSession[]>;
+  /** Messages organized by sessionId */
+  messages: Record<string, AIChatMessage[]>;
+  /** Loading state for sessions fetch */
   isLoadingSessions: boolean;
+  /** Loading state for messages fetch */
   isLoadingMessages: boolean;
-  // Error states
+  /** Error message for sessions operations */
   sessionsError: string | null;
+  /** Error message for messages operations */
   messagesError: string | null;
-  // Active session ID
+  /** Currently active session ID */
   activeSessionId: string | null;
-  // Selected agent bot ID (for Rails) or store ID (for Python backend)
-  selectedAgentBotId?: number;
-  selectedStoreId?: number;
 }
 
-/**
- * Payload types for actions
- */
+// === Action Payload Types (Rails-only — no Python backend fields) ===
+
 export interface FetchSessionsPayload {
-  agentBotId?: number;
-  storeId?: number;
-  agentSystemId?: number;
-  userId?: number;
+  agentBotId: number;
   limit?: number;
-  aiBackendUrl?: string;
-  usePythonBackend?: boolean;
+  offset?: number;
 }
 
 export interface FetchMessagesPayload {
   sessionId: string;
   limit?: number;
-  accountId?: number;
-  agentBotId?: number;
-  storeId?: number;
-  agentSystemId?: number;
-  userId?: number;
-  aiBackendUrl?: string;
-  usePythonBackend?: boolean;
+  offset?: number;
 }
 
 export interface SetActiveSessionPayload {
@@ -67,5 +56,9 @@ export interface SetActiveSessionPayload {
 
 export interface ClearSessionsPayload {
   agentBotId?: number;
-  storeId?: number;
+}
+
+export interface AIChatErrorPayload {
+  message: string;
+  errors?: string[];
 }

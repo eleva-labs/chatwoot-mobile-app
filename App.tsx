@@ -1,4 +1,6 @@
 import 'reflect-metadata'; // Must be first import for TSyringe decorators
+import { bootstrapDI } from '@/dependency-injection';
+
 import * as Sentry from '@sentry/react-native';
 import { getApps } from '@react-native-firebase/app';
 import { waitForFirebaseInit } from './src/utils/firebaseUtils';
@@ -11,6 +13,9 @@ import App from './src/app';
 // Ref: https://github.com/gorhom/react-native-bottom-sheet/issues/1983
 // https://github.com/dohooo/react-native-reanimated-carousel/issues/706
 import './reanimatedConfig';
+
+// Initialize DI container immediately after reflect-metadata
+bootstrapDI();
 // import './wdyr';
 
 const isStorybookEnabled = Constants.expoConfig?.extra?.eas?.storybookEnabled;

@@ -16,8 +16,7 @@ const meta = {
           flex: 1,
           alignItems: 'center',
           padding: 16,
-        }}
-      >
+        }}>
         <Story />
       </View>
     ),

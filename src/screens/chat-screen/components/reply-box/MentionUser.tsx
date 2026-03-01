@@ -17,16 +17,14 @@ export const MentionUser = (props: MentionUserProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !lastItem ? 'border-b-[1px] border-blackA-A3' : '',
-        )}
-      >
+          !lastItem ? 'border-b-[1px] border-slate-6' : '',
+        )}>
         <Animated.Text
           style={[
             tailwind.style(
-              'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
             ),
-          ]}
-        >
+          ]}>
           {agent.name}
         </Animated.Text>
       </Animated.View>

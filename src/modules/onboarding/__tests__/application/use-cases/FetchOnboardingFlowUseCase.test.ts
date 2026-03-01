@@ -4,6 +4,7 @@
  * This use case fetches onboarding flows with caching (1 hour TTL).
  * Tests demonstrate mocking repositories and testing cache behavior.
  */
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 import { FetchOnboardingFlowUseCaseImpl } from '../../../application/use-cases/FetchOnboardingFlowUseCaseImpl';
 import { createMockOnboardingRepository, createMockStorageRepository } from '../../helpers/mocks';

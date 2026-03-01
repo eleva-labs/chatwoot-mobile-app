@@ -3,9 +3,9 @@ import { Path, Svg } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const MacrosIcon = ({ stroke = 'black' }: IconProps): JSX.Element => {
+export const MacrosIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 22 22" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 22 22" fill="none" color={color}>
       <Path
         d="M11.593 5L6.31136 11.4128C6.105 11.6636 6.00123 11.7896 6.00004 11.8952C5.99927 11.9407 6.00874 11.9858 6.02775 12.0271C6.04675 12.0684 6.07479 12.1047 6.10974 12.1334C6.19157 12.2 6.35286 12.2 6.67603 12.2H11L10.407 17L15.6886 10.5872C15.895 10.3364 15.9988 10.2104 16 10.1048C16.0007 10.0593 15.9913 10.0142 15.9723 9.9729C15.9532 9.93163 15.9252 9.89528 15.8903 9.8666C15.8084 9.8 15.6471 9.8 15.324 9.8H11L11.593 5Z"
         stroke={stroke}

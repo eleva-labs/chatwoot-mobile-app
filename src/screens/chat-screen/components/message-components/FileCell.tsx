@@ -6,8 +6,9 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import { FileIcon } from '@/svg-icons';
 import { tailwind } from '@/theme';
+import i18n from '@/i18n';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { getAvatarSource, messageTimestamp } from '@/utils';
 import { Avatar, Icon } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';
@@ -32,7 +33,7 @@ export const FilePreview = (props: FilePreviewProps) => {
     try {
       FileViewer.open(localFilePath).catch(e => Alert.alert(e));
     } catch (e) {
-      Alert.alert('Not able to preview file' + e);
+      Alert.alert(i18n.t('FILES.PREVIEW_ERROR') + e);
     }
   };
 
@@ -53,7 +54,7 @@ export const FilePreview = (props: FilePreviewProps) => {
               setFileDownload(false);
             })
             .catch(() => {
-              Alert.alert('File load error');
+              Alert.alert(i18n.t('FILES.LOAD_ERROR'));
             });
         }
       });
@@ -67,7 +68,7 @@ export const FilePreview = (props: FilePreviewProps) => {
         <Animated.View style={tailwind.style('pr-1.5')}>
           <Spinner
             size={20}
-            stroke={isIncoming ? tailwind.color('text-white') : tailwind.color('bg-brand-600')}
+            stroke={isIncoming ? tailwind.color('text-white') : tailwind.color('bg-brand')}
           />
         </Animated.View>
       ) : (
@@ -76,7 +77,7 @@ export const FilePreview = (props: FilePreviewProps) => {
             size={24}
             icon={
               <FileIcon
-                fill={isIncoming ? tailwind.color('bg-white') : tailwind.color('text-brand-600')}
+                fill={isIncoming ? tailwind.color('bg-solid-1') : tailwind.color('text-brand')}
               />
             }
           />
@@ -94,11 +95,10 @@ export const FilePreview = (props: FilePreviewProps) => {
                   ? 'text-base tracking-[0.32px] leading-[22px] font-inter-normal-20'
                   : '',
                 isIncoming ? 'text-white' : '',
-                isOutgoing ? 'text-brand-600' : '',
+                isOutgoing ? 'text-brand' : '',
               ),
               style.androidTextOnlyStyle,
-            ]}
-          >
+            ]}>
             {fileName}
           </Animated.Text>
           <Animated.View
@@ -106,7 +106,7 @@ export const FilePreview = (props: FilePreviewProps) => {
               tailwind.style(
                 'border-b-[1px] absolute left-0 right-0 ios:bottom-[1px] android:bottom-0',
                 isIncoming ? 'border-white' : '',
-                isOutgoing ? 'border-brand-600' : '',
+                isOutgoing ? 'border-brand' : '',
               ),
             ]}
           />
@@ -158,12 +158,11 @@ export const FileCell = (props: FileCellProps) => {
         !shouldRenderAvatar && isIncoming ? 'ml-7' : '',
         !shouldRenderAvatar && isOutgoing ? 'pr-7' : '',
         shouldRenderAvatar ? 'pb-2' : '',
-      )}
-    >
+      )}>
       <Animated.View style={tailwind.style('flex flex-row')}>
-        {sender?.thumbnail && sender?.name && isIncoming && shouldRenderAvatar ? (
+        {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -171,8 +170,8 @@ export const FileCell = (props: FileCellProps) => {
             style={[
               tailwind.style(
                 'flex flex-row items-center relative max-w-[300px] pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
-                isIncoming ? 'bg-brand-600' : '',
-                isOutgoing ? 'bg-gray-100' : '',
+                isIncoming ? 'bg-brand' : '',
+                isOutgoing ? 'bg-slate-3' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -181,20 +180,17 @@ export const FileCell = (props: FileCellProps) => {
                       : ''
                   : '',
               ),
-            ]}
-          >
+            ]}>
             <FilePreview {...{ fileSrc, isIncoming, isOutgoing }} />
             <Animated.View
-              style={tailwind.style('h-[21px] pt-[5px] pb-0.5 flex flex-row items-center pl-1.5')}
-            >
+              style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center pl-1.5')}>
               <Animated.Text
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
                   isIncoming ? 'text-whiteA-A11' : '',
-                  isOutgoing ? 'text-gray-700' : '',
-                )}
-              >
-                {unixTimestampToReadableTime(timeStamp)}
+                  isOutgoing ? 'text-slate-11' : '',
+                )}>
+                {messageTimestamp(timeStamp)}
               </Animated.Text>
               <DeliveryStatus
                 isPrivate={isPrivate}
@@ -203,15 +199,15 @@ export const FileCell = (props: FileCellProps) => {
                 channel={channel}
                 sourceId={sourceId}
                 errorMessage={errorMessage || ''}
-                deliveredColor="text-gray-700"
-                sentColor="text-gray-700"
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
               />
             </Animated.View>
           </Animated.View>
         </MessageMenu>
-        {sender?.thumbnail && sender?.name && isOutgoing && shouldRenderAvatar ? (
+        {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

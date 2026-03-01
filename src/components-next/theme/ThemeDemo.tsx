@@ -8,9 +8,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, Switch } from 'react-native';
 import { useTheme } from '@/context';
+import { useThemedStyles } from '@/hooks/useThemedStyles';
 
 export const ThemeDemo: React.FC = () => {
-  const { tailwind, isDark, toggleTheme, setTheme } = useTheme();
+  const { isDark, toggleTheme, setTheme } = useTheme();
+  const tailwind = useThemedStyles();
   const [inputValue, setInputValue] = useState('');
   const [switchValue, setSwitchValue] = useState(false);
 
@@ -43,15 +45,13 @@ export const ThemeDemo: React.FC = () => {
           <View style={tailwind.style('flex-row gap-3')}>
             <TouchableOpacity
               style={tailwind.style('flex-1 bg-primary px-4 py-2 rounded-lg')}
-              onPress={toggleTheme}
-            >
+              onPress={toggleTheme}>
               <Text style={tailwind.style('text-white text-center font-medium')}>Toggle Theme</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={tailwind.style('flex-1 bg-surface border border-border px-4 py-2 rounded-lg')}
-              onPress={() => setTheme('system')}
-            >
+              onPress={() => setTheme('system')}>
               <Text style={tailwind.style('text-foreground text-center font-medium')}>System</Text>
             </TouchableOpacity>
           </View>
@@ -152,8 +152,7 @@ export const ThemeDemo: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={tailwind.style('bg-surface border border-border px-4 py-3 rounded-lg')}
-            >
+              style={tailwind.style('bg-surface border border-border px-4 py-3 rounded-lg')}>
               <Text style={tailwind.style('text-foreground text-center font-medium')}>
                 Secondary Button
               </Text>

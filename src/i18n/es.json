@@ -23,7 +23,7 @@
   },
   "LOGIN": {
     "TITLE": "Inicia sesión en tu cuenta",
-    "DESCRIPTION": "Estás conectado a {{baseUrl}}.",
+    "DESCRIPTION": "Estás conectado a %{baseUrl}.",
     "EMAIL": "Email",
     "PASSWORD": "Contraseña",
     "EMAIL_REQUIRED": "El email es requerido",
@@ -32,6 +32,10 @@
     "PASSWORD_ERROR": "Introduce una contraseña válida",
     "LOGIN": "Iniciar sesión",
     "LOGIN_LOADING": "Iniciar sesión...",
+    "LOGIN_VIA_SSO": "Iniciar sesión con SSO",
+    "SSO_AUTH_FAILED": "La autenticación SSO falló. Por favor, inténtalo de nuevo.",
+    "SSO_INVALID_RESPONSE": "Respuesta SSO inválida. Por favor, contacta al administrador.",
+    "SSO_UNEXPECTED_ERROR": "Ocurrió un error inesperado durante la autenticación SSO.",
     "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
     "RESET_HERE": "Restablecer aquí",
     "NO_ACCOUNT": "¿No tienes una cuenta?",
@@ -50,6 +54,24 @@
     "SUB_TITLE": "¡No te preocupes! Te cubrimos las espaldas",
     "API_SUCCESS": "El enlace para restablecer la contraseña ha sido enviado a tu correo electrónico"
   },
+  "MFA": {
+    "TITLE": "Autenticación de dos factores",
+    "TABS": {
+      "AUTHENTICATOR_APP": "Aplicación de autenticación",
+      "BACKUP_CODE": "Código de respaldo"
+    },
+    "INSTRUCTIONS": {
+      "AUTHENTICATOR": "Ingresa el código de 6 dígitos de tu aplicación de autenticación.",
+      "BACKUP": "Ingresa uno de tus códigos de respaldo."
+    },
+    "PLACEHOLDERS": {
+      "BACKUP_CODE": "Ingresa tu código de respaldo"
+    },
+    "BUTTONS": {
+      "VERIFY": "Verificar",
+      "VERIFYING": "Verificando..."
+    }
+  },
   "CONVERSATION": {
     "HEADER": {
       "TITLE": "Conversaciones",
@@ -65,13 +87,13 @@
       "SORT_BY": {
         "TITLE": "Ordenar por",
         "OPTIONS": {
-          "LATEST": "Latest",
+          "LATEST": "Más recientes",
           "SORT_ON_CREATED_AT": "Creado el",
           "SORT_ON_PRIORITY": "Prioridad"
         }
       },
       "STATUS": {
-        "TITLE": "Filter by status",
+        "TITLE": "Filtrar por estado",
         "OPTIONS": {
           "OPEN": "Abrir",
           "PENDING": "En espera",
@@ -83,7 +105,7 @@
       "ASSIGNEE_TYPE": {
         "TITLE": "Filtrar por tipo de asignado",
         "OPTIONS": {
-          "ME": "Me",
+          "ME": "Yo",
           "UNASSIGNED": "Sin asignar",
           "ALL": "Todo"
         }
@@ -97,8 +119,8 @@
         "SEARCH_AGENT": "Buscar agentes"
       },
       "STATUS": {
-        "HEADER_TITLE": "Assign status",
-        "TITLE": "Filter by status",
+        "HEADER_TITLE": "Asignar estado",
+        "TITLE": "Filtrar por estado",
         "OPTIONS": {
           "OPEN": "Abrir",
           "PENDING": "En espera",
@@ -132,9 +154,9 @@
     "PRIVATE_MSG_INPUT": "Esto será visible sólo para los agentes",
     "UNSUPPORTED_MESSAGE": "Este mensaje no es compatible. Puedes ver este mensaje en la aplicación de Facebook/Instagram.",
     "NOT_FOUND": {
-      "TITLE": "Unable to fetch conversation",
-      "RETRY": "Retry",
-      "BACK_TO_HOME": "Go back to home",
+      "TITLE": "No se pudo obtener la conversación",
+      "RETRY": "Reintentar",
+      "BACK_TO_HOME": "Volver al inicio",
       "DESCRIPTION": "Parece que no se pudo obtener la conversación correctamente. Podría deberse a un problema de red o la conversación ya no está disponible. Haga clic en el botón de reintentar para intentarlo nuevamente."
     },
     "BOT": "Bot",
@@ -160,13 +182,20 @@
     "DELETE_MESSAGE_SUB_TITLE": "Esta acción no se puede deshacer.",
     "COPY_MESSAGE": "Mensaje copiado al portapapeles",
     "STORY_NOT_AVAILABLE": "Esta historia ya no está disponible",
+    "IMAGE_LOAD_ERROR": "Error al cargar",
+    "ADD_MENU": {
+      "PHOTOS": "Fotos",
+      "CAMERA": "Cámara",
+      "ATTACH_FILE": "Adjuntar archivo",
+      "MACROS": "Macros"
+    },
     "DELETE_MESSAGE_SUCCESS": "Mensaje eliminado correctamente",
     "NO_CONTENT": "No hay contenido disponible",
     "ASSIGN_CHANGE": "Conversación cambiada de asignatario",
-    "TEAM_CHANGE": "Conversation Team changed",
-    "STATUS_CHANGE": "Conversation Status changed",
-    "PRIORITY_CHANGE": "Conversation Priority changed",
-    "PARTICIPANT_CHANGE": "Conversation Participant changed",
+    "TEAM_CHANGE": "Equipo de conversación cambiado",
+    "STATUS_CHANGE": "Estado de conversación cambiado",
+    "PRIORITY_CHANGE": "Prioridad de conversación cambiada",
+    "PARTICIPANT_CHANGE": "Participante de conversación cambiado",
     "CHANGE_STATUS": "Cambiar estado",
     "SEARCH_TEAM": "Buscar equipos",
     "PRIORITY": {
@@ -210,13 +239,13 @@
         "CONTENT": "ha compartido una url"
       },
       "contact": {
-        "CONTENT": "Shared a contact"
+        "CONTENT": "Contacto compartido"
       }
     },
     "LONG_PRESS_ACTIONS": {
       "COPY": "Copiar",
       "REPLY": "Responder",
-      "DELETE_MESSAGE": "Delete message"
+      "DELETE_MESSAGE": "Eliminar mensaje"
     },
     "EMAIL_HEADER": {
       "FROM": "Desde",
@@ -224,20 +253,31 @@
       "BCC": "Bcc",
       "CC": "Cc",
       "SUBJECT": "Asunto",
-      "EXPAND": "Expand email"
+      "EXPAND": "Expandir correo"
     },
     "ACTIONS": {
+      "TITLE": "Acciones de conversación",
       "ASSIGNEE": {
         "EMPTY": "Sin asignar",
         "ASSIGN": "Asignar",
         "EDIT": "Editar"
       },
+      "BASIC": {
+        "OPEN": "Abrir",
+        "PENDING": "Pendiente",
+        "SNOOZE": "Posponer",
+        "RESOLVE": "Resolver"
+      },
+      "LABELS": {
+        "TITLE": "Etiquetas",
+        "ADD": "Agregar"
+      },
       "TEAM": {
-        "EMPTY": "No team assigned",
+        "EMPTY": "Sin equipo asignado",
         "ASSIGN": "Asignar"
       },
       "PRIORITY": {
-        "EMPTY": "No priority added",
+        "EMPTY": "Sin prioridad asignada",
         "EDIT": "Editar"
       },
       "SHARE": "Compartir conversación"
@@ -250,6 +290,58 @@
     },
     "MENU": {
       "SELECT_ACTION": "Seleccionar acción"
+    },
+    "ACTIVITY": {
+      "STATUS": {
+        "RESOLVED": "Conversación marcada como resuelta por %{user_name}",
+        "CONTACT_RESOLVED": "Conversación resuelta por %{contact_name}",
+        "OPEN": "Conversación reabierta por %{user_name}",
+        "PENDING": "Conversación marcada como pendiente por %{user_name}",
+        "SNOOZED": "Conversación pospuesta por %{user_name}",
+        "AUTO_RESOLVED_DAYS": "Conversación marcada como resuelta por el sistema debido a %{count} días de inactividad",
+        "AUTO_RESOLVED_HOURS": "Conversación marcada como resuelta por el sistema debido a %{count} horas de inactividad",
+        "AUTO_RESOLVED_MINUTES": "Conversación marcada como resuelta por el sistema debido a %{count} minutos de inactividad",
+        "SYSTEM_AUTO_OPEN": "El sistema reabrió la conversación debido a un nuevo mensaje entrante.",
+        "CAPTAIN_RESOLVED": "Conversación marcada como resuelta por %{user_name} debido a inactividad",
+        "CAPTAIN_OPEN": "Conversación marcada como abierta por %{user_name}",
+        "AGENT_BOT_ERROR": "Conversación marcada como abierta por el sistema debido a un error con el bot."
+      },
+      "PRIORITY": {
+        "ADDED": "%{user_name} estableció la prioridad a %{new_priority}",
+        "UPDATED": "%{user_name} cambió la prioridad de %{old_priority} a %{new_priority}",
+        "REMOVED": "%{user_name} eliminó la prioridad"
+      },
+      "ASSIGNEE": {
+        "SELF_ASSIGNED": "%{user_name} se autoasignó esta conversación",
+        "ASSIGNED": "Asignada a %{assignee_name} por %{user_name}",
+        "REMOVED": "Conversación desasignada por %{user_name}"
+      },
+      "TEAM": {
+        "ASSIGNED": "Asignada al equipo %{team_name} por %{user_name}",
+        "ASSIGNED_WITH_ASSIGNEE": "Asignada a %{assignee_name} vía %{team_name} por %{user_name}",
+        "REMOVED": "Desasignada del equipo %{team_name} por %{user_name}"
+      },
+      "LABELS": {
+        "ADDED": "%{user_name} agregó %{labels}",
+        "REMOVED": "%{user_name} eliminó %{labels}"
+      },
+      "SLA": {
+        "ADDED": "%{user_name} agregó la política SLA %{sla_name}",
+        "REMOVED": "%{user_name} eliminó la política SLA %{sla_name}"
+      },
+      "LINEAR": {
+        "ISSUE_CREATED": "Issue de Linear %{issue_id} fue creado por %{user_name}",
+        "ISSUE_LINKED": "Issue de Linear %{issue_id} fue vinculado por %{user_name}",
+        "ISSUE_UNLINKED": "Issue de Linear %{issue_id} fue desvinculado por %{user_name}"
+      },
+      "MUTED": "%{user_name} silenció la conversación",
+      "UNMUTED": "%{user_name} activó la conversación",
+      "CSAT": {
+        "NOT_SENT": "Encuesta CSAT no enviada debido a restricciones de mensajes salientes"
+      },
+      "AUTO_RESOLVE": {
+        "NOT_SENT": "Mensaje de auto-resolución no enviado debido a restricciones de mensajes salientes"
+      }
     }
   },
   "FILTER": {
@@ -289,7 +381,7 @@
     "LOGOUT": "Cerrar sesión",
     "SUBMIT": "Enviar",
     "SET_LANGUAGE": "Definir idioma",
-    "DEBUG_ACTIONS": "Debug Actions"
+    "DEBUG_ACTIONS": "Acciones de depuración"
   },
   "NOTIFICATION": {
     "HEADER_TITLE": "Notificaciones",
@@ -359,7 +451,7 @@
     "RATIONALE_SETTINGS": "Abrir Configuración"
   },
   "CONVERSATION_DETAILS": {
-    "TITLE": "Attributes",
+    "TITLE": "Atributos",
     "BROWSER": "Navegador",
     "OPERATING_SYSTEM": "Sistema operativo",
     "INITIATED_AT": "Iniciado a las",
@@ -372,12 +464,12 @@
     "TITLE": "Detalles de contacto",
     "EMAIL": "Email",
     "PHONE_NUMBER": "Número telefónico",
-    "CALL": "Call",
+    "CALL": "Llamar",
     "CONTACT_ATTRIBUTES": "Atributos de contacto",
     "VALUE_UNAVAILABLE": "No disponible"
   },
   "CONVERSATION_PARTICIPANTS": {
-    "TITLE": "Participants",
+    "TITLE": "Participantes",
     "TOTAL_PARTICIPANTS_TEXT": "%{count} personas están participando.",
     "TOTAL_PARTICIPANT_TEXT": "%{count} personas están participando.",
     "NO_PARTICIPANTS_TEXT": "Nadie está participando!.",
@@ -388,7 +480,8 @@
     "ADD_PARTICIPANTS": "Seleccionar participantes",
     "REMAINING_PARTICIPANTS_TEXT": "otros",
     "REMAINING_PARTICIPANT_TEXT": "otro",
-    "ADD_PARTICIPANT": "Add Participant"
+    "ADD_PARTICIPANT": "Agregar participante",
+    "OVERFLOW_COUNT": "%{count} participantes"
   },
   "CONTACT_ATTRIBUTES": {
     "TITLE": "Atributos de contacto"
@@ -455,10 +548,10 @@
     "ALERT_RESTART": "Reiniciar ahora"
   },
   "BANNER": {
-    "TWILIO_WHATSAPP_CAN_REPLY": "Sólo puede responder a esta conversación usando una plantilla de mensaje debido a",
+    "TWILIO_WHATSAPP_CAN_REPLY": "Sólo puedes responder a esta conversación usando una plantilla de mensaje debido a",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "Restricción de la ventana de mensajes de 24 horas",
     "24_HOURS_WINDOW": "Restricción de la ventana de mensajes de 24 horas",
-    "CANNOT_REPLY": "No puede responder debido a"
+    "CANNOT_REPLY": "No puedes responder debido a"
   },
   "SLA": {
     "FRT": "FRT",
@@ -476,23 +569,24 @@
       "FRT": "Primera respuesta",
       "NRT": "Tiempo de próxima respuesta",
       "RT": "Tiempo de resolución",
-      "SHOW_MORE": "{count} más",
-      "HIDE": "Esconder {count} filas"
+      "SHOW_MORE": "%{count} más",
+      "HIDE": "Esconder %{count} filas"
     }
   },
   "MACRO": {
     "TITLE": "Macros",
-    "SELECT_MACRO": "Select macro",
+    "SELECT_MACRO": "Seleccionar macro",
     "ACTIONS": {
-      "RUN": "Run"
+      "RUN": "Ejecutar"
     },
     "EXECUTION_SUCCESS": "Macro ejecutado correctamente",
-    "EXECUTION_ERROR": "Macro execution failed",
+    "EXECUTION_ERROR": "La ejecución del macro falló",
     "NO_MACROS": "No se encontraron macros"
   },
   "AI_ASSISTANT": {
     "CHAT": {
       "TITLE": "Asistente de IA",
+      "AVATAR_NAME": "IA",
       "INPUT": {
         "PLACEHOLDER": "Escribe un mensaje...",
         "CANCEL": "Cancelar",
@@ -504,14 +598,14 @@
         "CLOSE": "Cerrar Asistente de IA"
       },
       "MESSAGES": {
-        "LOADING": "Cargando conversación...",
-        "EMPTY_WITH_SESSION": "No hay mensajes en esta conversación",
-        "EMPTY_NO_SESSION": "Inicia una conversación con el asistente de IA",
-        "ERROR_RENDERING": "Error al renderizar mensaje: {id}"
+        "LOADING": "Cargando sesión...",
+        "EMPTY_WITH_SESSION": "No hay mensajes en esta sesión",
+        "EMPTY_NO_SESSION": "Inicia una sesión con el asistente de IA",
+        "ERROR_RENDERING": "Error al renderizar mensaje: %{id}"
       },
       "SESSIONS": {
         "LOADING": "Cargando sesiones...",
-        "EMPTY": "No hay conversaciones anteriores",
+        "EMPTY": "No hay sesiones anteriores",
         "RECENTLY": "Recientemente"
       },
       "THOUGHTS": {
@@ -520,8 +614,65 @@
       },
       "TOOLS": {
         "SINGLE": "Usando herramienta...",
-        "MULTIPLE": "Usando {count} herramientas...",
-        "INDICATOR": "Indicador de llamada de herramienta de IA"
+        "MULTIPLE": "Usando %{count} herramientas...",
+        "INDICATOR": "Indicador de llamada de herramienta de IA",
+        "PENDING": "Pendiente",
+        "RUNNING": "Ejecutando",
+        "COMPLETED": "Completado",
+        "ERROR": "Error",
+        "UNKNOWN_TOOL": "Herramienta desconocida",
+        "INPUT": "Entrada",
+        "OUTPUT": "Salida",
+        "NO_DATA": "No hay datos disponibles",
+        "EXECUTION_FAILED": "La ejecución de la herramienta falló"
+      },
+      "EMPTY_STATE": {
+        "TITLE_WITH_SESSION": "No hay mensajes aún",
+        "TITLE_NO_SESSION": "Inicia una sesión",
+        "DESCRIPTION_WITH_SESSION": "Esta sesión está vacía",
+        "DESCRIPTION_NO_SESSION": "Haz una pregunta o describe en qué necesitas ayuda"
+      },
+      "SUGGESTED_PROMPTS": {
+        "SUMMARIZE": "Resume mis sesiones recientes",
+        "DRAFT": "Ayúdame a redactar una respuesta",
+        "CAPABILITIES": "¿En qué puedes ayudarme?"
+      },
+      "STATUS": {
+        "THINKING": "Pensando...",
+        "ISSUE": "Problema"
+      },
+      "ERRORS": {
+        "NETWORK": "Error de red",
+        "RATE_LIMIT": "Límite de solicitudes",
+        "AUTH": "Error de autenticación",
+        "SERVER": "Error del servidor",
+        "UNKNOWN": "Algo salió mal",
+        "RETRY": "Reintentar",
+        "FRESH_START": "Nuevo inicio",
+        "DISMISS": "Descartar"
+      },
+      "REASONING": {
+        "THINKING": "Pensando...",
+        "VIEW_REASONING": "Ver razonamiento",
+        "PROCESSING": "Procesando..."
+      },
+      "COPY": {
+        "COPY": "Copiar",
+        "COPIED": "¡Copiado!"
+      },
+      "SESSIONS_PANEL": {
+        "TITLE": "Sesiones",
+        "COUNT_ONE": "%{count} sesión",
+        "COUNT_OTHER": "%{count} sesiones"
+      },
+      "SESSION_ITEM": {
+        "TODAY": "Hoy",
+        "YESTERDAY": "Ayer"
+      },
+      "COLLAPSIBLE": {
+        "COLLAPSE": "Colapsar",
+        "EXPANDED": "%{title}, expandido",
+        "COLLAPSED": "%{title}, colapsado"
       },
       "ACCESSIBILITY": {
         "USER_MESSAGE": "Tu mensaje",
@@ -534,7 +685,12 @@
         "CLOSE": "Cerrar Asistente de IA",
         "CLOSE_HINT": "Cierra la interfaz de chat del asistente de IA",
         "OPEN": "Abrir Asistente de IA",
-        "OPEN_HINT": "Abre la interfaz de chat del asistente de IA"
+        "OPEN_HINT": "Abre la interfaz de chat del asistente de IA",
+        "STOP_GENERATING": "Detener generación",
+        "SESSIONS_COUNT": "%{count} sesiones",
+        "COPY_MESSAGE": "Copiar mensaje",
+        "LOADING_MESSAGES": "Cargando mensajes",
+        "CLOSE_BACKDROP": "Cerrar Asistente de IA"
       }
     },
     "STATUS": {
@@ -549,9 +705,10 @@
     "LOAD_ERROR": "Error al cargar el archivo"
   },
   "AUDIO": {
-    "RECORDING_ERROR": "Error de grabación"
+    "RECORDING_ERROR": "Error de grabación",
+    "PREPARE_ERROR": "Error al preparar el archivo de audio"
   },
   "CLIPBOARD": {
-    "COPIED": "{item} copiado al portapapeles"
+    "COPIED": "%{item} copiado al portapapeles"
   }
 }

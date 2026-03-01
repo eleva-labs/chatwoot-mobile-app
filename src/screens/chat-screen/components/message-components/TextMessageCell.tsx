@@ -1,8 +1,9 @@
 import React from 'react';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import tailwind from 'twrnc';
+import { tailwind } from '@/theme';
 
 import { Channel, Message } from '@/types';
+import { getAvatarSource } from '@/utils';
 import { Avatar } from '@/components-next/common';
 
 import { ActivityTextCell } from './ActivityTextCell';
@@ -58,16 +59,11 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
           shouldRenderAvatar ? 'mb-1' : '',
           messageItem.private ? 'my-2' : '',
         ),
-      ]}
-    >
+      ]}>
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender && sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar
-              size={'md'}
-              src={sender?.thumbnail ? { uri: sender.thumbnail } : undefined}
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -114,15 +110,7 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
         </MessageMenu>
         {shouldRenderAvatar && (isPrivate || isOutgoing || isTemplate) ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar
-              size={'md'}
-              src={
-                isTemplate || isSentByBot
-                  ? require('../../../../assets/local/bot-avatar.png') // eslint-disable-line @typescript-eslint/no-require-imports
-                  : { uri: sender?.thumbnail }
-              }
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
       </Animated.View>

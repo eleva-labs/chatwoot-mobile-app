@@ -58,7 +58,7 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
     <Provider store={mockStore}>
       <BottomSheetModalProvider>
         <RefsProvider>
-          <View style={tailwind.style('flex-1 bg-white p-4')}>
+          <View style={tailwind.style('flex-1 bg-solid-1 p-4')}>
             <BottomSheetModal
               ref={filtersModalSheetRef}
               backdropComponent={BottomSheetBackdrop}
@@ -70,8 +70,7 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
               animationConfigs={animationConfigs}
               handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
               style={tailwind.style('overflow-hidden')}
-              snapPoints={['50%']}
-            >
+              snapPoints={['50%']}>
               <BottomSheetScrollView showsVerticalScrollIndicator={false}>
                 {children}
               </BottomSheetScrollView>

@@ -20,32 +20,30 @@ const priorityAvatar = (priority: ConversationPriority) => {
 };
 
 const PriorityPanel = ({ priority, onPress }: PriorityPanelProps) => {
-  const priorityName = priority ? priority : i18n.t('CONVERSATION.ACTIONS.PRIORITY.EMPTY');
+  const priorityName = priority
+    ? i18n.t(`CONVERSATION.PRIORITY.OPTIONS.${priority.toUpperCase()}`)
+    : i18n.t('CONVERSATION.ACTIONS.PRIORITY.EMPTY');
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [tailwind.style(pressed ? 'bg-gray-100' : '', 'rounded-t-[13px]')]}
-    >
+      style={({ pressed }) => [tailwind.style(pressed ? 'bg-slate-3' : '', 'rounded-t-[13px]')]}>
       <Animated.View style={tailwind.style('flex-row items-center justify-between pl-3')}>
         {priorityAvatar(priority)}
         <Animated.View
           style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px] border-b-[1px] border-b-blackA-A3',
-          )}
-        >
+            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px] border-b-[1px] border-b-slate-6',
+          )}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22.4px] tracking-[0.16px] text-gray-950 capitalize',
-            )}
-          >
+              'text-base font-inter-420-20 leading-[22.4px] tracking-[0.16px] text-slate-12 capitalize',
+            )}>
             {priorityName}
           </Animated.Text>
           <Animated.View style={tailwind.style('flex-row items-center pr-3')}>
             <Animated.Text
               style={tailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] text-gray-900',
-              )}
-            >
+                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] text-slate-12',
+              )}>
               {i18n.t('CONVERSATION.ACTIONS.PRIORITY.EDIT')}
             </Animated.Text>
             <Icon icon={<CaretRight />} size={20} />

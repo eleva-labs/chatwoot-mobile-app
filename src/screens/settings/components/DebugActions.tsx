@@ -56,7 +56,7 @@ const DebugActionCell = ({ item, index, isLastItem }: DebugActionCellProps) => {
   const pushToken = useAppSelector(selectPushToken);
 
   useEffect(() => {
-    console.log('installationUrl', installationUrl);
+    console.warn('installationUrl', installationUrl);
   }, [installationUrl]);
 
   const hapticSelection = useHaptic();
@@ -71,14 +71,14 @@ const DebugActionCell = ({ item, index, isLastItem }: DebugActionCellProps) => {
   };
 
   const labelTextStyle = themedTailwind.style(
-    'text-base  text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+    'text-base  text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
   );
   const valueTextStyle = themedTailwind.style(
-    'text-sm text-gray-900 font-inter-420-20 leading-[18px] tracking-[0.16px] italic',
+    'text-sm text-slate-12 font-inter-420-20 leading-[18px] tracking-[0.16px] italic',
   );
   const rowStyle = themedTailwind.style(
     'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-    !isLastItem && 'border-b-[1px] border-blackA-A3',
+    !isLastItem && 'border-b-[1px] border-slate-6',
   );
 
   const debugValue = (key: string) => {

@@ -1,13 +1,10 @@
-import {
-  PerformanceMonitoringService,
-  PerformanceTrace,
-} from '@/domain/interfaces/performance/PerformanceMonitoringService';
-import { FirebasePerformanceService } from '@/infrastructure/performance/FirebasePerformanceService';
+import type { IPerformanceService, IPerformanceTrace } from '@/domain/interfaces/services/shared';
+import { FirebasePerformanceService } from './FirebasePerformanceService';
 
 class PerformanceHelper {
-  private service: PerformanceMonitoringService;
+  private service: IPerformanceService;
 
-  constructor(service: PerformanceMonitoringService = new FirebasePerformanceService()) {
+  constructor(service: IPerformanceService = new FirebasePerformanceService()) {
     this.service = service;
   }
 
@@ -19,11 +16,11 @@ class PerformanceHelper {
     this.service.markScreenTrace(screenName, screenClass);
   }
 
-  startTrace(traceName: string): Promise<PerformanceTrace | null> {
+  startTrace(traceName: string): Promise<IPerformanceTrace | null> {
     return this.service.startTrace(traceName);
   }
 
-  stopTrace(trace: PerformanceTrace | null): Promise<void> {
+  stopTrace(trace: IPerformanceTrace | null): Promise<void> {
     return this.service.stopTrace(trace);
   }
 }

@@ -44,8 +44,7 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
         style={tailwind.style('rounded-t-[26px] overflow-hidden')}
         enablePanDownToClose
         snapPoints={['75%']}
-        enableDynamicSizing={false}
-      >
+        enableDynamicSizing={false}>
         <MacroProvider conversationId={conversationId} onClose={onClose}>
           <Animated.View style={tailwind.style('flex-1')}>
             {selectedMacro ? (
@@ -55,16 +54,14 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
                 <View style={tailwind.style('px-4 pt-1 pb-4 items-center')}>
                   <Animated.Text
                     style={tailwind.style(
-                      'text-gray-700 font-inter-580-24 leading-[17px] tracking-[0.32px]',
-                    )}
-                  >
+                      'text-slate-11 font-inter-580-24 leading-[17px] tracking-[0.32px]',
+                    )}>
                     {i18n.t('MACRO.SELECT_MACRO')}
                   </Animated.Text>
                 </View>
                 <BottomSheetScrollView
                   showsVerticalScrollIndicator={false}
-                  contentContainerStyle={tailwind.style('px-3 pb-6')}
-                >
+                  contentContainerStyle={tailwind.style('px-3 pb-6')}>
                   <MacroStack
                     handleMacroPress={handleMacroPress}
                     macrosList={macros}

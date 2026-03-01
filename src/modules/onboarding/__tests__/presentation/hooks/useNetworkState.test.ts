@@ -5,8 +5,6 @@
  * It tracks connection status and internet reachability.
  */
 
-import React from 'react';
-// @ts-expect-error - @testing-library/react-hooks is used in tests but may not be in package.json
 // eslint-disable-next-line import/no-unresolved
 import { renderHook, act } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';

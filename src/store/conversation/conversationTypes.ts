@@ -86,9 +86,15 @@ export interface SendMessagePayload {
   private: boolean;
   sender: {
     id: number;
+    name?: string;
     thumbnail?: string;
   };
-  file?: File;
+  file?: {
+    uri: string;
+    fileName: string;
+    type: string;
+  };
+  files?: unknown[];
   contentAttributes?: {
     inReplyTo: number;
   };
@@ -164,7 +170,7 @@ export interface BulkActionLabels {
 export interface AssigneePayload {
   conversationId: number;
   assigneeId?: number;
-  teamId?: string;
+  teamId?: number;
 }
 
 export interface AssignTeamPayload {

@@ -41,18 +41,17 @@ export const SearchBar = (props: SearchBarProps) => {
         style={tailwind.style(
           'flex items-center justify-center absolute bg-transparent z-10 inset-y-0 left-0',
           'pl-5.5',
-        )}
-      >
+        )}>
         <Icon icon={prefix ? prefix : <SearchIcon />} size={18} />
       </Animated.View>
       <SearchTextInput
         style={[
           tailwind.style(
-            'h-9 px-8.5 py-[7px] bg-blackA-A3 text-black text-base font-inter-normal-20 leading-[19.5px] rounded-[11px]',
+            'h-9 px-8.5 py-[7px] bg-blackA-A3 text-slate-12 text-base font-inter-normal-20 leading-[19.5px] rounded-[11px]',
             isLoading ? 'px-8.5' : 'pl-8.5 pr-4',
           ),
         ]}
-        placeholderTextColor={tailwind.color('text-gray-800')}
+        placeholderTextColor={tailwind.color('text-slate-12')}
         {...otherProps}
       />
       {isLoading ? (

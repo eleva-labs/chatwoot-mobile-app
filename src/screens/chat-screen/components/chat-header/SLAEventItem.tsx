@@ -19,9 +19,8 @@ export const SlaEvents = ({ label, items }: SlaEventsProps) => {
     <Animated.View style={tailwind.style('flex flex-row justify-between')}>
       <Text
         style={themedTailwind.style(
-          'text-sm  text-gray-950 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
-        )}
-      >
+          'text-sm  text-slate-12 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
+        )}>
         {label}
       </Text>
       <Animated.View style={tailwind.style('flex flex-col gap-2')}>
@@ -29,9 +28,8 @@ export const SlaEvents = ({ label, items }: SlaEventsProps) => {
           <Text
             key={item.id}
             style={themedTailwind.style(
-              'text-sm  text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
-            )}
-          >
+              'text-sm  text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+            )}>
             {formatDate(item.createdAt)}
           </Text>
         ))}

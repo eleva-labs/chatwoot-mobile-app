@@ -2,13 +2,14 @@ import { Platform } from 'react-native';
 import structuredClone from '@ungap/structured-clone';
 
 if (Platform.OS !== 'web') {
-  // Import polyfillGlobal synchronously
+  // These require() calls are intentional for conditional polyfilling at runtime
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { polyfillGlobal } = require('react-native/Libraries/Utilities/PolyfillFunctions');
 
-  // Import Web Streams polyfills synchronously
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { ReadableStream, WritableStream, TransformStream } = require('web-streams-polyfill');
 
-  // Import text encoding streams synchronously
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { TextEncoderStream, TextDecoderStream } = require('@stardazed/streams-text-encoding');
 
   // Polyfill structuredClone

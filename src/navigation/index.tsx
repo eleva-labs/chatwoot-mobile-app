@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useCallback, useRef, useEffect } from 'react';
 import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
-import firebase, { getApps } from '@react-native-firebase/app';
+import { getApps } from '@react-native-firebase/app';
 import { getApp } from '@react-native-firebase/app';
 import {
   getMessaging,
@@ -26,6 +26,7 @@ import {
   updateBadgeCount,
 } from '@/utils/pushUtils';
 import { extractConversationIdFromUrl } from '@/utils/conversationUtils';
+import { tailwind } from '@/theme';
 import { useAppSelector, useThemedStyles } from '@/hooks';
 import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSelectors';
 import { SSO_CALLBACK_URL } from '@/constants';
@@ -48,15 +49,15 @@ const initializeFirebaseMessaging = () => {
     // Ensure Firebase is initialized (should be auto-initialized by plugin, but let's be explicit)
     const apps = getApps();
     if (!apps.length) {
-      console.log('Firebase not initialized, skipping messaging setup...');
+      console.warn('Firebase not initialized, skipping messaging setup...');
       return;
     }
 
-    console.log('Firebase already initialized, setting up messaging...');
+    console.warn('Firebase already initialized, setting up messaging...');
 
     const messaging = getMessaging(getApp());
     setBackgroundMessageHandler(messaging, async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
+      console.warn('Message handled in the background', remoteMessage);
 
       // Handle notification data
       const notification = findNotificationFromFCM({ message: remoteMessage });
@@ -68,10 +69,10 @@ const initializeFirebaseMessaging = () => {
       }
 
       // TODO: Process camelCaseNotification data for background tasks
-      console.log('Processed notification:', camelCaseNotification.id);
+      console.warn('Processed notification:', camelCaseNotification.id);
     });
   } catch (error) {
-    console.log('Firebase messaging initialization failed:', error);
+    console.error('Firebase messaging initialization failed:', error);
   }
 };
 
@@ -117,7 +118,7 @@ export const AppNavigationContainer = () => {
     (async () => {
       const ready = await waitForFirebaseInit({ timeoutMs: 5000, pollMs: 100 });
       if (!isMounted) return;
-      console.log('Navigation: Firebase ready?', ready, 'apps:', getApps().length);
+      console.warn('Navigation: Firebase ready?', ready, 'apps:', getApps().length);
       initializeFirebaseMessaging();
     })();
     return () => {
@@ -126,7 +127,8 @@ export const AppNavigationContainer = () => {
   }, []);
 
   const normalizedInstallationUrl = installationUrl?.replace(/\/+$/, '');
-  const linking = {
+  // Cast to satisfy LinkingOptions type - the runtime structure is correct
+  const linking: Parameters<typeof NavigationContainer>[0]['linking'] = {
     prefixes: [
       installationUrl,
       normalizedInstallationUrl,
@@ -152,8 +154,8 @@ export const AppNavigationContainer = () => {
         },
       },
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // getStateFromPath: App running, receives deep link - handles SSO callbacks and conversation navigation
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStateFromPath: (path: string, config: any) => {
       const incomingPath = path;
       // Handle SSO callback - App running, receives deep link
@@ -284,10 +286,10 @@ export const AppNavigationContainer = () => {
               }
             });
           } catch (error) {
-            console.log('Failed to setup notification listener in linking:', error);
+            console.error('Failed to setup notification listener in linking:', error);
           }
         } else {
-          console.log('Firebase not initialized, skipping notification listener in linking');
+          console.warn('Firebase not initialized, skipping notification listener in linking');
         }
       })();
 
@@ -312,16 +314,16 @@ export const AppNavigationContainer = () => {
     return null;
   }
 
-  // Create a custom dark theme with pure black colors
+  // Create a custom dark theme with Radix-resolved colors
   const customDarkTheme = {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
-      background: '#000000', // Pure black background
-      card: '#111827', // gray-900 - card backgrounds
-      text: '#ffffff', // Pure white text
-      border: '#374151', // gray-700 - borders
-      notification: '#3b82f6', // blue-500 - notifications
+      background: tailwind.color('bg-solid-1') ?? '#000000',
+      card: tailwind.color('bg-slate-2') ?? '#111827',
+      text: tailwind.color('text-slate-12') ?? '#ffffff',
+      border: tailwind.color('bg-slate-6') ?? '#374151',
+      notification: tailwind.color('bg-iris-9') ?? '#3b82f6',
     },
   };
 
@@ -336,13 +338,11 @@ export const AppNavigationContainer = () => {
       onStateChange={async () => {
         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
       }}
-      fallback={<ActivityIndicator animating />}
-    >
+      fallback={<ActivityIndicator animating />}>
       <BottomSheetModalProvider>
         <View
-          style={[themedTailwind.style('bg-black'), styles.navigationLayout]}
-          onLayout={onLayoutRootView}
-        >
+          style={[themedTailwind.style('bg-background'), styles.navigationLayout]}
+          onLayout={onLayoutRootView}>
           <AppTabs />
         </View>
       </BottomSheetModalProvider>
@@ -353,10 +353,11 @@ export const AppNavigator = () => {
   const themedTailwind = useThemedStyles();
 
   return (
-    <GestureHandlerRootView style={[themedTailwind.style('bg-black'), styles.navigationLayout]}>
+    <GestureHandlerRootView
+      style={[themedTailwind.style('bg-background'), styles.navigationLayout]}>
       <KeyboardProvider>
         <RefsProvider>
-          <SafeAreaProvider style={themedTailwind.style('bg-black')}>
+          <SafeAreaProvider style={themedTailwind.style('bg-background')}>
             <AppNavigationContainer />
           </SafeAreaProvider>
         </RefsProvider>

@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Application from 'expo-application';
 import Animated from 'react-native-reanimated';
-import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
 
 export const BuildInfo: React.FC = () => {
@@ -15,6 +14,6 @@ export const BuildInfo: React.FC = () => {
   const text = buildNumber ? `${versionText}  •  Build Number: ${buildNumber}` : versionText;
 
   return (
-    <Animated.Text style={themedTailwind.style('text-sm text-gray-700')}>{text}</Animated.Text>
+    <Animated.Text style={themedTailwind.style('text-sm text-slate-11')}>{text}</Animated.Text>
   );
 };

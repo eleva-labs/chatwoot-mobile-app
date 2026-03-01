@@ -21,7 +21,7 @@ const AudioIcon = () => {
   return (
     <Animated.View style={tailwind.style('flex-1 justify-center items-center')}>
       <Icon
-        icon={<VoiceNote stroke={tailwind.color('text-blue-800')} strokeOpacity={1} />}
+        icon={<VoiceNote stroke={tailwind.color('text-iris-11')} strokeOpacity={1} />}
         size={24}
       />
     </Animated.View>
@@ -30,7 +30,7 @@ const AudioIcon = () => {
 const File = () => {
   return (
     <Animated.View style={tailwind.style('flex-1  justify-center items-center')}>
-      <Icon icon={<FileIcon fill={tailwind.color('text-blue-800')} />} size={24} />
+      <Icon icon={<FileIcon fill={tailwind.color('text-iris-11')} />} size={24} />
     </Animated.View>
   );
 };
@@ -41,7 +41,7 @@ export const QuoteReply = () => {
 
   const { messageListRef } = useRefsContext();
 
-  const textStyle = tailwind.style('text-gray-950');
+  const textStyle = tailwind.style('text-slate-12');
 
   const styles = StyleSheet.create({
     text: {
@@ -87,7 +87,7 @@ export const QuoteReply = () => {
 
   const handleScrollToMessage = useCallback(() => {
     const messageIndex = messageListRef.current?.props.data?.findIndex(
-      (item: Message) => item.id === quoteMessage?.id,
+      (item: Message | { date: string }) => 'id' in item && item.id === quoteMessage?.id,
     );
     const shouldScrollToMessage = messageIndex !== -1 && messageIndex !== undefined;
 
@@ -104,8 +104,7 @@ export const QuoteReply = () => {
   return (
     <Pressable
       onPress={handleScrollToMessage}
-      style={tailwind.style('flex flex-row items-center px-2.5 pb-[14px] bg-white -z-10')}
-    >
+      style={tailwind.style('flex flex-row items-center px-2.5 pb-[14px] bg-solid-1 -z-10')}>
       {quoteMessage?.attachments?.length && quoteMessage?.attachments?.length > 0 ? (
         <Animated.View style={tailwind.style('h-9.5 w-9.5 mr-3 rounded-lg overflow-hidden')}>
           {quoteMessage?.attachments?.length > 0 &&
@@ -132,8 +131,7 @@ export const QuoteReply = () => {
           <Animated.Text
             style={tailwind.style(
               'text-cxs tracking-[0.32px] leading-[15px] font-inter-420-20 text-blackA-A11',
-            )}
-          >
+            )}>
             Replying to {quoteMessage?.sender?.name}
           </Animated.Text>
         </Animated.View>
@@ -148,8 +146,7 @@ export const QuoteReply = () => {
                   typographer: true,
                 })}
                 //   onLinkPress={handleURL}
-                style={styles}
-              >
+                style={styles}>
                 {quoteMessage?.content.split('\n').length > 0
                   ? `${quoteMessage?.content.split('\n')[0]}`
                   : ''}
@@ -157,15 +154,13 @@ export const QuoteReply = () => {
             ) : (
               <Text
                 numberOfLines={1}
-                style={tailwind.style('text-md font-inter-normal-20 tracking-[0.32px] capitalize')}
-              >
+                style={tailwind.style('text-md font-inter-normal-20 tracking-[0.32px] capitalize')}>
                 {quoteMessage?.content}
               </Text>
             )
           ) : (
             <Text
-              style={tailwind.style('text-md font-inter-normal-20 tracking-[0.32px] capitalize')}
-            >
+              style={tailwind.style('text-md font-inter-normal-20 tracking-[0.32px] capitalize')}>
               {quoteMessage?.attachments?.[0]?.fileType}
             </Text>
           )}
@@ -173,8 +168,7 @@ export const QuoteReply = () => {
       </Animated.View>
       <Pressable
         style={tailwind.style('h-10 w-10 items-center justify-center -mr-[1px]')}
-        onPress={handleOnPressClose}
-      >
+        onPress={handleOnPressClose}>
         <Icon icon={<CloseIcon />} size={24} />
       </Pressable>
     </Pressable>

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Alert, Keyboard, TextInput } from 'react-native';
+import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, {
   FadeIn,
@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Lock, LockOpen } from 'lucide-react-native';
 
 import { useChatWindowContext, useRefsContext } from '@/context';
 import {
@@ -45,7 +46,6 @@ import { AddCommandButton } from './buttons/AddCommandButton';
 import { SendMessageButton } from './buttons/SendMessageButton';
 import { MessageTextInput } from './MessageTextInput';
 import { QuoteReply } from './QuoteReply';
-import { ReplyWarning } from './ReplyWarning';
 import { CannedResponses } from './CannedResponses';
 import { AttachedMedia } from '../message-components/AttachedMedia';
 import { CommandOptionsMenu } from '../message-components/CommandOptionsMenu';
@@ -131,9 +131,12 @@ const BottomSheetContent = () => {
 
   useEffect(() => {
     if (!lastEmail) return;
-    const {
-      contentAttributes: { email: emailAttributes = {} },
-    } = lastEmail;
+    const contentAttributes = lastEmail.contentAttributes as
+      | Record<string, unknown>
+      | null
+      | undefined;
+    const emailAttributes =
+      (contentAttributes?.email as Record<string, string[]> | undefined) ?? {};
 
     // Retrieve the email of the current conversation's sender
     const conversationContact = conversation?.meta?.sender?.email || '';
@@ -156,7 +159,7 @@ const BottomSheetContent = () => {
     }
 
     // Remove the conversation contact's email from the BCC list if present
-    let bcc = (emailAttributes.bcc || []).filter(email => email !== conversationContact);
+    let bcc = (emailAttributes.bcc || []).filter((email: string) => email !== conversationContact);
 
     // Ensure only unique email addresses are in the CC list
     bcc = [...new Set(bcc)];
@@ -206,15 +209,24 @@ const BottomSheetContent = () => {
     }
   };
 
+  const handleTogglePrivateMode = () => {
+    if (replyEditorMode === REPLY_EDITOR_MODES.REPLY) {
+      hapticSelection?.();
+      dispatch(togglePrivateMessage(!isPrivate));
+    }
+  };
+
   // TODO: Implement this
-  const setReplyToInPayload = (messagePayload: Record<string, unknown>) => {
+  const setReplyToInPayload = (messagePayload: SendMessagePayload): SendMessagePayload => {
     //     ...(quoteMessage?.id && {
     //       contentAttributes: { inReplyTo: quoteMessage.id },
     //     }),
     return messagePayload;
   };
 
-  const getMessagePayload = (message: string, audioFile: File | null) => {
+  type MobileFileType = { uri: string; fileName: string; type: string };
+
+  const getMessagePayload = (message: string, audioFile: MobileFileType | null) => {
     let updatedMessage = message;
     if (isPrivate) {
       const regex = /@\[([\w\s]+)\]\((\d+)\)/g;
@@ -285,11 +297,11 @@ const BottomSheetContent = () => {
     return messagePayload;
   };
 
-  const onRecordingComplete = async (audioFile: File | null) => {
+  const onRecordingComplete = async (audioFile: MobileFileType | null) => {
     confirmOnSendReply(audioFile);
   };
 
-  const confirmOnSendReply = (audioFile: File | null) => {
+  const confirmOnSendReply = (audioFile: MobileFileType | null) => {
     hapticSelection?.();
     if (textInputRef && 'current' in textInputRef && textInputRef.current) {
       (textInputRef.current as TextInput).clear();
@@ -395,13 +407,7 @@ const BottomSheetContent = () => {
 
   return (
     <AnimatedKeyboardStickyView
-      style={[themedTailwind.style('bg-white'), animatedInputWrapperStyle]}
-    >
-      {!canReply && inbox && conversation && (
-        <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
-          <ReplyWarning inbox={inbox} conversation={conversation} />
-        </Animated.View>
-      )}
+      style={[themedTailwind.style('bg-solid-1'), animatedInputWrapperStyle]}>
       {shouldShowCannedResponses && (
         <CannedResponses searchKey={messageContent} onSelect={onSelectCannedResponse} />
       )}
@@ -409,9 +415,8 @@ const BottomSheetContent = () => {
       <Animated.View
         layout={LinearTransition.springify().damping(38).stiffness(240)}
         style={themedTailwind.style(
-          `pb-2 border-t-[1px] border-t-gray-200 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
-        )}
-      >
+          `pb-2 border-t-[1px] border-t-slate-6 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
+        )}>
         {quoteMessage && (
           <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
             <QuoteReply />s
@@ -439,7 +444,9 @@ const BottomSheetContent = () => {
             {attachmentsLength === 0 && shouldShowFileUpload && (
               <AddCommandButton
                 onPress={handleShowAddMenuOption}
-                derivedAddMenuOptionStateValue={derivedAddMenuOptionStateValue}
+                derivedAddMenuOptionStateValue={
+                  derivedAddMenuOptionStateValue as unknown as import('react-native-reanimated').SharedValue<number>
+                }
               />
             )}
             <MessageTextInput
@@ -449,6 +456,25 @@ const BottomSheetContent = () => {
               agents={agents as Agent[]}
               messageContent={messageContent}
             />
+            <Pressable
+              onPress={handleTogglePrivateMode}
+              disabled={replyEditorMode !== REPLY_EDITOR_MODES.REPLY}
+              hitSlop={4}
+              style={tailwind.style('flex items-center justify-center h-10 w-10')}>
+              {isPrivate ? (
+                <Lock
+                  size={20}
+                  strokeWidth={2}
+                  color={tailwind.color('text-amber-9') ?? '#FFC53D'}
+                />
+              ) : (
+                <LockOpen
+                  size={20}
+                  strokeWidth={2}
+                  color={tailwind.color('text-slate-11') ?? '#60646C'}
+                />
+              )}
+            </Pressable>
             {(messageContent.length > 0 || attachmentsLength > 0) && (
               <SendMessageButton onPress={() => confirmOnSendReply(null)} />
             )}

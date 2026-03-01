@@ -49,19 +49,17 @@ function SingleSelectChipsComponent({
             onPress={() => handleOptionPress(option.value)}
             style={themedStyles.style(
               'px-4 py-2 rounded-full border',
-              isSelected ? 'bg-brand-600 border-brand-600' : 'bg-white border-gray-300',
+              isSelected ? 'bg-brand border-brand' : 'bg-solid-1 border-slate-7',
             )}
             accessible
             accessibilityRole="button"
             accessibilityState={{ selected: isSelected }}
-            accessibilityLabel={option.label}
-          >
+            accessibilityLabel={option.label}>
             <Text
               style={themedStyles.style(
                 'text-sm font-medium',
-                isSelected ? 'text-white' : 'text-gray-900',
-              )}
-            >
+                isSelected ? 'text-white' : 'text-slate-12',
+              )}>
               {option.label}
             </Text>
           </TouchableOpacity>
@@ -84,7 +82,7 @@ function SingleSelectChipsComponent({
         </View>
       )}
 
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-2')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-2')}>{error}</Text>}
     </View>
   );
 }

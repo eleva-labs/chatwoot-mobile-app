@@ -16,8 +16,7 @@ const meta = {
           flex: 1,
           padding: 16,
           gap: 16,
-        }}
-      >
+        }}>
         <Story />
       </View>
     ),

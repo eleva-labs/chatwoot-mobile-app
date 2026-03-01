@@ -16,8 +16,9 @@ import { MAXIMUM_FILE_UPLOAD_SIZE } from '@/constants';
 import i18n from '@/i18n';
 import { showToast } from '@/utils/toastUtils';
 import { findFileSize } from '@/utils/fileUtils';
+import type { AppDispatch } from '@/store';
 
-export const handleOpenPhotosLibrary = async dispatch => {
+export const handleOpenPhotosLibrary = async (dispatch: AppDispatch) => {
   const pickedAssets = await launchImageLibrary({
     quality: 1,
     selectionLimit: 4,
@@ -52,7 +53,7 @@ export const handleOpenPhotosLibrary = async dispatch => {
   }
 };
 
-const handleLaunchCamera = async dispatch => {
+const handleLaunchCamera = async (dispatch: AppDispatch) => {
   request(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA).then(
     async result => {
       if (RESULTS.BLOCKED === result) {
@@ -111,7 +112,7 @@ const mapObject = (originalObject: DocumentPickerResponse): Asset[] => {
   ];
 };
 
-const handleAttachFile = async dispatch => {
+const handleAttachFile = async (dispatch: AppDispatch) => {
   try {
     const result = await DocumentPicker.pick({
       type: [
@@ -146,30 +147,42 @@ const handleAttachFile = async dispatch => {
 const ADD_MENU_OPTIONS = [
   {
     icon: <PhotosIcon />,
-    title: 'Photos',
+    key: 'photos',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.PHOTOS'),
     handlePress: handleOpenPhotosLibrary,
   },
   {
     icon: <CameraIcon />,
-    title: 'Camera',
+    key: 'camera',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.CAMERA'),
     handlePress: handleLaunchCamera,
   },
   {
     icon: <AttachFileIcon />,
-    title: 'Attach File',
+    key: 'attach_file',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.ATTACH_FILE'),
     handlePress: handleAttachFile,
   },
   {
     icon: <MacrosIcon />,
-    title: 'Macros',
+    key: 'macros',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.MACROS'),
     handlePress: () => {},
   },
 ];
 
-export const validateFileAndSetAttachments = async (dispatch, attachment) => {
-  const { fileSize } = attachment;
-  if (findFileSize(fileSize) <= MAXIMUM_FILE_UPLOAD_SIZE) {
-    dispatch(updateAttachments([attachment]));
+export const validateFileAndSetAttachments = async (
+  dispatch: AppDispatch,
+  attachment: Asset | DocumentPickerResponse | Record<string, unknown>,
+) => {
+  const fileSize =
+    'fileSize' in attachment
+      ? (attachment.fileSize as number | undefined)
+      : 'size' in attachment
+        ? (attachment.size as number | undefined)
+        : 0;
+  if (findFileSize(fileSize ?? 0) <= MAXIMUM_FILE_UPLOAD_SIZE) {
+    dispatch(updateAttachments([attachment as Asset]));
   } else {
     showToast({ message: i18n.t('CONVERSATION.FILE_SIZE_LIMIT') });
   }
@@ -191,7 +204,7 @@ const MenuOption = (props: MenuOptionProps) => {
   const handlePress = () => {
     hapticSelection?.();
     menuOption?.handlePress(dispatch);
-    if (menuOption.title === 'Macros') {
+    if (menuOption.key === 'macros') {
       macrosListSheetRef.current?.present();
     }
   };
@@ -205,10 +218,9 @@ const MenuOption = (props: MenuOptionProps) => {
           </Animated.View>
           <Text
             style={tailwind.style(
-              'text-base font-inter-normal-20 leading-[18px] tracking-[0.24px] text-gray-950 pl-5',
-            )}
-          >
-            {menuOption.title}
+              'text-base font-inter-normal-20 leading-[18px] tracking-[0.24px] text-slate-12 pl-5',
+            )}>
+            {menuOption.getTitle()}
           </Text>
         </Animated.View>
       </Pressable>
@@ -226,10 +238,9 @@ export const CommandOptionsMenu = () => {
     <Animated.View
       entering={SlideInDown.springify().damping(38).stiffness(240)}
       exiting={SlideOutDown.springify().damping(38).stiffness(240)}
-      style={tailwind.style('mx-1 pt-2 items-start', `h-[${containerHeight}px]`)}
-    >
+      style={tailwind.style('mx-1 pt-2 items-start', `h-[${containerHeight}px]`)}>
       {ADD_MENU_OPTIONS.map((menuOption, index) => {
-        return <MenuOption key={menuOption.title} {...{ menuOption, index }} />;
+        return <MenuOption key={menuOption.key} {...{ menuOption, index }} />;
       })}
     </Animated.View>
   );

@@ -3,9 +3,9 @@ import { Path, Svg } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const AttachFileIcon = ({ stroke = 'black' }: IconProps): JSX.Element => {
+export const AttachFileIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M14 2.27V6.4C14 6.96 14 7.24 14.109 7.454C14.2049 7.64215 14.3578 7.79513 14.546 7.891C14.76 8.001 15.04 8.001 15.6 8.001H19.73M12 18H8M14 14H8M4 14V17.2C4 18.88 4 19.72 4.327 20.362C4.61462 20.9265 5.07354 21.3854 5.638 21.673C6.28 22 7.12 22 8.8 22H15.2C16.88 22 17.72 22 18.362 21.673C18.9265 21.3854 19.3854 20.9265 19.673 20.362C20 19.72 20 18.88 20 17.2V9.988C20 9.254 20 8.888 19.918 8.542C19.8442 8.2359 19.7228 7.94332 19.558 7.675C19.372 7.372 19.113 7.113 18.595 6.594L15.405 3.406C14.887 2.887 14.628 2.628 14.325 2.443C14.056 2.278 13.764 2.156 13.458 2.083C13.112 2 12.745 2 12.012 2H8.8"
         stroke={stroke}

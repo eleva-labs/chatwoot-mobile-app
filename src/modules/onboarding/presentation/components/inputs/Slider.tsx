@@ -35,7 +35,7 @@ export function SliderInput({
     <View style={themedStyles.style('w-full')}>
       <View style={themedStyles.style('flex-row items-center justify-between mb-2')}>
         {showValue && (
-          <Text style={themedStyles.style('text-lg font-semibold text-gray-900')}>
+          <Text style={themedStyles.style('text-lg font-semibold text-slate-12')}>
             {value} {unit || ''}
           </Text>
         )}
@@ -47,9 +47,9 @@ export function SliderInput({
         minimumValue={min}
         maximumValue={max}
         step={step}
-        minimumTrackTintColor={themedStyles.color('bg-brand-600')}
-        maximumTrackTintColor={themedStyles.color('bg-gray-300')}
-        thumbTintColor={themedStyles.color('bg-brand-600')}
+        minimumTrackTintColor={themedStyles.color('bg-brand')}
+        maximumTrackTintColor={themedStyles.color('bg-slate-5')}
+        thumbTintColor={themedStyles.color('bg-brand')}
         accessible
         accessibilityRole="adjustable"
         accessibilityValue={{
@@ -60,15 +60,15 @@ export function SliderInput({
       />
 
       <View style={themedStyles.style('flex-row justify-between mt-1')}>
-        <Text style={themedStyles.style('text-xs text-gray-500')}>
+        <Text style={themedStyles.style('text-xs text-slate-9')}>
           {min} {unit || ''}
         </Text>
-        <Text style={themedStyles.style('text-xs text-gray-500')}>
+        <Text style={themedStyles.style('text-xs text-slate-9')}>
           {max} {unit || ''}
         </Text>
       </View>
 
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-2')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-2')}>{error}</Text>}
     </View>
   );
 }

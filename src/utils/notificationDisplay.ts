@@ -1,21 +1,30 @@
 import { Platform } from 'react-native';
-// Deprecated Notifee helpers are removed. This module left intentionally empty for now.
-import { Notification } from '@/types/Notification';
+import notifee, { AndroidImportance, AndroidVisibility, AndroidStyle } from '@notifee/react-native';
+
+type NotificationData = Record<string, string | number | object>;
 
 export const displayRichNotification = async (notification: {
   title: string;
   body: string;
-  data?: any;
+  data?: Record<string, unknown>;
   imageUrl?: string;
 }) => {
+  // Convert data to the expected type
+  const safeData: NotificationData | undefined = notification.data
+    ? (Object.fromEntries(
+        Object.entries(notification.data).filter(
+          ([, v]) => typeof v === 'string' || typeof v === 'number' || typeof v === 'object',
+        ),
+      ) as NotificationData)
+    : undefined;
+
   if (Platform.OS === 'ios') {
     await notifee.displayNotification({
       title: notification.title,
       body: notification.body,
-      data: notification.data,
+      data: safeData,
       ios: {
         sound: 'default',
-        badge: 1,
         attachments: notification.imageUrl
           ? [
               {
@@ -25,7 +34,6 @@ export const displayRichNotification = async (notification: {
             ]
           : undefined,
         foregroundPresentationOptions: {
-          badge: true,
           sound: true,
           banner: true,
           list: true,
@@ -44,7 +52,7 @@ export const displayRichNotification = async (notification: {
     await notifee.displayNotification({
       title: notification.title,
       body: notification.body,
-      data: notification.data,
+      data: safeData,
       android: {
         channelId,
         importance: AndroidImportance.HIGH,
@@ -54,7 +62,7 @@ export const displayRichNotification = async (notification: {
         largeIcon: notification.imageUrl,
         style: notification.imageUrl
           ? {
-              type: notifee.AndroidStyle.BIGPICTURE,
+              type: AndroidStyle.BIGPICTURE,
               picture: notification.imageUrl,
             }
           : undefined,

@@ -51,15 +51,14 @@ export function DatePicker({
       <TouchableOpacity
         onPress={() => setShowPicker(true)}
         style={themedStyles.style(
-          'w-full px-4 py-3 rounded-lg border bg-white',
-          error ? 'border-ruby-500' : 'border-gray-300',
+          'w-full px-4 py-3 rounded-lg border bg-solid-1',
+          error ? 'border-ruby-500' : 'border-slate-7',
         )}
         accessible
         accessibilityRole="button"
         accessibilityLabel="Date picker"
-        accessibilityHint="Tap to select a date"
-      >
-        <Text style={themedStyles.style('text-base', value ? 'text-gray-900' : 'text-gray-400')}>
+        accessibilityHint="Tap to select a date">
+        <Text style={themedStyles.style('text-base', value ? 'text-slate-12' : 'text-slate-9')}>
           {displayValue}
         </Text>
       </TouchableOpacity>

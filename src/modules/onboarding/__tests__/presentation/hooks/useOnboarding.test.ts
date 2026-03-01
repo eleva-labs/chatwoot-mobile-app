@@ -5,7 +5,6 @@
  * navigation, answers, submission, and event callbacks.
  */
 
-// @ts-expect-error - Testing library types are available at runtime
 // eslint-disable-next-line import/no-unresolved
 import { renderHook, act } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
@@ -110,7 +109,7 @@ describe('useOnboarding', () => {
       });
 
       const firstScreen = testData.flows.simple().getScreen(0);
-      expect(result.current.currentScreen?.id.toString()).toBe(firstScreen.id.toString());
+      expect(result.current.currentScreen?.id.toString()).toBe(firstScreen?.id.toString());
     });
 
     it('should call onFlowStarted callback', async () => {

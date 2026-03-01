@@ -1,0 +1,1 @@
+export { FirebasePerformanceTraceAdapter } from './FirebasePerformanceTraceAdapter';

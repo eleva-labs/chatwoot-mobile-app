@@ -65,7 +65,7 @@ export const ConversationHeader = () => {
 
   const hapticSuccess = useHaptic('success');
 
-  const headerBorderColor = tailwind.color('text-blackA-A3') as string;
+  const headerBorderColor = tailwind.color('text-slate-6') as string;
 
   const headerOpenState = useDerivedValue(() =>
     currentState !== 'none' && currentState !== 'Select' ? withSpring(1) : withSpring(0),
@@ -125,7 +125,8 @@ export const ConversationHeader = () => {
   };
 
   return (
-    <Animated.View style={[themedTailwind.style('border-b-[1px] bg-white'), headerBorderAnimation]}>
+    <Animated.View
+      style={[themedTailwind.style('border-b-[1px] bg-solid-1'), headerBorderAnimation]}>
       <ConversationHeaderPresenter
         currentState={currentState}
         isSelectedAll={isSelectedAll}

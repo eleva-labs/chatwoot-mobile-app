@@ -19,15 +19,14 @@ export const ExampleMessageBubble: React.FC<{
 
   return (
     <View
-      style={tailwind(
+      style={tailwind.style(
         'px-4 py-3 rounded-lg max-w-[80%] mb-2',
         isOutgoing ? 'bg-primary ml-auto' : 'bg-surface border border-border',
-      )}
-    >
-      <Text style={tailwind('text-sm', isOutgoing ? 'text-white' : 'text-foreground')}>
+      )}>
+      <Text style={tailwind.style('text-sm', isOutgoing ? 'text-white' : 'text-foreground')}>
         {message}
       </Text>
-      <Text style={tailwind('text-xs mt-1', isOutgoing ? 'text-white/70' : 'text-muted')}>
+      <Text style={tailwind.style('text-xs mt-1', isOutgoing ? 'text-white/70' : 'text-muted')}>
         {timestamp}
       </Text>
     </View>
@@ -70,10 +69,9 @@ export const ExampleButton: React.FC<{
 
   return (
     <TouchableOpacity
-      style={tailwind('px-4 py-3 rounded-lg items-center', getButtonStyles())}
-      onPress={onPress}
-    >
-      <Text style={tailwind('text-sm font-medium', getTextStyles())}>{title}</Text>
+      style={tailwind.style('px-4 py-3 rounded-lg items-center', getButtonStyles())}
+      onPress={onPress}>
+      <Text style={tailwind.style('text-sm font-medium', getTextStyles())}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -87,9 +85,9 @@ export const ExampleCard: React.FC<{
   const { tailwind } = useTheme();
 
   return (
-    <View style={tailwind('bg-surface border border-border rounded-lg p-4 mb-4')}>
-      <Text style={tailwind('text-lg font-semibold text-foreground mb-1')}>{title}</Text>
-      {subtitle && <Text style={tailwind('text-sm text-muted mb-3')}>{subtitle}</Text>}
+    <View style={tailwind.style('bg-surface border border-border rounded-lg p-4 mb-4')}>
+      <Text style={tailwind.style('text-lg font-semibold text-foreground mb-1')}>{title}</Text>
+      {subtitle && <Text style={tailwind.style('text-sm text-muted mb-3')}>{subtitle}</Text>}
       {children}
     </View>
   );
@@ -105,22 +103,21 @@ export const ExampleInput: React.FC<{
   const { tailwind } = useTheme();
 
   return (
-    <View style={tailwind('mb-4')}>
+    <View style={tailwind.style('mb-4')}>
       <View
-        style={tailwind(
+        style={tailwind.style(
           'bg-input border rounded-lg px-3 py-2',
           error ? 'border-destructive' : 'border-input-border',
-        )}
-      >
+        )}>
         <TextInput
-          style={tailwind('text-foreground text-base')}
+          style={tailwind.style('text-foreground text-base')}
           placeholder={placeholder}
-          placeholderTextColor={tailwind('text-muted').color}
+          placeholderTextColor={tailwind.color('text-muted')}
           value={value}
           onChangeText={onChangeText}
         />
       </View>
-      {error && <Text style={tailwind('text-destructive text-sm mt-1')}>{error}</Text>}
+      {error && <Text style={tailwind.style('text-destructive text-sm mt-1')}>{error}</Text>}
     </View>
   );
 };
@@ -148,9 +145,9 @@ export const ExampleStatusIndicator: React.FC<{
   };
 
   return (
-    <View style={tailwind('flex-row items-center')}>
-      <View style={tailwind('w-3 h-3 rounded-full mr-2', getStatusColor())} />
-      <Text style={tailwind('text-sm text-foreground')}>{label}</Text>
+    <View style={tailwind.style('flex-row items-center')}>
+      <View style={tailwind.style('w-3 h-3 rounded-full mr-2', getStatusColor())} />
+      <Text style={tailwind.style('text-sm text-foreground')}>{label}</Text>
     </View>
   );
 };

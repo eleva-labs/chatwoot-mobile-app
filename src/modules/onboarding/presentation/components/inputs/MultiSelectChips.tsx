@@ -61,10 +61,10 @@ function MultiSelectChipsComponent({
             style={themedStyles.style(
               'px-4 py-2 rounded-full border',
               isSelected
-                ? 'bg-brand-600 border-brand-600'
+                ? 'bg-brand border-brand'
                 : isDisabled
-                  ? 'bg-gray-100 border-gray-200 opacity-50'
-                  : 'bg-white border-gray-300',
+                  ? 'bg-slate-3 border-slate-6 opacity-50'
+                  : 'bg-solid-1 border-slate-7',
             )}
             accessible
             accessibilityRole="checkbox"
@@ -72,14 +72,12 @@ function MultiSelectChipsComponent({
               checked: isSelected,
               disabled: isDisabled,
             }}
-            accessibilityLabel={option.label}
-          >
+            accessibilityLabel={option.label}>
             <Text
               style={themedStyles.style(
                 'text-sm font-medium',
-                isSelected ? 'text-white' : 'text-gray-900',
-              )}
-            >
+                isSelected ? 'text-white' : 'text-slate-12',
+              )}>
               {option.label}
             </Text>
           </TouchableOpacity>
@@ -93,12 +91,12 @@ function MultiSelectChipsComponent({
       <View style={themedStyles.style('flex-row flex-wrap gap-2')}>{renderedOptions}</View>
 
       {maxSelection && (
-        <Text style={themedStyles.style('text-gray-500 text-xs mt-2')}>
+        <Text style={themedStyles.style('text-slate-9 text-xs mt-2')}>
           {value?.length || 0} / {maxSelection} selected
         </Text>
       )}
 
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-2')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-2')}>{error}</Text>}
     </View>
   );
 }

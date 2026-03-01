@@ -17,19 +17,30 @@ const isValidSize = (size: Size): boolean => {
 
 const defaultAnchorPoint = { x: 0.5, y: 0.5 };
 
+// Type for the transform array items
+type TransformItem =
+  | { translateX: number }
+  | { translateY: number }
+  | { rotate: string }
+  | { scale: number }
+  | Record<string, number | string>;
+
 export const withAnchorPoint = (transform: TransformsStyle, anchorPoint: Point, size: Size) => {
   'worklet';
   if (!isValidSize(size)) {
     return transform;
   }
 
-  let injectedTransform = transform.transform;
-  if (!injectedTransform) {
+  const originalTransform = transform.transform;
+  if (!originalTransform || typeof originalTransform === 'string') {
     return transform;
   }
 
+  // Work with a mutable copy of the transform array
+  let injectedTransform: TransformItem[] = [...originalTransform] as TransformItem[];
+
   if (anchorPoint.x !== defaultAnchorPoint.x && size.width) {
-    const shiftTranslateX = [];
+    const shiftTranslateX: TransformItem[] = [];
 
     // shift before rotation
     shiftTranslateX.push({
@@ -42,12 +53,8 @@ export const withAnchorPoint = (transform: TransformsStyle, anchorPoint: Point, 
     });
   }
 
-  if (!Array.isArray(injectedTransform)) {
-    return { transform: injectedTransform };
-  }
-
   if (anchorPoint.y !== defaultAnchorPoint.y && size.height) {
-    const shiftTranslateY = [];
+    const shiftTranslateY: TransformItem[] = [];
     // shift before rotation
     shiftTranslateY.push({
       translateY: size.height * (anchorPoint.y - defaultAnchorPoint.y),

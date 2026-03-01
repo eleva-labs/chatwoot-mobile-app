@@ -11,6 +11,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import { TEXT_INPUT_CONTAINER_HEIGHT } from '@/constants';
 import { useChatWindowContext } from '@/context';
+import i18n from '@/i18n';
 import { SendIcon, Trash } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { Icon } from '@/components-next';
@@ -59,11 +60,13 @@ const millisecondsToTimeString = (milliseconds: number | undefined) => {
   return `${minutesString}:${secondsString}`;
 };
 
+type MobileAudioFileType = { uri: string; fileName: string; type: string };
+
 export const AudioRecorder = ({
   onRecordingComplete,
   audioFormat,
 }: {
-  onRecordingComplete: (audioFile: File) => void;
+  onRecordingComplete: (audioFile: MobileAudioFileType | null) => void;
   audioFormat: 'audio/m4a' | 'audio/wav';
 }) => {
   const localRecordedAudioCacheFilePaths = useAppSelector(selectLocalRecordedAudioCacheFilePaths);
@@ -121,7 +124,7 @@ export const AudioRecorder = ({
         })
         .catch(error => {
           Alert.alert(
-            'Error preparing audio file',
+            i18n.t('AUDIO.PREPARE_ERROR'),
             error instanceof Error ? error.message : String(error),
           );
           deleteRecorder();
@@ -191,18 +194,18 @@ export const AudioRecorder = ({
           const audioFile = await createAudioFile(value);
           dispatch(addNewCachePath(audioFile.originalPath));
           setIsVoiceRecorderOpen(false);
-          onRecordingComplete(audioFile as unknown as File);
+          onRecordingComplete(audioFile as MobileAudioFileType);
         } catch (error) {
           Sentry.captureException(error);
           Alert.alert(
-            'Error preparing audio file',
+            i18n.t('AUDIO.PREPARE_ERROR'),
             error instanceof Error ? error.message : String(error),
           );
         }
       })
       .catch(e => {
         console.error('Recording error:', e);
-        Alert.alert('Recording Error', e.toString());
+        Alert.alert(i18n.t('AUDIO.RECORDING_ERROR'), e.toString());
       })
       .finally(() => {
         setIsSending(false);
@@ -226,20 +229,17 @@ export const AudioRecorder = ({
       style={tailwind.style(
         'px-1 flex flex-row items-center overflow-hidden',
         `max-h-[${TEXT_INPUT_CONTAINER_HEIGHT}px]`,
-      )}
-    >
+      )}>
       <Pressable
         onPress={deleteRecorder}
-        style={tailwind.style('h-10 w-10 flex items-center justify-center')}
-      >
+        style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
         <Icon icon={<Trash />} size={28} />
       </Pressable>
       <Animated.View
         style={tailwind.style(
-          'bg-blue-800 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
+          'bg-iris-9 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
           `w-[${RecorderSegmentWidth}px]`,
-        )}
-      >
+        )}>
         <Pressable onPress={toggleRecorder} hitSlop={12}>
           {isAudioRecording ? (
             <Animated.View>
@@ -254,21 +254,16 @@ export const AudioRecorder = ({
         <Animated.Text
           style={tailwind.style(
             'text-xs leading-[14px] font-inter-420-20 tracking-[0.32px] text-whiteA-A12',
-          )}
-        >
+          )}>
           {millisecondsToTimeString(recorderData?.currentPosition)}
         </Animated.Text>
       </Animated.View>
       <Pressable
         disabled={isSending}
         onPress={sendRecordedMessage}
-        style={tailwind.style('h-10 w-10 flex items-center justify-center')}
-      >
+        style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
         <Animated.View
-          style={tailwind.style(
-            'flex items-center justify-center h-7 w-7 rounded-full bg-blue-800',
-          )}
-        >
+          style={tailwind.style('flex items-center justify-center h-7 w-7 rounded-full bg-iris-9')}>
           <Icon icon={<SendIcon />} size={16} />
         </Animated.View>
       </Pressable>

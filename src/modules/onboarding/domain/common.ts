@@ -142,7 +142,7 @@ export interface SelectOption {
 /**
  * Answer value type (can be various types)
  */
-export type AnswerValue = string | number | string[] | number[] | Date | null;
+export type AnswerValue = string | number | boolean | string[] | number[] | Date | null | undefined;
 
 /**
  * Answers map - question ID to answer value

@@ -1,11 +1,9 @@
 import React from 'react';
 import Animated, { LinearTransition, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
-import { Icon } from '@/components-next/common';
-import { AddIcon } from '@/svg-icons';
+import { Plus } from 'lucide-react-native';
 import { useScaleAnimation } from '@/utils';
 import { tailwind } from '@/theme';
-import { useTheme } from '@/context';
 import { AddCommandButtonProps } from '../types';
 
 export const AddCommandButton = ({
@@ -13,7 +11,6 @@ export const AddCommandButton = ({
   ...otherProps
 }: AddCommandButtonProps) => {
   const { animatedStyle, handlers } = useScaleAnimation();
-  const { isDark } = useTheme();
 
   const addIconAnimation = useAnimatedStyle(() => {
     return {
@@ -28,20 +25,17 @@ export const AddCommandButton = ({
   return (
     <Animated.View
       layout={LinearTransition.springify().damping(20).stiffness(180)}
-      style={animatedStyle}
-    >
+      style={animatedStyle}>
       <Pressable
         {...otherProps}
         style={({ pressed }) => [tailwind.style(pressed ? 'opacity-70' : '')]}
-        {...handlers}
-      >
+        {...handlers}>
         <Animated.View
           style={[
             tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
             addIconAnimation,
-          ]}
-        >
-          <Icon icon={<AddIcon stroke={isDark ? '#FFFFFF' : undefined} />} size={24} />
+          ]}>
+          <Plus size={20} strokeWidth={2} color={tailwind.color('text-slate-11') ?? '#60646C'} />
         </Animated.View>
       </Pressable>
     </Animated.View>

@@ -356,8 +356,60 @@ When adding new theme features:
 4. **Test thoroughly** in both light and dark modes
 5. **Ensure consistency** with the web application
 
+## Token System
+
+### Overview
+
+The theme system now includes a token architecture for co-locating styles with features. Base types are defined centrally, while feature-specific tokens live with their components.
+
+### Architecture
+
+```
+src/theme/colors/tokens/
+├── base.ts         # Base token interfaces
+└── index.ts        # Token exports
+
+src/components-next/<feature>/styles/
+├── tokens.ts       # Feature-specific tokens
+├── use<Feature>Styles.ts  # Feature styling hook
+└── index.ts        # Exports
+```
+
+### Base Token Types
+
+Available in `@/theme/colors/tokens`:
+
+- `BaseMessageTokens` - Message bubble styling (background, text, border)
+- `BaseTextTokens` - Text hierarchy (primary, secondary, muted, link)
+- `BaseStatusTokens` - Status indicators (success, warning, error, info)
+- `BaseInteractiveTokens` - Interactive elements (default, hover, active, disabled)
+- `BaseCollapsibleTokens` - Expandable sections (border, background, icon, label, chevron)
+
+### Using Feature Tokens
+
+```typescript
+// Example: AI Assistant styles
+import { useAIStyles } from '@/components-next/ai-assistant/styles';
+
+function MyComponent({ role }) {
+  const { style, tokens, message, getCollapsible } = useAIStyles();
+  const msgTokens = message(role);
+
+  return (
+    <View style={style(msgTokens.background, 'rounded-xl p-3')}>
+      <Text style={style(msgTokens.text)}>Hello</Text>
+    </View>
+  );
+}
+```
+
+### Creating New Feature Tokens
+
+See [MIGRATION.md](./MIGRATION.md) for detailed instructions on creating tokens for new features.
+
 ## Resources
 
+- [Migration Guide](./MIGRATION.md)
 - [Web Application Colors](./docs/ignore/dark-mode.md)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [React Native Styling](https://reactnative.dev/docs/style)

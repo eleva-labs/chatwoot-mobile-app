@@ -4,7 +4,7 @@ import AutoHeightWebView from 'react-native-autoheight-webview';
 
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, MessageType } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 
 import { MESSAGE_STATUS } from '@/constants';
 import { DeliveryStatus } from './DeliveryStatus';
@@ -54,9 +54,9 @@ export const Email = (props: EmailProps) => {
     <Animated.View
       style={[
         tailwind.style(
-          'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden bg-gray-100',
+          'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden bg-slate-3',
           `max-w-[${WIDTH}px]`,
-          isMessageFailed ? 'bg-ruby-700' : '',
+          isMessageFailed ? 'bg-ruby-5' : '',
           isAvatarRendered
             ? isOutgoing
               ? 'rounded-br-none'
@@ -65,10 +65,9 @@ export const Email = (props: EmailProps) => {
                 : ''
             : '',
         ),
-      ]}
-    >
+      ]}>
       {contentAttributes && <EmailMeta {...{ contentAttributes, sender }} />}
-      <Animated.View style={[tailwind.style('flex bg-white rounded-2xl w-full')]}>
+      <Animated.View style={[tailwind.style('flex bg-solid-1 rounded-2xl w-full')]}>
         <Animated.View style={tailwind.style('px-4 py-2 w-full')}>
           <AutoHeightWebView
             style={{ width: '100%', minHeight: 1, minWidth: '100%' }}
@@ -90,15 +89,13 @@ export const Email = (props: EmailProps) => {
         </Animated.View>
       </Animated.View>
       <Animated.View
-        style={tailwind.style('h-[21px] pt-[6px] pb-0.5 flex flex-row items-center justify-end')}
-      >
+        style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
         <Text
           style={tailwind.style(
-            'text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-gray-700',
+            'text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-slate-11',
             isMessageFailed ? 'text-whiteA-A11' : '',
-          )}
-        >
-          {unixTimestampToReadableTime(timeStamp)}
+          )}>
+          {messageTimestamp(timeStamp)}
         </Text>
         <DeliveryStatus
           isPrivate={isPrivate}
@@ -107,8 +104,8 @@ export const Email = (props: EmailProps) => {
           channel={channel}
           sourceId={sourceId}
           errorMessage={errorMessage}
-          deliveredColor="text-gray-700"
-          sentColor="text-gray-700"
+          deliveredColor="text-slate-11"
+          sentColor="text-slate-11"
         />
       </Animated.View>
     </Animated.View>

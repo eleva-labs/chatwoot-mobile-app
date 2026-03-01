@@ -6,6 +6,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import { FileIcon } from '@/svg-icons';
 import { tailwind } from '@/theme';
+import i18n from '@/i18n';
 import { Icon } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { MESSAGE_VARIANTS } from '@/constants';
@@ -26,7 +27,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
     try {
       FileViewer.open(localFilePath).catch(e => Alert.alert(e));
     } catch (e) {
-      Alert.alert('Not able to preview file' + e);
+      Alert.alert(i18n.t('FILES.PREVIEW_ERROR') + e);
     }
   };
 
@@ -47,7 +48,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
               setFileDownload(false);
             })
             .catch(() => {
-              Alert.alert('File load error');
+              Alert.alert(i18n.t('FILES.LOAD_ERROR'));
             });
         }
       });
@@ -64,7 +65,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
             stroke={
               variant === MESSAGE_VARIANTS.USER
                 ? tailwind.color('text-white')
-                : tailwind.color('bg-brand-600')
+                : tailwind.color('bg-brand')
             }
           />
         </Animated.View>
@@ -76,8 +77,8 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
               <FileIcon
                 fill={
                   variant === MESSAGE_VARIANTS.USER
-                    ? tailwind.color('bg-white')
-                    : tailwind.color('text-brand-600')
+                    ? tailwind.color('bg-solid-1')
+                    : tailwind.color('text-brand')
                 }
               />
             }
@@ -98,12 +99,11 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
                 variant === MESSAGE_VARIANTS.USER
                   ? 'text-white'
                   : variant === MESSAGE_VARIANTS.AGENT
-                    ? 'text-gray-700'
+                    ? 'text-slate-11'
                     : '',
               ),
               style.androidTextOnlyStyle,
-            ]}
-          >
+            ]}>
             {fileName}
           </Animated.Text>
           <Animated.View
@@ -111,7 +111,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
               tailwind.style(
                 'border-b-[1px] absolute left-0 right-0 ios:bottom-[1px] android:bottom-0',
                 variant === MESSAGE_VARIANTS.USER ? 'border-white' : '',
-                variant === MESSAGE_VARIANTS.AGENT ? 'border-brand-600' : '',
+                variant === MESSAGE_VARIANTS.AGENT ? 'border-brand' : '',
               ),
             ]}
           />

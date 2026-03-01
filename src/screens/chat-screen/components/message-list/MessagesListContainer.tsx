@@ -16,13 +16,13 @@ import { selectAttachments } from '@/store/conversation/sendMessageSlice';
 import { Animated } from 'react-native';
 import { getGroupedMessages, isAnEmailChannel } from '@/utils';
 import { MessagesList } from './MessagesList';
-import tailwind from 'twrnc';
 import { conversationParticipantActions } from '@/store/conversation-participant/conversationParticipantActions';
 import { MESSAGE_TYPES, SCREENS } from '@/constants';
 import { Message } from '@/types';
 import { selectInboxById } from '@/store/inbox/inboxSelectors';
 import { selectUserId } from '@/store/auth/authSelectors';
 import { getCurrentRouteName } from '@/utils/navigationUtils';
+import { ReplyWarning } from '../reply-box/ReplyWarning';
 
 type DateSeparator = { date: string; type: 'date' };
 type MessageOrDate = Message | DateSeparator;
@@ -169,11 +169,15 @@ export const MessagesListContainer = () => {
   const isEmailInbox = isAnEmailChannel(inbox);
   const userId = useAppSelector(selectUserId);
 
+  const canReply = conversation?.canReply;
+
   return (
     <PlatformSpecificKeyboardWrapperComponent
-      style={themedTailwind.style('flex-1 bg-white')}
-      interpolator="linear"
-    >
+      style={themedTailwind.style('flex-1 bg-solid-1')}
+      interpolator="linear">
+      {!canReply && inbox && conversation && (
+        <ReplyWarning inbox={inbox} conversation={conversation} />
+      )}
       <MessagesList
         messages={messagesWithGrouping}
         isFlashListReady={isFlashListReady}

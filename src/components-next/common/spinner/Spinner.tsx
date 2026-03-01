@@ -9,7 +9,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import tailwind from 'twrnc';
+import { tailwind } from '@/theme';
 
 import { LoadingIcon } from '@/svg-icons';
 import { withAnchorPoint } from '@/utils';
@@ -42,15 +42,18 @@ export const Spinner = (props: SpinnerProps) => {
       { x: 0.5, y: 0.5 },
       { width: size, height: size },
     );
-    return { ...transforms };
+    return transforms as { transform: { rotate: string }[] };
   });
 
   return (
     <Animated.View
       entering={FadeIn}
       exiting={FadeOut}
-      style={[tailwind.style('flex items-center justify-center'), animatedStyle, style]}
-    >
+      style={[
+        tailwind.style('flex items-center justify-center'),
+        animatedStyle as ViewProps['style'],
+        style,
+      ]}>
       <Icon icon={<LoadingIcon stroke={stroke} />} size={size} />
     </Animated.View>
   );

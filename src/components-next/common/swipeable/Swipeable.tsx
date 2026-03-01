@@ -95,12 +95,12 @@ export type SwipeableProps = {
   noOfPointers?: number;
   /**
    * Background color for the left swipeable element
-   * @default 'bg-brand-600'
+   * @default 'bg-brand'
    */
   leftElementBgColor?: string;
   /**
    * Background color for the right swipeable element
-   * @default 'bg-green-800'
+   * @default 'bg-teal-9'
    */
   rightElementBgColor?: string;
 };
@@ -122,8 +122,8 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
     spacing,
     triggerOverswipeOnFlick = false,
     noOfPointers = 1,
-    leftElementBgColor = 'bg-brand-600',
-    rightElementBgColor = 'bg-green-800',
+    leftElementBgColor = 'bg-brand',
+    rightElementBgColor = 'bg-teal-9',
   } = props;
 
   const hapticWarning = useHaptic('success');
@@ -133,7 +133,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
   const isGestureActive = useSharedValue(false);
 
   const maxTranslation = WIDTH * 0.6;
-  const tappedBgStyle = tailwind.color('bg-gray-200') as string;
+  const tappedBgStyle = tailwind.color('bg-slate-4') as string;
   const maxSnapPointLeft = -maxTranslation;
   const maxSnapPointRight = maxTranslation;
 
@@ -452,8 +452,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
           StyleSheet.absoluteFillObject,
           tailwind.style('flex justify-center items-start', leftElementBgColor),
           leftStyle,
-        ]}
-      >
+        ]}>
         <AnimatedNativeView style={[tailwind.style(`pl-[${spacing}px]`), leftTranslation]}>
           {leftElement}
         </AnimatedNativeView>
@@ -464,8 +463,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
           StyleSheet.absoluteFillObject,
           tailwind.style('flex justify-center items-end', rightElementBgColor),
           rightStyle,
-        ]}
-      >
+        ]}>
         <AnimatedNativeView style={[tailwind.style(`pr-[${spacing}px]`), rightTranslation]}>
           {rightElement}
         </AnimatedNativeView>
@@ -481,8 +479,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
               : FadeIn
           }
           layout={LinearTransition.springify().damping(28).stiffness(200)}
-          style={[tailwind.style('flex-1 z-10', `w-[${WIDTH}px]`), overlayStyle, tappedCellStyle]}
-        >
+          style={[tailwind.style('flex-1 z-10', `w-[${WIDTH}px]`), overlayStyle, tappedCellStyle]}>
           {children}
         </AnimatedNativeView>
       </GestureDetector>

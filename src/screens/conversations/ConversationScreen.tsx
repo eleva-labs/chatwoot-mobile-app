@@ -24,7 +24,8 @@ import {
 } from './components';
 
 import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
-import { FloatingAIAssistant } from '@/components-next/ai-assistant';
+// AI assistant FAB disabled — not yet ready for production
+// import { FloatingAIAssistant } from '@/presentation';
 
 import { EmptyStateIcon } from '@/svg-icons';
 import {
@@ -149,8 +150,7 @@ const ConversationList = () => {
         style={tailwind.style(
           'flex-1 items-center justify-center pt-8',
           `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}
-      >
+        )}>
         {isAllConversationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -246,8 +246,7 @@ const ConversationList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}
-    >
+      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
       <ActivityIndicator />
     </Animated.View>
   ) : allConversations.length === 0 ? (
@@ -256,10 +255,9 @@ const ConversationList = () => {
       contentContainerStyle={tailwind.style(
         'flex-1 items-center justify-center',
         `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}
-    >
+      )}>
       <EmptyStateIcon />
-      <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
+      <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-slate-12')}>
         {i18n.t('CONVERSATION.EMPTY')}
       </Animated.Text>
     </Animated.ScrollView>
@@ -322,13 +320,11 @@ const ConversationScreen = () => {
   }, [currentBottomSheet]);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={themedTailwind.color('bg-white')}
+        backgroundColor={themedTailwind.color('bg-solid-1')}
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        navigationBarColor={themedTailwind.color('bg-white')}
-        navigationBarHidden={false}
       />
       <ConversationListStateProvider>
         <ConversationHeader />
@@ -341,11 +337,11 @@ const ConversationScreen = () => {
           )}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
+          backgroundStyle={themedTailwind.style('bg-solid-1')}
           animationConfigs={animationConfigs}
           enablePanDownToClose
           snapPoints={filterSnapPoints}
-          onDismiss={handleOnDismiss}
-        >
+          onDismiss={handleOnDismiss}>
           <BottomSheetWrapper>
             {currentBottomSheet === 'status' ? <StatusFilters /> : null}
             {currentBottomSheet === 'sort_by' ? <SortByFilters /> : null}
@@ -355,7 +351,8 @@ const ConversationScreen = () => {
         </BottomSheetModal>
         <ActionBottomSheet />
         <ActionTabs />
-        <FloatingAIAssistant />
+        {/* AI assistant FAB disabled — not yet ready for production */}
+        {/* <FloatingAIAssistant /> */}
       </ConversationListStateProvider>
     </SafeAreaView>
   );

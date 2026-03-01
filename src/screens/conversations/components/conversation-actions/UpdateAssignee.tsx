@@ -41,16 +41,14 @@ const AssigneeCell = (props: AssigneeCellProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !lastItem ? 'border-b-[1px] border-blackA-A3' : '',
-        )}
-      >
+          !lastItem ? 'border-b-[1px] border-slate-6' : '',
+        )}>
         <Animated.Text
           style={[
             tailwind.style(
-              'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
             ),
-          ]}
-        >
+          ]}>
           {agent.name}
         </Animated.Text>
         {assigneeId === agent.id ? <Icon icon={<TickIcon />} size={20} /> : null}
@@ -156,8 +154,7 @@ export const UpdateAssignee = () => {
 
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
-        style={tailwind.style('my-1 pl-3')}
-      >
+        style={tailwind.style('my-1 pl-3')}>
         {isFetching ? (
           <ActivityIndicator />
         ) : (
@@ -165,23 +162,20 @@ export const UpdateAssignee = () => {
             {!isSelfAssign && (
               <Pressable
                 style={tailwind.style('flex flex-row items-center')}
-                onPress={() => handleAssigneePress(selfAgent as Agent)}
-              >
+                onPress={() => handleAssigneePress(selfAgent as Agent)}>
                 <Animated.View style={tailwind.style('p-0.5')}>
                   <Icon icon={<SelfAssign />} size={24} />
                 </Animated.View>
                 <Animated.View
                   style={tailwind.style(
-                    'flex-1 ml-3 flex-row justify-between py-[11px] pr-3 border-b-[1px] border-blackA-A3',
-                  )}
-                >
+                    'flex-1 ml-3 flex-row justify-between py-[11px] pr-3 border-b-[1px] border-slate-6',
+                  )}>
                   <Animated.Text
                     style={[
                       tailwind.style(
-                        'text-base text-blue-800 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+                        'text-base text-iris-11 font-inter-420-20 leading-[21px] tracking-[0.16px]',
                       ),
-                    ]}
-                  >
+                    ]}>
                     {i18n.t('CONVERSATION.SELF_ASSIGN')}
                   </Animated.Text>
                 </Animated.View>

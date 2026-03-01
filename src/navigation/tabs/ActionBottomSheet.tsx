@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
-import tailwind from 'twrnc';
+import { tailwind } from '@/theme';
 import { BottomSheetBackdrop } from '@/components-next';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import {
@@ -8,7 +8,7 @@ import {
   selectCurrentActionState,
 } from '@/store/conversation/conversationActionSlice';
 
-import { useRefsContext, useTheme } from '@/context';
+import { useRefsContext } from '@/context';
 import { useThemedStyles } from '@/hooks';
 import {
   UpdateAssignee,
@@ -21,7 +21,6 @@ import {
 const ActionBottomSheet = () => {
   const dispatch = useAppDispatch();
   const currentActionState = useAppSelector(selectCurrentActionState);
-  const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
 
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -57,15 +56,14 @@ const ActionBottomSheet = () => {
     <BottomSheetModal
       ref={actionsModalSheetRef}
       backdropComponent={BottomSheetBackdrop}
-      handleIndicatorStyle={tailwind.style('overflow-hidden w-8 h-1 rounded-[11px]')}
+      handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
       handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
       style={tailwind.style('rounded-[26px] overflow-hidden')}
-      backgroundStyle={themedTailwind.style('bg-black')}
+      backgroundStyle={themedTailwind.style('bg-solid-1')}
       animationConfigs={animationConfigs}
       enablePanDownToClose
       snapPoints={actionSnapPoints}
-      onDismiss={handleOnDismiss}
-    >
+      onDismiss={handleOnDismiss}>
       {currentActionState === 'Assign' ? <UpdateAssignee /> : null}
       {currentActionState === 'TeamAssign' ? <UpdateTeam /> : null}
       {currentActionState === 'Status' ? <UpdateStatus /> : null}

@@ -1,17 +1,14 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import { Pressable } from 'react-native';
-import { Icon } from '@/components-next/common';
-import { VoiceNote } from '@/svg-icons';
+import { Mic } from 'lucide-react-native';
 import { useScaleAnimation } from '@/utils';
 import { tailwind } from '@/theme';
-import { useTheme } from '@/context';
 import { VoiceRecordButtonProps } from '../types';
 import { voiceNoteIconEnterAnimation, voiceNoteIconExitAnimation } from '@/utils/customAnimations';
 
 export const VoiceRecordButton = (props: VoiceRecordButtonProps) => {
   const { animatedStyle, handlers } = useScaleAnimation();
-  const { isDark } = useTheme();
 
   return (
     <Pressable {...props} {...handlers}>
@@ -21,9 +18,8 @@ export const VoiceRecordButton = (props: VoiceRecordButtonProps) => {
         style={[
           tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
           animatedStyle,
-        ]}
-      >
-        <Icon icon={<VoiceNote stroke={isDark ? '#FFFFFF' : undefined} />} size={24} />
+        ]}>
+        <Mic size={20} strokeWidth={2} color={tailwind.color('text-slate-11') ?? '#60646C'} />
       </Animated.View>
     </Pressable>
   );

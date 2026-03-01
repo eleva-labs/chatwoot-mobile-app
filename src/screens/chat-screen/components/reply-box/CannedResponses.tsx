@@ -25,13 +25,12 @@ const CannedResponseItem = ({
     <Pressable
       onPress={() => onSelect(item)}
       style={tailwind.style(
-        'w-full flex-row justify-between items-center border-b border-gray-200 py-3 px-4',
-      )}
-    >
-      <Animated.Text numberOfLines={1} style={tailwind.style('text-md flex-1 text-gray-950')}>
+        'w-full flex-row justify-between items-center border-b border-slate-6 py-3 px-4',
+      )}>
+      <Animated.Text numberOfLines={1} style={tailwind.style('text-md flex-1 text-slate-12')}>
         {item.content.replace(/\n/g, ' ')}
       </Animated.Text>
-      <Animated.Text style={tailwind.style('text-sm text-gray-900 ml-2')}>
+      <Animated.Text style={tailwind.style('text-sm text-slate-12 ml-2')}>
         {`/${item.shortCode}`}
       </Animated.Text>
     </Pressable>
@@ -56,10 +55,9 @@ export const CannedResponses = (props: CannedResponsesProps) => {
     <Animated.View
       style={[
         tailwind.style(
-          'left-0 right-0 bg-white border-t border-gray-200 max-h-[180px] relative bottom-0 h-[180px]',
+          'left-0 right-0 bg-solid-1 border-t border-slate-6 max-h-[180px] relative bottom-0 h-[180px]',
         ),
-      ]}
-    >
+      ]}>
       <FlashList
         data={cannedResponses}
         renderItem={({ item }) => <CannedResponseItem item={item} onSelect={props.onSelect} />}

@@ -25,7 +25,7 @@ export enum MessageType {
   'template',
 }
 
-export type MessageStatus = 'sent' | 'delivered' | 'read' | 'failed';
+export type MessageStatus = 'sent' | 'delivered' | 'read' | 'failed' | 'progress';
 
 export type ImageMetadata = {
   id: number;

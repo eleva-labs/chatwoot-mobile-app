@@ -11,7 +11,7 @@ import i18n from '@/i18n';
 import { openNumber, openEmail } from '@/utils/urlUtils';
 
 type ContactOption = {
-  contactType: 'call' | 'email';
+  contactType: string;
   icon: React.ReactNode;
 };
 
@@ -39,21 +39,19 @@ const ContactOptionComponent = (props: ContactOptionProps) => {
       <Pressable
         style={({ pressed }) => [
           tailwind.style(
-            'flex items-center justify-center flex-1 rounded-xl bg-gray-50 py-3',
+            'flex items-center justify-center flex-1 rounded-xl bg-slate-2 py-3',
             `w-[${OPTION_WIDTH}px]`,
-            pressed ? 'bg-gray-100' : '',
+            pressed ? 'bg-slate-3' : '',
           ),
         ]}
         onPress={handleOnPress}
-        {...handlers}
-      >
+        {...handlers}>
         <Icon icon={option.icon} size={24} />
         <Animated.Text
           numberOfLines={1}
           style={tailwind.style(
-            'text-cxs font-inter-medium-24 leading-[15px] tracking-[0.32px] text-center text-blue-800 pt-2',
-          )}
-        >
+            'text-cxs font-inter-medium-24 leading-[15px] tracking-[0.32px] text-center text-iris-11 pt-2',
+          )}>
           {option.contactType}
         </Animated.Text>
       </Pressable>
@@ -70,11 +68,11 @@ export const ContactBasicActions = (props: ContactBasicActionsProps) => {
   const { phoneNumber, email } = props;
 
   const onCallPress = () => {
-    openNumber({ phoneNumber });
+    if (phoneNumber) openNumber({ phoneNumber });
   };
 
   const onEmailPress = () => {
-    openEmail({ email });
+    if (email) openEmail({ email });
   };
 
   if (!email && !phoneNumber) {
@@ -88,7 +86,7 @@ export const ContactBasicActions = (props: ContactBasicActionsProps) => {
           key="email"
           option={{
             contactType: i18n.t('CONTACT_DETAILS.EMAIL'),
-            icon: <MailIcon strokeWidth={2} stroke={tailwind.color('bg-blue-800')} />,
+            icon: <MailIcon strokeWidth={2} stroke={tailwind.color('text-iris-11')} />,
           }}
           handleOptionPress={onEmailPress}
         />
@@ -96,7 +94,7 @@ export const ContactBasicActions = (props: ContactBasicActionsProps) => {
           key="phoneNumber"
           option={{
             contactType: i18n.t('CONTACT_DETAILS.CALL'),
-            icon: <PhoneIcon strokeWidth={2} stroke={tailwind.color('bg-blue-800')} />,
+            icon: <PhoneIcon strokeWidth={2} stroke={tailwind.color('text-iris-11')} />,
           }}
           handleOptionPress={onCallPress}
         />

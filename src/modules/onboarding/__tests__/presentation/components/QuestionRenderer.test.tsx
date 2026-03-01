@@ -4,9 +4,9 @@
  * QuestionRenderer dynamically renders the appropriate input component
  * based on the question type (text, select, date, rating, slider, etc.).
  */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports */
 
 import React from 'react';
-// @ts-expect-error - Testing library types are available at runtime
 // eslint-disable-next-line import/no-unresolved
 import { render, fireEvent } from '@testing-library/react-native';
 import { QuestionRenderer } from '../../../presentation/components/QuestionRenderer';
@@ -839,8 +839,8 @@ describe('QuestionRenderer', () => {
       const screen = aScreen().build();
 
       const { UNSAFE_getByType } = render(<QuestionRenderer screen={screen} {...defaultProps} />);
-
-      expect(UNSAFE_getByType('ScrollView')).toBeTruthy();
+      const { ScrollView } = require('react-native');
+      expect(UNSAFE_getByType(ScrollView)).toBeTruthy();
     });
 
     it('should display required indicator for screen readers', () => {

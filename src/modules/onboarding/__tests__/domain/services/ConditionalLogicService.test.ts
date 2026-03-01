@@ -6,9 +6,15 @@
  * Supports 8 operators: equals, not_equals, contains, not_contains,
  * greater_than, less_than, is_empty, is_not_empty
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { ConditionalLogicService } from '../../../domain/services/ConditionalLogicService';
-import type { ConditionalLogic, Answers } from '../../../domain/common';
+import type {
+  ConditionalLogic,
+  Answers,
+  SelectOption,
+  ConditionalOperator,
+} from '../../../domain/common';
 import { anAnswer, aScreen } from '../../helpers/builders';
 import { Answer } from '../../../domain/entities/Answer';
 

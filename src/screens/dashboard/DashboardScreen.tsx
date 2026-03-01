@@ -54,9 +54,8 @@ const DashboardScreen = () => {
     <Animated.View style={tailwind.style('flex-1')}>
       <Animated.View
         style={tailwind.style(
-          'flex flex-row items-center justify-between px-4 border-b-[1px] border-b-blackA-A3 py-[12px] bg-white',
-        )}
-      >
+          'flex flex-row items-center justify-between px-4 border-b-[1px] border-b-slate-6 py-[12px] bg-solid-1',
+        )}>
         <Pressable hitSlop={16} onPress={handleBackPress}>
           <Animated.View>
             <Icon icon={<CloseIcon />} size={24} />
@@ -65,9 +64,8 @@ const DashboardScreen = () => {
         <Animated.View>
           <Animated.Text
             style={tailwind.style(
-              'text-[17px] font-inter-medium-24 tracking-[0.32px] text-gray-950',
-            )}
-          >
+              'text-[17px] font-inter-medium-24 tracking-[0.32px] text-slate-12',
+            )}>
             {title}
           </Animated.Text>
         </Animated.View>

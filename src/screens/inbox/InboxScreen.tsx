@@ -63,8 +63,7 @@ const InboxList = () => {
         style={tailwind.style(
           'flex-1 items-center justify-center pt-8',
           `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}
-      >
+        )}>
         {isAllNotificationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -137,8 +136,7 @@ const InboxList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}
-    >
+      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
       <ActivityIndicator />
     </Animated.View>
   ) : notifications.length === 0 ? (
@@ -147,10 +145,9 @@ const InboxList = () => {
       contentContainerStyle={tailwind.style(
         'flex-1 items-center justify-center',
         `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}
-    >
+      )}>
       <EmptyStateIcon />
-      <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-gray-800')}>
+      <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-slate-12')}>
         {i18n.t('NOTIFICATION.EMPTY')}
       </Animated.Text>
     </Animated.ScrollView>
@@ -186,13 +183,11 @@ const InboxScreen = () => {
   }, [dispatch]);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={themedTailwind.color('bg-white')}
+        backgroundColor={themedTailwind.color('bg-solid-1')}
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        navigationBarColor={themedTailwind.color('bg-white')}
-        navigationBarHidden={false}
       />
       <InboxListStateProvider>
         <InboxHeader markAllAsRead={markAllAsRead} />

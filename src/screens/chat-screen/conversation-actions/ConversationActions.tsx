@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+// import { useEffect } from 'react'; // Team assignment disabled — not currently in use
 import { Alert, Dimensions, Platform, Share } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -15,7 +16,8 @@ import {
 import { TAB_BAR_HEIGHT } from '@/constants';
 import { tailwind } from '@/theme';
 import { ConversationStatus } from '@/types';
-import { useChatWindowContext, useTheme } from '@/context';
+import i18n from '@/i18n';
+import { useChatWindowContext } from '@/context';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
 import { conversationActions } from '@/store/conversation/conversationActions';
@@ -23,8 +25,8 @@ import { conversationActions } from '@/store/conversation/conversationActions';
 import { setActionState } from '@/store/conversation/conversationActionSlice';
 import { useRefsContext } from '@/context';
 import { selectSingleConversation } from '@/store/conversation/conversationSelectedSlice';
-import { teamActions } from '@/store/team/teamActions';
-import { selectAllTeams } from '@/store/team/teamSelectors';
+// import { teamActions } from '@/store/team/teamActions';
+// import { selectAllTeams } from '@/store/team/teamSelectors';
 import { selectInstallationUrl } from '@/store/settings/settingsSelectors';
 import { ConversationMetaInformation } from './components/ConversationMetaInformation';
 import { selectConversationParticipantsByConversationId } from '@/store/conversation-participant/conversationParticipantSelectors';
@@ -37,7 +39,6 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
-  const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
@@ -51,10 +52,11 @@ export const ConversationActions = () => {
   const installationUrl = useAppSelector(selectInstallationUrl);
 
   const { status, muted: isMuted, meta, priority = null } = conversation || {};
-  const { assignee, team } = meta || {};
-  const teams = useAppSelector(selectAllTeams);
-
-  const currentTeam = teams.find(t => t.id === team?.id) || null;
+  const { assignee } = meta || {};
+  // Team assignment disabled — not currently in use
+  // const { team } = meta || {};
+  // const teams = useAppSelector(selectAllTeams);
+  // const currentTeam = teams.find(t => t.id === team?.id) || null;
 
   const currentLabels = conversation?.labels || [];
 
@@ -62,10 +64,11 @@ export const ConversationActions = () => {
     selectConversationParticipantsByConversationId(state, conversationId),
   );
 
-  useEffect(() => {
-    dispatch(teamActions.fetchTeams());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Team assignment disabled — not currently in use
+  // useEffect(() => {
+  //   dispatch(teamActions.fetchTeams());
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const onShareConversation = async () => {
     try {
@@ -121,12 +124,13 @@ export const ConversationActions = () => {
     actionsModalSheetRef.current?.present();
   };
 
-  const onChangeTeamAssignee = () => {
-    if (!conversation) return;
-    dispatch(selectSingleConversation(conversation));
-    dispatch(setActionState('TeamAssign'));
-    actionsModalSheetRef.current?.present();
-  };
+  // Team assignment disabled — not currently in use
+  // const onChangeTeamAssignee = () => {
+  //   if (!conversation) return;
+  //   dispatch(selectSingleConversation(conversation));
+  //   dispatch(setActionState('TeamAssign'));
+  //   actionsModalSheetRef.current?.present();
+  // };
 
   const onChangePriority = () => {
     if (!conversation) return;
@@ -145,8 +149,7 @@ export const ConversationActions = () => {
     <Animated.View style={tailwind.style('', `w-[${SCREEN_WIDTH}px]`)}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}
-      >
+        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
         <ConversationBasicActions
           status={status}
           updateConversationStatus={updateConversationStatus}
@@ -155,10 +158,8 @@ export const ConversationActions = () => {
         <Animated.View style={tailwind.style('pt-10')}>
           <ConversationSettingsPanel
             assignee={assignee || null}
-            team={currentTeam || null}
             priority={priority || null}
             onChangeAssignee={onChangeAssignee}
-            onChangeTeamAssignee={onChangeTeamAssignee}
             onChangePriority={onChangePriority}
           />
         </Animated.View>
@@ -175,7 +176,11 @@ export const ConversationActions = () => {
           {conversation && <ConversationMetaInformation conversation={conversation} />}
         </Animated.View>
         <Animated.View style={tailwind.style('px-4 pt-10')}>
-          <Button variant="secondary" handlePress={onShareConversation} text="Share conversation" />
+          <Button
+            variant="secondary"
+            handlePress={onShareConversation}
+            text={i18n.t('CONVERSATION.ACTIONS.SHARE')}
+          />
         </Animated.View>
       </ScrollView>
       <BottomSheetModal
@@ -184,11 +189,10 @@ export const ConversationActions = () => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-black')}
+        backgroundStyle={themedTailwind.style('bg-solid-1')}
         animationConfigs={animationConfigs}
         enablePanDownToClose
-        snapPoints={['50%']}
-      >
+        snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />
       </BottomSheetModal>
     </Animated.View>

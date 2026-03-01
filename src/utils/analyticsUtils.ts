@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
-import { AnalyticsService } from '@/domain/interfaces/analytics/AnalyticsService';
-import { FirebaseAnalyticsService } from '@/infrastructure/analytics/FirebaseAnalyticsService';
+import type { IAnalyticsService } from '@/domain/interfaces/services/shared';
+import { FirebaseAnalyticsService } from '@/infrastructure/services/shared';
 
 interface User {
   id: string | number;
@@ -52,9 +52,9 @@ class AnalyticsHelper {
   private user: User;
   private isAnalyticsEnabled: boolean;
   private APIHelper: AxiosInstance;
-  private analyticsService: AnalyticsService;
+  private analyticsService: IAnalyticsService;
 
-  constructor(service: AnalyticsService = new FirebaseAnalyticsService()) {
+  constructor(service: IAnalyticsService = new FirebaseAnalyticsService()) {
     this.analyticsToken = process.env.EXPO_PUBLIC_JUNE_SDK_KEY || '';
     this.user = {} as User;
     this.isAnalyticsEnabled = !!(!__DEV__ && this.analyticsToken);

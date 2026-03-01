@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
-import type { RootState } from '@/store/reducers';
-import type { AIChatSession, AIChatMessage } from '@/domain/ai/types';
+import type { RootState } from '@/store';
+import type { AIChatSession, AIChatMessage } from './aiChatTypes';
 
 /**
  * Select the entire AI chat state
@@ -29,18 +29,6 @@ export const selectSessionsByAgentBot = createSelector(
   [selectAIChatState, (_state: RootState, agentBotId: number) => agentBotId],
   (aiChatState, agentBotId) => {
     const key = `agentBot_${agentBotId}`;
-    const sessions = aiChatState.sessions[key];
-    return sessions && sessions.length > 0 ? sessions : EMPTY_SESSIONS;
-  },
-);
-
-/**
- * Select sessions for a store (Python backend)
- */
-export const selectSessionsByStore = createSelector(
-  [selectAIChatState, (_state: RootState, storeId: number) => storeId],
-  (aiChatState, storeId) => {
-    const key = `store_${storeId}`;
     const sessions = aiChatState.sessions[key];
     return sessions && sessions.length > 0 ? sessions : EMPTY_SESSIONS;
   },

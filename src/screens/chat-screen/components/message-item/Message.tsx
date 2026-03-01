@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
 import { useChatWindowContext } from '@/context';
 import { conversationActions } from '@/store/conversation/conversationActions';
-import { unixTimestampToReadableTime, useHaptic } from '@/utils';
+import { getAvatarSource, messageTimestamp, useHaptic } from '@/utils';
 import {
   ComposedBubble,
   DeliveryStatus,
@@ -34,6 +34,7 @@ import i18n from '@/i18n';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { CopyIcon, Trash } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
+import { useThemedStyles } from '@/hooks';
 import { tailwind } from '@/theme';
 import { Dimensions, View } from 'react-native';
 import { Avatar } from '@/components-next';
@@ -44,6 +45,7 @@ type MessageComponentProps = {
   item: Message;
   index: number;
   isEmailInbox: boolean;
+  currentUserId?: number;
 };
 
 type MessageWrapperProps = {
@@ -60,33 +62,43 @@ type MessageWrapperProps = {
   channel?: Channel;
 };
 
-const variantTextMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-gray-700',
-  [MESSAGE_VARIANTS.USER]: 'text-white',
-  [MESSAGE_VARIANTS.BOT]: 'text-gray-700',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-gray-700',
-  [MESSAGE_VARIANTS.ERROR]: 'text-white',
+/**
+ * Variant styling maps aligned with web BaseBubble.vue:
+ *
+ * AGENT (outgoing, right) => bg-n-solid-blue   => bg-solid-blue
+ * USER  (incoming, left)  => bg-n-slate-4      => bg-slate-4
+ * BOT/TEMPLATE            => bg-n-solid-iris   => bg-solid-iris
+ * PRIVATE                 => bg-n-solid-amber  => bg-solid-amber
+ * ERROR                   => bg-n-ruby-4       => bg-ruby-4
+ */
+const variantTextMap: Record<string, string> = {
+  [MESSAGE_VARIANTS.AGENT]: 'text-slate-11',
+  [MESSAGE_VARIANTS.USER]: 'text-slate-11',
+  [MESSAGE_VARIANTS.BOT]: 'text-slate-11',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-11',
+  [MESSAGE_VARIANTS.PRIVATE]: 'text-slate-11',
+  [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
 };
 
 const variantBaseMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'bg-gray-100',
-  [MESSAGE_VARIANTS.PRIVATE]: 'bg-amber-100',
-  [MESSAGE_VARIANTS.USER]: 'bg-brand-600',
-  [MESSAGE_VARIANTS.BOT]: 'bg-brand-100',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'bg-brand-100',
-  [MESSAGE_VARIANTS.ERROR]: 'bg-ruby-700',
-  [MESSAGE_VARIANTS.EMAIL]: 'bg-gray-100',
-  [MESSAGE_VARIANTS.UNSUPPORTED]: 'bg-amber-100 border border-dashed border-amber-700',
+  [MESSAGE_VARIANTS.AGENT]: 'bg-solid-blue',
+  [MESSAGE_VARIANTS.PRIVATE]: 'bg-solid-amber',
+  [MESSAGE_VARIANTS.USER]: 'bg-slate-4',
+  [MESSAGE_VARIANTS.BOT]: 'bg-solid-iris',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'bg-solid-iris',
+  [MESSAGE_VARIANTS.ERROR]: 'bg-ruby-4',
+  [MESSAGE_VARIANTS.EMAIL]: 'bg-slate-3',
+  [MESSAGE_VARIANTS.UNSUPPORTED]: 'bg-solid-amber border border-dashed border-amber-12',
 };
 
 const variantBorderMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'border-gray-100',
-  [MESSAGE_VARIANTS.USER]: 'border-gray-100',
-  [MESSAGE_VARIANTS.BOT]: 'border-gray-100',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'border-gray-100',
-  [MESSAGE_VARIANTS.ERROR]: 'border-gray-100',
-  [MESSAGE_VARIANTS.EMAIL]: 'border-gray-100',
-  [MESSAGE_VARIANTS.UNSUPPORTED]: 'border-gray-100',
+  [MESSAGE_VARIANTS.AGENT]: 'border-slate-6',
+  [MESSAGE_VARIANTS.USER]: 'border-slate-4',
+  [MESSAGE_VARIANTS.BOT]: 'border-slate-4',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'border-slate-4',
+  [MESSAGE_VARIANTS.ERROR]: 'border-ruby-6',
+  [MESSAGE_VARIANTS.EMAIL]: 'border-slate-4',
+  [MESSAGE_VARIANTS.UNSUPPORTED]: 'border-amber-12',
 };
 
 const MessageWrapper = ({
@@ -101,6 +113,7 @@ const MessageWrapper = ({
   variant,
   channel,
 }: MessageWrapperProps) => {
+  const themedTailwind = useThemedStyles();
   const flexOrientationClass = () => {
     const map = {
       [ORIENTATION.LEFT]: 'items-start',
@@ -118,7 +131,7 @@ const MessageWrapper = ({
     <Animated.View
       entering={FadeIn.duration(350)}
       style={[
-        tailwind.style(
+        themedTailwind.style(
           'my-[1px]',
           flexOrientationClass(),
           shouldGroupWithPrevious && orientation === ORIENTATION.LEFT ? 'ml-7' : '',
@@ -126,54 +139,43 @@ const MessageWrapper = ({
           !shouldGroupWithPrevious && !shouldGroupWithNext ? 'mb-2' : 'mb-1',
           item.private ? 'my-1' : '',
         ),
-      ]}
-    >
-      <Animated.View style={tailwind.style('flex flex-row')}>
+      ]}>
+      <Animated.View style={themedTailwind.style('flex flex-row')}>
         {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.LEFT ? (
-          <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
+          <Animated.View style={themedTailwind.style('flex items-end justify-end mr-1')}>
             <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={getMenuOptions(item)}>
           <Animated.View
             style={[
-              tailwind.style(
-                'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
+              themedTailwind.style(
+                'relative pl-3 pr-2.5 py-2 rounded-xl overflow-hidden',
                 `${variant === MESSAGE_VARIANTS.EMAIL ? `max-w-[${EMAIL_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`}`,
                 variantBaseMap[variant],
                 variantBorderMap[variant],
-                shouldGroupWithNext && shouldGroupWithPrevious
-                  ? orientation === ORIENTATION.LEFT
-                    ? 'rounded-l-none'
-                    : 'rounded-r-none'
-                  : '',
-                shouldGroupWithNext && !shouldGroupWithPrevious
-                  ? orientation === ORIENTATION.LEFT
-                    ? 'rounded-tl-none'
-                    : 'rounded-tr-none'
-                  : '',
-                !shouldGroupWithNext && shouldGroupWithPrevious
-                  ? orientation === ORIENTATION.LEFT
-                    ? 'rounded-bl-none'
-                    : 'rounded-br-none'
-                  : '',
+                // Avatar-adjacent corner is always sharper (matches web BaseBubble.vue)
+                orientation === ORIENTATION.LEFT ? 'rounded-bl-sm' : '',
+                orientation === ORIENTATION.RIGHT ? 'rounded-br-sm' : '',
+                // When grouped with previous, sharpen the top corner on avatar side too
+                // (matches web's .group-with-next + .message-bubble-container CSS)
+                shouldGroupWithPrevious && orientation === ORIENTATION.LEFT ? 'rounded-tl-sm' : '',
+                shouldGroupWithPrevious && orientation === ORIENTATION.RIGHT ? 'rounded-tr-sm' : '',
               ),
-            ]}
-          >
+            ]}>
             {children}
             {!shouldGroupWithPrevious && (
               <Animated.View
-                style={tailwind.style(
-                  'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center justify-end',
-                )}
-              >
+                style={themedTailwind.style(
+                  'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center',
+                  orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
+                )}>
                 <Animated.Text
-                  style={tailwind.style(
+                  style={themedTailwind.style(
                     'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
                     variantTextMap[variant],
-                  )}
-                >
-                  {unixTimestampToReadableTime(item.createdAt)}
+                  )}>
+                  {messageTimestamp(item.createdAt)}
                 </Animated.Text>
                 <DeliveryStatus
                   isPrivate={item.private}
@@ -182,15 +184,15 @@ const MessageWrapper = ({
                   channel={channel}
                   sourceId={item.sourceId}
                   errorMessage={item.contentAttributes?.externalError || ''}
-                  deliveredColor="text-gray-700"
-                  sentColor="text-gray-700"
+                  deliveredColor="text-slate-11"
+                  sentColor="text-slate-11"
                 />
               </Animated.View>
             )}
           </Animated.View>
         </MessageMenu>
         {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (
-          <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
+          <Animated.View style={themedTailwind.style('flex items-end justify-end ml-1')}>
             <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
           </Animated.View>
         ) : null}
@@ -265,7 +267,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.COPY'),
-        icon: <CopyIcon />,
+        icon: <CopyIcon stroke={tailwind.color('text-slate-12') ?? '#1C2024'} />,
         handleOnPressMenuOption: () => handleCopyMessage(content),
         destructive: false,
       });
@@ -274,7 +276,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasAttachments || hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.DELETE_MESSAGE'),
-        icon: <Trash />,
+        icon: <Trash stroke={tailwind.color('text-ruby-9') ?? '#E54666'} />,
         handleOnPressMenuOption: () => handleDeleteMessage(message.id),
         destructive: true,
       });
@@ -306,19 +308,17 @@ export const MessageComponent = (props: MessageComponentProps) => {
   };
 
   const avatarInfo = () => {
-    if (!sender || sender.type === SENDER_TYPES.AGENT_BOT) {
+    if (!sender) {
       return {
         name: i18n.t('CONVERSATION.BOT'),
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        src: require('../../../../assets/local/bot-avatar.png'),
+        src: undefined,
       };
     }
 
     return {
-      name: sender?.name || '',
-      src: {
-        uri: sender?.thumbnail || null,
-      },
+      name:
+        sender?.name || (sender.type === SENDER_TYPES.AGENT_BOT ? i18n.t('CONVERSATION.BOT') : ''),
+      src: getAvatarSource(sender),
     };
   };
   // TODO: Add this once we have a proper way to render single attachments
@@ -384,8 +384,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
         avatarInfo={avatarInfo()}
         getMenuOptions={getMenuOptions}
         variant={variant()}
-        channel={channel}
-      >
+        channel={channel}>
         {messageContent}
       </MessageWrapper>
     );

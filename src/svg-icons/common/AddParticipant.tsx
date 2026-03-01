@@ -4,11 +4,12 @@ import { Path, Svg } from 'react-native-svg';
 import { IconProps } from '../../types';
 
 export const AddParticipant = ({
-  stroke = '#858585',
+  stroke = 'currentColor',
   strokeWidth = 1.5,
+  color,
 }: IconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M12.0001 2.57886C6.80649 2.57886 2.59619 6.78915 2.59619 11.9828C2.59619 17.1765 6.80649 21.3868 12.0001 21.3868C17.1938 21.3868 21.4041 17.1765 21.4041 11.9828C21.4041 10.8451 21.2021 9.75452 20.8319 8.74508"
         stroke={stroke}

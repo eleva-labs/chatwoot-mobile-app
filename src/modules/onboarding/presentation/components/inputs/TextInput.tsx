@@ -59,7 +59,7 @@ export function TextInput({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={themedStyles.color('text-gray-400')}
+        placeholderTextColor={themedStyles.color('text-slate-9')}
         multiline={multiline}
         numberOfLines={numberOfLines}
         autoFocus={autoFocus}
@@ -69,16 +69,16 @@ export function TextInput({
         style={themedStyles.style(
           'w-full px-4 py-3 rounded-lg border',
           error
-            ? 'border-ruby-500 bg-ruby-50'
+            ? 'border-ruby-8 bg-ruby-3'
             : isFocused
-              ? 'border-brand-600 bg-white'
-              : 'border-gray-300 bg-white',
+              ? 'border-brand bg-solid-1'
+              : 'border-slate-7 bg-solid-1',
           multiline && 'min-h-[100px]',
         )}
         accessible
         accessibilityLabel={placeholder || 'Text input'}
         accessibilityHint={required ? 'Required field' : 'Optional field'}
-        accessibilityState={{ invalid: !!error }}
+        aria-invalid={!!error}
       />
 
       {/* Character counter */}
@@ -87,21 +87,20 @@ export function TextInput({
           style={themedStyles.style(
             'text-xs mt-1 text-right',
             characterCountStatus.isError
-              ? 'text-ruby-500 font-semibold'
+              ? 'text-ruby-11 font-semibold'
               : characterCountStatus.isWarning
                 ? 'text-orange-500 font-medium'
-                : 'text-gray-500',
+                : 'text-slate-9',
           )}
           accessible
-          accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}
-        >
+          accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}>
           {characterCountStatus.remaining} character
           {characterCountStatus.remaining !== 1 ? 's' : ''} remaining
         </Text>
       )}
 
       {/* Error message */}
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-1')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-1')}>{error}</Text>}
     </View>
   );
 }

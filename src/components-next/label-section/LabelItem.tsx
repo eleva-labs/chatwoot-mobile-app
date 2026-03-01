@@ -1,49 +1,27 @@
 import React from 'react';
-import { StyleSheet, Platform } from 'react-native';
-import Animated from 'react-native-reanimated';
-
+import { Text } from 'react-native';
 import { tailwind } from '@/theme';
-import { Label } from '@/types';
+import { useThemedStyles } from '@/hooks';
+import { NativeView } from '@/components-next/native-components';
 
 type LabelItemProps = {
-  item: Label;
-  index: number;
+  title: string;
+  color: string;
 };
 
-export const LabelItem = (props: LabelItemProps) => {
-  const { item } = props;
+export const LabelItem = ({ title, color }: LabelItemProps) => {
+  const themedTailwind = useThemedStyles();
   return (
-    <Animated.View
-      style={[
-        styles.labelShadow,
-        tailwind.style('flex flex-row items-center bg-white px-3 py-[7px] rounded-lg mr-2 mt-3'),
-      ]}
-    >
-      <Animated.View style={tailwind.style('h-2 w-2 rounded-full', `bg-[${item.color}]`)} />
-      <Animated.Text
-        style={tailwind.style(
-          'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] pl-1.5 text-gray-950',
-        )}
-      >
-        {item.title}
-      </Animated.Text>
-    </Animated.View>
+    <NativeView
+      style={themedTailwind.style(
+        'flex-row items-center gap-1 h-5 py-0.5 px-1 rounded border border-slate-6 bg-transparent',
+      )}>
+      <NativeView style={tailwind.style('h-2 w-2 rounded-sm', `bg-[${color}]`)} />
+      <Text
+        numberOfLines={1}
+        style={themedTailwind.style('text-xs font-inter-420-20 text-slate-11')}>
+        {title}
+      </Text>
+    </NativeView>
   );
 };
-
-const styles = StyleSheet.create({
-  labelShadow:
-    Platform.select({
-      ios: {
-        shadowColor: '#00000040',
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-        backgroundColor: 'white',
-      },
-    }) || {}, // Add fallback empty object
-});

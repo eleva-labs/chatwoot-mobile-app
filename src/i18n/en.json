@@ -23,7 +23,7 @@
   },
   "LOGIN": {
     "TITLE": "Log in to your account",
-    "DESCRIPTION": "You are connected to {{baseUrl}}.",
+    "DESCRIPTION": "You are connected to %{baseUrl}.",
     "EMAIL": "Email",
     "PASSWORD": "Password",
     "EMAIL_REQUIRED": "Email is required",
@@ -182,6 +182,13 @@
     "DELETE_MESSAGE_SUB_TITLE": "This action cannot be undone.",
     "COPY_MESSAGE": "Message copied to clipboard",
     "STORY_NOT_AVAILABLE": "This story is no longer available",
+    "IMAGE_LOAD_ERROR": "Loading failed",
+    "ADD_MENU": {
+      "PHOTOS": "Photos",
+      "CAMERA": "Camera",
+      "ATTACH_FILE": "Attach File",
+      "MACROS": "Macros"
+    },
     "DELETE_MESSAGE_SUCCESS": "Message deleted successfully",
     "NO_CONTENT": "No content available",
     "ASSIGN_CHANGE": "Conversation Assignee changed",
@@ -249,10 +256,21 @@
       "EXPAND": "Expand email"
     },
     "ACTIONS": {
+      "TITLE": "Conversation Actions",
       "ASSIGNEE": {
         "EMPTY": "Unassigned",
         "ASSIGN": "Assign",
         "EDIT": "Edit"
+      },
+      "BASIC": {
+        "OPEN": "Open",
+        "PENDING": "Pending",
+        "SNOOZE": "Snooze",
+        "RESOLVE": "Resolve"
+      },
+      "LABELS": {
+        "TITLE": "Labels",
+        "ADD": "Add"
       },
       "TEAM": {
         "EMPTY": "No team assigned",
@@ -272,6 +290,58 @@
     },
     "MENU": {
       "SELECT_ACTION": "Select action"
+    },
+    "ACTIVITY": {
+      "STATUS": {
+        "RESOLVED": "Conversation was marked resolved by %{user_name}",
+        "CONTACT_RESOLVED": "Conversation was resolved by %{contact_name}",
+        "OPEN": "Conversation was reopened by %{user_name}",
+        "PENDING": "Conversation was marked as pending by %{user_name}",
+        "SNOOZED": "Conversation was snoozed by %{user_name}",
+        "AUTO_RESOLVED_DAYS": "Conversation was marked resolved by system due to %{count} days of inactivity",
+        "AUTO_RESOLVED_HOURS": "Conversation was marked resolved by system due to %{count} hours of inactivity",
+        "AUTO_RESOLVED_MINUTES": "Conversation was marked resolved by system due to %{count} minutes of inactivity",
+        "SYSTEM_AUTO_OPEN": "System reopened the conversation due to a new incoming message.",
+        "CAPTAIN_RESOLVED": "Conversation was marked resolved by %{user_name} due to inactivity",
+        "CAPTAIN_OPEN": "Conversation was marked open by %{user_name}",
+        "AGENT_BOT_ERROR": "Conversation was marked open by system due to an error with the agent bot."
+      },
+      "PRIORITY": {
+        "ADDED": "%{user_name} set the priority to %{new_priority}",
+        "UPDATED": "%{user_name} changed the priority from %{old_priority} to %{new_priority}",
+        "REMOVED": "%{user_name} removed the priority"
+      },
+      "ASSIGNEE": {
+        "SELF_ASSIGNED": "%{user_name} self-assigned this conversation",
+        "ASSIGNED": "Assigned to %{assignee_name} by %{user_name}",
+        "REMOVED": "Conversation unassigned by %{user_name}"
+      },
+      "TEAM": {
+        "ASSIGNED": "Assigned to %{team_name} by %{user_name}",
+        "ASSIGNED_WITH_ASSIGNEE": "Assigned to %{assignee_name} via %{team_name} by %{user_name}",
+        "REMOVED": "Unassigned from %{team_name} by %{user_name}"
+      },
+      "LABELS": {
+        "ADDED": "%{user_name} added %{labels}",
+        "REMOVED": "%{user_name} removed %{labels}"
+      },
+      "SLA": {
+        "ADDED": "%{user_name} added SLA policy %{sla_name}",
+        "REMOVED": "%{user_name} removed SLA policy %{sla_name}"
+      },
+      "LINEAR": {
+        "ISSUE_CREATED": "Linear issue %{issue_id} was created by %{user_name}",
+        "ISSUE_LINKED": "Linear issue %{issue_id} was linked by %{user_name}",
+        "ISSUE_UNLINKED": "Linear issue %{issue_id} was unlinked by %{user_name}"
+      },
+      "MUTED": "%{user_name} has muted the conversation",
+      "UNMUTED": "%{user_name} has unmuted the conversation",
+      "CSAT": {
+        "NOT_SENT": "CSAT survey not sent due to outgoing message restrictions"
+      },
+      "AUTO_RESOLVE": {
+        "NOT_SENT": "Auto-resolve message not sent due to outgoing message restrictions"
+      }
     }
   },
 
@@ -411,7 +481,8 @@
     "ADD_PARTICIPANTS": "Select participants",
     "REMAINING_PARTICIPANTS_TEXT": "others",
     "REMAINING_PARTICIPANT_TEXT": "other",
-    "ADD_PARTICIPANT": "Add Participant"
+    "ADD_PARTICIPANT": "Add Participant",
+    "OVERFLOW_COUNT": "%{count} participants"
   },
   "CONTACT_ATTRIBUTES": {
     "TITLE": "Contact Attributes"
@@ -499,8 +570,8 @@
       "FRT": "First response time",
       "NRT": "Next response time",
       "RT": "Resolution time",
-      "SHOW_MORE": "{count} more",
-      "HIDE": "Hide {count} rows"
+      "SHOW_MORE": "%{count} more",
+      "HIDE": "Hide %{count} rows"
     }
   },
   "MACRO": {
@@ -516,6 +587,7 @@
   "AI_ASSISTANT": {
     "CHAT": {
       "TITLE": "AI Assistant",
+      "AVATAR_NAME": "AI",
       "INPUT": {
         "PLACEHOLDER": "Type a message...",
         "CANCEL": "Cancel",
@@ -527,14 +599,14 @@
         "CLOSE": "Close AI Assistant"
       },
       "MESSAGES": {
-        "LOADING": "Loading conversation...",
-        "EMPTY_WITH_SESSION": "No messages in this conversation",
-        "EMPTY_NO_SESSION": "Start a conversation with the AI assistant",
-        "ERROR_RENDERING": "Error rendering message: {id}"
+        "LOADING": "Loading session...",
+        "EMPTY_WITH_SESSION": "No messages in this session",
+        "EMPTY_NO_SESSION": "Start a session with the AI assistant",
+        "ERROR_RENDERING": "Error rendering message: %{id}"
       },
       "SESSIONS": {
         "LOADING": "Loading sessions...",
-        "EMPTY": "No previous conversations",
+        "EMPTY": "No previous sessions",
         "RECENTLY": "Recently"
       },
       "THOUGHTS": {
@@ -543,8 +615,65 @@
       },
       "TOOLS": {
         "SINGLE": "Using tool...",
-        "MULTIPLE": "Using {count} tools...",
-        "INDICATOR": "AI tool call indicator"
+        "MULTIPLE": "Using %{count} tools...",
+        "INDICATOR": "AI tool call indicator",
+        "PENDING": "Pending",
+        "RUNNING": "Running",
+        "COMPLETED": "Completed",
+        "ERROR": "Error",
+        "UNKNOWN_TOOL": "Unknown Tool",
+        "INPUT": "Input",
+        "OUTPUT": "Output",
+        "NO_DATA": "No data available",
+        "EXECUTION_FAILED": "Tool execution failed"
+      },
+      "EMPTY_STATE": {
+        "TITLE_WITH_SESSION": "No messages yet",
+        "TITLE_NO_SESSION": "Start a session",
+        "DESCRIPTION_WITH_SESSION": "This session is empty",
+        "DESCRIPTION_NO_SESSION": "Ask a question or describe what you need help with"
+      },
+      "SUGGESTED_PROMPTS": {
+        "SUMMARIZE": "Summarize my recent sessions",
+        "DRAFT": "Help me draft a response",
+        "CAPABILITIES": "What can you help me with?"
+      },
+      "STATUS": {
+        "THINKING": "Thinking...",
+        "ISSUE": "Issue"
+      },
+      "ERRORS": {
+        "NETWORK": "Network Error",
+        "RATE_LIMIT": "Rate Limited",
+        "AUTH": "Authentication Error",
+        "SERVER": "Server Error",
+        "UNKNOWN": "Something went wrong",
+        "RETRY": "Retry",
+        "FRESH_START": "Fresh Start",
+        "DISMISS": "Dismiss"
+      },
+      "REASONING": {
+        "THINKING": "Thinking...",
+        "VIEW_REASONING": "View reasoning",
+        "PROCESSING": "Processing..."
+      },
+      "COPY": {
+        "COPY": "Copy",
+        "COPIED": "Copied!"
+      },
+      "SESSIONS_PANEL": {
+        "TITLE": "Sessions",
+        "COUNT_ONE": "%{count} session",
+        "COUNT_OTHER": "%{count} sessions"
+      },
+      "SESSION_ITEM": {
+        "TODAY": "Today",
+        "YESTERDAY": "Yesterday"
+      },
+      "COLLAPSIBLE": {
+        "COLLAPSE": "Collapse",
+        "EXPANDED": "%{title}, expanded",
+        "COLLAPSED": "%{title}, collapsed"
       },
       "ACCESSIBILITY": {
         "USER_MESSAGE": "Your message",
@@ -557,7 +686,12 @@
         "CLOSE": "Close AI Assistant",
         "CLOSE_HINT": "Closes the AI assistant chat interface",
         "OPEN": "Open AI Assistant",
-        "OPEN_HINT": "Opens the AI assistant chat interface"
+        "OPEN_HINT": "Opens the AI assistant chat interface",
+        "STOP_GENERATING": "Stop generating",
+        "SESSIONS_COUNT": "%{count} sessions",
+        "COPY_MESSAGE": "Copy message",
+        "LOADING_MESSAGES": "Loading messages",
+        "CLOSE_BACKDROP": "Close AI Assistant"
       }
     },
     "STATUS": {
@@ -572,9 +706,10 @@
     "LOAD_ERROR": "File load error"
   },
   "AUDIO": {
-    "RECORDING_ERROR": "Recording Error"
+    "RECORDING_ERROR": "Recording Error",
+    "PREPARE_ERROR": "Error preparing audio file"
   },
   "CLIPBOARD": {
-    "COPIED": "{item} copied to clipboard"
+    "COPIED": "%{item} copied to clipboard"
   }
 }

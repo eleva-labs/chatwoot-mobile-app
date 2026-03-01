@@ -62,8 +62,8 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
   const totalDuration = useSharedValue(0);
 
   const audioPlayBackStatus = useCallback(
-    (data: { data: PlayBackType }) => {
-      const playBackData = data.data as PlayBackType;
+    (args: { status: unknown; data?: PlayBackType }) => {
+      const playBackData = args.data;
       if (playBackData) {
         currentPosition.value = playBackData.currentPosition;
         totalDuration.value = playBackData.duration;
@@ -84,7 +84,9 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
         setIsSoundLoading(true);
         try {
           const convertedSrc = await convertOggToWav(audioSrc);
-          setConvertedAudioSrc(convertedSrc);
+          if (typeof convertedSrc === 'string') {
+            setConvertedAudioSrc(convertedSrc);
+          }
         } catch (error) {
           Sentry.captureException(error);
         } finally {
@@ -148,9 +150,9 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
 
   const sliderProps = useMemo(
     () => ({
-      trackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-whiteA-A9' : 'bg-gray-500',
-      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-white' : 'bg-brand-600',
-      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-brand-300' : 'border-brand-600',
+      trackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-whiteA-A9' : 'bg-slate-9',
+      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-solid-1' : 'bg-brand',
+      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-iris-7' : 'border-brand',
       manualSeekTo,
       currentPosition,
       totalDuration,
@@ -170,8 +172,7 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
           <Animated.View
             style={tailwind.style('pl-0.5 pr-0.5')}
             entering={FadeIn}
-            exiting={FadeOut}
-          >
+            exiting={FadeOut}>
             <Icon
               icon={
                 <PauseIcon
@@ -186,8 +187,7 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
           <Animated.View
             style={tailwind.style('pl-0.5 pr-0.5')}
             entering={FadeIn}
-            exiting={FadeOut}
-          >
+            exiting={FadeOut}>
             <PlayIcon
               fillOpacity={variant === MESSAGE_VARIANTS.USER ? '1' : '0.565'}
               fill={variant === MESSAGE_VARIANTS.USER ? 'white' : 'black'}

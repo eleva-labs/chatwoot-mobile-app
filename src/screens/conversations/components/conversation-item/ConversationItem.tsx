@@ -33,6 +33,7 @@ export type ConversationItemProps = {
   priority?: ConversationPriority | null;
   labels: string[];
   timestamp: number;
+  createdAt?: number;
   inbox: Inbox | null;
   lastMessage?: Message | null;
   inboxId: number;
@@ -75,6 +76,7 @@ export const ConversationItem = memo(
     priority = null,
     labels,
     timestamp,
+    createdAt,
     inbox,
     lastMessage,
     inboxId,
@@ -91,14 +93,13 @@ export const ConversationItem = memo(
     const themedTailwind = useThemedStyles();
 
     return (
-      <NativeView style={themedTailwind.style('px-3 gap-3 flex-row justify-between bg-white')}>
+      <NativeView style={themedTailwind.style('px-3 gap-2 flex-row justify-between bg-solid-1')}>
         <NativeView style={tailwind.style('py-3 flex flex-row')}>
           <ConversationSelect {...{ isSelected, currentState }} />
           <ConversationAvatar
             src={{ uri: senderThumbnail } as ImageURISource}
             name={senderName || ''}
             status={isTyping ? 'typing' : availabilityStatus || 'offline'}
-            unreadCount={unreadCount}
           />
         </NativeView>
 
@@ -111,6 +112,7 @@ export const ConversationItem = memo(
             assignee,
             senderName,
             timestamp,
+            createdAt,
             inbox,
             lastMessage,
             inboxId,

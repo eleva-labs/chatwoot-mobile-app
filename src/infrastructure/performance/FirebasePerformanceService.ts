@@ -1,21 +1,19 @@
 import perf from '@react-native-firebase/perf';
 
-import {
-  PerformanceMonitoringService,
-  PerformanceTrace,
-} from '@/domain/interfaces/performance/PerformanceMonitoringService';
+import type { IPerformanceService, IPerformanceTrace } from '@/domain/interfaces/services/shared';
 import { normalizeEventName } from '@/utils/normalizeEventName';
+import { FirebasePerformanceTraceAdapter } from './adapters';
 
 const SCREEN_TRACE_PREFIX = 'screen_';
 
-export class FirebasePerformanceService implements PerformanceMonitoringService {
+export class FirebasePerformanceService implements IPerformanceService {
   private collectionEnabled = true;
 
   constructor() {
     this.setCollectionEnabled(true);
   }
 
-  setCollectionEnabled(enabled: boolean) {
+  setCollectionEnabled(enabled: boolean): void {
     this.collectionEnabled = enabled;
     perf()
       .setPerformanceCollectionEnabled(enabled)
@@ -24,20 +22,21 @@ export class FirebasePerformanceService implements PerformanceMonitoringService 
       });
   }
 
-  async startTrace(traceName: string): Promise<PerformanceTrace | null> {
+  async startTrace(traceName: string): Promise<IPerformanceTrace | null> {
     if (!this.collectionEnabled || !traceName) return null;
 
     const normalizedName = normalizeEventName(traceName);
     if (!normalizedName) return null;
 
     try {
-      return await perf().startTrace(normalizedName);
+      const firebaseTrace = await perf().startTrace(normalizedName);
+      return new FirebasePerformanceTraceAdapter(firebaseTrace);
     } catch {
       return null;
     }
   }
 
-  async stopTrace(trace: PerformanceTrace | null): Promise<void> {
+  async stopTrace(trace: IPerformanceTrace | null): Promise<void> {
     if (!trace) return;
     try {
       await trace.stop();

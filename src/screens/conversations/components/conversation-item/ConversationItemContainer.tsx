@@ -76,6 +76,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
     unreadCount,
     labels,
     timestamp,
+    createdAt,
     inboxId,
     lastNonActivityMessage,
     slaPolicyId,
@@ -99,17 +100,15 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
   const selected = useAppSelector(selectSelected);
   const currentState = useAppSelector(selectCurrentState);
 
-  const {
-    availabilityStatus,
-    name: contactName,
-    thumbnail: contactThumbnail,
-    customAttributes,
-  } = contact || {};
+  const { availabilityStatus, name: contactName, thumbnail: contactThumbnail } = contact || {};
   const isSelected = useMemo(() => id in selected, [selected, id]);
   const isTyping = useMemo(() => isContactTyping(typingUsers, contactId), [typingUsers, contactId]);
   const typingText = useMemo(() => getTypingUsersText({ users: typingUsers }), [typingUsers]);
-  // @ts-expect-error - customAttributes is not typed
-  const isAIEnabled = useMemo(() => customAttributes?.aiEnabled === true, [customAttributes]);
+  // Read AI status from conversation's custom_attributes (aligned with web logic)
+  const isAIEnabled = useMemo(
+    () => conversationItem.customAttributes?.aiEnabled === 'true',
+    [conversationItem.customAttributes],
+  );
 
   const lastMessage = getLastMessage(conversationItem);
 
@@ -158,6 +157,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
     priority,
     labels,
     timestamp,
+    createdAt,
     inbox: inbox || null,
     lastNonActivityMessage,
     lastMessage,
@@ -189,8 +189,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
       handleLongPress={onLongPressAction}
       handlePress={onPressAction}
       triggerOverswipeOnFlick
-      {...{ index, openedRowIndex }}
-    >
+      {...{ index, openedRowIndex }}>
       <ConversationItem {...viewProps} />
     </Swipeable>
   );

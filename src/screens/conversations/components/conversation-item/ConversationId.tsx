@@ -14,8 +14,8 @@ export const ConversationId = (props: ConversationIdProps) => {
   const themedTailwind = useThemedStyles();
   return (
     <NativeView style={tailwind.style('flex flex-row items-center gap-0.5')}>
-      <Text style={themedTailwind.style('text-sm font-inter-420-20 text-gray-700')}>#</Text>
-      <Text style={themedTailwind.style('text-sm font-inter-420-20 text-gray-700')}>{id}</Text>
+      <Text style={themedTailwind.style('text-sm font-inter-420-20 text-slate-11')}>#</Text>
+      <Text style={themedTailwind.style('text-sm font-inter-420-20 text-slate-11')}>{id}</Text>
     </NativeView>
   );
 };
