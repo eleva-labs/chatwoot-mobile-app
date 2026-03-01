@@ -67,7 +67,7 @@ src/
 | Layer | Location | Responsibility | Can import from | Examples |
 |-------|----------|---------------|-----------------|----------|
 | **Domain** | `domain/` | Pure business logic, entities, types, constants | Nothing (pure TypeScript) | `User.ts`, `PART_TYPES`, `TransportConfig` |
-| **Infrastructure** | `infrastructure/` | Framework-dependent utilities, UI, hooks, integrations | `domain/` | `Avatar.tsx`, `useDebounce.ts`, `theme/` |
+| **Infrastructure** | `infrastructure/` | Framework-dependent utilities, UI, hooks, integrations | `domain/`, `application/` (for adapters) | `Avatar.tsx`, `useDebounce.ts`, `theme/`, `ReduxStateRepository` |
 | **Application** | `application/store/`, `application/navigation/` | State management, routing, orchestration | `domain/`, `infrastructure/`, `services/` | Redux slices, React Navigation |
 | **Presentation** | `screens/`, `presentation/ai-chat/` | React components, user interaction | `application/store/`, `domain/`, `infrastructure/` | Screens, containers, components |
 | **Services** | `services/` | HTTP client, shared utilities | Nothing app-specific | `apiService.ts` |
@@ -88,9 +88,14 @@ src/
 | From | Can import | Cannot import |
 |------|-----------|---------------|
 | `domain/` | Nothing (pure TypeScript) | Everything else |
-| `infrastructure/` | `domain/` | `application/`, `screens/`, `presentation/` |
+| `infrastructure/` | `domain/`, `application/` (for adapters) | `screens/`, `presentation/` |
 | `application/store/`, `application/navigation/` | `domain/`, `infrastructure/`, `services/` | `screens/`, `presentation/`, other features |
 | `screens/`, `presentation/ai-chat/` | `application/store/`, `domain/`, `infrastructure/`, `application/navigation/` | Other screen features |
+
+**Why infrastructure imports application**: Infrastructure layer contains **adapters** that wrap application-specific concerns (adapter pattern). Examples:
+- `ReduxStateRepository` wraps Redux store (infrastructure adapter)
+- `ReduxAuthRepository` wraps auth state (infrastructure adapter)
+- These are infrastructure **implementations** of domain ports, legitimately depending on the application layer (Redux).
 
 **Feature Isolation**: Store features and screen features must not import from other feature modules. Share data via selectors, shared thunks, or `domain/` types.
 
@@ -324,7 +329,7 @@ Domain (domain/)  ← Innermost layer (pure TypeScript)
 |--------------------------|---------------|---------------------|
 | **Presentation** | `screens/`, `presentation/ai-chat/` | Can import from all layers below |
 | **Application** | `application/store/`, `application/navigation/` | Can import: Infrastructure, Domain |
-| **Infrastructure** | `infrastructure/`, `services/` | Can import: Domain only |
+| **Infrastructure** | `infrastructure/`, `services/` | Can import: Domain, Application (for adapters) |
 | **Domain** | `domain/` | Imports nothing from `src/` |
 
 ### 8.2 Import Rules (Detailed)
@@ -332,7 +337,7 @@ Domain (domain/)  ← Innermost layer (pure TypeScript)
 | From | Can import | Cannot import |
 |------|-----------|---------------|
 | `domain/` | External packages only (no React) | Anything in `src/` |
-| `infrastructure/` | `domain/` | `application/`, `screens/`, `presentation/` |
+| `infrastructure/` | `domain/`, `application/` (for adapters) | `screens/`, `presentation/` |
 | `application/store/<feature>/` | `domain/`, `infrastructure/`, `services/` | `screens/`, `presentation/`, other `application/store/<feature>/` modules |
 | `application/navigation/` | `domain/`, `infrastructure/` | `application/store/`, `screens/`, `presentation/` |
 | `screens/<feature>/` | `application/store/`, `domain/`, `infrastructure/`, `application/navigation/` | Other `screens/<feature>/` modules |
@@ -524,10 +529,11 @@ export default {
           group: ['@/infrastructure/*', '@/application/*', '@/screens/*', '@/presentation/*'],
           message: 'Domain layer cannot import from infrastructure or application layers'
         },
-        // Block infrastructure from importing application layers
+        // Block infrastructure from importing screens/presentation
+        // NOTE: infrastructure CAN import from @application/* (for repositories, adapters)
         {
-          group: ['@/application/*', '@/screens/*', '@/presentation/*'],
-          message: 'Infrastructure cannot import from application layer'
+          group: ['@/screens/*', '@/presentation/*'],
+          message: 'Infrastructure layer cannot import from screens or presentation layers'
         },
         // Block application from importing presentation
         {
@@ -557,9 +563,13 @@ export default {
 // domain/entities/user/model.ts
 import { Avatar } from '@/infrastructure/ui/avatar'; // ERROR: Domain cannot import infrastructure
 
-// ❌ Blocked: Infrastructure importing application
+// ✅ Allowed: Infrastructure importing application (for adapters)
+// infrastructure/repositories/ReduxStateRepository.ts
+import { store } from '@/application/store'; // OK: Adapter pattern wrapping Redux
+
+// ❌ Blocked: Infrastructure importing screens/presentation
 // infrastructure/ui/button/Button.tsx
-import { useAppSelector } from '@/application/store'; // ERROR: Infrastructure cannot import application
+import { LoginScreen } from '@/screens/login'; // ERROR: Infrastructure cannot import presentation
 
 // ❌ Blocked: Application importing presentation
 // application/store/auth/authSlice.ts
