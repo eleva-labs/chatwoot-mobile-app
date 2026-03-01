@@ -62,32 +62,32 @@ type MessageWrapperProps = {
 };
 
 const variantTextMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-gray-700',
+  [MESSAGE_VARIANTS.AGENT]: 'text-slate-11',
   [MESSAGE_VARIANTS.USER]: 'text-white',
-  [MESSAGE_VARIANTS.BOT]: 'text-gray-700',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-gray-700',
+  [MESSAGE_VARIANTS.BOT]: 'text-slate-11',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-11',
   [MESSAGE_VARIANTS.ERROR]: 'text-white',
 };
 
 const variantBaseMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'bg-gray-100',
+  [MESSAGE_VARIANTS.AGENT]: 'bg-slate-3',
   [MESSAGE_VARIANTS.PRIVATE]: 'bg-amber-100',
   [MESSAGE_VARIANTS.USER]: 'bg-brand-600',
   [MESSAGE_VARIANTS.BOT]: 'bg-brand-100',
   [MESSAGE_VARIANTS.TEMPLATE]: 'bg-brand-100',
   [MESSAGE_VARIANTS.ERROR]: 'bg-ruby-700',
-  [MESSAGE_VARIANTS.EMAIL]: 'bg-gray-100',
+  [MESSAGE_VARIANTS.EMAIL]: 'bg-slate-3',
   [MESSAGE_VARIANTS.UNSUPPORTED]: 'bg-amber-100 border border-dashed border-amber-700',
 };
 
 const variantBorderMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'border-gray-100',
-  [MESSAGE_VARIANTS.USER]: 'border-gray-100',
-  [MESSAGE_VARIANTS.BOT]: 'border-gray-100',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'border-gray-100',
-  [MESSAGE_VARIANTS.ERROR]: 'border-gray-100',
-  [MESSAGE_VARIANTS.EMAIL]: 'border-gray-100',
-  [MESSAGE_VARIANTS.UNSUPPORTED]: 'border-gray-100',
+  [MESSAGE_VARIANTS.AGENT]: 'border-slate-4',
+  [MESSAGE_VARIANTS.USER]: 'border-slate-4',
+  [MESSAGE_VARIANTS.BOT]: 'border-slate-4',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'border-slate-4',
+  [MESSAGE_VARIANTS.ERROR]: 'border-slate-4',
+  [MESSAGE_VARIANTS.EMAIL]: 'border-slate-4',
+  [MESSAGE_VARIANTS.UNSUPPORTED]: 'border-slate-4',
 };
 
 const MessageWrapper = ({
@@ -179,8 +179,8 @@ const MessageWrapper = ({
                   channel={channel}
                   sourceId={item.sourceId}
                   errorMessage={item.contentAttributes?.externalError || ''}
-                  deliveredColor="text-gray-700"
-                  sentColor="text-gray-700"
+                  deliveredColor="text-slate-11"
+                  sentColor="text-slate-11"
                 />
               </Animated.View>
             )}

@@ -38,7 +38,7 @@ const DropdownMenuItem = DropdownMenu.create<React.ComponentProps<typeof Dropdow
         <View style={tailwind.style('flex flex-row items-center')}>
           <DropdownMenu.ItemTitle
             style={themedTailwind.style(
-              'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
             )}>
             {props.children}
           </DropdownMenu.ItemTitle>
@@ -155,7 +155,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
                       )}>
                       <Animated.Text
                         style={themedTailwind.style(
-                          'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+                          'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
                         )}>
                         {option.title}
                       </Animated.Text>

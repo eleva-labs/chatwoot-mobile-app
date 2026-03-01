@@ -22,7 +22,7 @@ const meta: Meta<typeof ChatHeader> = {
   },
   decorators: [
     Story => (
-      <View style={tailwind.style('bg-white')}>
+      <View style={tailwind.style('bg-solid-1')}>
         <Story />
       </View>
     ),
@@ -41,7 +41,7 @@ export const Default: Story = {
 
 const Title = ({ title }: { title: string }) => (
   <View style={tailwind.style('flex items-center justify-center py-2')}>
-    <Text style={tailwind.style('text-md font-medium italic text-gray-800')}>{title}</Text>
+    <Text style={tailwind.style('text-md font-medium italic text-slate-12')}>{title}</Text>
   </View>
 );
 

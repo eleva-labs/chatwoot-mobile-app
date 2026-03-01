@@ -153,7 +153,7 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   if (conversation) {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-white')}>
+      <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
         <LightBoxProvider>
           <ChatWindowProvider conversationId={conversationId}>
             <ChatScreenWrapper {...props} />
@@ -168,7 +168,7 @@ const ChatScreen = (props: ChatScreenProps) => {
     return (
       <Animated.View
         style={themedTailwind.style(
-          'flex-1 items-center justify-center bg-white',
+          'flex-1 items-center justify-center bg-solid-1',
           `pb-[${TAB_BAR_HEIGHT}px]`,
         )}>
         <ActivityIndicator />
@@ -178,7 +178,7 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   if (conversationError || !conversation) {
     return (
-      <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-white')}>
+      <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-solid-1')}>
         <Animated.View
           style={themedTailwind.style(
             'flex-1 items-center justify-center gap-8 px-4',
@@ -188,13 +188,13 @@ const ChatScreen = (props: ChatScreenProps) => {
           <Animated.View style={tailwind.style('flex items-center justify-center gap-4')}>
             <Animated.Text
               style={themedTailwind.style(
-                'text-2xl font-inter-420-20 text-gray-950 font-inter-semibold-20',
+                'text-2xl font-inter-420-20 text-slate-12 font-inter-semibold-20',
               )}>
               {conversationError || i18n.t('CONVERSATION.NOT_FOUND.TITLE')}
             </Animated.Text>
             <Animated.Text
               style={themedTailwind.style(
-                'font-inter-normal-20 font-base leading-[18px] tracking-[0.32px] text-gray-950 text-center',
+                'font-inter-normal-20 font-base leading-[18px] tracking-[0.32px] text-slate-12 text-center',
               )}>
               {i18n.t('CONVERSATION.NOT_FOUND.DESCRIPTION')}
             </Animated.Text>
@@ -208,7 +208,7 @@ const ChatScreen = (props: ChatScreenProps) => {
             <Pressable
               style={tailwind.style('flex-row justify-center items-center')}
               onPress={handleBackPress}>
-              <Animated.Text style={tailwind.style('text-base font-inter-medium-24 text-gray-900')}>
+              <Animated.Text style={tailwind.style('text-base font-inter-medium-24 text-slate-12')}>
                 {i18n.t('CONVERSATION.NOT_FOUND.BACK_TO_HOME')}
               </Animated.Text>
             </Pressable>

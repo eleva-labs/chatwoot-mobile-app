@@ -22,14 +22,14 @@ export const SlaEvents = ({ slaEvents, statusText }: SlaEventsProps) => {
     <Animated.View style={tailwind.style('py-6 px-6 gap-3')}>
       <Text
         style={themedTailwind.style(
-          'text-[17px]  text-gray-950 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
+          'text-[17px]  text-slate-12 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
         )}>
         {statusText}
       </Text>
 
       <Text
         style={themedTailwind.style(
-          'text-md  text-gray-900 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
+          'text-md  text-slate-12 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
         )}>
         {i18n.t('SLA.MISSES.TITLE')}
       </Text>
