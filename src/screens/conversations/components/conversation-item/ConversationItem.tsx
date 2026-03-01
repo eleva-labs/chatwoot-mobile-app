@@ -98,7 +98,6 @@ export const ConversationItem = memo(
             src={{ uri: senderThumbnail } as ImageURISource}
             name={senderName || ''}
             status={isTyping ? 'typing' : availabilityStatus || 'offline'}
-            unreadCount={unreadCount}
           />
         </NativeView>
 

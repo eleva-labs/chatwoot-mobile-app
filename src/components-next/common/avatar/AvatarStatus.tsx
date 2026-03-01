@@ -102,6 +102,7 @@ export const AvatarStatus: React.FC<Pick<AvatarProps, 'status' | 'size' | 'paren
               bottom: avatarTheme.status.position[size],
               right: avatarTheme.status.position[size],
               borderColor: tailwind.color(parentsBackground),
+              backgroundColor: tailwind.color(parentsBackground),
             },
           ]}>
           <View
