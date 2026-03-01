@@ -90,11 +90,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               accessible
               accessibilityRole="button"
               accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.NEW_CONVERSATION')}>
-              <Plus
-                size={20}
-                color={resolveColor('text-slate-10', '#80838D')}
-                strokeWidth={2}
-              />
+              <Plus size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
             </Pressable>
           )}
           <Pressable
@@ -105,11 +101,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SESSIONS_COUNT', {
               count: sessionsCount,
             })}>
-            <History
-              size={20}
-              color={resolveColor('text-slate-10', '#80838D')}
-              strokeWidth={2}
-            />
+            <History size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
           </Pressable>
           <Pressable
             onPress={onClose}
@@ -118,11 +110,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityRole="button"
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE')}
             accessibilityHint={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_HINT')}>
-            <X
-              size={20}
-              color={resolveColor('text-slate-10', '#80838D')}
-              strokeWidth={2}
-            />
+            <X size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
           </Pressable>
         </View>
       </View>

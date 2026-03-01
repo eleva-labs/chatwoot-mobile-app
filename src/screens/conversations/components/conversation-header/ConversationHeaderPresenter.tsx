@@ -131,18 +131,22 @@ const RightSection = ({
       <Pressable onPress={onRightIconPress} hitSlop={16}>
         {currentState === 'Filter' || currentState === 'Select' ? (
           <Animated.View exiting={exiting} entering={entering}>
-            <Icon size={24} icon={<CloseIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />} />
+            <Icon
+              size={24}
+              icon={<CloseIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
+            />
           </Animated.View>
         ) : (
           <Animated.View exiting={exiting} entering={entering}>
             {filtersAppliedCount > 0 && (
               <Animated.View
-                style={tailwind.style(
-                  'absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-brand',
-                )}
+                style={tailwind.style('absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-brand')}
               />
             )}
-            <Icon size={24} icon={<FilterIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />} />
+            <Icon
+              size={24}
+              icon={<FilterIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
+            />
           </Animated.View>
         )}
       </Pressable>

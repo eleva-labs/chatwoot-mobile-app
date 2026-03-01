@@ -77,7 +77,8 @@ class PartErrorBoundary extends React.Component<
     if (this.state.hasError) {
       if (__DEV__) {
         return (
-          <View style={{ padding: 8, backgroundColor: '#FFF3CD', borderRadius: 4, marginVertical: 2 }}>
+          <View
+            style={{ padding: 8, backgroundColor: '#FFF3CD', borderRadius: 4, marginVertical: 2 }}>
             <Text style={{ fontSize: 11, fontFamily: 'monospace', color: '#856404' }}>
               Error in custom part renderer ({this.props.partType}): {this.state.error?.message}
             </Text>
@@ -109,7 +110,12 @@ export const AIPartRenderer: React.FC<AIPartRendererProps> = ({
     const partProps = part as { type: string; [key: string]: unknown };
     return (
       <PartErrorBoundary partType={part.type}>
-        <CustomPartComponent part={partProps} role={role} isStreaming={isStreaming} isLastPart={isLastPart} />
+        <CustomPartComponent
+          part={partProps}
+          role={role}
+          isStreaming={isStreaming}
+          isLastPart={isLastPart}
+        />
       </PartErrorBoundary>
     );
   }
@@ -133,7 +139,12 @@ export const AIPartRenderer: React.FC<AIPartRendererProps> = ({
         const toolPartProps = part as unknown as { type: string; [key: string]: unknown };
         return (
           <PartErrorBoundary partType={`tool:${toolName}`}>
-            <CustomToolComponent part={toolPartProps} role={role} isStreaming={isStreaming} isLastPart={isLastPart} />
+            <CustomToolComponent
+              part={toolPartProps}
+              role={role}
+              isStreaming={isStreaming}
+              isLastPart={isLastPart}
+            />
           </PartErrorBoundary>
         );
       }

@@ -86,13 +86,16 @@ export const AIChatProvider: React.FC<AIChatProviderProps> = ({
   children,
 }) => {
   // Build theme context value
-  const themeValue = useMemo<AIThemeContextValue>(() => ({
-    resolveColor: (token: string, fallback: string) => {
-      if (theme?.[token]) return theme[token]!;
-      return tailwind.color(token) ?? fallback;
-    },
-    overrides: (theme ?? {}) as AIThemeTokens,
-  }), [theme]);
+  const themeValue = useMemo<AIThemeContextValue>(
+    () => ({
+      resolveColor: (token: string, fallback: string) => {
+        if (theme?.[token]) return theme[token]!;
+        return tailwind.color(token) ?? fallback;
+      },
+      overrides: (theme ?? {}) as AIThemeTokens,
+    }),
+    [theme],
+  );
 
   // Build i18n value
   const i18nValue = useMemo(() => i18nProp ?? defaultI18n, [i18nProp]);
@@ -120,9 +123,7 @@ export const AIChatProvider: React.FC<AIChatProviderProps> = ({
   return (
     <AIThemeContextProvider value={themeValue}>
       <AIi18nContextProvider value={i18nValue}>
-        <RegistryContext.Provider value={registries}>
-          {children}
-        </RegistryContext.Provider>
+        <RegistryContext.Provider value={registries}>{children}</RegistryContext.Provider>
       </AIi18nContextProvider>
     </AIThemeContextProvider>
   );

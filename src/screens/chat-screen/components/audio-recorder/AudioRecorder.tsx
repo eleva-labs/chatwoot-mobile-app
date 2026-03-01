@@ -262,9 +262,7 @@ export const AudioRecorder = ({
         onPress={sendRecordedMessage}
         style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
         <Animated.View
-          style={tailwind.style(
-            'flex items-center justify-center h-7 w-7 rounded-full bg-iris-9',
-          )}>
+          style={tailwind.style('flex items-center justify-center h-7 w-7 rounded-full bg-iris-9')}>
           <Icon icon={<SendIcon />} size={16} />
         </Animated.View>
       </Pressable>

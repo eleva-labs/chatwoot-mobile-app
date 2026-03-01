@@ -27,14 +27,10 @@ export const PrivateTextCell = (props: PrivateTextCellProps) => {
       ]}>
       <MarkdownDisplay isPrivate messageContent={text} />
       <Animated.View
-        style={tailwind.style(
-          'h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end',
-        )}>
+        style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
         <Icon icon={<LockIcon />} size={12} />
         <Text
-          style={tailwind.style(
-            'text-xs font-inter-420-20 tracking-[0.32px] pl-1 text-slate-11',
-          )}>
+          style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pl-1 text-slate-11')}>
           {messageTimestamp(timeStamp)}
         </Text>
       </Animated.View>

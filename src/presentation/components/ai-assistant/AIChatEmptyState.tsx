@@ -11,11 +11,12 @@ import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 
-const SUGGESTED_PROMPT_KEYS = [
-  'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.SUMMARIZE',
-  'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.DRAFT',
-  'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.CAPABILITIES',
-] as const;
+// TODO: Re-enable when prompt list is finalized (see JSX comment below)
+// const SUGGESTED_PROMPT_KEYS = [
+//   'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.SUMMARIZE',
+//   'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.DRAFT',
+//   'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.CAPABILITIES',
+// ] as const;
 
 interface AIChatEmptyStateProps {
   hasActiveSession?: boolean;

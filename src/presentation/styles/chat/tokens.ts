@@ -76,13 +76,21 @@ export const chatMessageTokens = {
 /** Maps MESSAGE_VARIANTS to token sets */
 export const getMessageTokensByVariant = (variant: string) => {
   switch (variant) {
-    case 'USER': return chatMessageTokens.outgoing;
-    case 'AGENT': return chatMessageTokens.incoming;
-    case 'BOT': return chatMessageTokens.bot;
-    case 'TEMPLATE': return chatMessageTokens.bot;
-    case 'PRIVATE': return chatMessageTokens.private;
-    case 'EMAIL': return chatMessageTokens.email;
-    case 'ERROR': return chatMessageTokens.error;
-    default: return chatMessageTokens.incoming;
+    case 'USER':
+      return chatMessageTokens.outgoing;
+    case 'AGENT':
+      return chatMessageTokens.incoming;
+    case 'BOT':
+      return chatMessageTokens.bot;
+    case 'TEMPLATE':
+      return chatMessageTokens.bot;
+    case 'PRIVATE':
+      return chatMessageTokens.private;
+    case 'EMAIL':
+      return chatMessageTokens.email;
+    case 'ERROR':
+      return chatMessageTokens.error;
+    default:
+      return chatMessageTokens.incoming;
   }
 };

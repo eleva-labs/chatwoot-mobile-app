@@ -231,15 +231,18 @@ export function useAIChatScroll(
 
   // Cleanup timeouts on unmount — read refs inside cleanup to get current values
   useEffect(() => {
+    const scrollTimeout = scrollTimeoutRef.current;
+    const scrollTimeoutId = scrollTimeoutIdRef.current;
+    const scrollStateTimeout = scrollStateTimeoutRef.current;
     return () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
       }
-      if (scrollTimeoutIdRef.current) {
-        clearTimeout(scrollTimeoutIdRef.current);
+      if (scrollTimeoutId) {
+        clearTimeout(scrollTimeoutId);
       }
-      if (scrollStateTimeoutRef.current) {
-        clearTimeout(scrollStateTimeoutRef.current);
+      if (scrollStateTimeout) {
+        clearTimeout(scrollStateTimeout);
       }
     };
   }, []);

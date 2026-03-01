@@ -19,11 +19,15 @@ export const AISessionItem: React.FC<SessionItemProps> = React.memo(
     const { t } = useAIi18n();
     const sessionTokens = tokens.session;
 
-    const title = useMemo(() => formatSessionTitle(session.updated_at, {
-      today: t('AI_ASSISTANT.CHAT.SESSION_ITEM.TODAY'),
-      yesterday: t('AI_ASSISTANT.CHAT.SESSION_ITEM.YESTERDAY'),
-      recently: t('AI_ASSISTANT.CHAT.SESSIONS.RECENTLY'),
-    }), [session.updated_at, t]);
+    const title = useMemo(
+      () =>
+        formatSessionTitle(session.updated_at, {
+          today: t('AI_ASSISTANT.CHAT.SESSION_ITEM.TODAY'),
+          yesterday: t('AI_ASSISTANT.CHAT.SESSION_ITEM.YESTERDAY'),
+          recently: t('AI_ASSISTANT.CHAT.SESSIONS.RECENTLY'),
+        }),
+      [session.updated_at, t],
+    );
 
     return (
       <Pressable onPress={onPress}>

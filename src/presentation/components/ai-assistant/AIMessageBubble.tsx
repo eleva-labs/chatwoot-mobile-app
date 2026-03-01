@@ -83,7 +83,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
 
   return (
     <View
-      style={      style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
+      style={style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
       accessible
       accessibilityRole="text"
       accessibilityLabel={
@@ -95,14 +95,21 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
       <View style={[style('mb-1'), { flexShrink: 0 }]}>
         {renderAvatarProp ? (
           renderAvatarProp({
-            name: avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME')),
+            name:
+              avatarName ||
+              (isUser
+                ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE')
+                : t('AI_ASSISTANT.CHAT.AVATAR_NAME')),
             src: avatarSrc,
             size: 28,
           })
         ) : avatarSrc ? (
           <Avatar
             name={
-              avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME'))
+              avatarName ||
+              (isUser
+                ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE')
+                : t('AI_ASSISTANT.CHAT.AVATAR_NAME'))
             }
             src={{ uri: avatarSrc }}
             size="lg"
@@ -114,13 +121,13 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               { backgroundColor: avatarColors.bg },
             ]}>
             <Text
-              style={[
-                style('text-sm font-inter-medium-24'),
-                { color: avatarColors.text },
-              ]}
+              style={[style('text-sm font-inter-medium-24'), { color: avatarColors.text }]}
               allowFontScaling={false}>
               {getAvatarInitials(
-                avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME')),
+                avatarName ||
+                  (isUser
+                    ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE')
+                    : t('AI_ASSISTANT.CHAT.AVATAR_NAME')),
               )}
             </Text>
           </View>
@@ -208,10 +215,11 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
                 }}
                 style={style('p-1.5 rounded-md')}
                 accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
-                {copiedId === message.id
-                  ? <Check size={16} color={resolveColor('text-teal-9', '#12A594')} strokeWidth={2} />
-                  : <Copy size={16} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
-                }
+                {copiedId === message.id ? (
+                  <Check size={16} color={resolveColor('text-teal-9', '#12A594')} strokeWidth={2} />
+                ) : (
+                  <Copy size={16} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
+                )}
               </Pressable>
             </View>
           )}

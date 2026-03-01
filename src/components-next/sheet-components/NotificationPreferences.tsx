@@ -79,7 +79,10 @@ export const NotificationPreferences = () => {
             {i18n.t(`NOTIFICATION_PREFERENCE.${NOTIFICATION_PREFERENCE_TYPES[item]}`)}
           </Animated.Text>
           <Switch
-            trackColor={{ false: tailwind.color('bg-slate-7') ?? '#C9D7E3', true: tailwind.color('bg-iris-9') ?? '#1F93FF' }}
+            trackColor={{
+              false: tailwind.color('bg-slate-7') ?? '#C9D7E3',
+              true: tailwind.color('bg-iris-9') ?? '#1F93FF',
+            }}
             thumbColor="#FFFFFF" // Intentional: white thumb on colored track, consistent across themes
             style={styles.switch}
             ios_backgroundColor={tailwind.color('bg-slate-7') ?? '#C9D7E3'}

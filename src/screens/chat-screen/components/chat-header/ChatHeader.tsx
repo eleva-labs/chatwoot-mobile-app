@@ -69,7 +69,10 @@ export const ChatHeader = ({
             hitSlop={8}
             style={tailwind.style('h-8 w-8 flex  justify-center items-start')}
             onPress={onBackPress}>
-            <Icon icon={<ChevronLeft stroke={tailwind.color('text-slate-12') ?? '#202020'} />} size={24} />
+            <Icon
+              icon={<ChevronLeft stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
+              size={24}
+            />
           </Pressable>
           <Pressable
             onPress={onContactDetailsPress}
@@ -96,7 +99,13 @@ export const ChatHeader = ({
               <Pressable hitSlop={8} onPress={toggleSlaEventsSheet}>
                 <Icon
                   icon={
-                    <SLAIcon color={isSlaMissed ? (tailwind.color('text-ruby-9') ?? '#E13D45') : (tailwind.color('text-slate-11') ?? '#646464')} />
+                    <SLAIcon
+                      color={
+                        isSlaMissed
+                          ? (tailwind.color('text-ruby-9') ?? '#E13D45')
+                          : (tailwind.color('text-slate-11') ?? '#646464')
+                      }
+                    />
                   }
                   size={24}
                 />
@@ -109,7 +118,10 @@ export const ChatHeader = ({
                   isResolved ? (
                     <ResolvedIcon strokeWidth={2} stroke={tailwind.color('bg-teal-9')} />
                   ) : (
-                    <OpenIcon strokeWidth={2} stroke={tailwind.color('text-slate-12') ?? '#202020'} />
+                    <OpenIcon
+                      strokeWidth={2}
+                      stroke={tailwind.color('text-slate-12') ?? '#202020'}
+                    />
                   )
                 }
                 size={24}
@@ -119,7 +131,9 @@ export const ChatHeader = ({
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>
               <Icon
-                icon={<Overflow strokeWidth={2} stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
+                icon={
+                  <Overflow strokeWidth={2} stroke={tailwind.color('text-slate-12') ?? '#202020'} />
+                }
                 size={24}
               />
             </ChatDropdownMenu>

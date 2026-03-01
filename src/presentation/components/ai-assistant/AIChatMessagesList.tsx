@@ -147,9 +147,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             accessible
             accessibilityRole="text"
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.LOADING_MESSAGES')}>
-            <Text style={style(tokens.text.muted)}>
-              {t('AI_ASSISTANT.CHAT.MESSAGES.LOADING')}
-            </Text>
+            <Text style={style(tokens.text.muted)}>{t('AI_ASSISTANT.CHAT.MESSAGES.LOADING')}</Text>
           </View>
         ) : listData.length === 0 && status === 'ready' ? (
           <AIChatEmptyState hasActiveSession={!!activeSessionId} onSendPrompt={onSendPrompt} />
@@ -189,7 +187,11 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             style={style(
               'absolute bottom-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6 shadow-md',
             )}>
-            <ChevronDown size={16} color={resolveColor('text-slate-11', '#60646C')} strokeWidth={2} />
+            <ChevronDown
+              size={16}
+              color={resolveColor('text-slate-11', '#60646C')}
+              strokeWidth={2}
+            />
           </Pressable>
         )}
         {!isAtTop && (

@@ -3,6 +3,8 @@ import type { UIMessage } from 'ai';
 import type { AIChatMessage } from '@/store/ai-chat/aiChatTypes';
 import { useMessageBridge, type UseMessageBridgeOptions } from '../useMessageBridge';
 
+import { mapMessagesToUIMessages } from '@/store/ai-chat/aiChatMapper';
+
 // Mock mapMessagesToUIMessages
 const mockMappedMessages: UIMessage[] = [
   { id: 'ui-1', role: 'user', parts: [{ type: 'text' as const, text: 'Hello' }] },
@@ -16,8 +18,6 @@ const mockMappedMessages: UIMessage[] = [
 jest.mock('@/store/ai-chat/aiChatMapper', () => ({
   mapMessagesToUIMessages: jest.fn(() => mockMappedMessages),
 }));
-
-import { mapMessagesToUIMessages } from '@/store/ai-chat/aiChatMapper';
 const mockMapMessages = mapMessagesToUIMessages as jest.MockedFunction<
   typeof mapMessagesToUIMessages
 >;

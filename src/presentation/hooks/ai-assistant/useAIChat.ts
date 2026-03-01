@@ -92,16 +92,20 @@ export interface UseAIChatReturn {
   /** Current session ID */
   sessionId: string | null;
   /** Add tool output for tool-result flows */
-  addToolOutput: (opts: {
-    tool: string;
-    toolCallId: string;
-    output: unknown;
-  } | {
-    tool: string;
-    toolCallId: string;
-    state: 'output-error';
-    errorText: string;
-  }) => void;
+  addToolOutput: (
+    opts:
+      | {
+          tool: string;
+          toolCallId: string;
+          output: unknown;
+        }
+      | {
+          tool: string;
+          toolCallId: string;
+          state: 'output-error';
+          errorText: string;
+        },
+  ) => void;
 }
 
 // ============================================================================
@@ -207,24 +211,22 @@ export function useAIChat(config: ChatConfig, options?: UseAIChatOptions): UseAI
 
   const transport = useMemo(() => {
     const { transport: t } = config;
-    const apiEndpoint = typeof t.streamEndpoint === 'function' ? t.streamEndpoint() : t.streamEndpoint;
+    const apiEndpoint =
+      typeof t.streamEndpoint === 'function' ? t.streamEndpoint() : t.streamEndpoint;
     const fetchFn = t.fetch ?? globalThis.fetch;
 
     return new DefaultChatTransport({
       api: apiEndpoint,
 
       fetch: async (url, fetchOptions) => {
-        const response = await (fetchFn as (url: string | URL, init?: unknown) => Promise<Response>)(
-          url as string,
-          fetchOptions,
-        );
+        const response = await (
+          fetchFn as (url: string | URL, init?: unknown) => Promise<Response>
+        )(url as string, fetchOptions);
 
         // Check for errors and parse backend-specific error format
         if (!response.ok) {
           const parseError = transportRef.current.parseError;
-          const errorMessage = parseError
-            ? await parseError(response)
-            : `HTTP ${response.status}`;
+          const errorMessage = parseError ? await parseError(response) : `HTTP ${response.status}`;
           throw new Error(errorMessage);
         }
 

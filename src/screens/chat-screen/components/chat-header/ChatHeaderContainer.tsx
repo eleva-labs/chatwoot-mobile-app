@@ -38,8 +38,7 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
   const contactId = conversation?.meta?.sender?.id;
 
   // Read AI status from conversation's custom_attributes (aligned with web logic)
-  // @ts-expect-error - customAttributes values can be boolean despite Record<string, string> type
-  const isAIEnabled = conversation?.customAttributes?.aiEnabled === true || conversation?.customAttributes?.aiEnabled === 'true';
+  const isAIEnabled = conversation?.customAttributes?.aiEnabled === 'true';
 
   const appliedSla = conversation?.appliedSla;
 

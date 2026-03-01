@@ -51,11 +51,7 @@ describe('validateAndNormalizeParts', () => {
     const msg = {
       id: '1',
       role: 'user' as const,
-      parts: [
-        { type: 'text', text: 'hello' },
-        { noType: true },
-        { type: 'text', text: 'world' },
-      ],
+      parts: [{ type: 'text', text: 'hello' }, { noType: true }, { type: 'text', text: 'world' }],
     } as unknown as UIMessage;
     const result = validateAndNormalizeParts(msg);
     expect(result.parts).toHaveLength(2);

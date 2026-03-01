@@ -30,13 +30,7 @@ export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPre
       <View style={tailwind.style('w-4 h-4')}>
         <BotIcon stroke={textColor} size={16} />
       </View>
-      <Text
-        style={[
-          tailwind.style('text-sm font-inter-medium-24'),
-          { color: textColor },
-        ]}>
-        AI
-      </Text>
+      <Text style={[tailwind.style('text-sm font-inter-medium-24'), { color: textColor }]}>AI</Text>
     </Pressable>
   );
 };

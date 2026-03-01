@@ -108,7 +108,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
           textDecorationLine: 'underline',
         },
       }),
-    // themeVersion ensures styles recompute when tailwind is rebuilt
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- themeVersion ensures styles recompute when tailwind is rebuilt
     [reasoningTextColor, reasoningCodeBg, reasoningLinkColor, themeVersion],
   );
 
@@ -130,7 +130,11 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
       isStreaming={isStreaming}
       defaultExpanded={defaultExpanded}
       icon={
-        <Brain size={14} color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')} strokeWidth={1.5} />
+        <Brain
+          size={14}
+          color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')}
+          strokeWidth={1.5}
+        />
       }>
       <ScrollView
         style={style('max-h-64')}

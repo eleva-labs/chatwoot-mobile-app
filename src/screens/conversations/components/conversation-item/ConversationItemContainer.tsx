@@ -99,17 +99,13 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
   const selected = useAppSelector(selectSelected);
   const currentState = useAppSelector(selectCurrentState);
 
-  const {
-    availabilityStatus,
-    name: contactName,
-    thumbnail: contactThumbnail,
-  } = contact || {};
+  const { availabilityStatus, name: contactName, thumbnail: contactThumbnail } = contact || {};
   const isSelected = useMemo(() => id in selected, [selected, id]);
   const isTyping = useMemo(() => isContactTyping(typingUsers, contactId), [typingUsers, contactId]);
   const typingText = useMemo(() => getTypingUsersText({ users: typingUsers }), [typingUsers]);
   // Read AI status from conversation's custom_attributes (aligned with web logic)
   const isAIEnabled = useMemo(
-    () => conversationItem.customAttributes?.aiEnabled === 'true' || conversationItem.customAttributes?.aiEnabled === true,
+    () => conversationItem.customAttributes?.aiEnabled === 'true',
     [conversationItem.customAttributes],
   );
 

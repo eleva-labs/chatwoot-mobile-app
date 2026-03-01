@@ -12,7 +12,6 @@ import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
 import {
   categorizeError,
   ERROR_DISPLAY_CONFIG,
-  type ErrorCategory,
   type ErrorDisplayConfig,
 } from '@/presentation/utils/ai-assistant/aiChatErrorUtils';
 
@@ -26,8 +25,8 @@ interface AIChatErrorProps {
 /** Map icon type to Lucide component */
 const ICON_COMPONENTS = {
   'wifi-off': WifiOff,
-  'clock': Clock,
-  'lock': Lock,
+  clock: Clock,
+  lock: Lock,
   'server-crash': ServerCrash,
   'alert-circle': CircleAlert,
 } as const;

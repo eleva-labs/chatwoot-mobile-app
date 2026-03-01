@@ -79,7 +79,12 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
           {i18n.t('CONVERSATION_PARTICIPANTS.TITLE')}
         </Animated.Text>
       </Animated.View>
-      <Animated.View style={[tailwind.style('rounded-[13px] mx-4 bg-solid-1'), styles.listShadow, Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' }]}>
+      <Animated.View
+        style={[
+          tailwind.style('rounded-[13px] mx-4 bg-solid-1'),
+          styles.listShadow,
+          Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
+        ]}>
         {conversationParticipants &&
           conversationParticipants.slice(0, 4).map((listItem, index) => {
             return <ListItem key={index} {...{ listItem, index }} />;
@@ -87,9 +92,7 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
         {overflowCount > 4 && <ParticipantOverflowCell count={overflowCount - 4} />}
         <Pressable
           onPress={onAddParticipant}
-          style={({ pressed }) => [
-            tailwind.style('rounded-b-[13px]', pressed ? 'bg-iris-3' : ''),
-          ]}>
+          style={({ pressed }) => [tailwind.style('rounded-b-[13px]', pressed ? 'bg-iris-3' : '')]}>
           <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
             <Animated.View style={tailwind.style('p-0.5')}>
               <Icon icon={<AddParticipant stroke={tailwind.color('text-iris-11')} />} size={24} />

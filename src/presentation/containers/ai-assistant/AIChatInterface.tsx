@@ -199,6 +199,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     // Sessions management
     const {
       sessions,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- will be used when loading indicator is added
       isLoadingMessages: isLoadingSessionMessages,
       showSessions,
       setShowSessions,
@@ -232,11 +233,16 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     }, [messages]);
 
     // Chatwoot i18n adapter — wraps the app's i18n system for the AI chat context
-    const chatwootI18n = useMemo(() => ({
-      t: (key: string, params?: Record<string, unknown>) => i18n.t(key, params),
-      get locale() { return i18n.locale; },
-      dir: 'ltr' as const,
-    }), []);
+    const chatwootI18n = useMemo(
+      () => ({
+        t: (key: string, params?: Record<string, unknown>) => i18n.t(key, params),
+        get locale() {
+          return i18n.locale;
+        },
+        dir: 'ltr' as const,
+      }),
+      [],
+    );
 
     const { style, tokens } = useAIStyles();
 

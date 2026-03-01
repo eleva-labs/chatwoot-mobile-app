@@ -49,10 +49,7 @@ export const AVATAR_COLORS = {
  * Uses `name.length % 6` to deterministically select a color pair,
  * matching the web algorithm exactly.
  */
-export function getAvatarColorsByName(
-  name: string | undefined,
-  isDark: boolean,
-): AvatarColorPair {
+export function getAvatarColorsByName(name: string | undefined, isDark: boolean): AvatarColorPair {
   if (!name) return AVATAR_COLORS.default;
   const palette = isDark ? AVATAR_COLORS.dark : AVATAR_COLORS.light;
   return palette[name.length % palette.length];

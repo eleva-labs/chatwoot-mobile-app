@@ -63,7 +63,10 @@ const ListItem = (props: ListItemProps) => {
               {listItem.subtitle}
             </Animated.Text>
             {listItem.hasChevron ? (
-              <Icon icon={<CaretRight stroke={tailwind.color('text-slate-12') ?? '#202020'} />} size={20} />
+              <Icon
+                icon={<CaretRight stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
+                size={20}
+              />
             ) : null}
           </Animated.View>
         </Animated.View>

@@ -101,7 +101,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   const [contentHeight, setContentHeight] = useState<number | undefined>(undefined);
   const handleInnerLayout = useCallback((e: { nativeEvent: { layout: { height: number } } }) => {
     const h = e.nativeEvent.layout.height;
-    setContentHeight(prev => (prev === undefined || h > prev) ? h : prev);
+    setContentHeight(prev => (prev === undefined || h > prev ? h : prev));
   }, []);
 
   // Reset measured height when text changes (e.g. message reuse or update)

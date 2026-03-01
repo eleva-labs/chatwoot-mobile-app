@@ -90,8 +90,8 @@ export const chatwootChatConfig: ChatConfig = {
   transport: chatwootTransport,
   behavior: { streamThrottle: 150 },
   persistence: {
-    get: (key) => AsyncStorage.getItem(key),
+    get: key => AsyncStorage.getItem(key),
     set: (key, value) => AsyncStorage.setItem(key, value),
-    remove: (key) => AsyncStorage.removeItem(key),
+    remove: key => AsyncStorage.removeItem(key),
   },
 };

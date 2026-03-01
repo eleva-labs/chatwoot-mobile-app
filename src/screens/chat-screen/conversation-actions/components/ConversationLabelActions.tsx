@@ -133,7 +133,9 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
               'flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3',
               pressed ? 'bg-iris-3' : '',
             ),
-            Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
+            Platform.OS === 'android' && {
+              backgroundColor: tailwind.color('bg-solid-1') ?? 'white',
+            },
           ]}>
           <Icon icon={<LabelTag />} size={16} />
           <Animated.Text

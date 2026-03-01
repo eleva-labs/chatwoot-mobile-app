@@ -197,10 +197,12 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
   const toolName = useMemo(() => {
     const name =
       part.toolName ||
-      ((part as ToolResultPart & { output?: { tool_name?: string } }).output?.tool_name as string) ||
+      ((part as ToolResultPart & { output?: { tool_name?: string } }).output
+        ?.tool_name as string) ||
       '';
     return formatToolName(name, t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL'));
-  }, [part.toolName, part]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- part.toolName is extracted from part
+  }, [part, t]);
 
   // Build title — show only tool name (state is conveyed by icon color)
   const title = toolName;

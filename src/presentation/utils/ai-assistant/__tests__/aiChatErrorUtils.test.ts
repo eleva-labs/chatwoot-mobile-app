@@ -1,9 +1,4 @@
-import {
-  categorizeError,
-  ERROR_DISPLAY_CONFIG,
-  type ErrorCategory,
-  type ErrorDisplayConfig,
-} from '../aiChatErrorUtils';
+import { categorizeError, ERROR_DISPLAY_CONFIG, type ErrorCategory } from '../aiChatErrorUtils';
 
 describe('categorizeError', () => {
   it('categorizes network errors', () => {

@@ -94,7 +94,13 @@ const ActionTabBarBackground = (props: ActionTabBarBackgroundProps) => {
       {children}
     </AnimatedBlurView>
   ) : (
-    <Animated.View style={[style, animatedTabBarStyle, styles.listShadow, { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' }]}>
+    <Animated.View
+      style={[
+        style,
+        animatedTabBarStyle,
+        styles.listShadow,
+        { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
+      ]}>
       {children}
     </Animated.View>
   );

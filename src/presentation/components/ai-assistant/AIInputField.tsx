@@ -110,7 +110,12 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
                   'w-7 h-7 rounded-full items-center justify-center',
                   inputTokens.sendButton,
                 )}>
-                <Send size={15} color="white" strokeWidth={2} style={{ marginLeft: -1, marginTop: -0.5 }} />
+                <Send
+                  size={15}
+                  color="white"
+                  strokeWidth={2}
+                  style={{ marginLeft: -1, marginTop: -0.5 }}
+                />
               </View>
             </Pressable>
           </View>

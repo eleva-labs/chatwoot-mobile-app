@@ -32,9 +32,7 @@ export const AISessionList: React.FC<AISessionListProps> = React.memo(
     if (sessions.length === 0) {
       return (
         <View style={style('p-4 items-center justify-center')}>
-          <Text style={style(sessionTokens.subtitle)}>
-            {t('AI_ASSISTANT.CHAT.SESSIONS.EMPTY')}
-          </Text>
+          <Text style={style(sessionTokens.subtitle)}>{t('AI_ASSISTANT.CHAT.SESSIONS.EMPTY')}</Text>
         </View>
       );
     }

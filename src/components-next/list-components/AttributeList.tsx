@@ -113,7 +113,12 @@ export const AttributeList = (props: AttributeListProps) => {
           </Animated.Text>
         </Animated.View>
       ) : null}
-      <Animated.View style={[tailwind.style('rounded-[13px] mx-4 bg-solid-1'), styles.listShadow, Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' }]}>
+      <Animated.View
+        style={[
+          tailwind.style('rounded-[13px] mx-4 bg-solid-1'),
+          styles.listShadow,
+          Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
+        ]}>
         {list.map(
           (listItem, index) =>
             !listItem.disabled &&

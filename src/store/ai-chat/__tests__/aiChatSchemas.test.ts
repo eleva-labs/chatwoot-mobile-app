@@ -22,7 +22,12 @@ describe('AIChatBotApiSchema', () => {
   });
 
   it('parses bot with optional fields', () => {
-    const data = { id: 1, name: 'Test Bot', avatar_url: 'https://example.com/avatar.png', description: 'A test bot' };
+    const data = {
+      id: 1,
+      name: 'Test Bot',
+      avatar_url: 'https://example.com/avatar.png',
+      description: 'A test bot',
+    };
     const result = AIChatBotApiSchema.parse(data);
     expect(result.avatar_url).toBe('https://example.com/avatar.png');
     expect(result.description).toBe('A test bot');

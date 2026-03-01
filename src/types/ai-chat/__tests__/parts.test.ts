@@ -19,8 +19,6 @@ import {
   getLastAssistantMessage,
   getActiveReasoning,
   type MessagePart,
-  type TextPart,
-  type ReasoningPart,
   type ToolCallPart,
   type ToolResultPart,
   type ToolPart,
@@ -210,7 +208,9 @@ describe('hasReasoningParts', () => {
 
 describe('hasToolParts', () => {
   it('returns true when tool parts exist', () => {
-    expect(hasToolParts([{ type: 'tool-call', toolCallId: 'tc1', toolName: 'search' } as ToolCallPart])).toBe(true);
+    expect(
+      hasToolParts([{ type: 'tool-call', toolCallId: 'tc1', toolName: 'search' } as ToolCallPart]),
+    ).toBe(true);
   });
 
   it('returns false when no tool parts', () => {
@@ -221,9 +221,24 @@ describe('hasToolParts', () => {
 describe('getDeduplicatedToolParts', () => {
   it('deduplicates by toolCallId, keeping latest', () => {
     const parts: MessagePart[] = [
-      { type: 'tool-input-streaming', toolCallId: 'tc1', toolName: 'search', state: 'input-streaming' } as ToolCallPart,
-      { type: 'tool-input-available', toolCallId: 'tc1', toolName: 'search', state: 'input-available' } as ToolCallPart,
-      { type: 'tool-output-available', toolCallId: 'tc1', toolName: 'search', state: 'output-available' } as unknown as ToolPart,
+      {
+        type: 'tool-input-streaming',
+        toolCallId: 'tc1',
+        toolName: 'search',
+        state: 'input-streaming',
+      } as ToolCallPart,
+      {
+        type: 'tool-input-available',
+        toolCallId: 'tc1',
+        toolName: 'search',
+        state: 'input-available',
+      } as ToolCallPart,
+      {
+        type: 'tool-output-available',
+        toolCallId: 'tc1',
+        toolName: 'search',
+        state: 'output-available',
+      } as unknown as ToolPart,
     ];
     const result = getDeduplicatedToolParts(parts);
     expect(result).toHaveLength(1);
@@ -254,17 +269,31 @@ describe('getDeduplicatedToolParts', () => {
 
 describe('deriveToolDisplayState', () => {
   it('returns explicit state when present', () => {
-    const part: ToolCallPart = { type: 'tool-call', toolCallId: 'tc1', toolName: 'search', state: 'input-streaming' };
+    const part: ToolCallPart = {
+      type: 'tool-call',
+      toolCallId: 'tc1',
+      toolName: 'search',
+      state: 'input-streaming',
+    };
     expect(deriveToolDisplayState(part)).toBe(TOOL_STATES.INPUT_STREAMING);
   });
 
   it('prefers explicit state over type-derived state', () => {
-    const part: ToolCallPart = { type: 'tool-call', toolCallId: 'tc1', toolName: 'search', state: 'output-available' };
+    const part: ToolCallPart = {
+      type: 'tool-call',
+      toolCallId: 'tc1',
+      toolName: 'search',
+      state: 'output-available',
+    };
     expect(deriveToolDisplayState(part)).toBe(TOOL_STATES.OUTPUT_AVAILABLE);
   });
 
   it('derives INPUT_STREAMING from type', () => {
-    const part: ToolCallPart = { type: 'tool-input-streaming', toolCallId: 'tc1', toolName: 'search' };
+    const part: ToolCallPart = {
+      type: 'tool-input-streaming',
+      toolCallId: 'tc1',
+      toolName: 'search',
+    };
     expect(deriveToolDisplayState(part)).toBe(TOOL_STATES.INPUT_STREAMING);
   });
 
@@ -384,9 +413,7 @@ describe('getLastAssistantMessage', () => {
   });
 
   it('returns undefined when no assistant messages', () => {
-    const messages = [
-      { id: '1', role: 'user' as const, parts: [] },
-    ];
+    const messages = [{ id: '1', role: 'user' as const, parts: [] }];
     expect(getLastAssistantMessage(messages)).toBeUndefined();
   });
 });

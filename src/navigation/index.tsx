@@ -353,7 +353,8 @@ export const AppNavigator = () => {
   const themedTailwind = useThemedStyles();
 
   return (
-    <GestureHandlerRootView style={[themedTailwind.style('bg-background'), styles.navigationLayout]}>
+    <GestureHandlerRootView
+      style={[themedTailwind.style('bg-background'), styles.navigationLayout]}>
       <KeyboardProvider>
         <RefsProvider>
           <SafeAreaProvider style={themedTailwind.style('bg-background')}>

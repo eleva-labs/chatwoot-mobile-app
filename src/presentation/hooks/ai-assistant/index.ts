@@ -23,4 +23,9 @@ export { useAITheme, useResolveColor, AIThemeContextProvider } from './useAIThem
 export type { AIThemeTokens, AIThemeContextValue } from './useAITheme';
 
 export { AIChatProvider, useAIChatRegistries } from './useAIChatProvider';
-export type { AIChatProviderProps, PartRendererProps, PartComponent, AIChatRegistries } from './useAIChatProvider';
+export type {
+  AIChatProviderProps,
+  PartRendererProps,
+  PartComponent,
+  AIChatRegistries,
+} from './useAIChatProvider';

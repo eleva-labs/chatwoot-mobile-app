@@ -107,10 +107,7 @@ export function useMessageBridge(options: UseMessageBridgeOptions): {
  * For each assistant message in the backend set, if it lacks reasoning parts
  * but a matching SDK message (by id) has them, prepend the reasoning parts.
  */
-function mergeReasoningParts(
-  backendMessages: UIMessage[],
-  sdkMessages: UIMessage[],
-): UIMessage[] {
+function mergeReasoningParts(backendMessages: UIMessage[], sdkMessages: UIMessage[]): UIMessage[] {
   if (sdkMessages.length === 0) return backendMessages;
 
   const sdkMap = new Map(sdkMessages.map(m => [m.id, m]));

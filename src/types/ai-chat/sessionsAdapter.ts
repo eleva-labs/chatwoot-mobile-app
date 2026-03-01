@@ -28,7 +28,7 @@ export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp?: string;
-  parts?: Array<{
+  parts?: {
     type: string;
     text?: string;
     toolName?: string;
@@ -36,7 +36,7 @@ export interface ChatMessage {
     args?: Record<string, unknown>;
     result?: unknown;
     state?: string;
-  }>;
+  }[];
 }
 
 // ============================================================================

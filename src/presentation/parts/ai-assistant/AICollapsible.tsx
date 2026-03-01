@@ -121,10 +121,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
     }
     return {
       opacity: withRepeat(
-        withSequence(
-          withTiming(0.4, { duration: 1000 }),
-          withTiming(1, { duration: 1000 }),
-        ),
+        withSequence(withTiming(0.4, { duration: 1000 }), withTiming(1, { duration: 1000 })),
         -1,
         true,
       ),
@@ -133,7 +130,11 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
 
   return (
     <View
-      style={style('rounded-xl border overflow-hidden w-full', 'border-slate-6/50', colors.background)}
+      style={style(
+        'rounded-xl border overflow-hidden w-full',
+        'border-slate-6/50',
+        colors.background,
+      )}
       accessible
       accessibilityRole="button"
       accessibilityState={{ expanded: isExpanded }}
@@ -179,7 +180,11 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
 
         {/* Chevron (rotates 90deg like Vue) */}
         <Animated.View style={[chevronAnimatedStyle, style('w-4 h-4 items-center justify-center')]}>
-          <ChevronRight size={14} color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')} strokeWidth={2} />
+          <ChevronRight
+            size={14}
+            color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')}
+            strokeWidth={2}
+          />
         </Animated.View>
       </Pressable>
 
@@ -191,7 +196,11 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
               {children}
               {/* Collapse footer button */}
               <Pressable onPress={handleToggle} style={style('flex-row items-center gap-1 pt-2')}>
-                <ChevronUp size={12} color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')} strokeWidth={2} />
+                <ChevronUp
+                  size={12}
+                  color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')}
+                  strokeWidth={2}
+                />
                 <Text style={style('text-xs', colors.label)}>
                   {t('AI_ASSISTANT.CHAT.COLLAPSIBLE.COLLAPSE')}
                 </Text>

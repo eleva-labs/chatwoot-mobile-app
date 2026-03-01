@@ -36,7 +36,10 @@ export const AddCommandButton = ({
             tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
             addIconAnimation,
           ]}>
-          <Icon icon={<AddIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />} size={24} />
+          <Icon
+            icon={<AddIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
+            size={24}
+          />
         </Animated.View>
       </Pressable>
     </Animated.View>

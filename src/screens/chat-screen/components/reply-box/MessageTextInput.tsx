@@ -211,7 +211,9 @@ export const MessageTextInput = ({
               Platform.OS === 'ios' ? 'absolute bottom-full' : 'relative h-[150px]',
             ),
             styles.listShadow,
-            Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
+            Platform.OS === 'android' && {
+              backgroundColor: tailwind.color('bg-solid-1') ?? 'white',
+            },
           ]}>
           <ScrollView keyboardShouldPersistTaps="always">
             {filteredSuggestions.map(agent => {
