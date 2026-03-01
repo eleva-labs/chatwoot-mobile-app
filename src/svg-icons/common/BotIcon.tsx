@@ -4,18 +4,16 @@ import Svg, { Path, Rect } from 'react-native-svg';
 interface BotIconProps {
   stroke?: string;
   size?: number;
+  color?: string;
 }
 
 export const BotIcon = ({
   stroke = 'currentColor',
   size = 24,
+  color,
 }: BotIconProps): JSX.Element => {
   return (
-    <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none">
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M12 8V4H8"
         stroke={stroke}

@@ -1,9 +1,15 @@
 import React from 'react';
 import Svg, { Path, G } from 'react-native-svg';
 
-export const EyeIcon = ({ stroke = 'currentColor' }: { stroke?: string }) => {
+export const EyeIcon = ({
+  stroke = 'currentColor',
+  color,
+}: {
+  stroke?: string;
+  color?: string;
+}) => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 17 16" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 17 16" fill="none" color={color}>
       <G id="lucide/eye">
         <G id="Vector">
           <Path

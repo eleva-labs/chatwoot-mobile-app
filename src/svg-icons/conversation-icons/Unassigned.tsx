@@ -1,9 +1,15 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-export const UnassignedIcon = ({ stroke = 'currentColor' }: { stroke?: string }) => {
+export const UnassignedIcon = ({
+  stroke = 'currentColor',
+  color,
+}: {
+  stroke?: string;
+  color?: string;
+}) => {
   return (
-    <Svg width="22" height="23" viewBox="0 0 22 23" fill="none">
+    <Svg width="22" height="23" viewBox="0 0 22 23" fill="none" color={color}>
       <Path
         d="M10.9997 2.5791C5.806 2.5791 1.5957 6.7894 1.5957 11.9831C1.5957 17.1767 5.806 21.387 10.9997 21.387C16.1933 21.387 20.4036 17.1767 20.4036 11.9831C20.4036 10.8453 20.2016 9.75476 19.8314 8.74533"
         stroke={stroke}

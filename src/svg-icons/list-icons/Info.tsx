@@ -1,9 +1,15 @@
 import React from 'react';
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 
-export const InfoIcon = ({ fill = 'currentColor' }: { fill?: string }): JSX.Element => {
+export const InfoIcon = ({
+  fill = 'currentColor',
+  color,
+}: {
+  fill?: string;
+  color?: string;
+}): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 21 28" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 21 28" fill="none" color={color}>
       <G clipPath="url(#clip0_2165_87542)">
         <Path
           d="M10.6777 23.9561C16.1758 23.9561 20.6387 19.4932 20.6387 13.9951C20.6387 8.49707 16.1758 4.03418 10.6777 4.03418C5.17969 4.03418 0.716797 8.49707 0.716797 13.9951C0.716797 19.4932 5.17969 23.9561 10.6777 23.9561ZM10.6777 22.2959C6.08789 22.2959 2.37696 18.585 2.37696 13.9951C2.37696 9.40527 6.08789 5.69434 10.6777 5.69434C15.2676 5.69434 18.9785 9.40527 18.9785 13.9951C18.9785 18.585 15.2676 22.2959 10.6777 22.2959Z"

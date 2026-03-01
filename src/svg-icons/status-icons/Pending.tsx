@@ -3,9 +3,9 @@ import Svg, { G, Mask, Path, Rect } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const PendingIcon = ({ stroke = 'currentColor' }: IconProps): JSX.Element => {
+export const PendingIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M12 2V6M12 18V22M6 12H2M22 12H18M19.0784 19.0784L16.25 16.25M19.0784 4.99994L16.25 7.82837M4.92157 19.0784L7.75 16.25M4.92157 4.99994L7.75 7.82837"
         stroke={stroke}

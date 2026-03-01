@@ -3,9 +3,13 @@ import Svg, { Path } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const MuteIcon = ({ stroke = 'currentColor', strokeWidth = '1.5' }: IconProps): JSX.Element => {
+export const MuteIcon = ({
+  stroke = 'currentColor',
+  strokeWidth = '1.5',
+  color,
+}: IconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M18.5 11.5V16.1002C18.5 18.16 18.5 19.19 18.0747 19.7331C17.7046 20.2058 17.1418 20.4872 16.5416 20.4997C15.8519 20.514 15.028 19.8961 13.3801 18.6603L12.313 17.86"
         stroke={stroke}

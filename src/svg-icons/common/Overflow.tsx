@@ -3,9 +3,9 @@ import Svg, { Path } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const Overflow = ({ stroke = 'currentColor', strokeWidth = 1.5 }: IconProps) => {
+export const Overflow = ({ stroke = 'currentColor', strokeWidth = 1.5, color }: IconProps) => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z"
         stroke={stroke}

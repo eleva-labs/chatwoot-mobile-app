@@ -3,9 +3,9 @@ import Svg, { Path } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const KeyRoundIcon = ({ stroke = 'currentColor' }: IconProps): JSX.Element => {
+export const KeyRoundIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (
-    <Svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+    <Svg width="40" height="40" viewBox="0 0 40 40" fill="none" color={color}>
       <Path
         d="M27.5026 13.3333C27.9628 13.3333 28.3359 12.9602 28.3359 12.4999C28.3359 12.0397 27.9628 11.6666 27.5026 11.6666C27.0424 11.6666 26.6693 12.0397 26.6693 12.4999C26.6693 12.9602 27.0424 13.3333 27.5026 13.3333Z"
         fill="currentColor"

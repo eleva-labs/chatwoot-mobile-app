@@ -23,7 +23,7 @@ const getButtonStyles = (
   const variantStyles = isPrimary
     ? isDestructive
       ? 'bg-ruby-3' // Pastel red background for destructive primary
-      : 'bg-brand-600'
+      : 'bg-brand'
     : isDestructive
       ? 'bg-ruby-2' // Pastel red background for destructive secondary
       : 'bg-slate-2';

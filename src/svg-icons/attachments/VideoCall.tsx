@@ -1,9 +1,17 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-export const VideoCall = ({ stroke = 'currentColor', strokeOpacity = '0.565' }: { stroke?: string; strokeOpacity?: string }) => {
+export const VideoCall = ({
+  stroke = 'currentColor',
+  strokeOpacity = '0.565',
+  color,
+}: {
+  stroke?: string;
+  strokeOpacity?: string;
+  color?: string;
+}) => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M22 8.93091C22 8.32591 22 8.02291 21.88 7.88191C21.8286 7.82196 21.7638 7.77503 21.6908 7.74496C21.6178 7.71489 21.5387 7.70253 21.46 7.70891C21.277 7.72291 21.063 7.93691 20.634 8.36591L17 11.9999L20.634 15.6339C21.063 16.0629 21.277 16.2769 21.461 16.2909C21.5397 16.2973 21.6188 16.2849 21.6918 16.2549C21.7648 16.2248 21.8296 16.1779 21.881 16.1179C22 15.9779 22 15.6739 22 15.0679V8.93191V8.93091Z"
         stroke={stroke}

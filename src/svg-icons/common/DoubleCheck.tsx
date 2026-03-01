@@ -10,9 +10,10 @@ type DoubleCheckIconProps = IconProps & {
 export const DoubleCheckIcon = ({
   stroke = 'currentColor',
   renderSecondTick = true,
+  color,
 }: DoubleCheckIconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M16 5L4.92045 18L1 12.0909"
         stroke={stroke}
@@ -33,9 +34,9 @@ export const DoubleCheckIcon = ({
   );
 };
 
-export const MessagePendingIcon = ({ stroke = 'currentColor' }: IconProps): JSX.Element => {
+export const MessagePendingIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 14 15" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 14 15" fill="none" color={color}>
       <Path
         d="M7 4.5V7.5L9 8.5M12 7.5C12 10.2614 9.76142 12.5 7 12.5C4.23858 12.5 2 10.2614 2 7.5C2 4.73858 4.23858 2.5 7 2.5C9.76142 2.5 12 4.73858 12 7.5Z"
         stroke={stroke}

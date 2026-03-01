@@ -3,9 +3,9 @@ import Svg, { G, Path, Rect, Mask } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const SnoozedIcon = ({ stroke = 'currentColor' }: IconProps): JSX.Element => {
+export const SnoozedIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M15.3566 12.5H22L15.3566 20.5H22M3 4.5H14.958L3 17.8818H13.4965"
         stroke={stroke}

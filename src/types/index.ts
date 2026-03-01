@@ -12,7 +12,14 @@ export * from './Team';
 export * from './Account';
 export * from './Macro';
 
-export type IconProps = PathProps;
+export type IconProps = PathProps & {
+  /**
+   * Color prop forwarded to the root <Svg> element.
+   * When set, `currentColor` in stroke/fill attributes resolves to this value
+   * instead of falling back to black in React Native.
+   */
+  color?: string;
+};
 
 export interface GenericListType {
   key?: string;

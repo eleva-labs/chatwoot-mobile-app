@@ -164,7 +164,7 @@ export const LANGUAGES = {
   de: 'German', */
   en: 'English',
   /* el: 'Greek', */
-  es: 'Spanish',
+  es: 'Español',
   /* fa: 'Farsi',
   fi: 'Finnish',
   fr: 'French',

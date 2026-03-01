@@ -188,7 +188,9 @@ const LoginScreen = () => {
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={tailwind.style('px-6 pt-24')}>
-          <Image source={appLogo} style={tailwind.style('w-10 h-10')} resizeMode="contain" />
+          <View style={tailwind.style('items-center')}>
+            <Image source={appLogo} style={tailwind.style('w-36 h-36')} resizeMode="contain" />
+          </View>
           {/* <View style={tailwind.style('pt-6 gap-4')}>
             <Animated.Text style={tailwind.style('text-2xl text-slate-12 font-inter-semibold-20')}>
               {i18n.t('LOGIN.TITLE')}
@@ -293,7 +295,16 @@ const LoginScreen = () => {
                   <Pressable
                     style={tailwind.style('absolute right-4 top-2.5')}
                     onPress={() => setShowPassword(!showPassword)}>
-                    <Icon size={20} icon={showPassword ? <EyeIcon /> : <EyeSlash />} />
+                    <Icon
+                      size={20}
+                      icon={
+                        showPassword ? (
+                          <EyeIcon stroke={tailwind.color('text-slate-11') ?? '#6B7280'} />
+                        ) : (
+                          <EyeSlash stroke={tailwind.color('text-slate-11') ?? '#6B7280'} />
+                        )
+                      }
+                    />
                   </Pressable>
                 </View>
                 {errors.password && (
@@ -307,8 +318,7 @@ const LoginScreen = () => {
           />
 
           <Pressable style={tailwind.style('pt-1 mb-8')} onPress={openResetPassword}>
-            <Animated.Text
-              style={tailwind.style('text-iris-11 font-inter-medium-24 text-right')}>
+            <Animated.Text style={tailwind.style('text-iris-11 font-inter-medium-24 text-right')}>
               {i18n.t('LOGIN.FORGOT_PASSWORD')}
             </Animated.Text>
           </Pressable>

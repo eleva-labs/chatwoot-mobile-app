@@ -22,7 +22,7 @@ const getButtonStyles = (
   themedTailwind: ReturnType<typeof import('@/hooks').useThemedStyles>,
 ) => {
   const baseStyles = 'py-[11px] flex-row items-center justify-center rounded-[13px] gap-4';
-  const variantStyles = isPrimary ? 'bg-brand-600' : 'bg-slate-2';
+  const variantStyles = isPrimary ? 'bg-brand' : 'bg-slate-2';
   const pressedStyles = isPrimary ? 'opacity-95' : pressed ? 'bg-slate-3' : '';
 
   return themedTailwind.style(baseStyles, variantStyles, pressedStyles);
@@ -36,11 +36,11 @@ const getTextStyles = (
   const baseStyles = 'text-base font-medium tracking-[0.16px] leading-[22px]';
   const colorStyles = isPrimary
     ? isDestructive
-      ? 'text-tomato-800'
-      : 'text-blue-800'
+      ? 'text-ruby-11'
+      : 'text-white'
     : isDestructive
-      ? 'text-ruby-800'
-      : 'text-blue-800';
+      ? 'text-ruby-11'
+      : 'text-iris-11';
 
   return themedTailwind.style(baseStyles, colorStyles);
 };
@@ -76,7 +76,7 @@ export const IconButton = ({
         style={({ pressed }) => getButtonStyles(isPrimary, pressed, themedTailwind)}
         {...handlers}>
         <Icon
-          icon={<PhoneIcon strokeWidth={2} stroke={tailwind.color('bg-blue-800')} />}
+          icon={<PhoneIcon strokeWidth={2} stroke={tailwind.color('text-white') ?? '#FFFFFF'} />}
           size={24}
         />
         <Animated.Text style={getTextStyles(isPrimary, isDestructive, themedTailwind)}>

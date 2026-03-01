@@ -1,9 +1,17 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-export const PlayerIcon = ({ stroke = 'currentColor', strokeOpacity = '0.565' }: { stroke?: string; strokeOpacity?: string }) => {
+export const PlayerIcon = ({
+  stroke = 'currentColor',
+  strokeOpacity = '0.565',
+  color,
+}: {
+  stroke?: string;
+  strokeOpacity?: string;
+  color?: string;
+}) => {
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
         d="M9.22217 8.6277C9.22217 8.0977 9.22217 7.83214 9.33328 7.68437C9.38094 7.62071 9.44171 7.56803 9.51149 7.52989C9.58126 7.49174 9.65841 7.46902 9.73772 7.46325C9.92217 7.44992 10.1455 7.59325 10.5922 7.87992L15.8366 11.2521C16.2244 11.501 16.4177 11.6255 16.4844 11.7833C16.5134 11.8518 16.5284 11.9255 16.5284 11.9999C16.5284 12.0744 16.5134 12.148 16.4844 12.2166C16.4177 12.3744 16.2244 12.4988 15.8366 12.7477L10.5922 16.1199C10.1455 16.4066 9.92217 16.5499 9.73772 16.5366C9.65832 16.5307 9.58112 16.5078 9.51134 16.4695C9.44156 16.4311 9.38083 16.3782 9.33328 16.3144C9.22217 16.1677 9.22217 15.9021 9.22217 15.3721V8.6277Z"
         stroke={stroke}
