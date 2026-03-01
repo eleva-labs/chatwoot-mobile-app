@@ -38,7 +38,10 @@ This system is designed so that a single Tailwind class like `bg-slate-3` resolv
 | `src/theme/tailwind.ts` | Mutable singleton + `rebuildTailwind(isDark)` |
 | `src/theme/components/ThemeProvider.tsx` | Unified provider -- manages state, rebuilds tailwind |
 | `src/theme/text-styles.ts` | Typography presets |
+| `src/theme/colors/avatar.ts` | Name-based avatar colors (6 pairs, matches web) |
 | `src/theme/index.ts` | Barrel exports |
+| `src/presentation/styles/ai-assistant/` | AI assistant design tokens + styles hook |
+| `src/presentation/styles/chat/` | Chat message design tokens + styles hook |
 
 ---
 
@@ -169,7 +172,7 @@ export const buildTwConfig = (isDark: boolean) => {
           // ... all semantic tokens
         },
         fontFamily: { /* Inter variants */ },
-        fontSize: { xs: '12px', cxs: '13px', md: '15px', '2xl': '22px' },
+        fontSize: { xxs: '10px', xs: '12px', cxs: '13px', md: '15px', '2xl': '22px' },
       },
     },
   };
@@ -349,7 +352,35 @@ const msgTokens = message('assistant');
 </View>
 ```
 
-### 5.4 When to Use Tokens
+### 5.4 Chat Message Tokens
+
+The chat message system has its own tokens at `src/presentation/styles/chat/tokens.ts`, following the same pattern as AI assistant tokens:
+
+```typescript
+import { useChatStyles } from '@/presentation/styles/chat';
+
+const { style, tokens, getTokens } = useChatStyles();
+const msgTokens = getTokens('USER'); // or 'AGENT', 'BOT', 'PRIVATE', 'EMAIL', 'ERROR'
+
+<View style={style(msgTokens.background, 'rounded-xl p-3')}>
+  <Text style={style(msgTokens.text)}>{content}</Text>
+</View>
+```
+
+Variants: `incoming` (agent), `outgoing` (user), `activity`, `private`, `email`, `error`, `bot`, `date`, `replyQuote`.
+
+### 5.5 Avatar Colors
+
+Name-based avatar colors live in `src/theme/colors/avatar.ts`. Six light/dark color pairs match the web's `Avatar.vue` exactly. The color is deterministic using `name.length % 6`:
+
+```typescript
+import { getAvatarColorsByName, getAvatarInitials } from '@/theme/colors/avatar';
+
+const colors = getAvatarColorsByName('John Doe', isDark); // { bg: '#E1E9FF', text: '#3A5BC7' }
+const initials = getAvatarInitials('John Doe'); // 'JD'
+```
+
+### 5.6 When to Use Tokens
 
 | Situation | Approach |
 |-----------|----------|
@@ -394,6 +425,7 @@ Available presets: `display`, `h1`, `h2`, `h3`, `body`, `bodySmall`, `caption`, 
 
 | Class | Size | Note |
 |-------|------|------|
+| `text-xxs` | 10px | Badges, micro labels |
 | `text-xs` | 12px | Captions, timestamps |
 | `text-cxs` | 13px | Custom -- small body |
 | `text-sm` | 14px | Secondary body, labels |
@@ -403,7 +435,7 @@ Available presets: `display`, `h1`, `h2`, `h3`, `body`, `bodySmall`, `caption`, 
 | `text-xl` | 20px | Section headings |
 | `text-2xl` | 22px | Screen titles |
 
-`text-cxs`, `text-md`, and `text-2xl` are custom sizes added in the tailwind config.
+`text-xxs`, `text-cxs`, `text-md`, and `text-2xl` are custom sizes added in the tailwind config.
 
 ---
 
@@ -549,25 +581,67 @@ Use `tailwind.color()` for props that take a color string:
 ```typescript
 <ActivityIndicator color={tailwind.color('text-iris-9')} />
 <Icon stroke={tailwind.color('text-slate-11')} />
+<StatusBar backgroundColor={tailwind.color('bg-slate-1')} />
 ```
 
-### 8.5 Radix Step Selection Guide
+### 3.6 Fallback Pattern for Native Props
 
-When choosing a step for a new element:
+`tailwind.color()` can return `undefined` if the class string is invalid or the theme hasn't initialized. For native component props that require a color string, always provide a fallback:
 
-| Element | Recommended Step | Class Example |
-|---------|-----------------|---------------|
-| Page background | 1 | `bg-slate-1` |
-| Card/section background | 2 or 3 | `bg-slate-3` |
-| Hover state | 4 | `bg-slate-4` |
-| Pressed state | 5 | `bg-slate-5` |
-| Divider/separator | 6 | `border-slate-6` |
-| Input/card border | 7 | `border-slate-7` |
-| Focus ring | 8 | `border-iris-8` |
-| Button fill / badge | 9 | `bg-iris-9` |
-| Button hover fill | 10 | `bg-iris-10` |
-| Secondary text / labels | 11 | `text-slate-11` |
-| Primary text / headings | 12 | `text-slate-12` |
+```typescript
+// CORRECT -- defensive fallback
+<Icon stroke={tailwind.color('text-slate-12') ?? '#202020'} />
+<Switch ios_backgroundColor={tailwind.color('bg-slate-7') ?? '#C9D7E3'} />
+
+// WRONG -- may pass undefined
+<Icon stroke={tailwind.color('text-slate-12')} />
+```
+
+The fallback hex should approximate the light-mode value. It is a safety net that should never be needed at runtime with a properly initialized theme.
+
+### 8.6 Surface Hierarchy
+
+Choose the right background based on the element's role:
+
+| Token | Role | Usage |
+|-------|------|-------|
+| `bg-background` | App canvas | Root background behind everything |
+| `bg-slate-1` | Page surface | Screen-level background |
+| `bg-solid-1` | Elevated opaque surface | Cards, bottom sheets, modals, SafeAreaViews |
+| `bg-slate-2` | Subtle elevated surface | Secondary cards, empty states, inactive tabs |
+| `bg-slate-3` | Interactive component surface | Input fields, message bubbles, code blocks |
+
+`bg-solid-1` is `rgb(255,255,255)` light / `rgb(23,23,26)` dark -- a true opaque surface. `bg-slate-1` is slightly off-white (`rgb(252,252,253)` light). Use `bg-solid-1` for elements that must appear "on top" (sheets, card overlays).
+
+### 8.7 Border vs Divider Conventions
+
+Two patterns for visual separators:
+
+```typescript
+// Borders on containers -- use border-slate-6
+<View style={tailwind.style('border border-slate-6 rounded-xl')}>
+<View style={tailwind.style('border-t border-slate-6')}>
+
+// Thin View dividers -- use bg-slate-5
+<View style={tailwind.style('h-px bg-slate-5')} />
+```
+
+Rule: `border-slate-6` on container borders, `bg-slate-5` for standalone 1px divider Views.
+
+### 8.8 Eliminating isDark Color Ternaries
+
+When migrating from legacy styling, replace `isDark` ternaries with Radix auto-switching classes:
+
+```typescript
+// BEFORE (legacy)
+backgroundColor: isDark ? '#1c1c1e' : '#ffffff'
+style={isDark ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}
+
+// AFTER (Radix)
+style={tailwind.style('bg-solid-1 text-slate-12')}
+```
+
+Keep `isDark` only for non-color concerns (StatusBar barStyle, keyboard appearance, third-party library mode props).
 
 ---
 
@@ -625,7 +699,19 @@ The legacy scales (`bg-gray-950`, `text-gray-700`, `bg-white`, `border-gray-200`
 | `border-gray-200` | `border-slate-6` |
 | `border-gray-300` | `border-slate-7` |
 
-### 9.5 Arbitrary border radius values
+### 9.5 Using blackA-A3 for borders in new code
+
+The `border-blackA-A3` pattern exists in ~30 legacy files for list item separators. It does not auto-switch properly in dark mode. Use `border-slate-6` instead in all new code:
+
+```typescript
+// BAD -- legacy alpha border
+'border-b border-blackA-A3'
+
+// GOOD
+'border-b border-slate-6'
+```
+
+### 9.6 Arbitrary border radius values
 
 ```typescript
 // BAD
