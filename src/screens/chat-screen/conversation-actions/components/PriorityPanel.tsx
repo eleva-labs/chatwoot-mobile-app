@@ -20,7 +20,9 @@ const priorityAvatar = (priority: ConversationPriority) => {
 };
 
 const PriorityPanel = ({ priority, onPress }: PriorityPanelProps) => {
-  const priorityName = priority ? priority : i18n.t('CONVERSATION.ACTIONS.PRIORITY.EMPTY');
+  const priorityName = priority
+    ? i18n.t(`CONVERSATION.PRIORITY.OPTIONS.${priority.toUpperCase()}`)
+    : i18n.t('CONVERSATION.ACTIONS.PRIORITY.EMPTY');
   return (
     <Pressable
       onPress={onPress}

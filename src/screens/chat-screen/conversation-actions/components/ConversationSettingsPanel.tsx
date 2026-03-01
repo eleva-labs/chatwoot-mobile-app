@@ -3,26 +3,26 @@ import { Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { tailwind } from '@/theme';
-import { Agent, ConversationPriority, Team } from '@/types';
+import { Agent, ConversationPriority } from '@/types';
 import AssigneePanel from './AssigneePanel';
-import TeamPanel from './TeamPanel';
+// import TeamPanel from './TeamPanel';
 import PriorityPanel from './PriorityPanel';
 
 type ConversationSettingsPanelProps = {
   priority: ConversationPriority;
-  team: Team | null;
+  // team: Team | null;
   assignee: Agent | null;
   onChangeAssignee: () => void;
-  onChangeTeamAssignee: () => void;
+  // onChangeTeamAssignee: () => void;
   onChangePriority: () => void;
 };
 
 export const ConversationSettingsPanel = ({
   assignee,
-  team,
+  // team,
   priority,
   onChangeAssignee,
-  onChangeTeamAssignee,
+  // onChangeTeamAssignee,
   onChangePriority,
 }: ConversationSettingsPanelProps) => {
   return (
@@ -33,7 +33,8 @@ export const ConversationSettingsPanel = ({
         Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
       ]}>
       <AssigneePanel assignee={assignee} onPress={onChangeAssignee} />
-      <TeamPanel team={team} onPress={onChangeTeamAssignee} />
+      {/* Team assignment disabled — not currently in use */}
+      {/* <TeamPanel team={team} onPress={onChangeTeamAssignee} /> */}
       <PriorityPanel priority={priority} onPress={onChangePriority} />
     </Animated.View>
   );
