@@ -8,6 +8,7 @@ import { FileIcon } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
 import { messageTimestamp } from '@/utils';
+import { getAvatarSource } from '@/utils';
 import { Avatar, Icon } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';
@@ -159,9 +160,9 @@ export const FileCell = (props: FileCellProps) => {
         shouldRenderAvatar ? 'pb-2' : '',
       )}>
       <Animated.View style={tailwind.style('flex flex-row')}>
-        {sender?.thumbnail && sender?.name && isIncoming && shouldRenderAvatar ? (
+        {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -204,9 +205,9 @@ export const FileCell = (props: FileCellProps) => {
             </Animated.View>
           </Animated.View>
         </MessageMenu>
-        {sender?.thumbnail && sender?.name && isOutgoing && shouldRenderAvatar ? (
+        {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

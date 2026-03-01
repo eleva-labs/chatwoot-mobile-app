@@ -20,3 +20,4 @@ export * from './normalizeEventName';
 export * from './localeUtils';
 export * from './audioConverter';
 export * from './activityMessageUtils';
+export * from './avatarUtils';

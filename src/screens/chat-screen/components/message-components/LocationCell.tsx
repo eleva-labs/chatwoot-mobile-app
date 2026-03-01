@@ -5,6 +5,7 @@ import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
 import { messageTimestamp } from '@/utils';
+import { getAvatarSource } from '@/utils';
 import { Avatar, Icon } from '@/components-next/common';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { MESSAGE_STATUS, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@/constants';
@@ -62,7 +63,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail ?? undefined }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -127,7 +128,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
         </MessageMenu>
         {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail ?? undefined }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

@@ -1,4 +1,11 @@
-import { fromUnixTime, formatDistanceToNow, isSameDay, isSameYear, format } from 'date-fns';
+import {
+  fromUnixTime,
+  formatDistanceToNow,
+  isSameDay,
+  isSameYear,
+  format,
+  differenceInHours,
+} from 'date-fns';
 import i18n from '@/i18n';
 import { UnixTimestamp } from '@/types';
 
@@ -51,6 +58,7 @@ export const formatDate = (date: UnixTimestamp, dateFormat = 'MMM dd, yyyy') => 
   return format(dateObj, dateFormat);
 };
 
+/** @deprecated Use `messageTimestamp` instead. */
 export const unixTimestampToReadableTime = (unixTimestamp: number) => {
   const date = new Date(unixTimestamp * 1000); // Convert Unix timestamp to milliseconds
   const hours = date.getHours();
@@ -84,4 +92,15 @@ export const messageTimestamp = (time: number, dateFormat = 'LLL d, h:mm a'): st
     return format(messageTime, 'LLL d y, h:mm a');
   }
   return format(messageTime, dateFormat);
+};
+
+/**
+ * Returns true if the given unix timestamp is more than 24 hours in the past.
+ * Used for Instagram story expiration checks.
+ */
+export const isOlderThan24Hours = (unixTimestamp: number): boolean => {
+  const currentTime = new Date();
+  const messageTime = new Date(unixTimestamp * 1000);
+  const hoursDifference = differenceInHours(currentTime, messageTime);
+  return hoursDifference > 24;
 };

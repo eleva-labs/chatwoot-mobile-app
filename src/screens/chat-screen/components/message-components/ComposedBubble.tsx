@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import Animated from 'react-native-reanimated';
 
 import { FileErrorIcon } from '@/svg-icons';
-import { differenceInHours } from 'date-fns';
 import { tailwind } from '@/theme';
 import { Message } from '@/types';
 import { Icon, Spinner } from '@/components-next';
@@ -14,6 +13,7 @@ import { useAppSelector } from '@/hooks';
 import { useChatWindowContext } from '@/context';
 import { getMessagesByConversationId } from '@/store/conversation/conversationSelectors';
 import { ATTACHMENT_TYPES, MESSAGE_STATUS } from '@/constants';
+import { isOlderThan24Hours } from '@/utils';
 import i18n from '@/i18n';
 import { MarkdownBubble } from './MarkdownBubble';
 import { FileBubblePreview } from './FileBubble';
@@ -26,22 +26,8 @@ type ComposedBubbleProps = {
   variant: string;
 };
 
-const isMessageCreatedAtLessThan24HoursOld = (messageTimestamp: number) => {
-  const currentTime = new Date();
-  const messageTime = new Date(messageTimestamp * 1000);
-  const hoursDifference = differenceInHours(currentTime, messageTime);
-
-  return hoursDifference > 24;
-};
-
 export const ComposedBubble = (props: ComposedBubbleProps) => {
-  const {
-    content,
-    private: isPrivate,
-    createdAt,
-    contentAttributes,
-    status,
-  } = props.item as Message;
+  const { content, createdAt, contentAttributes, status } = props.item as Message;
   const { conversationId } = useChatWindowContext();
 
   const messages = useAppSelector(state => getMessagesByConversationId(state, { conversationId }));
@@ -60,7 +46,7 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
   );
   const { imageType } = contentAttributes || {};
   const isAnInstagramStory = imageType === ATTACHMENT_TYPES.STORY_MENTION;
-  const isInstagramStoryExpired = isMessageCreatedAtLessThan24HoursOld(createdAt);
+  const isInstagramStoryExpired = isOlderThan24Hours(createdAt);
   const isMessageSending = status === MESSAGE_STATUS.PROGRESS;
 
   return (
@@ -94,7 +80,7 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
                 <Animated.View key={attachment.fileType + index} style={tailwind.style('my-2')}>
                   <ImageBubbleContainer
                     imageSrc={attachment.dataUrl}
-                    width={300 - 24 - (isPrivate ? 13 : 0)}
+                    width={300 - 24}
                     height={215}
                   />
                 </Animated.View>

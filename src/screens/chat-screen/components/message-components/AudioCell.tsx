@@ -12,6 +12,7 @@ import {
 import { tailwind } from '@/theme';
 import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@/types';
 import { messageTimestamp } from '@/utils';
+import { getAvatarSource } from '@/utils';
 import { Avatar, Icon, Slider } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
@@ -214,7 +215,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail ?? undefined }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -261,7 +262,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
         </MessageMenu>
         {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail ?? undefined }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

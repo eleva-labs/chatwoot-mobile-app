@@ -26,14 +26,10 @@ const LabelPill = ({ labelText, labelColor }: { labelText: string; labelColor: s
       style={themedTailwind.style(
         'flex-row items-center gap-1 h-5 py-0.5 px-1 rounded border border-slate-6 bg-transparent',
       )}>
-      <NativeView
-        style={tailwind.style('h-2 w-2 rounded-sm', `bg-[${labelColor}]`)}
-      />
+      <NativeView style={tailwind.style('h-2 w-2 rounded-sm', `bg-[${labelColor}]`)} />
       <Text
         numberOfLines={1}
-        style={themedTailwind.style(
-          'text-xs font-inter-420-20 text-slate-11',
-        )}>
+        style={themedTailwind.style('text-xs font-inter-420-20 text-slate-11')}>
         {labelText}
       </Text>
     </NativeView>
@@ -81,8 +77,8 @@ export const LabelIndicator = ({ labels, allLabels }: { labels: string[]; allLab
         setContainerWidth(width);
       }}>
       <NativeView style={tailwind.style('flex-row items-center overflow-hidden gap-1')}>
-        {activeLabels.map((label, index) => (
-          <LabelPill key={index} labelText={label.title} labelColor={label.color} />
+        {activeLabels.map(label => (
+          <LabelPill key={label.title} labelText={label.title} labelColor={label.color} />
         ))}
       </NativeView>
     </AnimatedNativeView>

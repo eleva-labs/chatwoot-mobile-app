@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
 import { useChatWindowContext } from '@/context';
 import { conversationActions } from '@/store/conversation/conversationActions';
-import { messageTimestamp, useHaptic } from '@/utils';
+import { getAvatarSource, messageTimestamp, useHaptic } from '@/utils';
 import {
   ComposedBubble,
   DeliveryStatus,
@@ -308,7 +308,6 @@ export const MessageComponent = (props: MessageComponentProps) => {
   };
 
   const avatarInfo = () => {
-    // If no sender, return generic info (Avatar will show initials)
     if (!sender) {
       return {
         name: i18n.t('CONVERSATION.BOT'),
@@ -316,24 +315,10 @@ export const MessageComponent = (props: MessageComponentProps) => {
       };
     }
 
-    // For agent bots, use avatarUrl or thumbnail (matches web avatarInfo computed)
-    if (sender.type === SENDER_TYPES.AGENT_BOT) {
-      const botSender = sender as {
-        avatarUrl?: string | null;
-        thumbnail?: string | null;
-        name?: string | null;
-      };
-      const botAvatarSrc = botSender.avatarUrl || botSender.thumbnail;
-      return {
-        name: sender?.name || i18n.t('CONVERSATION.BOT'),
-        src: botAvatarSrc ? { uri: botAvatarSrc } : undefined,
-      };
-    }
-
-    // For all other senders, use thumbnail
     return {
-      name: sender?.name || '',
-      src: sender?.thumbnail ? { uri: sender.thumbnail } : undefined,
+      name:
+        sender?.name || (sender.type === SENDER_TYPES.AGENT_BOT ? i18n.t('CONVERSATION.BOT') : ''),
+      src: getAvatarSource(sender),
     };
   };
   // TODO: Add this once we have a proper way to render single attachments

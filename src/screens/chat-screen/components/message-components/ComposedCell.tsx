@@ -3,10 +3,9 @@ import { Text, Dimensions } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { FileErrorIcon, LockIcon } from '@/svg-icons';
-import { differenceInHours } from 'date-fns';
 import { tailwind } from '@/theme';
 import { Channel, Message } from '@/types';
-import { messageTimestamp } from '@/utils';
+import { getAvatarSource, isOlderThan24Hours, messageTimestamp } from '@/utils';
 import { Avatar, Icon } from '@/components-next';
 import { MarkdownDisplay } from './MarkdownDisplay';
 import { MenuOption, MessageMenu } from '../message-menu';
@@ -28,14 +27,6 @@ type ComposedCellProps = {
   messageData: Message;
   channel?: Channel;
   menuOptions: MenuOption[];
-};
-
-const isMessageCreatedAtLessThan24HoursOld = (messageTimestamp: number) => {
-  const currentTime = new Date();
-  const messageTime = new Date(messageTimestamp * 1000);
-  const hoursDifference = differenceInHours(currentTime, messageTime);
-
-  return hoursDifference > 24;
 };
 
 export const ComposedCell = (props: ComposedCellProps) => {
@@ -72,11 +63,10 @@ export const ComposedCell = (props: ComposedCellProps) => {
         : null,
     [messages, contentAttributes],
   );
-  // const replyMessage = null;
   const errorMessage = contentAttributes?.externalError || '';
   const { imageType } = contentAttributes || {};
   const isAnInstagramStory = imageType === ATTACHMENT_TYPES.STORY_MENTION;
-  const isInstagramStoryExpired = isMessageCreatedAtLessThan24HoursOld(createdAt);
+  const isInstagramStoryExpired = isOlderThan24Hours(createdAt);
 
   const isEmailMessage = channel === INBOX_TYPES.EMAIL;
 
@@ -103,11 +93,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar
-              size={'md'}
-              src={{ uri: sender?.thumbnail ?? undefined }}
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
 
@@ -171,7 +157,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                           style={tailwind.style('my-2')}>
                           <ImageContainer
                             imageSrc={attachment.dataUrl}
-                            width={300 - 24 - (isPrivate ? 13 : 0)}
+                            width={300 - 24}
                             height={215}
                           />
                         </Animated.View>
@@ -206,9 +192,6 @@ export const ComposedCell = (props: ComposedCellProps) => {
                 <Animated.View
                   style={tailwind.style(
                     'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center justify-end',
-                    // singleLineShortText ? "pl-1.5" : "",
-                    // singleLineLongText || isMultiLine ? "justify-end" : "",
-                    // multiLineShortText ? " absolute bottom-0.5 right-2.5" : "",
                   )}>
                   {isPrivate ? <Icon icon={<LockIcon />} size={12} /> : null}
                   <Text
@@ -238,11 +221,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
 
         {shouldRenderAvatar && (isPrivate || isOutgoing || isTemplate) ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar
-              size={'md'}
-              src={sender?.thumbnail ? { uri: sender.thumbnail } : undefined}
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
       </Animated.View>

@@ -9,6 +9,7 @@ import { MESSAGE_TYPES } from '@/constants';
 import { Email } from './Email';
 import { tailwind } from '@/theme';
 import { Avatar } from '@/components-next';
+import { getAvatarSource } from '@/utils';
 
 export type EmailMessageCellProps = {
   item: Message;
@@ -71,11 +72,7 @@ export const EmailMessageCell = (props: EmailMessageCellProps) => {
       <Animated.View style={tailwind.style('flex flex-row w-full')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar
-              size={'md'}
-              src={sender?.thumbnail ? { uri: sender.thumbnail } : undefined}
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -122,15 +119,7 @@ export const EmailMessageCell = (props: EmailMessageCellProps) => {
         </MessageMenu>
         {shouldRenderAvatar && (isPrivate || isOutgoing || isTemplate) ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar
-              size={'md'}
-              src={
-                isTemplate
-                  ? require('../../../../assets/local/bot-avatar.png') // eslint-disable-line @typescript-eslint/no-require-imports
-                  : { uri: sender?.thumbnail }
-              }
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
       </Animated.View>

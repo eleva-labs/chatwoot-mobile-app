@@ -134,7 +134,7 @@ export const VideoBubble = (props: VideoBubbleProps) => {
               style={tailwind.style(
                 'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
               )}>
-              {unixTimestampToReadableTime(timeStamp)}
+              {messageTimestamp(timeStamp)}
             </Text>
             <DeliveryStatus
               isPrivate={isPrivate}
