@@ -2,15 +2,15 @@ import React from 'react';
 import { Text } from 'react-native';
 import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { getAvatarSource, messageTimestamp } from '@/utils';
-import { Avatar, Icon } from '@/components-next/common';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar, Icon } from '@infrastructure/ui/common';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_STATUS, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@/constants';
+import { MESSAGE_STATUS, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 import { MapIcon } from '@/svg-icons';
-import { openURL } from '@/utils/urlUtils';
+import { openURL } from '@infrastructure/utils/urlUtils';
 
 type LocationCellProps = {
   shouldRenderAvatar: boolean;

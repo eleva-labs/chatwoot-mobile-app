@@ -3,10 +3,10 @@ import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { AddParticipant, Overflow } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Avatar, Icon } from '@/components-next';
-import { Agent } from '@/types';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import { Avatar, Icon } from '@infrastructure/ui';
+import { Agent } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 type ListItemProps = {
   listItem: Agent;

@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { G, Mask, Path, Rect } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const PendingIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (

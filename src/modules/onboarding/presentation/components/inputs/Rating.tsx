@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useThemedStyles } from '@/hooks/useThemedStyles';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
 
 interface RatingProps {
   value: number;

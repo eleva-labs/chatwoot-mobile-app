@@ -5,14 +5,14 @@ import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 import RNFetchBlob from 'rn-fetch-blob';
 
 import { FileIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { getAvatarSource, messageTimestamp } from '@/utils';
-import { Avatar, Icon } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
+import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar, Icon } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 
 type FilePreviewProps = Pick<FileCellProps, 'fileSrc'> & {

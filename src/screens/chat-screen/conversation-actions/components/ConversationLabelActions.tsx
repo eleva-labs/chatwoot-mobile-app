@@ -3,20 +3,20 @@ import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { useChatWindowContext, useRefsContext } from '@/context';
+import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { LabelTag } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Label } from '@/types';
-import { BottomSheetBackdrop, Icon, SearchBar } from '@/components-next';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import { Label } from '@domain/types';
+import { BottomSheetBackdrop, Icon, SearchBar } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
 import { useAppSelector } from '@/hooks';
-import { filterLabels } from '@/store/label/labelSelectors';
+import { filterLabels } from '@application/store/label/labelSelectors';
 import { useAppDispatch } from '@/hooks';
-import { conversationActions } from '@/store/conversation/conversationActions';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 
-import { LabelCell, LabelItem } from '@/components-next/label-section';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { LABEL_EVENTS } from '@/constants/analyticsEvents';
+import { LabelCell, LabelItem } from '@infrastructure/ui/label-section';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
 
 type LabelStackProps = {
   filteredLabels: Label[];

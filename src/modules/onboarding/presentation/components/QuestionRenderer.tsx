@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Screen } from '../../domain/entities/Screen';
-import { useThemedStyles } from '@/hooks/useThemedStyles';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
 import { useScreenTransition } from '../hooks/useScreenTransition';
 import { TextInput } from './inputs/TextInput';
 import { SingleSelectChips } from './inputs/SingleSelectChips';

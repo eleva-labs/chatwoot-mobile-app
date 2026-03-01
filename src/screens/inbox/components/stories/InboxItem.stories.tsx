@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/react';
 import { InboxItem } from '../InboxItem';
 import { ScrollView, View, Text } from 'react-native';
-import { tailwind } from '@/theme';
-import { NotificationType } from '@/types/Notification';
-import { CONVERSATION_PRIORITY } from '@/constants';
+import { tailwind } from '@infrastructure/theme';
+import { NotificationType } from '@domain/types/Notification';
+import { CONVERSATION_PRIORITY } from '@domain/constants';
 import { conversation } from './NotificationItemMockData';
-import { ConversationPriority } from '@/types/common';
+import { ConversationPriority } from '@domain/types/common';
 
 const meta: Meta<typeof InboxItem> = {
   title: 'Inbox Item',

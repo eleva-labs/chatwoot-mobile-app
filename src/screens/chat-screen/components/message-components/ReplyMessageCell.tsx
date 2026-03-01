@@ -2,14 +2,14 @@ import React, { useCallback, useMemo } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, VideoCall, VoiceNote } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Message } from '@/types';
-import { isMarkdown } from '@/utils';
-import { Icon } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Message } from '@domain/types';
+import { isMarkdown } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui';
 import { MarkdownDisplay } from './MarkdownDisplay';
-import { TEXT_MAX_WIDTH } from '@/constants';
+import { TEXT_MAX_WIDTH } from '@domain/constants';
 
 type ReplyMessageCellProps = {
   replyMessage: Message;

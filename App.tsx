@@ -3,7 +3,7 @@ import { bootstrapDI } from '@/dependency-injection';
 
 import * as Sentry from '@sentry/react-native';
 import { getApps } from '@react-native-firebase/app';
-import { waitForFirebaseInit } from './src/utils/firebaseUtils';
+import { waitForFirebaseInit } from './src/infrastructure/utils/firebaseUtils';
 import * as Notifications from 'expo-notifications';
 
 import Constants from 'expo-constants';

@@ -2,8 +2,8 @@ import React from 'react';
 import Animated, { LinearTransition, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 import { Plus } from 'lucide-react-native';
-import { useScaleAnimation } from '@/utils';
-import { tailwind } from '@/theme';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { tailwind } from '@infrastructure/theme';
 import { AddCommandButtonProps } from '../types';
 
 export const AddCommandButton = ({

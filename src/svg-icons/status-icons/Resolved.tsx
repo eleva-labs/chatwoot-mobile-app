@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path, Mask, G, Rect } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const ResolvedIcon = ({
   stroke = 'currentColor',

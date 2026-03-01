@@ -2,8 +2,8 @@ import React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { Agent, ConversationPriority } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { Agent, ConversationPriority } from '@domain/types';
 import AssigneePanel from './AssigneePanel';
 // import TeamPanel from './TeamPanel';
 import PriorityPanel from './PriorityPanel';

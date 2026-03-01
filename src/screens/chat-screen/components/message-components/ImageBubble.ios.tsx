@@ -3,8 +3,8 @@ import { Image } from 'expo-image';
 import Animated from 'react-native-reanimated';
 import { Galeria } from '@nandorojo/galeria';
 import { CircleOff } from 'lucide-react-native';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
 
 type ImageCellProps = {
   imageSrc: string;

@@ -3,14 +3,14 @@ import { Text, Dimensions } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { FileErrorIcon, LockIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Channel, Message } from '@/types';
-import { getAvatarSource, isOlderThan24Hours, messageTimestamp } from '@/utils';
-import { Avatar, Icon } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, Message } from '@domain/types';
+import { getAvatarSource, isOlderThan24Hours, messageTimestamp } from '@infrastructure/utils';
+import { Avatar, Icon } from '@infrastructure/ui';
 import { MarkdownDisplay } from './MarkdownDisplay';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { ReplyMessageCell } from './ReplyMessageCell';
-import { INBOX_TYPES, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@/constants';
+import { INBOX_TYPES, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@domain/constants';
 
 import { AudioPlayer } from './AudioCell';
 import { FilePreview } from './FileCell';
@@ -18,10 +18,10 @@ import { ImageBubbleContainer as ImageContainer } from './ImageBubble';
 import { VideoPlayer } from './VideoCell';
 import { DeliveryStatus } from './DeliveryStatus';
 import { useAppSelector } from '@/hooks';
-import { useChatWindowContext } from '@/context';
-import { getMessagesByConversationId } from '@/store/conversation/conversationSelectors';
-import { ATTACHMENT_TYPES } from '@/constants';
-import i18n from '@/i18n';
+import { useChatWindowContext } from '@infrastructure/context';
+import { getMessagesByConversationId } from '@application/store/conversation/conversationSelectors';
+import { ATTACHMENT_TYPES } from '@domain/constants';
+import i18n from '@infrastructure/i18n';
 
 type ComposedCellProps = {
   messageData: Message;

@@ -7,12 +7,12 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { Icon } from '@/components-next';
+import { Icon } from '@infrastructure/ui';
 import { OpenIcon, ResolvedFilledIcon, PendingFilledIcon, SnoozedFilledIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic, useScaleAnimation } from '@/utils';
-import { ConversationStatus } from '@/types';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
+import { ConversationStatus } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 import { ConversationActionType } from '../ConversationActions';
 

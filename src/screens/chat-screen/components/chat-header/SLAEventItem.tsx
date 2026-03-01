@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, Animated } from 'react-native';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { SLAEvent } from '@/types/common/SLA';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { SLAEvent } from '@domain/types/common/SLA';
 import { format, fromUnixTime } from 'date-fns';
 
 interface SlaEventsProps {

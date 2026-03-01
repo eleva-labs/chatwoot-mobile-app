@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useThemedStyles } from '@/hooks/useThemedStyles';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
 import { TextInput } from './TextInput';
 import type { SelectOption } from '../../../domain/common';
 

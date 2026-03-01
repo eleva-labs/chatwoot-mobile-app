@@ -5,9 +5,9 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-import { getStore } from '@/store/storeAccessor';
-import I18n from '@/i18n';
-import { showToast } from '@/utils/toastUtils';
+import { getStore } from '@application/store/storeAccessor';
+import I18n from '@infrastructure/i18n';
+import { showToast } from '@infrastructure/utils/toastUtils';
 
 const nonAccountRoutes = [
   'profile',

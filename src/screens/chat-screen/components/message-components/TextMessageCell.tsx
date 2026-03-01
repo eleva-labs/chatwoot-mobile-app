@@ -1,17 +1,17 @@
 import React from 'react';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
-import { Channel, Message } from '@/types';
-import { getAvatarSource } from '@/utils';
-import { Avatar } from '@/components-next/common';
+import { Channel, Message } from '@domain/types';
+import { getAvatarSource } from '@infrastructure/utils';
+import { Avatar } from '@infrastructure/ui/common';
 
 import { ActivityTextCell } from './ActivityTextCell';
 import { BotTextCell } from './BotTextCell';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { MessageTextCell } from './MessageTextCell';
 import { PrivateTextCell } from './PrivateTextCell';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 
 export type TextMessageCellProps = {
   item: Message;

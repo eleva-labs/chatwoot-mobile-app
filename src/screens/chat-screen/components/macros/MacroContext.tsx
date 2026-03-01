@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Macro } from '@/types';
+import { Macro } from '@domain/types';
 import { useAppDispatch } from '@/hooks';
-import { macroActions } from '@/store/macro/macroActions';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
+import { macroActions } from '@application/store/macro/macroActions';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
 
 type MacroContextType = {
   selectedMacro: Macro | null;

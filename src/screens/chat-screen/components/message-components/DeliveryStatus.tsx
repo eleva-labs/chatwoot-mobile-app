@@ -3,15 +3,15 @@ import { Pressable } from 'react-native';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 import { Check, CheckCheck, Clock } from 'lucide-react-native';
 
-import { BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
-import { tailwind } from '@/theme';
+import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { tailwind } from '@infrastructure/theme';
 import { WarningIcon } from '@/svg-icons';
-import { Icon } from '@/components-next/common';
-import { MessageStatus, MessageType } from '@/types';
-import { Channel } from '@/types';
-import { INBOX_TYPES, MESSAGE_TYPES, MESSAGE_STATUS } from '@/constants';
+import { Icon } from '@infrastructure/ui/common';
+import { MessageStatus, MessageType } from '@domain/types';
+import { Channel } from '@domain/types';
+import { INBOX_TYPES, MESSAGE_TYPES, MESSAGE_STATUS } from '@domain/constants';
 import { ErrorInformation } from './ErrorInformation';
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 
 const READ_COLOR = '#7EB6FF';
 const ICON_SIZE = 14;

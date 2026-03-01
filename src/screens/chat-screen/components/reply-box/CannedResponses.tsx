@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { selectAllCannedResponses } from '@/store/canned-response/cannedResponseSlice';
+import { tailwind } from '@infrastructure/theme';
+import { selectAllCannedResponses } from '@application/store/canned-response/cannedResponseSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { cannedResponseActions } from '@/store/canned-response/cannedResponseActions';
-import { CannedResponse } from '@/types';
+import { cannedResponseActions } from '@application/store/canned-response/cannedResponseActions';
+import { CannedResponse } from '@domain/types';
 import { FlashList } from '@shopify/flash-list';
 
 type CannedResponsesProps = {

@@ -2,11 +2,11 @@ import React from 'react';
 import { Animated, Text, Dimensions } from 'react-native';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 
-import { tailwind } from '@/theme';
-import { Channel, Message, MessageStatus, MessageType } from '@/types';
-import { messageTimestamp } from '@/utils';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, Message, MessageStatus, MessageType } from '@domain/types';
+import { messageTimestamp } from '@infrastructure/utils';
 
-import { MESSAGE_STATUS } from '@/constants';
+import { MESSAGE_STATUS } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 import { EmailMeta } from './EmailMeta';
 

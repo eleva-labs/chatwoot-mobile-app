@@ -3,15 +3,15 @@ import { ImageSourcePropType, Keyboard, Platform, Pressable } from 'react-native
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
 
-import { Avatar, Icon } from '@/components-next';
+import { Avatar, Icon } from '@infrastructure/ui';
 import { ChevronLeft, OpenIcon, Overflow, ResolvedIcon, SLAIcon } from '@/svg-icons';
-import { AIHeaderButton } from '@/components-next/ai-status/AIHeaderButton';
-import { BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
+import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
+import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { ChatDropdownMenu, DashboardList } from './DropdownMenu';
-import { SLAEvent } from '@/types/common';
-import { useRefsContext } from '@/context';
+import { SLAEvent } from '@domain/types/common';
+import { useRefsContext } from '@infrastructure/context';
 import { SlaEvents } from './SlaEvents';
 
 type ChatHeaderProps = {

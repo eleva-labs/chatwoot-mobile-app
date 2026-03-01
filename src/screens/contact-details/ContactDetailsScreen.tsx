@@ -3,7 +3,7 @@ import { View, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import camelCase from 'camelcase';
 
-import { SCREENS, TAB_BAR_HEIGHT } from '@/constants';
+import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
 import {
   CallIcon,
   EmailIcon,
@@ -16,23 +16,23 @@ import {
   GithubIcon,
   LinkedinIcon,
 } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { AttributeListType, CustomAttribute, GenericListType } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { AttributeListType, CustomAttribute, GenericListType } from '@domain/types';
 
 import {
   ContactDetailsScreenHeader,
   ContactBasicActions,
   ContactMetaInformation,
 } from './components';
-import { AttributeList } from '@/components-next';
+import { AttributeList } from '@infrastructure/ui';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TabBarExcludedScreenParamList } from '@/navigation/tabs/AppTabs';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
+import { TabBarExcludedScreenParamList } from '@application/navigation/tabs/AppTabs';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
-import { contactLabelActions } from '@/store/contact/contactLabelActions';
-import { getContactCustomAttributes } from '@/store/custom-attribute/customAttributeSlice';
-import { selectContactById } from '@/store/contact/contactSelectors';
-import i18n from '@/i18n';
+import { contactLabelActions } from '@application/store/contact/contactLabelActions';
+import { getContactCustomAttributes } from '@application/store/custom-attribute/customAttributeSlice';
+import { selectContactById } from '@application/store/contact/contactSelectors';
+import i18n from '@infrastructure/i18n';
 
 type ContactDetailsScreenProps = NativeStackScreenProps<
   TabBarExcludedScreenParamList,

@@ -3,8 +3,8 @@ import Animated from 'react-native-reanimated';
 import { LightBox, LightBoxProps } from '@alantoa/lightbox';
 import { Image } from 'expo-image';
 import { CircleOff } from 'lucide-react-native';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
 
 const AnimatedExpoImage = Animated.createAnimatedComponent(Image);
 

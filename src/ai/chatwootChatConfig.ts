@@ -8,10 +8,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetch as expoFetch } from 'expo/fetch';
 
-import type { ChatConfig, TransportConfig } from '@/types/ai-chat/chatConfig';
-import { AIChatService } from '@/store/ai-chat/aiChatService';
+import type { ChatConfig, TransportConfig } from '@domain/types/ai-chat/chatConfig';
+import { AIChatService } from '@application/store/ai-chat/aiChatService';
 import type { UIMessage } from 'ai';
-import { isTextPart, type MessagePart, type TextPart } from '@/types/ai-chat/parts';
+import { isTextPart, type MessagePart, type TextPart } from '@domain/types/ai-chat/parts';
 
 // ============================================================================
 // Helper Functions (extracted from useAIChat.ts)

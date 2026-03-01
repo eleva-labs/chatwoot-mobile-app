@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 
-import { useThemedStyles } from '@/hooks';
-import { NativeView } from '@/components-next/native-components';
-import { formatTimeToShortForm, formatRelativeTime } from '@/utils/dateTimeUtils';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { NativeView } from '@infrastructure/ui/native-components';
+import { formatTimeToShortForm, formatRelativeTime } from '@infrastructure/utils/dateTimeUtils';
 
 // Constants from Vue component
 const MINUTE_IN_MS = 60000;

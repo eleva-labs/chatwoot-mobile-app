@@ -4,20 +4,26 @@ import { Dimensions, Text } from 'react-native';
 import { LinearTransition } from 'react-native-reanimated';
 import { isEqual } from 'lodash';
 
-import { AnimatedNativeView, NativeView } from '@/components-next/native-components';
-import { AIStatusIcon } from '@/components-next';
-import { tailwind } from '@/theme';
-import { Agent, Conversation, ConversationAdditionalAttributes, Label, Message } from '@/types';
-import { useThemedStyles } from '@/hooks';
+import { AnimatedNativeView, NativeView } from '@infrastructure/ui/native-components';
+import { AIStatusIcon } from '@infrastructure/ui';
+import { tailwind } from '@infrastructure/theme';
+import {
+  Agent,
+  Conversation,
+  ConversationAdditionalAttributes,
+  Label,
+  Message,
+} from '@domain/types';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { PersonIcon } from '@/svg-icons';
 
 import { ConversationLastMessage } from './ConversationLastMessage';
-import { PriorityIndicator } from '@/components-next/list-components';
+import { PriorityIndicator } from '@infrastructure/ui/list-components';
 import { SLAIndicator } from './SLAIndicator';
 import { LabelIndicator } from './LabelIndicator';
 import { LastActivityTime } from './LastActivityTime';
-import { SLA } from '@/types/common/SLA';
-import { Inbox } from '@/types/Inbox';
+import { SLA } from '@domain/types/common/SLA';
+import { Inbox } from '@domain/types/Inbox';
 import { TypingMessage } from './TypingMessage';
 
 const { width } = Dimensions.get('screen');

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Icon } from '@/components-next';
+import { Icon } from '@infrastructure/ui';
 import { CaretRight, TeamIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Team } from '@/types';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import { Team } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 type TeamPanelProps = {
   team: Team | null;

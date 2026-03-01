@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { G, Path, Rect, Mask } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const SnoozedIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (

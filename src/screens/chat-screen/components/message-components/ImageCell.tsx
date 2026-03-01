@@ -3,14 +3,14 @@ import { Text } from 'react-native';
 import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 import { Image, ImageBackground } from 'expo-image';
 import { CircleOff } from 'lucide-react-native';
-import { tailwind } from '@/theme';
-import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { getAvatarSource, messageTimestamp } from '@/utils';
-import { Avatar } from '@/components-next/common';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar } from '@infrastructure/ui/common';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
 
 type ImageCellProps = {
   imageSrc: string;

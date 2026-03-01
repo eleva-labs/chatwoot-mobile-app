@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, TextInput as RNTextInput } from 'react-native';
-import { useThemedStyles } from '@/hooks/useThemedStyles';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
 
 interface TextInputProps {
   value: string;

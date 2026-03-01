@@ -2,10 +2,13 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 import { Mic } from 'lucide-react-native';
-import { useScaleAnimation } from '@/utils';
-import { tailwind } from '@/theme';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { tailwind } from '@infrastructure/theme';
 import { VoiceRecordButtonProps } from '../types';
-import { voiceNoteIconEnterAnimation, voiceNoteIconExitAnimation } from '@/utils/customAnimations';
+import {
+  voiceNoteIconEnterAnimation,
+  voiceNoteIconExitAnimation,
+} from '@infrastructure/utils/customAnimations';
 
 export const VoiceRecordButton = (props: VoiceRecordButtonProps) => {
   const { animatedStyle, handlers } = useScaleAnimation();

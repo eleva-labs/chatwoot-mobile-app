@@ -8,17 +8,17 @@ import * as Sentry from '@sentry/react-native';
 import {
   selectCurrentPlayingAudioSrc,
   setCurrentPlayingAudioSrc,
-} from '@/store/conversation/audioPlayerSlice';
+} from '@application/store/conversation/audioPlayerSlice';
 
-import { tailwind } from '@/theme';
-import { IconProps } from '@/types';
-import { Icon, Slider } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import { IconProps } from '@domain/types';
+import { Icon, Slider } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
-import { MESSAGE_VARIANTS } from '@/constants';
+import { MESSAGE_VARIANTS } from '@domain/constants';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/hooks';
-import { convertOggToWav } from '@/utils';
+import { convertOggToWav } from '@infrastructure/utils';
 
 // eslint-disable-next-line react/display-name
 const PlayIcon = React.memo(({ fill, fillOpacity }: IconProps) => {

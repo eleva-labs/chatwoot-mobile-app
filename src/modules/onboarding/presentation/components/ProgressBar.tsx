@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { useThemedStyles } from '@/hooks/useThemedStyles';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
 
 interface ProgressBarProps {
   progress: number; // 0-100

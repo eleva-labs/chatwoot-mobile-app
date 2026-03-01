@@ -1,7 +1,7 @@
 import React from 'react';
 import { Path, Svg } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const MacrosIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (

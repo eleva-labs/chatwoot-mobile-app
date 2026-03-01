@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Text } from 'react-native';
 
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { NativeView } from '@/components-next/native-components';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { NativeView } from '@infrastructure/ui/native-components';
 import { SlaMissedIcon } from '@/svg-icons';
-import { SLA, SLAStatus } from '@/types/common/SLA';
+import { SLA, SLAStatus } from '@domain/types/common/SLA';
 import { evaluateSLAStatus } from '@chatwoot/utils';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
 
 const REFRESH_INTERVAL = 60000;
 

@@ -3,23 +3,23 @@ import { Pressable, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { Icon, Spinner } from '@/components-next';
-import i18n from '@/i18n';
+import { Icon, Spinner } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
 import { ChevronLeft } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Agent, Macro } from '@/types';
-import { useHaptic, useScaleAnimation } from '@/utils';
+import { tailwind } from '@infrastructure/theme';
+import { Agent, Macro } from '@domain/types';
+import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { useAppSelector } from '@/hooks';
-import { selectAllLabels } from '@/store/label/labelSelectors';
-import { selectAllTeams } from '@/store/team/teamSelectors';
-import { selectAssignableAgentsByInboxId } from '@/store/assignable-agent/assignableAgentSelectors';
+import { selectAllLabels } from '@application/store/label/labelSelectors';
+import { selectAllTeams } from '@application/store/team/teamSelectors';
+import { selectAssignableAgentsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
 import {
   resolveActionName,
   resolveTeamIds,
   resolveLabels,
   resolveAgents,
-} from '@/utils/macroUtils';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
+} from '@infrastructure/utils/macroUtils';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { useMacroContext } from './MacroContext';
 
 type MacroDetailsProps = {

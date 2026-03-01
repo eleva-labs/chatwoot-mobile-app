@@ -3,9 +3,9 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
-import { Icon, Avatar } from '@/components-next/common';
+import { Icon, Avatar } from '@infrastructure/ui/common';
 import { CloseIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 type ContactDetailsScreenHeaderProps = {
   name: string;

@@ -1,15 +1,15 @@
 import React from 'react';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { Channel, Message } from '@/types';
+import { Channel, Message } from '@domain/types';
 import { ActivityTextCell } from './ActivityTextCell';
 import { BotTextCell } from './BotTextCell';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { PrivateTextCell } from './PrivateTextCell';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 import { Email } from './Email';
-import { tailwind } from '@/theme';
-import { Avatar } from '@/components-next';
-import { getAvatarSource } from '@/utils';
+import { tailwind } from '@infrastructure/theme';
+import { Avatar } from '@infrastructure/ui';
+import { getAvatarSource } from '@infrastructure/utils';
 
 export type EmailMessageCellProps = {
   item: Message;

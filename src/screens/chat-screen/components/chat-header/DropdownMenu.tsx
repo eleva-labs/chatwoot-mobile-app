@@ -9,9 +9,9 @@ import {
 } from '@gorhom/bottom-sheet';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
-import { BottomSheetHeader, BottomSheetWrapper } from '@/components-next';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
+import { BottomSheetHeader, BottomSheetWrapper } from '@infrastructure/ui';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 export type DashboardList = {
   title: string;

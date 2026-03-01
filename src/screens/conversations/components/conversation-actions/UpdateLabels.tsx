@@ -1,18 +1,18 @@
 import React, { useCallback, useState } from 'react';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { SearchBar } from '@/components-next';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { SearchBar } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { filterLabels } from '@/store/label/labelSelectors';
-import { Label } from '@/types/common/Label';
-import { selectSelectedIds } from '@/store/conversation/conversationSelectedSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { LabelCell } from '@/components-next/label-section';
-import i18n from '@/i18n';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { LABEL_EVENTS } from '@/constants/analyticsEvents';
+import { filterLabels } from '@application/store/label/labelSelectors';
+import { Label } from '@domain/types/common/Label';
+import { selectSelectedIds } from '@application/store/conversation/conversationSelectedSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { LabelCell } from '@infrastructure/ui/label-section';
+import i18n from '@infrastructure/i18n';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
 
 type LabelStackProps = {
   labelList: Label[];

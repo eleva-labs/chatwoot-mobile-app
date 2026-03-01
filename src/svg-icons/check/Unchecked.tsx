@@ -1,7 +1,7 @@
 import React from 'react';
 import { Circle, Svg } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const UncheckedIcon = (props: IconProps) => {
   const { stroke = 'currentColor', color } = props;

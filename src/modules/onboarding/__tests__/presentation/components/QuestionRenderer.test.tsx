@@ -14,7 +14,7 @@ import { aScreen } from '../../helpers/builders';
 import type { QuestionType } from '../../../domain/common';
 
 // Mock all dependencies
-jest.mock('@/hooks/useThemedStyles', () => ({
+jest.mock('@infrastructure/hooks/useThemedStyles', () => ({
   useThemedStyles: () => ({
     style: (className: string) => ({ className }),
     color: (colorName: string) => colorName,

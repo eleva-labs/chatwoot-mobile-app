@@ -6,30 +6,33 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { useConversationListStateContext } from '@/context';
-import { tailwind } from '@/theme';
-import { useHaptic } from '@/utils';
-import { getFilteredConversations } from '@/store/conversation/conversationSelectors';
+import { useConversationListStateContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic } from '@infrastructure/utils';
+import { getFilteredConversations } from '@application/store/conversation/conversationSelectors';
 import { useThemedStyles } from '@/hooks';
-import { selectUserId } from '@/store/auth/authSelectors';
+import { selectUserId } from '@application/store/auth/authSelectors';
 import {
   resetFilters,
   selectFilters,
   defaultFilterState,
   FilterState,
-} from '@/store/conversation/conversationFilterSlice';
+} from '@application/store/conversation/conversationFilterSlice';
 import {
   clearSelection,
   selectAll,
   selectSelectedConversations,
-} from '@/store/conversation/conversationSelectedSlice';
-import { selectCurrentState, setCurrentState } from '@/store/conversation/conversationHeaderSlice';
+} from '@application/store/conversation/conversationSelectedSlice';
+import {
+  selectCurrentState,
+  setCurrentState,
+} from '@application/store/conversation/conversationHeaderSlice';
 import { ConversationFilterBar } from '../conversation-filters';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
 
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 const getFiltersAppliedCount = (defaultState: FilterState, updatedState: FilterState): number => {
   let count = 0;

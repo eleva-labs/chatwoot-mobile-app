@@ -9,12 +9,12 @@ import {
 } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { EMAIL_REGEX } from '@/constants';
+import { EMAIL_REGEX } from '@domain/constants';
 import { EyeIcon, EyeSlash, LockIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { resetAuth } from '@/store/auth/authSlice';
-import { authActions } from '@/store/auth/authActions';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
+import { resetAuth } from '@application/store/auth/authSlice';
+import { authActions } from '@application/store/auth/authActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import {
@@ -24,23 +24,23 @@ import {
   Button,
   Icon,
   AuthButton,
-} from '@/components-next';
+} from '@infrastructure/ui';
 import {
   selectInstallationUrl,
   //selectBaseUrl,
   selectLocale,
-} from '@/store/settings/settingsSelectors';
-import { selectIsLoggingIn, selectLoggedIn } from '@/store/auth/authSelectors';
-import { loadAndClearPendingLink } from '@/utils/dynamicLinkUtils';
-import { navigationRef } from '@/utils/navigationUtils';
-import { setLocale } from '@/store/settings/settingsSlice';
-import { BuildInfo } from '@/components-next/common';
-import { useRefsContext } from '@/context/RefsContext';
-import { settingsActions } from '@/store/settings/settingsActions';
+} from '@application/store/settings/settingsSelectors';
+import { selectIsLoggingIn, selectLoggedIn } from '@application/store/auth/authSelectors';
+import { loadAndClearPendingLink } from '@infrastructure/utils/dynamicLinkUtils';
+import { navigationRef } from '@infrastructure/utils/navigationUtils';
+import { setLocale } from '@application/store/settings/settingsSlice';
+import { BuildInfo } from '@infrastructure/ui/common';
+import { useRefsContext } from '@infrastructure/context/RefsContext';
+import { settingsActions } from '@application/store/settings/settingsActions';
 import appLogo from '@/assets/images/logo.png';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@infrastructure/context/ThemeContext';
 import { useThemedStyles } from '@/hooks';
-import { SsoUtils } from '@/utils/ssoUtils';
+import { SsoUtils } from '@infrastructure/utils/ssoUtils';
 
 type FormData = {
   email: string;

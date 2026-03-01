@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-import { openURL } from '@/utils/urlUtils';
+import { openURL } from '@infrastructure/utils/urlUtils';
 
-import { MESSAGE_VARIANTS } from '@/constants';
-import { useThemedStyles } from '@/hooks';
+import { MESSAGE_VARIANTS } from '@domain/constants';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 type MarkdownBubbleProps = {
   messageContent: string;

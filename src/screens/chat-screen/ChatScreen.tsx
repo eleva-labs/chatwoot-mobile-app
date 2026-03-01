@@ -9,31 +9,31 @@ import { ConversationActions } from './conversation-actions';
 
 import { ReplyBoxContainer } from './components';
 import { MessagesListContainer } from './components';
-import { ChatWindowProvider, useChatWindowContext, useRefsContext } from '@/context';
-import { TabBarExcludedScreenParamList } from '@/navigation/tabs/AppTabs';
-import { tailwind } from '@/theme';
+import { ChatWindowProvider, useChatWindowContext, useRefsContext } from '@infrastructure/context';
+import { TabBarExcludedScreenParamList } from '@application/navigation/tabs/AppTabs';
+import { tailwind } from '@infrastructure/theme';
 import {
   selectConversationById,
   selectConversationFetching,
   selectConversationError,
-} from '@/store/conversation/conversationSelectors';
+} from '@application/store/conversation/conversationSelectors';
 import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 
-import { notificationActions } from '@/store/notification/notificationAction';
-import { MarkAsReadPayload } from '@/store/notification/notificationTypes';
-import { PrimaryActorType } from '@/types/Notification';
-import { assignableAgentActions } from '@/store/assignable-agent/assignableAgentActions';
-import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { SCREENS, TAB_BAR_HEIGHT } from '@/constants';
+import { notificationActions } from '@application/store/notification/notificationAction';
+import { MarkAsReadPayload } from '@application/store/notification/notificationTypes';
+import { PrimaryActorType } from '@domain/types/Notification';
+import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
+import ActionBottomSheet from '@application/navigation/tabs/ActionBottomSheet';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
 import { ErrorIcon } from '@/svg-icons';
-import { Button } from '@/components-next';
+import { Button } from '@infrastructure/ui';
 import { ActivityIndicator, Pressable } from 'react-native';
-import i18n from '@/i18n';
-import AnalyticsHelper from '@/utils/analyticsUtils';
+import i18n from '@infrastructure/i18n';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { MacrosList } from './components/macros/MacrosList';
-import { macroActions } from '@/store/macro/macroActions';
+import { macroActions } from '@application/store/macro/macroActions';
 import { LightBoxProvider } from '@alantoa/lightbox';
 
 export const ChatWindow = (props: ChatScreenProps) => {

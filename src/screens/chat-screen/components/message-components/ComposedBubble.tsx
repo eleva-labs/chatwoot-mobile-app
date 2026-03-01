@@ -2,19 +2,19 @@ import React, { useMemo } from 'react';
 import Animated from 'react-native-reanimated';
 
 import { FileErrorIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Message } from '@/types';
-import { Icon, Spinner } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Message } from '@domain/types';
+import { Icon, Spinner } from '@infrastructure/ui';
 import { ReplyMessageBubble } from './ReplyMessageBubble';
 
 import { ImageBubbleContainer } from './ImageBubble';
 
 import { useAppSelector } from '@/hooks';
-import { useChatWindowContext } from '@/context';
-import { getMessagesByConversationId } from '@/store/conversation/conversationSelectors';
-import { ATTACHMENT_TYPES, MESSAGE_STATUS } from '@/constants';
-import { isOlderThan24Hours } from '@/utils';
-import i18n from '@/i18n';
+import { useChatWindowContext } from '@infrastructure/context';
+import { getMessagesByConversationId } from '@application/store/conversation/conversationSelectors';
+import { ATTACHMENT_TYPES, MESSAGE_STATUS } from '@domain/constants';
+import { isOlderThan24Hours } from '@infrastructure/utils';
+import i18n from '@infrastructure/i18n';
 import { MarkdownBubble } from './MarkdownBubble';
 import { FileBubblePreview } from './FileBubble';
 import { AudioBubble } from './AudioBubble';

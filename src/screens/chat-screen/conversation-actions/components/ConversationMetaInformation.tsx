@@ -1,13 +1,13 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 
-import { AttributeListType, CustomAttribute } from '@/types';
-import { Conversation } from '@/types/Conversation';
-import i18n from '@/i18n';
+import { AttributeListType, CustomAttribute } from '@domain/types';
+import { Conversation } from '@domain/types/Conversation';
+import i18n from '@infrastructure/i18n';
 import { camelCase } from 'lodash';
 import { useAppSelector } from '@/hooks';
-import { getConversationCustomAttributes } from '@/store/custom-attribute/customAttributeSlice';
-import { AttributeList } from '@/components-next';
+import { getConversationCustomAttributes } from '@application/store/custom-attribute/customAttributeSlice';
+import { AttributeList } from '@infrastructure/ui';
 
 const processContactAttributes = (
   attributes: CustomAttribute[],

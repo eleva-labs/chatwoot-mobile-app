@@ -1,7 +1,7 @@
 import perf from '@react-native-firebase/perf';
 
 import type { IPerformanceService, IPerformanceTrace } from '@/domain/interfaces/services/shared';
-import { normalizeEventName } from '@/utils/normalizeEventName';
+import { normalizeEventName } from '@infrastructure/utils/normalizeEventName';
 import { FirebasePerformanceTraceAdapter } from './adapters';
 
 const SCREEN_TRACE_PREFIX = 'screen_';

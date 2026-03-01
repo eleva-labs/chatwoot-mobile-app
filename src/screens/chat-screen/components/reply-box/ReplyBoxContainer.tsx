@@ -12,7 +12,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lock, LockOpen } from 'lucide-react-native';
 
-import { useChatWindowContext, useRefsContext } from '@/context';
+import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import {
   useHaptic,
   isAWhatsAppChannel,
@@ -24,10 +24,10 @@ import {
   isAWebWidgetInbox,
   isAPIInbox,
   isAnInstagramChannel,
-} from '@/utils';
+} from '@infrastructure/utils';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
-import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@/constants';
-import { tailwind } from '@/theme';
+import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@domain/constants';
+import { tailwind } from '@infrastructure/theme';
 import {
   selectMessageContent,
   selectAttachments,
@@ -36,11 +36,15 @@ import {
   selectIsPrivateMessage,
   togglePrivateMessage,
   setMessageContent,
-} from '@/store/conversation/sendMessageSlice';
-import { selectUserId, selectUserName, selectUserThumbnail } from '@/store/auth/authSelectors';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { selectInboxById } from '@/store/inbox/inboxSelectors';
-import { conversationActions } from '@/store/conversation/conversationActions';
+} from '@application/store/conversation/sendMessageSlice';
+import {
+  selectUserId,
+  selectUserName,
+  selectUserThumbnail,
+} from '@application/store/auth/authSelectors';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { selectInboxById } from '@application/store/inbox/inboxSelectors';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import { AddCommandButton } from './buttons/AddCommandButton';
 import { SendMessageButton } from './buttons/SendMessageButton';
@@ -49,21 +53,21 @@ import { QuoteReply } from './QuoteReply';
 import { CannedResponses } from './CannedResponses';
 import { AttachedMedia } from '../message-components/AttachedMedia';
 import { CommandOptionsMenu } from '../message-components/CommandOptionsMenu';
-import { SendMessagePayload } from '@/store/conversation/conversationTypes';
+import { SendMessagePayload } from '@application/store/conversation/conversationTypes';
 import { TypingIndicator } from './TypingIndicator';
-import { getTypingUsersText } from '@/utils';
-import { selectTypingUsersByConversationId } from '@/store/conversation/conversationTypingSlice';
-import { Agent, CannedResponse, Conversation } from '@/types';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import { getTypingUsersText } from '@infrastructure/utils';
+import { selectTypingUsersByConversationId } from '@application/store/conversation/conversationTypingSlice';
+import { Agent, CannedResponse, Conversation } from '@domain/types';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 import {
   allMessageVariables,
   replaceMessageVariables,
   getAllUndefinedVariablesInMessage,
-} from '@/utils/messageVariableUtils';
+} from '@infrastructure/utils/messageVariableUtils';
 import { ReplyEmailHead } from './ReplyEmailHead';
-import { getLastEmailInSelectedChat } from '@/store/conversation/conversationSelectors';
-import { selectAssignableParticipantsByInboxId } from '@/store/assignable-agent/assignableAgentSelectors';
+import { getLastEmailInSelectedChat } from '@application/store/conversation/conversationSelectors';
+import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
 import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
 

@@ -9,19 +9,19 @@ import { isUndefined } from 'lodash';
 import * as Sentry from '@sentry/react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
-import { TEXT_INPUT_CONTAINER_HEIGHT } from '@/constants';
-import { useChatWindowContext } from '@/context';
-import i18n from '@/i18n';
+import { TEXT_INPUT_CONTAINER_HEIGHT } from '@domain/constants';
+import { useChatWindowContext } from '@infrastructure/context';
+import i18n from '@infrastructure/i18n';
 import { SendIcon, Trash } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Icon } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Icon } from '@infrastructure/ui';
 import { PauseIcon, PlayIcon } from '../message-components';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import {
   addNewCachePath,
   selectLocalRecordedAudioCacheFilePaths,
-} from '@/store/conversation/localRecordedAudioCacheSlice';
-import { convertAacToWav } from '@/utils/audioConverter';
+} from '@application/store/conversation/localRecordedAudioCacheSlice';
+import { convertAacToWav } from '@infrastructure/utils/audioConverter';
 
 const RecorderSegmentWidth = Dimensions.get('screen').width - 8 - 80 - 12;
 

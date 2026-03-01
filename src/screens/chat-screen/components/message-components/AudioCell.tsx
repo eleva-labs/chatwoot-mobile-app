@@ -7,16 +7,16 @@ import Svg, { Path, Rect } from 'react-native-svg';
 import {
   selectCurrentPlayingAudioSrc,
   setCurrentPlayingAudioSrc,
-} from '@/store/conversation/audioPlayerSlice';
+} from '@application/store/conversation/audioPlayerSlice';
 
-import { tailwind } from '@/theme';
-import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { getAvatarSource, messageTimestamp } from '@/utils';
-import { Avatar, Icon, Slider } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar, Icon, Slider } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/hooks';

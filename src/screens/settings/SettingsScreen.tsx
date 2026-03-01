@@ -15,13 +15,13 @@ import DeviceInfo from 'react-native-device-info';
 import ChatWootWidget from '@chatwoot/react-native-widget';
 import { useSelector } from 'react-redux';
 import * as Application from 'expo-application';
-import { Account, AvailabilityStatus } from '@/types';
-import { clearAllConversations } from '@/store/conversation/conversationSlice';
-import { resetNotifications } from '@/store/notification/notificationSlice';
-import { clearAllContacts } from '@/store/contact/contactSlice';
+import { Account, AvailabilityStatus } from '@domain/types';
+import { clearAllConversations } from '@application/store/conversation/conversationSlice';
+import { resetNotifications } from '@application/store/notification/notificationSlice';
+import { clearAllContacts } from '@application/store/contact/contactSlice';
 
-import i18n from 'i18n';
-import { tailwind } from '@/theme';
+import i18n from '@infrastructure/i18n';
+import { tailwind } from '@infrastructure/theme';
 import { useThemedStyles } from '@/hooks';
 
 import {
@@ -34,37 +34,37 @@ import {
   NotificationPreferences,
   SwitchAccount,
   SettingsList,
-} from '@/components-next';
+} from '@infrastructure/ui';
 import { UserAvatar } from './components/UserAvatar';
-import { BuildInfo } from '@/components-next/common';
+import { BuildInfo } from '@infrastructure/ui/common';
 
-import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@/constants';
-import { useRefsContext, useTheme } from '@/context';
+import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { useRefsContext, useTheme } from '@infrastructure/context';
 import { NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
-import { GenericListType } from '@/types';
+import { GenericListType } from '@domain/types';
 
-import { useHaptic } from '@/utils';
+import { useHaptic } from '@infrastructure/utils';
 import { SettingsHeader } from './SettingsHeader';
 import { DebugActions } from './components/DebugActions';
 import {
   selectCurrentUserAvailability,
   selectUser,
   selectAccounts,
-} from '@/store/auth/authSelectors';
-import { logout, setAccount } from '@/store/auth/authSlice';
-import { authActions } from '@/store/auth/authActions';
+} from '@application/store/auth/authSelectors';
+import { logout, setAccount } from '@application/store/auth/authSlice';
+import { authActions } from '@application/store/auth/authActions';
 import {
   selectLocale,
   //selectIsChatwootCloud,
   selectPushToken,
-} from '@/store/settings/settingsSelectors';
-import { settingsActions } from '@/store/settings/settingsActions';
-import { setLocale } from '@/store/settings/settingsSlice';
+} from '@application/store/settings/settingsSelectors';
+import { settingsActions } from '@application/store/settings/settingsActions';
+import { setLocale } from '@application/store/settings/settingsSlice';
 
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@/constants/analyticsEvents';
-import { getUserPermissions } from '@/utils/permissionUtils';
-import { CONVERSATION_PERMISSIONS } from '@/constants/permissions';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';
+import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
+import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
 import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 const appName = Application.applicationName;

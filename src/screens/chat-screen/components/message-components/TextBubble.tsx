@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message } from '@/types';
+import { Message } from '@domain/types';
 import { MarkdownBubble } from './MarkdownBubble';
 import { EmailMeta } from './EmailMeta';
 

@@ -6,11 +6,11 @@ import snakecaseKeys from 'snakecase-keys';
 
 import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
 
-import { Icon } from '@/components-next';
+import { Icon } from '@infrastructure/ui';
 import { CloseIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Conversation } from '@/types';
-import { User } from '@/types/User';
+import { tailwind } from '@infrastructure/theme';
+import { Conversation } from '@domain/types';
+import { User } from '@domain/types/User';
 
 const DashboardScreen = () => {
   const route = useRoute();

@@ -3,16 +3,16 @@ import { Controller, useForm } from 'react-hook-form';
 import { Animated, StatusBar, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button, Icon } from '@/components-next';
-import { EMAIL_REGEX } from '@/constants';
+import { Button, Icon } from '@infrastructure/ui';
+import { EMAIL_REGEX } from '@domain/constants';
 import { KeyRoundIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { authActions } from '@/store/auth/authActions';
+import { tailwind } from '@infrastructure/theme';
+import { authActions } from '@application/store/auth/authActions';
 import { useAppDispatch } from '@/hooks';
-import { resetAuth } from '@/store/auth/authSlice';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { ACCOUNT_EVENTS } from '@/constants/analyticsEvents';
-import i18n from '@/i18n';
+import { resetAuth } from '@application/store/auth/authSlice';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';
+import i18n from '@infrastructure/i18n';
 
 type FormData = {
   email: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const LabelTag = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (

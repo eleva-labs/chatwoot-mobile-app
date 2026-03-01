@@ -2,10 +2,10 @@
 import React, { memo } from 'react';
 import { LinearTransition } from 'react-native-reanimated';
 
-import { Icon } from '@/components-next/common';
-import { AnimatedNativeView } from '@/components-next/native-components';
+import { Icon } from '@infrastructure/ui/common';
+import { AnimatedNativeView } from '@infrastructure/ui/native-components';
 import { CheckedIcon, UncheckedIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 type ConversationSelectProps = {
   isSelected: boolean;

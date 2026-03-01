@@ -13,14 +13,14 @@ import { NavigationFooter } from '../../../presentation/components/NavigationFoo
 import { aScreen } from '../../helpers/builders';
 
 // Mock dependencies
-jest.mock('@/hooks/useThemedStyles', () => ({
+jest.mock('@infrastructure/hooks/useThemedStyles', () => ({
   useThemedStyles: () => ({
     style: (className: string) => ({ className }),
     color: (colorName: string) => colorName,
   }),
 }));
 
-jest.mock('@/components-next/button/Button', () => {
+jest.mock('@infrastructure/ui/button/Button', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
   // eslint-disable-next-line @typescript-eslint/no-require-imports

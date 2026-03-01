@@ -7,8 +7,8 @@
 
 import { injectable } from 'tsyringe';
 import type { IStateRepository } from '@/domain/interfaces/repositories/shared';
-import type { AIChatSession } from '@/store/ai-chat/aiChatTypes';
-import { getStore } from '@/store/storeAccessor';
+import type { AIChatSession } from '@application/store/ai-chat/aiChatTypes';
+import { getStore } from '@application/store/storeAccessor';
 
 /**
  * Repository for accessing and managing global state via Redux

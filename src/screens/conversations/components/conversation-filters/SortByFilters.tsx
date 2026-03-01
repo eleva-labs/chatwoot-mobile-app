@@ -2,18 +2,18 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { SortTypes } from '@/types';
-import { useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { SortTypes } from '@domain/types';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, Icon } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import i18n from '@/i18n';
-import { SortOptions } from '@/types';
-import { selectFilters, setFilters } from '@/store/conversation/conversationFilterSlice';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import i18n from '@infrastructure/i18n';
+import { SortOptions } from '@domain/types';
+import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 type SortByCellProps = {
   value: string;

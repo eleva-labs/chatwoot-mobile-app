@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const Overflow = ({ stroke = 'currentColor', strokeWidth = 1.5, color }: IconProps) => {
   return (

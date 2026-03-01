@@ -2,10 +2,10 @@ import React, { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { Icon, Spinner } from '@/components-next';
+import { Icon, Spinner } from '@infrastructure/ui';
 import { CaretRight, InfoIcon, MacroIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Macro } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { Macro } from '@domain/types';
 import { useMacroContext } from './MacroContext';
 
 type MacroItemProps = {

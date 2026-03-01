@@ -3,21 +3,21 @@ import React, { useCallback } from 'react';
 import { SharedValue } from 'react-native-reanimated';
 import Animated from 'react-native-reanimated';
 
-import { notificationActions } from '@/store/notification/notificationAction';
+import { notificationActions } from '@application/store/notification/notificationAction';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import type { Notification } from '@/types/Notification';
-import type { MarkAsReadPayload } from '@/store/notification/notificationTypes';
+import type { Notification } from '@domain/types/Notification';
+import type { MarkAsReadPayload } from '@application/store/notification/notificationTypes';
 import { MarkAsRead, MarkAsUnRead, DeleteIcon } from '@/svg-icons';
 import { InboxItem } from './InboxItem';
-import { formatRelativeTime } from '@/utils/dateTimeUtils';
-import { formatTimeToShortForm } from '@/utils/dateTimeUtils';
-import { tailwind } from '@/theme';
-import { Icon, Swipeable } from '@/components-next';
-import { selectInboxById } from '@/store/inbox/inboxSelectors';
-import i18n from '@/i18n';
-import { showToast } from '@/utils/toastUtils';
+import { formatRelativeTime } from '@infrastructure/utils/dateTimeUtils';
+import { formatTimeToShortForm } from '@infrastructure/utils/dateTimeUtils';
+import { tailwind } from '@infrastructure/theme';
+import { Icon, Swipeable } from '@infrastructure/ui';
+import { selectInboxById } from '@application/store/inbox/inboxSelectors';
+import i18n from '@infrastructure/i18n';
+import { showToast } from '@infrastructure/utils/toastUtils';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import { conversationActions } from '@/store/conversation/conversationActions';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 
 type InboxItemContainerProps = {
   item: Notification;

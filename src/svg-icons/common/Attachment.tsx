@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path, G, Circle, Rect } from 'react-native-svg';
 
-import { IconProps } from '../../types';
+import { IconProps } from '@domain/types';
 
 export const AttachmentIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (

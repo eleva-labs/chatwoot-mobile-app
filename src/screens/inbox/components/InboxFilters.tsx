@@ -2,14 +2,20 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
-import i18n from '@/i18n';
-import { InboxSortTypes, InboxSortOptions } from '@/store/notification/notificationTypes';
-import { selectSortOrder, setFilters } from '@/store/notification/notificationFilterSlice';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, Icon } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
+import {
+  InboxSortTypes,
+  InboxSortOptions,
+} from '@application/store/notification/notificationTypes';
+import {
+  selectSortOrder,
+  setFilters,
+} from '@application/store/notification/notificationFilterSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 type SortByCellProps = {

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Pressable, Text, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
-import { Icon } from '@/components-next/common';
+import { Icon } from '@infrastructure/ui/common';
 import { CheckedIcon, CloseIcon, FilterIcon, UncheckedIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { useScaleAnimation } from '@/utils';
-import { useHeaderAnimation } from '@/hooks/useHeaderAnimation';
-import { useThemedStyles } from '@/hooks';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { useHeaderAnimation } from '@infrastructure/hooks/useHeaderAnimation';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 type HeaderState = 'Search' | 'Filter' | 'Select' | 'none';
 

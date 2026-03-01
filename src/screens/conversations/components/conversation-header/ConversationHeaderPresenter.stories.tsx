@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { ScrollView, View, Text } from 'react-native';
 
 const meta: Meta<typeof ConversationHeaderPresenter> = {

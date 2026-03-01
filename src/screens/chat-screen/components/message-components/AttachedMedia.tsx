@@ -12,11 +12,14 @@ import { ResizeMode, Video } from 'expo-av';
 import { Image } from 'expo-image';
 
 import { AttachFileIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useScaleAnimation } from '@/utils';
-import { Icon } from '@/components-next/common';
+import { tailwind } from '@infrastructure/theme';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui/common';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAttachments, deleteAttachment } from '@/store/conversation/sendMessageSlice';
+import {
+  selectAttachments,
+  deleteAttachment,
+} from '@application/store/conversation/sendMessageSlice';
 
 export const PlayIcon = () => {
   return (

@@ -9,7 +9,7 @@ import {
 } from '@react-native-firebase/analytics';
 
 import type { AnalyticsEventParams, IAnalyticsService } from '@/domain/interfaces/services/shared';
-import { normalizeEventName } from '@/utils/normalizeEventName';
+import { normalizeEventName } from '@infrastructure/utils/normalizeEventName';
 
 export class FirebaseAnalyticsService implements IAnalyticsService {
   private collectionEnabled = true;

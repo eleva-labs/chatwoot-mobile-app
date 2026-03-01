@@ -2,12 +2,15 @@ import React from 'react';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 import { ArrowUp } from 'lucide-react-native';
-import { useScaleAnimation } from '@/utils';
-import { tailwind } from '@/theme';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { tailwind } from '@infrastructure/theme';
 import { useAppSelector, useThemedStyles } from '@/hooks';
-import { selectIsPrivateMessage } from '@/store/conversation/sendMessageSlice';
+import { selectIsPrivateMessage } from '@application/store/conversation/sendMessageSlice';
 import { SendMessageButtonProps } from '../types';
-import { sendIconEnterAnimation, sendIconExitAnimation } from '@/utils/customAnimations';
+import {
+  sendIconEnterAnimation,
+  sendIconExitAnimation,
+} from '@infrastructure/utils/customAnimations';
 
 export const SendMessageButton = (props: SendMessageButtonProps) => {
   const { animatedStyle, handlers } = useScaleAnimation();

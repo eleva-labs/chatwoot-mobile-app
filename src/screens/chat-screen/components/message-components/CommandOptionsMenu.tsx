@@ -6,17 +6,17 @@ import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch } from '@/hooks';
-import { updateAttachments } from '@/store/conversation/sendMessageSlice';
-import { useRefsContext } from '@/context';
+import { updateAttachments } from '@application/store/conversation/sendMessageSlice';
+import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic, useScaleAnimation } from '@/utils';
-import { Icon } from '@/components-next/common';
-import { MAXIMUM_FILE_UPLOAD_SIZE } from '@/constants';
-import i18n from '@/i18n';
-import { showToast } from '@/utils/toastUtils';
-import { findFileSize } from '@/utils/fileUtils';
-import type { AppDispatch } from '@/store';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui/common';
+import { MAXIMUM_FILE_UPLOAD_SIZE } from '@domain/constants';
+import i18n from '@infrastructure/i18n';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import { findFileSize } from '@infrastructure/utils/fileUtils';
+import type { AppDispatch } from '@application/store';
 
 export const handleOpenPhotosLibrary = async (dispatch: AppDispatch) => {
   const pickedAssets = await launchImageLibrary({

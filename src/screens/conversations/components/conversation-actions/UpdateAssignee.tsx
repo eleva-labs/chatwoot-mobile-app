@@ -3,27 +3,27 @@ import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { Agent } from '@/types';
-import { Avatar, Icon, SearchBar } from '@/components-next';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { Agent } from '@domain/types';
+import { Avatar, Icon, SearchBar } from '@infrastructure/ui';
 import { SelfAssign, TickIcon } from '@/svg-icons';
 
-import { assignableAgentActions } from '@/store/assignable-agent/assignableAgentActions';
+import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAssignableAgentsByInboxId } from '@/store/assignable-agent/assignableAgentSelectors';
+import { selectAssignableAgentsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
 import {
   selectSelectedIds,
   selectSelectedInboxes,
   selectSelectedConversation,
-} from '@/store/conversation/conversationSelectedSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { isAssignableAgentFetching } from '@/store/assignable-agent/assignableAgentSelectors';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { selectUserId } from '@/store/auth/authSelectors';
+} from '@application/store/conversation/conversationSelectedSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { isAssignableAgentFetching } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { selectUserId } from '@application/store/auth/authSelectors';
 
 type AssigneeCellProps = {
   agent: Agent;

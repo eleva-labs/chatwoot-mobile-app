@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button } from '@/components-next/button/Button';
-import { useThemedStyles } from '@/hooks/useThemedStyles';
+import { Button } from '@infrastructure/ui/button/Button';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
 import { Screen } from '../../domain/entities/Screen';
 import { t as translateOnboarding, TranslationKeys } from '../i18n';
 

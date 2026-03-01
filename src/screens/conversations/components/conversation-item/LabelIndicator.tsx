@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { tailwind } from '@/theme';
-import { AnimatedNativeView, NativeView } from '@/components-next/native-components';
-import { LabelItem } from '@/components-next/label-section';
-import { Label } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { AnimatedNativeView, NativeView } from '@infrastructure/ui/native-components';
+import { LabelItem } from '@infrastructure/ui/label-section';
+import { Label } from '@domain/types';
 
 interface LabelState {
   result: Label[]; // List of labels that fit within the available width

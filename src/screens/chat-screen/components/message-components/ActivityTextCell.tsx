@@ -1,9 +1,9 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { messageTimestamp } from '@/utils/dateTimeUtils';
-import { localizeActivityMessage } from '@/utils/activityMessageUtils';
+import { tailwind } from '@infrastructure/theme';
+import { messageTimestamp } from '@infrastructure/utils/dateTimeUtils';
+import { localizeActivityMessage } from '@infrastructure/utils/activityMessageUtils';
 
 type ActivityTextCellProps = {
   text: string;

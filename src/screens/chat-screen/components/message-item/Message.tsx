@@ -1,11 +1,11 @@
 import React from 'react';
-import { Channel, Message } from '@/types';
+import { Channel, Message } from '@domain/types';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { useChatWindowContext } from '@/context';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { getAvatarSource, messageTimestamp, useHaptic } from '@/utils';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { useChatWindowContext } from '@infrastructure/context';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { getAvatarSource, messageTimestamp, useHaptic } from '@infrastructure/utils';
 import {
   ComposedBubble,
   DeliveryStatus,
@@ -19,7 +19,7 @@ import {
   EmailBubble,
   UnsupportedBubble,
 } from '../message-components';
-import { showToast } from '@/utils/toastUtils';
+import { showToast } from '@infrastructure/utils/toastUtils';
 import {
   // ATTACHMENT_TYPES,
   MESSAGE_STATUS,
@@ -29,17 +29,17 @@ import {
   TEXT_MAX_WIDTH,
   CONTENT_TYPES,
   MESSAGE_TYPES,
-} from '@/constants';
-import i18n from '@/i18n';
+} from '@domain/constants';
+import i18n from '@infrastructure/i18n';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { CopyIcon, Trash } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { useThemedStyles } from '@/hooks';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { Dimensions, View } from 'react-native';
-import { Avatar } from '@/components-next';
+import { Avatar } from '@infrastructure/ui';
 
-// import { ImageMetadata } from '@/types';
+// import { ImageMetadata } from '@domain/types';
 
 type MessageComponentProps = {
   item: Message;

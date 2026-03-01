@@ -5,18 +5,18 @@
  * This file stays in the Chatwoot app; it is NOT extracted into the package.
  */
 
-import type { SessionsStateAdapter } from '@/types/ai-chat/sessionsAdapter';
-import type { AppDispatch } from '@/store';
-import { getStore } from '@/store/storeAccessor';
-import { aiChatActions, setActiveSession } from '@/store/ai-chat';
+import type { SessionsStateAdapter } from '@domain/types/ai-chat/sessionsAdapter';
+import type { AppDispatch } from '@application/store';
+import { getStore } from '@application/store/storeAccessor';
+import { aiChatActions, setActiveSession } from '@application/store/ai-chat';
 import {
   selectSessionsByAgentBot,
   selectActiveSessionId,
   selectIsLoadingSessions,
   selectIsLoadingMessages,
   selectMessagesBySession,
-} from '@/store/ai-chat';
-import { AIChatService } from '@/store/ai-chat/aiChatService';
+} from '@application/store/ai-chat';
+import { AIChatService } from '@application/store/ai-chat/aiChatService';
 
 /**
  * Factory function to create a Chatwoot sessions adapter.

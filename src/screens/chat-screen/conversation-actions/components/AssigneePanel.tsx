@@ -1,11 +1,11 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Avatar, Icon } from '@/components-next';
+import { Avatar, Icon } from '@infrastructure/ui';
 import { CaretRight, UnassignedIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Agent } from '@/types';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import { Agent } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 type AssigneePanelProps = {
   assignee: Agent | null;

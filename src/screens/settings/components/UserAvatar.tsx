@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { ImageSourcePropType, Text, View, ViewProps } from 'react-native';
 import { Image } from 'expo-image';
-import { AvailabilityStatus } from '@/types/common/AvailabilityStatus';
+import { AvailabilityStatus } from '@domain/types/common/AvailabilityStatus';
 
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { cx, styleAdapter } from '@/utils';
-import { userStatusList } from '@/constants';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { cx, styleAdapter } from '@infrastructure/utils';
+import { userStatusList } from '@domain/constants';
 
 function getInitials(name: string) {
   if (!name) {

@@ -1,11 +1,18 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAllInboxes } from '@/store/inbox/inboxSelectors';
-import { BottomSheetType, setBottomSheetState } from '@/store/conversation/conversationHeaderSlice';
-import { selectFilters } from '@/store/conversation/conversationFilterSlice';
-import { BaseFilterOption, FilterBar } from '@/components-next';
-import { AssigneeOptions, StatusOptions, SortOptions } from '@/types/common/ConversationStatus';
-import i18n from '@/i18n';
+import { selectAllInboxes } from '@application/store/inbox/inboxSelectors';
+import {
+  BottomSheetType,
+  setBottomSheetState,
+} from '@application/store/conversation/conversationHeaderSlice';
+import { selectFilters } from '@application/store/conversation/conversationFilterSlice';
+import { BaseFilterOption, FilterBar } from '@infrastructure/ui';
+import {
+  AssigneeOptions,
+  StatusOptions,
+  SortOptions,
+} from '@domain/types/common/ConversationStatus';
+import i18n from '@infrastructure/i18n';
 
 export const ConversationFilterOptions: BaseFilterOption[] = [
   {
