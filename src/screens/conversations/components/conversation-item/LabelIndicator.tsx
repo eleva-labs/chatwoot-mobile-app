@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { tailwind } from '@/theme';
 import { AnimatedNativeView, NativeView } from '@/components-next/native-components';
-import { LabelPill } from '@/components-next/label-section/LabelPill';
+import { LabelItem } from '@/components-next/label-section';
 import { Label } from '@/types';
 
 interface LabelState {
@@ -60,7 +60,7 @@ export const LabelIndicator = ({ labels, allLabels }: { labels: string[]; allLab
       }}>
       <NativeView style={tailwind.style('flex-row items-center overflow-hidden gap-1')}>
         {activeLabels.map(label => (
-          <LabelPill key={label.title} labelText={label.title} labelColor={label.color} />
+          <LabelItem key={label.title} title={label.title} color={label.color} />
         ))}
       </NativeView>
     </AnimatedNativeView>

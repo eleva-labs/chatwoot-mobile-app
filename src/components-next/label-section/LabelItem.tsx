@@ -1,20 +1,27 @@
 import React from 'react';
-import Animated from 'react-native-reanimated';
-
+import { Text } from 'react-native';
 import { tailwind } from '@/theme';
-import { Label } from '@/types';
-import { LabelPill } from './LabelPill';
+import { useThemedStyles } from '@/hooks';
+import { NativeView } from '@/components-next/native-components';
 
 type LabelItemProps = {
-  item: Label;
-  index: number;
+  title: string;
+  color: string;
 };
 
-export const LabelItem = (props: LabelItemProps) => {
-  const { item } = props;
+export const LabelItem = ({ title, color }: LabelItemProps) => {
+  const themedTailwind = useThemedStyles();
   return (
-    <Animated.View style={tailwind.style('mr-2 mt-3')}>
-      <LabelPill labelText={item.title} labelColor={item.color} />
-    </Animated.View>
+    <NativeView
+      style={themedTailwind.style(
+        'flex-row items-center gap-1 h-5 py-0.5 px-1 rounded border border-slate-6 bg-transparent',
+      )}>
+      <NativeView style={tailwind.style('h-2 w-2 rounded-sm', `bg-[${color}]`)} />
+      <Text
+        numberOfLines={1}
+        style={themedTailwind.style('text-xs font-inter-420-20 text-slate-11')}>
+        {title}
+      </Text>
+    </NativeView>
   );
 };

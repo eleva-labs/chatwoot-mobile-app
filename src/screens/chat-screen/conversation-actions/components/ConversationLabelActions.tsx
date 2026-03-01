@@ -120,8 +120,10 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         </Animated.Text>
       </Animated.View>
       <Animated.View style={tailwind.style('flex flex-row flex-wrap pl-4')}>
-        {conversationLabels.map((label, index) => (
-          <LabelItem key={index} index={index} item={label} />
+        {conversationLabels.map(label => (
+          <Animated.View key={label.title} style={tailwind.style('mr-2 mt-3')}>
+            <LabelItem title={label.title} color={label.color} />
+          </Animated.View>
         ))}
         <Pressable
           onPress={handleAddLabelPress}
