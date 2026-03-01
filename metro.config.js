@@ -52,6 +52,12 @@ const config = {
       ...defaultResolver.extraNodeModules,
       // Mock @vercel/oidc (used by @ai-sdk/gateway but we don't use gateway)
       '@vercel/oidc': path.resolve(__dirname, 'src/__mocks__/@vercel/oidc.js'),
+      // Path aliases for Clean Architecture layers
+      '@domain': path.resolve(__dirname, 'src/domain'),
+      '@infrastructure': path.resolve(__dirname, 'src/infrastructure'),
+      '@application': path.resolve(__dirname, 'src/application'),
+      '@screens': path.resolve(__dirname, 'src/screens'),
+      '@presentation': path.resolve(__dirname, 'src/presentation'),
     },
     // Custom resolver to handle @vercel/oidc
     resolveRequest: customResolveRequest,
