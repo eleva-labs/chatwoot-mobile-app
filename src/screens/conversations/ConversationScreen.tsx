@@ -24,7 +24,8 @@ import {
 } from './components';
 
 import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
-import { FloatingAIAssistant } from '@/presentation';
+// AI assistant FAB disabled — not yet ready for production
+// import { FloatingAIAssistant } from '@/presentation';
 
 import { EmptyStateIcon } from '@/svg-icons';
 import {
@@ -350,7 +351,8 @@ const ConversationScreen = () => {
         </BottomSheetModal>
         <ActionBottomSheet />
         <ActionTabs />
-        <FloatingAIAssistant />
+        {/* AI assistant FAB disabled — not yet ready for production */}
+        {/* <FloatingAIAssistant /> */}
       </ConversationListStateProvider>
     </SafeAreaView>
   );

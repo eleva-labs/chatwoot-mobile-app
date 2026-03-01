@@ -33,6 +33,7 @@ export type ConversationItemProps = {
   priority?: ConversationPriority | null;
   labels: string[];
   timestamp: number;
+  createdAt?: number;
   inbox: Inbox | null;
   lastMessage?: Message | null;
   inboxId: number;
@@ -75,6 +76,7 @@ export const ConversationItem = memo(
     priority = null,
     labels,
     timestamp,
+    createdAt,
     inbox,
     lastMessage,
     inboxId,
@@ -110,6 +112,7 @@ export const ConversationItem = memo(
             assignee,
             senderName,
             timestamp,
+            createdAt,
             inbox,
             lastMessage,
             inboxId,

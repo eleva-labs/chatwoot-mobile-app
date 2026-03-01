@@ -12,7 +12,7 @@ import { useThemedStyles } from '@/hooks';
 import { PersonIcon } from '@/svg-icons';
 
 import { ConversationLastMessage } from './ConversationLastMessage';
-import { PriorityIndicator, ChannelIndicator } from '@/components-next/list-components';
+import { PriorityIndicator } from '@/components-next/list-components';
 import { SLAIndicator } from './SLAIndicator';
 import { LabelIndicator } from './LabelIndicator';
 import { LastActivityTime } from './LastActivityTime';
@@ -29,6 +29,7 @@ type ConversationDetailSubCellProps = Pick<
   senderName: string | null;
   assignee: Agent | null;
   timestamp: number;
+  createdAt?: number;
   lastMessage?: Message | null;
   inbox: Inbox | null;
   appliedSla: SLA | null;
@@ -76,12 +77,11 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
     assignee,
     senderName,
     timestamp,
+    createdAt,
     slaPolicyId,
     lastMessage,
-    inbox,
     appliedSla,
     appliedSlaConversationDetails,
-    additionalAttributes,
     allLabels,
     typingText,
     isAIEnabled,
@@ -140,8 +140,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
         </AnimatedNativeView>
         <AnimatedNativeView
           style={tailwind.style('absolute right-0 flex flex-row items-center gap-1')}>
-          {inbox && <ChannelIndicator inbox={inbox} additionalAttributes={additionalAttributes} />}
-          <LastActivityTime timestamp={timestamp} />
+          <LastActivityTime timestamp={timestamp} createdAt={createdAt} />
         </AnimatedNativeView>
       </AnimatedNativeView>
       {/* Row 2: Last message | AI icon + Unread badge */}
