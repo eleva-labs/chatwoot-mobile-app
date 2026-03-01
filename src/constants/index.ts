@@ -14,15 +14,15 @@ export const TAB_BAR_HEIGHT = 83;
 export const TEXT_INPUT_CONTAINER_HEIGHT = 57;
 
 export const userStatusList = [
-  { statusColor: 'bg-green-800', status: 'online' },
-  { statusColor: 'bg-yellow-800', status: 'busy' },
-  { statusColor: 'bg-gray-800', status: 'offline' },
+  { statusColor: 'bg-teal-9', status: 'online' },
+  { statusColor: 'bg-amber-9', status: 'busy' },
+  { statusColor: 'bg-slate-8', status: 'offline' },
 ];
 
 export const AVAILABILITY_STATUS_LIST = [
-  { statusColor: 'bg-green-800', status: 'online' },
-  { statusColor: 'bg-yellow-800', status: 'busy' },
-  { statusColor: 'bg-gray-800', status: 'offline' },
+  { statusColor: 'bg-teal-9', status: 'online' },
+  { statusColor: 'bg-amber-9', status: 'busy' },
+  { statusColor: 'bg-slate-8', status: 'offline' },
 ];
 
 export const AUDIO_FORMATS = {
@@ -200,10 +200,12 @@ export const CONVERSATION_TOGGLE_STATUS = {
   resolved: 'RE_OPEN',
 };
 
+// Intentional: These are resolved at runtime via tailwind.color() by consumers.
+// Kept as hex fallbacks for places that can't use tailwind (e.g., native platform APIs).
 export const PRESENCE_STATUS_COLORS = {
-  online: '#44ce4b',
-  busy: '#ffc532',
-  offline: '#779bbb',
+  online: '#44ce4b', // Intentional: presence dot color, matches web API values
+  busy: '#ffc532', // Intentional: presence dot color, matches web API values
+  offline: '#779bbb', // Intentional: presence dot color, matches web API values
 };
 
 export const AVAILABILITY_TYPES = {

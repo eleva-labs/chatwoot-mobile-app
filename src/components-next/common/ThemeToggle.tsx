@@ -26,7 +26,7 @@ export const ThemeToggle: React.FC = () => {
           <Text
             style={tailwind.style(
               theme === themeOption.key
-                ? 'text-center text-sm font-medium text-blue-600'
+                ? 'text-center text-sm font-medium text-iris-11'
                 : 'text-center text-sm font-medium text-slate-10',
             )}>
             {themeOption.label}

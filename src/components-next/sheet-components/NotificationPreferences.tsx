@@ -80,7 +80,7 @@ export const NotificationPreferences = () => {
           </Animated.Text>
           <Switch
             trackColor={{ false: tailwind.color('bg-slate-7') ?? '#C9D7E3', true: tailwind.color('bg-iris-9') ?? '#1F93FF' }}
-            thumbColor="#FFFFFF"
+            thumbColor="#FFFFFF" // Intentional: white thumb on colored track, consistent across themes
             style={styles.switch}
             ios_backgroundColor={tailwind.color('bg-slate-7') ?? '#C9D7E3'}
             onValueChange={() => onPushItemChange(item)}

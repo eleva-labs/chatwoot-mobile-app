@@ -4,7 +4,7 @@ import { Path, Svg } from 'react-native-svg';
 import { IconProps } from '../../types';
 
 export const AddParticipant = ({
-  stroke = '#858585',
+  stroke = 'currentColor',
   strokeWidth = 1.5,
 }: IconProps): JSX.Element => {
   return (

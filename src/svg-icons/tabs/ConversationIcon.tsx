@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 
-export const ConversationIconOutline = ({ stroke = '#171717' }: { stroke?: string }) => {
+export const ConversationIconOutline = ({ stroke = 'currentColor' }: { stroke?: string }) => {
   return (
     <Svg width="49" height="40" viewBox="0 0 49 40" fill="none">
       <G clipPath="url(#clip0_1_1630)">
@@ -22,7 +22,7 @@ export const ConversationIconOutline = ({ stroke = '#171717' }: { stroke?: strin
   );
 };
 
-export const ConversationIconFilled = ({ fill = '#171717' }: { fill?: string }) => {
+export const ConversationIconFilled = ({ fill = 'currentColor' }: { fill?: string }) => {
   return (
     <Svg width="49" height="40" viewBox="0 0 49 40" fill="none">
       <Path

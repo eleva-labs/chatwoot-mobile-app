@@ -23,7 +23,7 @@ import {
  */
 const mentionRegEx = /((.)\[([^[]*)]\(([^(^)]*)\))/gi;
 
-const defaultMentionTextStyle: StyleProp<TextStyle> = { fontWeight: 'bold', color: 'blue' };
+const defaultMentionTextStyle: StyleProp<TextStyle> = { fontWeight: 'bold', color: 'rgb(39,129,246)' }; // blue-9 equivalent
 
 const defaultPlainStringGenerator = ({ trigger }: MentionPartType, { name }: MentionData) =>
   `${trigger}${name}`;

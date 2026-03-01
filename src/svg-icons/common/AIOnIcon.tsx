@@ -6,7 +6,7 @@ interface AIOnIconProps {
   color?: string;
 }
 
-export const AIOnIcon: React.FC<AIOnIconProps> = ({ size = 16, color = '#732fff' }) => {
+export const AIOnIcon: React.FC<AIOnIconProps> = ({ size = 16, color = '#732fff' }) => { // Intentional: brand mark color
   return (
     <Svg width={size} height={size} viewBox="0 0 512 512" fill="none">
       <G>

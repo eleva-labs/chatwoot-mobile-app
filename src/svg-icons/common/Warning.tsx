@@ -8,7 +8,7 @@ type WarningIconProps = IconProps & {
 };
 
 export const WarningIcon = ({
-  stroke = '#800',
+  stroke = 'currentColor', // Intentional: callers should pass tailwind.color('text-ruby-9') ?? '#800'
   renderSecondTick = true,
 }: WarningIconProps): JSX.Element => {
   return (

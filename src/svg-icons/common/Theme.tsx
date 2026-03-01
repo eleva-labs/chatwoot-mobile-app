@@ -6,7 +6,7 @@ interface ThemeIconProps {
   size?: number;
 }
 
-export const ThemeIcon: React.FC<ThemeIconProps> = ({ color = '#6B7280', size = 20 }) => {
+export const ThemeIcon: React.FC<ThemeIconProps> = ({ color = 'currentColor', size = 20 }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       {/* Sun rays */}

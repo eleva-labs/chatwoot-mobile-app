@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-export const SettingsIconOutline = ({ stroke = '#171717' }: { stroke?: string }) => {
+export const SettingsIconOutline = ({ stroke = 'currentColor' }: { stroke?: string }) => {
   return (
     <Svg width="48" height="40" viewBox="0 0 48 40" fill="none">
       <Path
@@ -22,7 +22,7 @@ export const SettingsIconOutline = ({ stroke = '#171717' }: { stroke?: string })
   );
 };
 
-export const SettingsIconFilled = ({ fill = '#171717' }: { fill?: string }) => {
+export const SettingsIconFilled = ({ fill = 'currentColor' }: { fill?: string }) => {
   return (
     <Svg width="48" height="40" viewBox="0 0 48 40" fill="none">
       <Path

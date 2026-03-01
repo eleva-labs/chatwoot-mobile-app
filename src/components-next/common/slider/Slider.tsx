@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     // box-shadow: 0px 1px 2px 0px #00000026;
     // box-shadow: 0px 0px 1px 0px #00000066;
     // box-shadow: [horizontal offset] [vertical offset] [blur radius] [optional spread radius] [color];
-    shadowColor: '#00000066',
+    shadowColor: '#00000066', // Intentional: shadow alpha color, universal across themes
     shadowOffset: { width: 0, height: 0.35 },
     shadowRadius: 4,
     shadowOpacity: 0.6,
