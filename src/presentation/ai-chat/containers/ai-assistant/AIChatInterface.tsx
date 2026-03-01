@@ -19,8 +19,8 @@ import type { UIMessage } from 'ai';
 import { tailwind } from '@infrastructure/theme';
 import { useAppSelector, useAppDispatch } from '@/hooks';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { chatwootChatConfig } from '@/ai/chatwootChatConfig';
-import { createChatwootSessionsAdapter } from '@/ai/chatwootSessionsAdapter';
+import { chatwootChatConfig } from '@application/adapters/ai-chat/chatwootChatConfig';
+import { createChatwootSessionsAdapter } from '@application/adapters/ai-chat/chatwootSessionsAdapter';
 import {
   useAIChat,
   useAIChatBot,
