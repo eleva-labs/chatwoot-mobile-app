@@ -441,26 +441,28 @@ const BottomSheetContent = () => {
         ) : null}
         {!isVoiceRecorderOpen ? (
           <Animated.View style={tailwind.style('flex flex-row px-1 items-end z-20 relative')}>
-            {replyEditorMode === REPLY_EDITOR_MODES.REPLY && (
-              <Pressable
-                onPress={handleTogglePrivateMode}
-                hitSlop={4}
-                style={tailwind.style('flex items-center justify-center h-10 w-10')}>
-                {isPrivate ? (
-                  <Lock
-                    size={20}
-                    strokeWidth={2}
-                    color={tailwind.color('text-amber-9') ?? '#FFC53D'}
-                  />
-                ) : (
-                  <LockOpen
-                    size={20}
-                    strokeWidth={2}
-                    color={tailwind.color('text-slate-11') ?? '#60646C'}
-                  />
-                )}
-              </Pressable>
-            )}
+            <Pressable
+              onPress={handleTogglePrivateMode}
+              disabled={replyEditorMode !== REPLY_EDITOR_MODES.REPLY}
+              hitSlop={4}
+              style={tailwind.style(
+                'flex items-center justify-center h-10 w-10',
+                replyEditorMode !== REPLY_EDITOR_MODES.REPLY ? 'opacity-50' : '',
+              )}>
+              {isPrivate ? (
+                <Lock
+                  size={20}
+                  strokeWidth={2}
+                  color={tailwind.color('text-amber-9') ?? '#FFC53D'}
+                />
+              ) : (
+                <LockOpen
+                  size={20}
+                  strokeWidth={2}
+                  color={tailwind.color('text-slate-11') ?? '#60646C'}
+                />
+              )}
+            </Pressable>
             {attachmentsLength === 0 && shouldShowFileUpload && (
               <AddCommandButton
                 onPress={handleShowAddMenuOption}
