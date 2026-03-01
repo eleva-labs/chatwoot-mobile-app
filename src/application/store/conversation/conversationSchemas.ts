@@ -39,7 +39,7 @@ export const SenderSchema = z.object({
   email: z.string().nullable().optional(),
   thumbnail: z.string().nullable().optional(),
   available_name: z.string().optional(),
-  availability_status: z.enum(['online', 'busy', 'offline']).optional(),
+  availability_status: z.enum(['online', 'busy', 'offline']).nullable().optional(),
 });
 
 export type Sender = z.infer<typeof SenderSchema>;
@@ -103,7 +103,7 @@ const MessageContentAttributesSchema = z
 export const MessageSchema = z.object({
   id: z.number(),
   content: z.string().nullable(),
-  account_id: z.number(),
+  account_id: z.number().optional(), // Optional - not always present in message responses
   inbox_id: z.number(),
   conversation_id: z.number(),
   message_type: z.union([
@@ -283,8 +283,8 @@ export const SingleConversationResponseSchema = z.object({
 
 export const MessagesResponseSchema = z.object({
   meta: z.object({
-    contact_last_seen_at: z.number().nullable().optional(),
-    agent_last_seen_at: z.number().nullable().optional(),
+    contact_last_seen_at: z.union([z.number(), z.string()]).nullable().optional(),
+    agent_last_seen_at: z.union([z.number(), z.string()]).nullable().optional(),
   }),
   payload: z.array(MessageSchema),
 });
