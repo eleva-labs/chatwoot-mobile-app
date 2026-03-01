@@ -256,10 +256,21 @@
       "EXPAND": "Expand email"
     },
     "ACTIONS": {
+      "TITLE": "Conversation Actions",
       "ASSIGNEE": {
         "EMPTY": "Unassigned",
         "ASSIGN": "Assign",
         "EDIT": "Edit"
+      },
+      "BASIC": {
+        "OPEN": "Open",
+        "PENDING": "Pending",
+        "SNOOZE": "Snooze",
+        "RESOLVE": "Resolve"
+      },
+      "LABELS": {
+        "TITLE": "Labels",
+        "ADD": "Add"
       },
       "TEAM": {
         "EMPTY": "No team assigned",
@@ -470,7 +481,8 @@
     "ADD_PARTICIPANTS": "Select participants",
     "REMAINING_PARTICIPANTS_TEXT": "others",
     "REMAINING_PARTICIPANT_TEXT": "other",
-    "ADD_PARTICIPANT": "Add Participant"
+    "ADD_PARTICIPANT": "Add Participant",
+    "OVERFLOW_COUNT": "%{count} participants"
   },
   "CONTACT_ATTRIBUTES": {
     "TITLE": "Contact Attributes"
@@ -694,7 +706,8 @@
     "LOAD_ERROR": "File load error"
   },
   "AUDIO": {
-    "RECORDING_ERROR": "Recording Error"
+    "RECORDING_ERROR": "Recording Error",
+    "PREPARE_ERROR": "Error preparing audio file"
   },
   "CLIPBOARD": {
     "COPIED": "%{item} copied to clipboard"

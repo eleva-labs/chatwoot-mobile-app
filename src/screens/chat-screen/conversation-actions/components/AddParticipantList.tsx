@@ -52,7 +52,7 @@ const ParticipantOverflowCell = ({ count }: { count: number }) => {
             style={tailwind.style(
               'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
             )}>
-            {count} participants
+            {i18n.t('CONVERSATION_PARTICIPANTS.OVERFLOW_COUNT', { count })}
           </Animated.Text>
         </Animated.View>
       </Animated.View>

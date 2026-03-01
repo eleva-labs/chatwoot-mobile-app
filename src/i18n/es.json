@@ -256,10 +256,21 @@
       "EXPAND": "Expandir correo"
     },
     "ACTIONS": {
+      "TITLE": "Acciones de conversación",
       "ASSIGNEE": {
         "EMPTY": "Sin asignar",
         "ASSIGN": "Asignar",
         "EDIT": "Editar"
+      },
+      "BASIC": {
+        "OPEN": "Abrir",
+        "PENDING": "Pendiente",
+        "SNOOZE": "Posponer",
+        "RESOLVE": "Resolver"
+      },
+      "LABELS": {
+        "TITLE": "Etiquetas",
+        "ADD": "Agregar"
       },
       "TEAM": {
         "EMPTY": "Sin equipo asignado",
@@ -469,7 +480,8 @@
     "ADD_PARTICIPANTS": "Seleccionar participantes",
     "REMAINING_PARTICIPANTS_TEXT": "otros",
     "REMAINING_PARTICIPANT_TEXT": "otro",
-    "ADD_PARTICIPANT": "Agregar participante"
+    "ADD_PARTICIPANT": "Agregar participante",
+    "OVERFLOW_COUNT": "%{count} participantes"
   },
   "CONTACT_ATTRIBUTES": {
     "TITLE": "Atributos de contacto"
@@ -693,7 +705,8 @@
     "LOAD_ERROR": "Error al cargar el archivo"
   },
   "AUDIO": {
-    "RECORDING_ERROR": "Error de grabación"
+    "RECORDING_ERROR": "Error de grabación",
+    "PREPARE_ERROR": "Error al preparar el archivo de audio"
   },
   "CLIPBOARD": {
     "COPIED": "%{item} copiado al portapapeles"

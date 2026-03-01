@@ -12,6 +12,7 @@ import { OpenIcon, ResolvedFilledIcon, PendingFilledIcon, SnoozedFilledIcon } fr
 import { tailwind } from '@/theme';
 import { useHaptic, useScaleAnimation } from '@/utils';
 import { ConversationStatus } from '@/types';
+import i18n from '@/i18n';
 
 import { ConversationActionType } from '../ConversationActions';
 
@@ -23,6 +24,7 @@ type ConversationActionOptionsType = {
   borderActionColor: string;
   actionIcon: React.JSX.Element;
   actionText: ConversationStateType;
+  actionI18nKey: string;
   actionStatus: ConversationStatus | 'open';
 };
 
@@ -36,6 +38,7 @@ const conversationActionOptions: ConversationActionOptionsType[] = [
     borderActionColor: 'bg-slate-11',
     actionIcon: <OpenIcon stroke={tailwind.color('text-slate-11') as string} />,
     actionText: 'open',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.OPEN',
     actionStatus: 'open',
   },
   {
@@ -44,6 +47,7 @@ const conversationActionOptions: ConversationActionOptionsType[] = [
     borderActionColor: 'bg-amber-9',
     actionIcon: <PendingFilledIcon />,
     actionText: 'pending',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.PENDING',
     actionStatus: 'pending',
   },
   {
@@ -52,6 +56,7 @@ const conversationActionOptions: ConversationActionOptionsType[] = [
     borderActionColor: 'bg-iris-9',
     actionIcon: <SnoozedFilledIcon />,
     actionText: 'snooze',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.SNOOZE',
     actionStatus: 'snoozed',
   },
   {
@@ -60,6 +65,7 @@ const conversationActionOptions: ConversationActionOptionsType[] = [
     borderActionColor: 'bg-teal-9',
     actionIcon: <ResolvedFilledIcon />,
     actionText: 'resolve',
+    actionI18nKey: 'CONVERSATION.ACTIONS.BASIC.RESOLVE',
     actionStatus: 'resolved',
   },
 ];
@@ -134,9 +140,9 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
         <Icon icon={conversationAction.actionIcon} size={32} />
         <Animated.Text
           style={tailwind.style(
-            'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] text-center pt-5 capitalize text-slate-12 ',
+            'text-md font-inter-normal-20 leading-[17px] tracking-[0.32px] text-center pt-5 text-slate-12 ',
           )}>
-          {conversationAction.actionText}
+          {i18n.t(conversationAction.actionI18nKey)}
         </Animated.Text>
       </Pressable>
     </Animated.View>

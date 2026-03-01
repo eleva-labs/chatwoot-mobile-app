@@ -11,6 +11,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 import { TEXT_INPUT_CONTAINER_HEIGHT } from '@/constants';
 import { useChatWindowContext } from '@/context';
+import i18n from '@/i18n';
 import { SendIcon, Trash } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { Icon } from '@/components-next';
@@ -123,7 +124,7 @@ export const AudioRecorder = ({
         })
         .catch(error => {
           Alert.alert(
-            'Error preparing audio file',
+            i18n.t('AUDIO.PREPARE_ERROR'),
             error instanceof Error ? error.message : String(error),
           );
           deleteRecorder();
@@ -197,14 +198,14 @@ export const AudioRecorder = ({
         } catch (error) {
           Sentry.captureException(error);
           Alert.alert(
-            'Error preparing audio file',
+            i18n.t('AUDIO.PREPARE_ERROR'),
             error instanceof Error ? error.message : String(error),
           );
         }
       })
       .catch(e => {
         console.error('Recording error:', e);
-        Alert.alert('Recording Error', e.toString());
+        Alert.alert(i18n.t('AUDIO.RECORDING_ERROR'), e.toString());
       })
       .finally(() => {
         setIsSending(false);

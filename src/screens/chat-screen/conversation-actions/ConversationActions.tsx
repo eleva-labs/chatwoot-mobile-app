@@ -15,6 +15,7 @@ import {
 import { TAB_BAR_HEIGHT } from '@/constants';
 import { tailwind } from '@/theme';
 import { ConversationStatus } from '@/types';
+import i18n from '@/i18n';
 import { useChatWindowContext } from '@/context';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
@@ -173,7 +174,11 @@ export const ConversationActions = () => {
           {conversation && <ConversationMetaInformation conversation={conversation} />}
         </Animated.View>
         <Animated.View style={tailwind.style('px-4 pt-10')}>
-          <Button variant="secondary" handlePress={onShareConversation} text="Share conversation" />
+          <Button
+            variant="secondary"
+            handlePress={onShareConversation}
+            text={i18n.t('CONVERSATION.ACTIONS.SHARE')}
+          />
         </Animated.View>
       </ScrollView>
       <BottomSheetModal

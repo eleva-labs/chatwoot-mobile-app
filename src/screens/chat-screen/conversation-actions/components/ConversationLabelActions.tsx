@@ -8,6 +8,7 @@ import { LabelTag } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { Label } from '@/types';
 import { BottomSheetBackdrop, Icon, SearchBar } from '@/components-next';
+import i18n from '@/i18n';
 import { useAppSelector } from '@/hooks';
 import { filterLabels } from '@/store/label/labelSelectors';
 import { useAppDispatch } from '@/hooks';
@@ -116,7 +117,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
           style={tailwind.style(
             'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
           )}>
-          Labels
+          {i18n.t('CONVERSATION.ACTIONS.LABELS.TITLE')}
         </Animated.Text>
       </Animated.View>
       <Animated.View style={tailwind.style('flex flex-row flex-wrap pl-4')}>
@@ -142,7 +143,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
             style={tailwind.style(
               'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px] pl-1.5 text-iris-11',
             )}>
-            Add
+            {i18n.t('CONVERSATION.ACTIONS.LABELS.ADD')}
           </Animated.Text>
         </Pressable>
       </Animated.View>
@@ -162,7 +163,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
           isInsideBottomSheet
           onSubmitEditing={handleOnSubmitEditing}
           onChangeText={handleChangeText}
-          placeholder="Search labels"
+          placeholder={i18n.t('CONVERSATION.LABELS.SEARCH_PLACEHOLDER')}
           returnKeyLabel="done"
           returnKeyType="done"
         />
