@@ -159,19 +159,16 @@ const MessageWrapper = ({
                 orientation === ORIENTATION.RIGHT ? 'rounded-br-sm' : '',
                 // When grouped with previous, sharpen the top corner on avatar side too
                 // (matches web's .group-with-next + .message-bubble-container CSS)
-                shouldGroupWithPrevious && orientation === ORIENTATION.LEFT
-                  ? 'rounded-tl-sm'
-                  : '',
-                shouldGroupWithPrevious && orientation === ORIENTATION.RIGHT
-                  ? 'rounded-tr-sm'
-                  : '',
+                shouldGroupWithPrevious && orientation === ORIENTATION.LEFT ? 'rounded-tl-sm' : '',
+                shouldGroupWithPrevious && orientation === ORIENTATION.RIGHT ? 'rounded-tr-sm' : '',
               ),
             ]}>
             {children}
             {!shouldGroupWithPrevious && (
               <Animated.View
                 style={themedTailwind.style(
-                  'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center justify-end',
+                  'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center',
+                  orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
                 )}>
                 <Animated.Text
                   style={themedTailwind.style(
@@ -321,7 +318,11 @@ export const MessageComponent = (props: MessageComponentProps) => {
 
     // For agent bots, use avatarUrl or thumbnail (matches web avatarInfo computed)
     if (sender.type === SENDER_TYPES.AGENT_BOT) {
-      const botSender = sender as { avatarUrl?: string | null; thumbnail?: string | null; name?: string | null };
+      const botSender = sender as {
+        avatarUrl?: string | null;
+        thumbnail?: string | null;
+        name?: string | null;
+      };
       const botAvatarSrc = botSender.avatarUrl || botSender.thumbnail;
       return {
         name: sender?.name || i18n.t('CONVERSATION.BOT'),
