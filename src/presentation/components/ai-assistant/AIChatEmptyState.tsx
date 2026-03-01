@@ -5,7 +5,7 @@
  * Includes tappable suggested prompt chips when no active session.
  */
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { MessageCircle } from 'lucide-react-native';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
 import { useResolveColor } from '@/presentation/hooks/ai-assistant/useAITheme';
@@ -51,7 +51,7 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({
           : t('AI_ASSISTANT.CHAT.EMPTY_STATE.DESCRIPTION_NO_SESSION')}
       </Text>
 
-      {/* Suggested prompt chips */}
+      {/* TODO: Re-enable suggestion chips when prompt list is finalized
       {!hasActiveSession && onSendPrompt && (
         <View style={style('mt-6 gap-2 w-full max-w-[340px]')}>
           {SUGGESTED_PROMPT_KEYS.map(key => {
@@ -73,7 +73,7 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({
             );
           })}
         </View>
-      )}
+      )} */}
     </View>
   );
 };
