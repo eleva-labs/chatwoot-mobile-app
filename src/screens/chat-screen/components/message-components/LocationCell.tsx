@@ -101,7 +101,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
 
             <Animated.View
               style={tailwind.style(
-                'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center justify-end',
+                'h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end',
               )}>
               <Text
                 style={tailwind.style(

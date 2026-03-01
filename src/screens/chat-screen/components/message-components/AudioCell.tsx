@@ -236,7 +236,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
             <AudioPlayer {...{ audioSrc, isIncoming, isOutgoing }} />
             <Animated.View
               style={tailwind.style(
-                'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center self-end pl-1.5',
+                'h-[21px] pt-2 pb-0.5 flex flex-row items-center self-end pl-1.5',
               )}>
               <Text
                 style={tailwind.style(

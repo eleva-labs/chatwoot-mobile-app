@@ -192,7 +192,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                   })}
                 <Animated.View
                   style={tailwind.style(
-                    'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center justify-end',
+                    'h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end',
                   )}>
                   {isPrivate ? <Icon icon={<LockIcon />} size={12} /> : null}
                   <Text

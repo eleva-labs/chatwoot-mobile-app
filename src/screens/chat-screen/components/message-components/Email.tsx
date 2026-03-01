@@ -89,7 +89,7 @@ export const Email = (props: EmailProps) => {
         </Animated.View>
       </Animated.View>
       <Animated.View
-        style={tailwind.style('h-[21px] pt-[6px] pb-0.5 flex flex-row items-center justify-end')}>
+        style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
         <Text
           style={tailwind.style(
             'text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-slate-11',

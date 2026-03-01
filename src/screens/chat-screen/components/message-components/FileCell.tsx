@@ -182,7 +182,7 @@ export const FileCell = (props: FileCellProps) => {
             ]}>
             <FilePreview {...{ fileSrc, isIncoming, isOutgoing }} />
             <Animated.View
-              style={tailwind.style('h-[21px] pt-[5px] pb-0.5 flex flex-row items-center pl-1.5')}>
+              style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center pl-1.5')}>
               <Animated.Text
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
