@@ -12,8 +12,14 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
-import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
+import { View, Text, Pressable } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+  withSequence,
+  Easing,
+} from 'react-native-reanimated';
 
 import { ChevronRight, ChevronUp } from 'lucide-react-native';
 import { useAIStyles, type AIAccentColor } from '@/presentation/styles/ai-assistant';
@@ -108,6 +114,23 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
     };
   });
 
+  // Pulse animation for icon when streaming (replaces ActivityIndicator)
+  const iconPulseStyle = useAnimatedStyle(() => {
+    if (!isStreaming) {
+      return { opacity: 1 };
+    }
+    return {
+      opacity: withRepeat(
+        withSequence(
+          withTiming(0.4, { duration: 1000 }),
+          withTiming(1, { duration: 1000 }),
+        ),
+        -1,
+        true,
+      ),
+    };
+  });
+
   return (
     <View
       style={style('rounded-xl border overflow-hidden w-full', 'border-slate-6/50', colors.background)}
@@ -126,12 +149,15 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
           style('flex-row items-center gap-2 px-3 py-2'),
           pressed && style('opacity-70'),
         ]}>
-        {/* Icon with streaming animation color */}
+        {/* Icon with pulse animation during streaming */}
         {icon && (
-          <View
-            style={style('w-4 h-4 items-center justify-center', isStreaming && colors.iconActive)}>
+          <Animated.View
+            style={[
+              style('w-4 h-4 items-center justify-center', isStreaming && colors.iconActive),
+              iconPulseStyle,
+            ]}>
             {icon}
-          </View>
+          </Animated.View>
         )}
 
         {/* Title with streaming active color */}
@@ -143,14 +169,6 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
           numberOfLines={1}>
           {title}
         </Text>
-
-        {/* Streaming spinner */}
-        {isStreaming && (
-          <ActivityIndicator
-            size="small"
-            color={resolveColor(colors.iconActive || 'text-slate-9', '#80838D')}
-          />
-        )}
 
         {/* Subtitle */}
         {subtitle && (

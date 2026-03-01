@@ -527,14 +527,14 @@
         "CLOSE": "Cerrar Asistente de IA"
       },
       "MESSAGES": {
-        "LOADING": "Cargando conversación...",
-        "EMPTY_WITH_SESSION": "No hay mensajes en esta conversación",
-        "EMPTY_NO_SESSION": "Inicia una conversación con el asistente de IA",
+        "LOADING": "Cargando sesión...",
+        "EMPTY_WITH_SESSION": "No hay mensajes en esta sesión",
+        "EMPTY_NO_SESSION": "Inicia una sesión con el asistente de IA",
         "ERROR_RENDERING": "Error al renderizar mensaje: %{id}"
       },
       "SESSIONS": {
         "LOADING": "Cargando sesiones...",
-        "EMPTY": "No hay conversaciones anteriores",
+        "EMPTY": "No hay sesiones anteriores",
         "RECENTLY": "Recientemente"
       },
       "THOUGHTS": {
@@ -557,12 +557,12 @@
       },
       "EMPTY_STATE": {
         "TITLE_WITH_SESSION": "No hay mensajes aún",
-        "TITLE_NO_SESSION": "Inicia una conversación",
-        "DESCRIPTION_WITH_SESSION": "Esta conversación está vacía",
+        "TITLE_NO_SESSION": "Inicia una sesión",
+        "DESCRIPTION_WITH_SESSION": "Esta sesión está vacía",
         "DESCRIPTION_NO_SESSION": "Haz una pregunta o describe en qué necesitas ayuda"
       },
       "SUGGESTED_PROMPTS": {
-        "SUMMARIZE": "Resume mis conversaciones recientes",
+        "SUMMARIZE": "Resume mis sesiones recientes",
         "DRAFT": "Ayúdame a redactar una respuesta",
         "CAPABILITIES": "¿En qué puedes ayudarme?"
       },
@@ -590,7 +590,7 @@
         "COPIED": "¡Copiado!"
       },
       "SESSIONS_PANEL": {
-        "TITLE": "Conversaciones",
+        "TITLE": "Sesiones",
         "COUNT_ONE": "%{count} sesión",
         "COUNT_OTHER": "%{count} sesiones"
       },

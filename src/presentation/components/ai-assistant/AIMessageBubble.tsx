@@ -14,7 +14,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, Pressable, ActivityIndicator } from 'react-native';
+import { View, Pressable, ActivityIndicator, Text } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useHaptic } from '@/utils';
 import { Copy, Check } from 'lucide-react-native';
@@ -30,6 +30,8 @@ import {
   type MessagePart,
 } from '@/types/ai-chat/parts';
 import { useAIi18n } from '@/presentation/hooks/ai-assistant/useAIi18n';
+import { useTheme } from '@/context/ThemeContext';
+import { getAvatarColorsByName, getAvatarInitials } from '@/theme/colors/avatar';
 
 export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
   message,
@@ -43,11 +45,18 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
   const { style, message: getMessageTokens } = useAIStyles();
   const { t } = useAIi18n();
   const resolveColor = useResolveColor();
+  const { isDark } = useTheme();
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const defaultHaptic = useHaptic('success');
   const isUser = message.role === 'user';
   const isAssistant = message.role === 'assistant';
   const messageTokens = getMessageTokens(isUser ? 'user' : 'assistant');
+
+  // Compute avatar colors for non-user messages (matches web AVATAR_COLORS)
+  const avatarColors = useMemo(
+    () => getAvatarColorsByName(avatarName, isDark),
+    [avatarName, isDark],
+  );
 
   const parts = useMemo(() => (message.parts as MessagePart[] | undefined) ?? [], [message.parts]);
 
@@ -74,7 +83,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
 
   return (
     <View
-      style={style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
+      style={      style('items-end gap-2 px-4 py-2', isUser ? 'flex-row-reverse' : 'flex-row')}
       accessible
       accessibilityRole="text"
       accessibilityLabel={
@@ -90,14 +99,31 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
             src: avatarSrc,
             size: 28,
           })
-        ) : (
+        ) : avatarSrc ? (
           <Avatar
             name={
               avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME'))
             }
-            src={avatarSrc ? { uri: avatarSrc } : undefined}
+            src={{ uri: avatarSrc }}
             size="lg"
           />
+        ) : (
+          <View
+            style={[
+              style('w-7 h-7 rounded-full items-center justify-center'),
+              { backgroundColor: avatarColors.bg },
+            ]}>
+            <Text
+              style={[
+                style('text-sm font-inter-medium-24'),
+                { color: avatarColors.text },
+              ]}
+              allowFontScaling={false}>
+              {getAvatarInitials(
+                avatarName || (isUser ? t('AI_ASSISTANT.CHAT.ACCESSIBILITY.USER_MESSAGE') : t('AI_ASSISTANT.CHAT.AVATAR_NAME')),
+              )}
+            </Text>
+          </View>
         )}
       </View>
 

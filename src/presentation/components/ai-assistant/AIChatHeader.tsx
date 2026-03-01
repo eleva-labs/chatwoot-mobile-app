@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { X, Plus } from 'lucide-react-native';
+import { X, Plus, History, Bot } from 'lucide-react-native';
 import { Avatar } from '@/components-next/common/avatar/Avatar';
 import type { AIChatBot } from '@/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@/presentation/styles/ai-assistant';
@@ -43,11 +43,17 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
         accessibilityRole="header">
         <View style={style('flex-row items-center flex-1')}>
           <View style={style('flex-row items-center gap-2')}>
-            <Avatar
-              name={selectedBot?.name || t('AI_ASSISTANT.CHAT.TITLE')}
-              src={selectedBot?.avatar_url ? { uri: selectedBot.avatar_url } : undefined}
-              size="lg"
-            />
+            {selectedBot?.avatar_url ? (
+              <Avatar
+                name={selectedBot?.name || t('AI_ASSISTANT.CHAT.TITLE')}
+                src={{ uri: selectedBot.avatar_url }}
+                size="lg"
+              />
+            ) : (
+              <View style={style('w-7 h-7 rounded-full bg-slate-3 items-center justify-center')}>
+                <Bot size={16} color={resolveColor('text-slate-11', '#60646C')} strokeWidth={2} />
+              </View>
+            )}
             <Text
               style={style('text-lg font-inter-semibold-20', headerTokens.title)}
               accessible
@@ -75,49 +81,39 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               )}
             </View>
           )}
-          {sessionsCount > 0 && (
-            <Pressable
-              onPress={onToggleSessions}
-              style={({ pressed }) =>
-                style(
-                  'ml-3 p-2 rounded-full flex-row items-center gap-1.5',
-                  pressed && 'bg-slate-3',
-                )
-              }
-              accessible
-              accessibilityRole="button"
-              accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SESSIONS_COUNT', {
-                count: sessionsCount,
-              })}>
-              <Text style={style('text-sm font-inter-420-20', headerTokens.link)}>
-                {t('AI_ASSISTANT.CHAT.HEADER.SESSIONS')}
-              </Text>
-              <View style={style('bg-slate-5 rounded-full px-1.5 min-w-[20px] items-center')}>
-                <Text style={style('text-xs font-inter-580-24', headerTokens.subtitle)}>
-                  {sessionsCount}
-                </Text>
-              </View>
-            </Pressable>
-          )}
         </View>
-        <View style={style('flex-row items-center gap-2')}>
+        <View style={style('flex-row items-center gap-1')}>
           {activeSessionId && (
             <Pressable
               onPress={onNewConversation}
-              style={({ pressed }) => style('p-2 rounded-full', pressed && 'bg-slate-3')}
+              style={({ pressed }) => style('p-1.5 rounded-md', pressed && 'bg-slate-3')}
               accessible
               accessibilityRole="button"
               accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.NEW_CONVERSATION')}>
               <Plus
                 size={20}
-                color={resolveColor('text-slate-11', '#60646C')}
+                color={resolveColor('text-slate-10', '#80838D')}
                 strokeWidth={2}
               />
             </Pressable>
           )}
           <Pressable
+            onPress={onToggleSessions}
+            style={({ pressed }) => style('p-1.5 rounded-md relative', pressed && 'bg-slate-3')}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SESSIONS_COUNT', {
+              count: sessionsCount,
+            })}>
+            <History
+              size={20}
+              color={resolveColor('text-slate-10', '#80838D')}
+              strokeWidth={2}
+            />
+          </Pressable>
+          <Pressable
             onPress={onClose}
-            style={({ pressed }) => style('p-2 rounded-full', pressed && 'opacity-70')}
+            style={({ pressed }) => style('p-1.5 rounded-md', pressed && 'opacity-70')}
             accessible
             accessibilityRole="button"
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE')}

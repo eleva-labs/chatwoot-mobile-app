@@ -34,11 +34,11 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
     <Animated.View
       layout={LinearTransition.springify().damping(20).stiffness(120)}
       style={[
-        style('px-4 py-3 pb-4 border-t', inputTokens.containerBackground, inputTokens.containerBorder),
+        style('px-4 py-2 border-t', inputTokens.containerBackground, inputTokens.containerBorder),
       ]}>
       <View
         style={style(
-          'flex-row items-end rounded-2xl px-3 py-2 border',
+          'flex-row items-end rounded-2xl px-3 py-1 border',
           inputTokens.inputBackground,
           isFocused ? 'border-iris-9' : 'border-slate-6',
         )}>
@@ -48,10 +48,13 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           onChangeText={setText}
           placeholder={t('AI_ASSISTANT.CHAT.INPUT.PLACEHOLDER')}
           placeholderTextColor={resolveColor('text-slate-9', '#696e77')}
-          style={style(
-            'flex-1 text-base font-inter-normal-20 min-h-[36px] max-h-[128px]',
-            inputTokens.inputText,
-          )}
+          style={[
+            style(
+              'flex-1 text-sm font-inter-normal-20 min-h-[32px] max-h-[128px]',
+              inputTokens.inputText,
+            ),
+            { paddingTop: 6, paddingBottom: 6 },
+          ]}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           multiline
@@ -59,19 +62,18 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           editable={!isLoading}
           onSubmitEditing={handleSend}
           returnKeyType="send"
-          textAlignVertical="center"
           accessible
           accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.INPUT')}
         />
         {isLoading && onCancel ? (
           <Pressable
             onPress={handleCancel}
-            style={({ pressed }) => style('ml-2 p-2 rounded-full', pressed && 'opacity-70')}
+            style={({ pressed }) => style('ml-2 p-1 rounded-full', pressed && 'opacity-70')}
             accessible
             accessibilityRole="button"
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.STOP_GENERATING')}>
-            <View style={style('w-8 h-8 rounded-full bg-ruby-9 items-center justify-center')}>
-              <View style={style('w-3 h-3 rounded-sm bg-white')} />
+            <View style={style('w-7 h-7 rounded-full bg-slate-9 items-center justify-center')}>
+              <View style={style('w-2.5 h-2.5 rounded-sm bg-white')} />
             </View>
           </Pressable>
         ) : (
@@ -79,13 +81,13 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
             {/* Disabled voice/mic button */}
             <Pressable
               disabled
-              style={style('ml-1 p-2 rounded-full opacity-50')}
+              style={style('ml-1 p-1 rounded-full opacity-50')}
               accessible
               accessibilityRole="button"
               accessibilityLabel="Voice input (coming soon)"
               accessibilityState={{ disabled: true }}>
-              <View style={style('w-8 h-8 rounded-full items-center justify-center')}>
-                <Mic size={18} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
+              <View style={style('w-7 h-7 rounded-full items-center justify-center')}>
+                <Mic size={16} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
               </View>
             </Pressable>
             {/* Send button */}
@@ -94,7 +96,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
               disabled={!text.trim() || isLoading}
               style={({ pressed }) =>
                 style(
-                  'ml-1 p-2 rounded-full',
+                  'ml-1 p-1 rounded-full',
                   (!text.trim() || isLoading) && 'opacity-50',
                   pressed && 'opacity-70',
                 )
@@ -105,10 +107,10 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
               accessibilityState={{ disabled: !text.trim() || isLoading }}>
               <View
                 style={style(
-                  'w-8 h-8 rounded-full items-center justify-center',
+                  'w-7 h-7 rounded-full items-center justify-center',
                   inputTokens.sendButton,
                 )}>
-                <Send size={18} color="white" strokeWidth={2} />
+                <Send size={15} color="white" strokeWidth={2} style={{ marginLeft: -1, marginTop: -0.5 }} />
               </View>
             </Pressable>
           </View>

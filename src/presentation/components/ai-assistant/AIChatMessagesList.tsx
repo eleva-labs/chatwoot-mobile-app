@@ -192,7 +192,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
             <ChevronDown size={16} color={resolveColor('text-slate-11', '#60646C')} strokeWidth={2} />
           </Pressable>
         )}
-        {!isAtTop && listData.length > 5 && (
+        {!isAtTop && (
           <Pressable
             onPress={onScrollToTop}
             style={style(

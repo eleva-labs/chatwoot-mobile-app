@@ -528,14 +528,14 @@
         "CLOSE": "Close AI Assistant"
       },
       "MESSAGES": {
-        "LOADING": "Loading conversation...",
-        "EMPTY_WITH_SESSION": "No messages in this conversation",
-        "EMPTY_NO_SESSION": "Start a conversation with the AI assistant",
+        "LOADING": "Loading session...",
+        "EMPTY_WITH_SESSION": "No messages in this session",
+        "EMPTY_NO_SESSION": "Start a session with the AI assistant",
         "ERROR_RENDERING": "Error rendering message: %{id}"
       },
       "SESSIONS": {
         "LOADING": "Loading sessions...",
-        "EMPTY": "No previous conversations",
+        "EMPTY": "No previous sessions",
         "RECENTLY": "Recently"
       },
       "THOUGHTS": {
@@ -558,12 +558,12 @@
       },
       "EMPTY_STATE": {
         "TITLE_WITH_SESSION": "No messages yet",
-        "TITLE_NO_SESSION": "Start a conversation",
-        "DESCRIPTION_WITH_SESSION": "This conversation is empty",
+        "TITLE_NO_SESSION": "Start a session",
+        "DESCRIPTION_WITH_SESSION": "This session is empty",
         "DESCRIPTION_NO_SESSION": "Ask a question or describe what you need help with"
       },
       "SUGGESTED_PROMPTS": {
-        "SUMMARIZE": "Summarize my recent conversations",
+        "SUMMARIZE": "Summarize my recent sessions",
         "DRAFT": "Help me draft a response",
         "CAPABILITIES": "What can you help me with?"
       },
@@ -591,7 +591,7 @@
         "COPIED": "Copied!"
       },
       "SESSIONS_PANEL": {
-        "TITLE": "Conversations",
+        "TITLE": "Sessions",
         "COUNT_ONE": "%{count} session",
         "COUNT_OTHER": "%{count} sessions"
       },
