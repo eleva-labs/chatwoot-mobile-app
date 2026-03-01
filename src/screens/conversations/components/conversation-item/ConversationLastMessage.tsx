@@ -80,7 +80,7 @@ const MessageContent = ({
   const { contentAttributes } = message || {};
   const { email: { subject = '' } = {} } = contentAttributes || {};
 
-  const lastMessageContent = getPlainText(subject || message?.content);
+  const lastMessageContent = getPlainText(subject || message?.content || '');
 
   const lastMessageFileType = message?.attachments?.[0]?.fileType;
 

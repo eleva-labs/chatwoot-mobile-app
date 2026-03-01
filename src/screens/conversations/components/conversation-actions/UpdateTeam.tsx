@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { Check } from 'lucide-react-native';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { Team } from '@domain/types';
-import { Avatar, Icon, SearchBar } from '@infrastructure/ui';
-import { TickIcon } from '@/svg-icons';
+import { Avatar, SearchBar } from '@infrastructure/ui';
 
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
@@ -63,7 +63,7 @@ const TeamCell = (props: TeamCellProps) => {
           ]}>
           {value.name}
         </Animated.Text>
-        {teamId === value.id ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {teamId === value.id ? <Check size={20} color={tailwind.color('text-slate-12')} /> : null}
       </Animated.View>
     </Pressable>
   );

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { MoreVertical } from 'lucide-react-native';
 
-import { AddParticipant, Overflow } from '@/svg-icons';
+import { AddParticipant } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { Avatar, Icon } from '@infrastructure/ui';
 import { Agent } from '@domain/types';
@@ -44,7 +45,7 @@ const ParticipantOverflowCell = ({ count }: { count: number }) => {
     <Pressable style={({ pressed }) => [tailwind.style(pressed ? 'bg-slate-3' : '')]}>
       <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
         <Animated.View>
-          <Icon icon={<Overflow stroke={tailwind.color('text-slate-10')} />} size={28} />
+          <MoreVertical size={28} color={tailwind.color('text-slate-10') ?? '#888'} />
         </Animated.View>
         <Animated.View
           style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>

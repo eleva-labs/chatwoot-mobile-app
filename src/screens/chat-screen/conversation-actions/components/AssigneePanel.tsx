@@ -1,8 +1,9 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { ChevronRight } from 'lucide-react-native';
 import { Avatar, Icon } from '@infrastructure/ui';
-import { CaretRight, UnassignedIcon } from '@/svg-icons';
+import { UnassignedIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { Agent } from '@domain/types';
 import i18n from '@infrastructure/i18n';
@@ -49,7 +50,7 @@ const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
               )}>
               {assigneeActionText}
             </Animated.Text>
-            <Icon icon={<CaretRight />} size={20} />
+            <ChevronRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
           </Animated.View>
         </Animated.View>
       </Animated.View>

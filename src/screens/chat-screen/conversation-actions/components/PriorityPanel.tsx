@@ -1,8 +1,9 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { ChevronRight } from 'lucide-react-native';
 import { Icon } from '@infrastructure/ui';
-import { CaretRight, PriorityIcon, NoPriorityIcon } from '@/svg-icons';
+import { PriorityIcon, NoPriorityIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationPriority } from '@domain/types';
 import i18n from '@infrastructure/i18n';
@@ -46,7 +47,7 @@ const PriorityPanel = ({ priority, onPress }: PriorityPanelProps) => {
               )}>
               {i18n.t('CONVERSATION.ACTIONS.PRIORITY.EDIT')}
             </Animated.Text>
-            <Icon icon={<CaretRight />} size={20} />
+            <ChevronRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
           </Animated.View>
         </Animated.View>
       </Animated.View>

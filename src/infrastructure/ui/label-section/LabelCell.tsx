@@ -1,10 +1,10 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Check } from 'lucide-react-native';
+
 import { tailwind } from '@infrastructure/theme';
 import { Label } from '@domain/types/common/Label';
-import { TickIcon } from '@/svg-icons';
-import { Icon } from '@infrastructure/ui/common/icon';
 
 type LabelCellProps = {
   value: Label;
@@ -37,7 +37,7 @@ export const LabelCell = (props: LabelCellProps) => {
           ]}>
           {value.title}
         </Animated.Text>
-        {isActive ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {isActive ? <Check size={20} color={tailwind.color('text-slate-12')} /> : null}
       </Animated.View>
     </Pressable>
   );

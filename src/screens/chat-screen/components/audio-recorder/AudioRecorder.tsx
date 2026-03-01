@@ -8,11 +8,12 @@ import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { isUndefined } from 'lodash';
 import * as Sentry from '@sentry/react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+import { Trash2 } from 'lucide-react-native';
 
 import { TEXT_INPUT_CONTAINER_HEIGHT } from '@domain/constants';
 import { useChatWindowContext } from '@infrastructure/context';
 import i18n from '@infrastructure/i18n';
-import { SendIcon, Trash } from '@/svg-icons';
+import { SendIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { Icon } from '@infrastructure/ui';
 import { PauseIcon, PlayIcon } from '../message-components';
@@ -233,7 +234,7 @@ export const AudioRecorder = ({
       <Pressable
         onPress={deleteRecorder}
         style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
-        <Icon icon={<Trash />} size={28} />
+        <Trash2 size={28} color={tailwind.color('text-danger-9') ?? '#E13D45'} />
       </Pressable>
       <Animated.View
         style={tailwind.style(

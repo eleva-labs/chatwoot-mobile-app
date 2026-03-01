@@ -1,11 +1,11 @@
 import React from 'react';
 import { Pressable, Text, Animated, View } from 'react-native';
+import { Check } from 'lucide-react-native';
 
-import { TickIcon } from '@/svg-icons';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { useHaptic } from '@infrastructure/utils';
-import { Icon } from '@infrastructure/ui/common/icon';
 import { Account } from '@domain/types';
+import { tailwind } from '@infrastructure/theme';
 
 type AccountCellProps = {
   item: Account;
@@ -54,7 +54,7 @@ const AccountCell = ({
               {item.role}
             </Text>
           </View>
-          {isSelected && <Icon icon={<TickIcon />} size={20} />}
+          {isSelected && <Check size={20} color={tailwind.color('text-slate-12')} />}
         </Animated.View>
       </Animated.View>
     </Pressable>

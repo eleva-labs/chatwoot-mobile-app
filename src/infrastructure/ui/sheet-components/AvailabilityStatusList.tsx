@@ -1,13 +1,12 @@
 import React from 'react';
 import { Pressable, Text, Animated } from 'react-native';
+import { Check } from 'lucide-react-native';
 
 import { AVAILABILITY_STATUS_LIST } from '@domain/constants';
-import { TickIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { AvailabilityStatus, AvailabilityStatusListItemType } from '@domain/types';
 import { useHaptic } from '@infrastructure/utils';
-import { Icon } from '@infrastructure/ui/common/icon';
 
 type StatusCellProps = {
   item: AvailabilityStatusListItemType;
@@ -48,7 +47,7 @@ const StatusCell = ({
             )}>
             {item.status}
           </Text>
-          {isSelected && <Icon icon={<TickIcon />} size={20} />}
+          {isSelected && <Check size={20} color={tailwind.color('text-slate-12')} />}
         </Animated.View>
       </Animated.View>
     </Pressable>

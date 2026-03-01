@@ -2,10 +2,10 @@ import React, { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { ChevronLeft } from 'lucide-react-native';
 
-import { Icon, Spinner } from '@infrastructure/ui';
+import { Spinner } from '@infrastructure/ui';
 import i18n from '@infrastructure/i18n';
-import { ChevronLeft } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { Agent, Macro } from '@domain/types';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
@@ -81,7 +81,9 @@ const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
     <Animated.View entering={FadeIn.duration(300).springify()} style={tailwind.style('flex-1')}>
       <View style={tailwind.style('flex-row items-center p-4')}>
         <Pressable onPress={onBack} style={tailwind.style('flex-1 flex-row items-center')}>
-          <Icon icon={<ChevronLeft />} size={18} style={tailwind.style('mr-1')} />
+          <View style={tailwind.style('mr-1')}>
+            <ChevronLeft size={18} color={tailwind.color('text-slate-12') ?? '#202020'} />
+          </View>
           <Animated.Text style={tailwind.style('flex-1 text-base')} numberOfLines={1}>
             {macro.name}
           </Animated.Text>

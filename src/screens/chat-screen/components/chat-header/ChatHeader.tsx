@@ -2,9 +2,10 @@ import React from 'react';
 import { ImageSourcePropType, Keyboard, Platform, Pressable } from 'react-native';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
+import { ChevronLeft, MoreVertical } from 'lucide-react-native';
 
 import { Avatar, Icon } from '@infrastructure/ui';
-import { ChevronLeft, OpenIcon, Overflow, ResolvedIcon, SLAIcon } from '@/svg-icons';
+import { OpenIcon, ResolvedIcon, SLAIcon } from '@/svg-icons';
 import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 import { tailwind } from '@infrastructure/theme';
@@ -69,10 +70,7 @@ export const ChatHeader = ({
             hitSlop={8}
             style={tailwind.style('h-8 w-8 flex  justify-center items-start')}
             onPress={onBackPress}>
-            <Icon
-              icon={<ChevronLeft stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
-              size={24}
-            />
+            <ChevronLeft size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
           </Pressable>
           <Pressable
             onPress={onContactDetailsPress}
@@ -130,12 +128,7 @@ export const ChatHeader = ({
           </Animated.View>
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>
-              <Icon
-                icon={
-                  <Overflow strokeWidth={2} stroke={tailwind.color('text-slate-12') ?? '#202020'} />
-                }
-                size={24}
-              />
+              <MoreVertical size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
             </ChatDropdownMenu>
           )}
         </Animated.View>

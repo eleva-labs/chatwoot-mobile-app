@@ -1,13 +1,13 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Check } from 'lucide-react-native';
 
 import { useRefsContext } from '@infrastructure/context';
-import { TickIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { SortTypes } from '@domain/types';
 import { useHaptic } from '@infrastructure/utils';
-import { BottomSheetHeader, Icon } from '@infrastructure/ui';
+import { BottomSheetHeader } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import i18n from '@infrastructure/i18n';
 import { SortOptions } from '@domain/types';
@@ -55,7 +55,9 @@ const SortByCell = (props: SortByCellProps) => {
           )}>
           {i18n.t(`CONVERSATION.FILTERS.SORT_BY.OPTIONS.${value.toUpperCase()}`)}
         </Animated.Text>
-        {filters.sort_by === value ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {filters.sort_by === value ? (
+          <Check size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

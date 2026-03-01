@@ -1,8 +1,9 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { ChevronRight } from 'lucide-react-native';
 import { Icon } from '@infrastructure/ui';
-import { CaretRight, TeamIcon } from '@/svg-icons';
+import { TeamIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { Team } from '@domain/types';
 import i18n from '@infrastructure/i18n';
@@ -37,7 +38,7 @@ const TeamPanel = ({ team, onPress }: TeamPanelProps) => {
               )}>
               {i18n.t('CONVERSATION.ACTIONS.TEAM.ASSIGN')}
             </Animated.Text>
-            <Icon icon={<CaretRight />} size={20} />
+            <ChevronRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
           </Animated.View>
         </Animated.View>
       </Animated.View>

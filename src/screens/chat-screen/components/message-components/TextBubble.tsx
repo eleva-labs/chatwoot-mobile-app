@@ -17,7 +17,7 @@ export const TextBubble = (props: TextBubbleProps) => {
   return (
     <React.Fragment>
       {contentAttributes && <EmailMeta {...{ contentAttributes, sender }} />}
-      <MarkdownBubble messageContent={content} variant={variant} />
+      <MarkdownBubble messageContent={content ?? ''} variant={variant} />
     </React.Fragment>
   );
 };

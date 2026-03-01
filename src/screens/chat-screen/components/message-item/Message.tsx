@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trash2 } from 'lucide-react-native';
 import { Channel, Message } from '@domain/types';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useAppDispatch, useAppSelector } from '@/hooks';
@@ -32,7 +33,7 @@ import {
 } from '@domain/constants';
 import i18n from '@infrastructure/i18n';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { CopyIcon, Trash } from '@/svg-icons';
+import { CopyIcon } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { useThemedStyles } from '@/hooks';
 import { tailwind } from '@infrastructure/theme';
@@ -276,7 +277,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasAttachments || hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.DELETE_MESSAGE'),
-        icon: <Trash stroke={tailwind.color('text-ruby-9') ?? '#E54666'} />,
+        icon: <Trash2 size={20} color={tailwind.color('text-ruby-9') ?? '#E54666'} />,
         handleOnPressMenuOption: () => handleDeleteMessage(message.id),
         destructive: true,
       });

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Pressable, StyleSheet, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { ChevronRight } from 'lucide-react-native';
 
-import { CaretRight } from '@/svg-icons';
 import { GenericListType } from '@domain/types';
 import { Icon } from '@infrastructure/ui/common/icon';
 import { tailwind } from '@infrastructure/theme';
@@ -63,10 +63,7 @@ const ListItem = (props: ListItemProps) => {
               {listItem.subtitle}
             </Animated.Text>
             {listItem.hasChevron ? (
-              <Icon
-                icon={<CaretRight stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
-                size={20}
-              />
+              <ChevronRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
             ) : null}
           </Animated.View>
         </Animated.View>

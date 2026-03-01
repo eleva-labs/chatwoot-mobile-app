@@ -1,8 +1,10 @@
 import React from 'react';
 import { Pressable, Text, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
+import { X } from 'lucide-react-native';
+
 import { Icon } from '@infrastructure/ui/common';
-import { CheckedIcon, CloseIcon, FilterIcon, UncheckedIcon } from '@/svg-icons';
+import { CheckedIcon, FilterIcon, UncheckedIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { useScaleAnimation } from '@infrastructure/utils';
@@ -131,10 +133,7 @@ const RightSection = ({
       <Pressable onPress={onRightIconPress} hitSlop={16}>
         {currentState === 'Filter' || currentState === 'Select' ? (
           <Animated.View exiting={exiting} entering={entering}>
-            <Icon
-              size={24}
-              icon={<CloseIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
-            />
+            <X size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
           </Animated.View>
         ) : (
           <Animated.View exiting={exiting} entering={entering}>

@@ -2,18 +2,18 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { Check } from 'lucide-react-native';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationPriority, PriorityOptions } from '@domain/types';
 import { getPriorityIcon, useHaptic } from '@infrastructure/utils';
-import { BottomSheetHeader, Icon } from '@infrastructure/ui';
+import { BottomSheetHeader } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import i18n from '@infrastructure/i18n';
-import { TickIcon } from '@/svg-icons/common';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
@@ -52,7 +52,9 @@ const PriorityCell = (props: PriorityCellProps) => {
           )}>
           {i18n.t(`CONVERSATION.PRIORITY.OPTIONS.${PriorityOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
-        {selectedPriority === value.id ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {selectedPriority === value.id ? (
+          <Check size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Check } from 'lucide-react-native';
 
 import { LANGUAGES } from '@domain/constants';
-import { TickIcon } from '@/svg-icons';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { useHaptic } from '@infrastructure/utils';
-import { Icon } from '@infrastructure/ui/common';
+import { tailwind } from '@infrastructure/theme';
 
 export type LanguageItemType = {
   title: string;
@@ -53,7 +53,7 @@ const LanguageCell = (props: LanguageCellProps) => {
             )}>
             {item.title}
           </Animated.Text>
-          {isSelected && <Icon icon={<TickIcon />} size={20} />}
+          {isSelected && <Check size={20} color={tailwind.color('text-slate-12')} />}
         </Animated.View>
       </Animated.View>
     </Pressable>
