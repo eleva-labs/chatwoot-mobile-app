@@ -7,7 +7,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import { FileIcon } from '@/svg-icons';
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 import { Avatar, Icon } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';
@@ -189,7 +189,7 @@ export const FileCell = (props: FileCellProps) => {
                   isIncoming ? 'text-whiteA-A11' : '',
                   isOutgoing ? 'text-slate-11' : '',
                 )}>
-                {unixTimestampToReadableTime(timeStamp)}
+                {messageTimestamp(timeStamp)}
               </Animated.Text>
               <DeliveryStatus
                 isPrivate={isPrivate}

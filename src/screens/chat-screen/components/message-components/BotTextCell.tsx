@@ -3,7 +3,7 @@ import { Animated, Text } from 'react-native';
 
 import { tailwind } from '@/theme';
 import { Channel, MessageStatus, MessageType } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 
 import { MarkdownDisplay } from './MarkdownDisplay';
 import { TEXT_MAX_WIDTH } from '@/constants';
@@ -93,7 +93,7 @@ export const BotTextCell = (props: BotTextCellProps) => {
         )}>
         <Text
           style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-slate-11')}>
-          {unixTimestampToReadableTime(timeStamp)}
+          {messageTimestamp(timeStamp)}
         </Text>
         <DeliveryStatus
           isPrivate={isPrivate}

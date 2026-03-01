@@ -4,7 +4,7 @@ import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 import { Avatar, Icon } from '@/components-next/common';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { MESSAGE_STATUS, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@/constants';
@@ -110,7 +110,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                   isOutgoing ? 'text-slate-11' : '',
                   isMessageFailed ? 'text-ruby-12' : '',
                 )}>
-                {unixTimestampToReadableTime(timeStamp)}
+                {messageTimestamp(timeStamp)}
               </Text>
               <DeliveryStatus
                 isPrivate={isPrivate}

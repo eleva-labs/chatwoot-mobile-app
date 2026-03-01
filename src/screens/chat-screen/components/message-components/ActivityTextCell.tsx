@@ -2,7 +2,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 
 import { tailwind } from '@/theme';
-import { unixTimestampToReadableTime } from '@/utils/dateTimeUtils';
+import { messageTimestamp } from '@/utils/dateTimeUtils';
 
 type ActivityTextCellProps = {
   text: string;
@@ -17,7 +17,7 @@ export const ActivityTextCell = (props: ActivityTextCellProps) => {
         style={tailwind.style(
           'text-cxs font-inter-420-20 tracking-[0.32px] leading-[18px] text-slate-11 text-center',
         )}>
-        {text} {unixTimestampToReadableTime(timeStamp)}
+        {text} {messageTimestamp(timeStamp)}
       </Animated.Text>
     </Animated.View>
   );

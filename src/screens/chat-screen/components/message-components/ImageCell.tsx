@@ -4,7 +4,7 @@ import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 import { ImageBackground } from 'expo-image';
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 import { Avatar } from '@/components-next/common';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { MESSAGE_TYPES } from '@/constants';
@@ -105,7 +105,7 @@ export const ImageCell = (props: ImageCellProps) => {
                       style={tailwind.style(
                         'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
                       )}>
-                      {unixTimestampToReadableTime(timeStamp)}
+                      {messageTimestamp(timeStamp)}
                     </Text>
                     <DeliveryStatus
                       messageType={messageType}

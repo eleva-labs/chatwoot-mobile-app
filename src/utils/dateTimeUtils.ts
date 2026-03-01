@@ -1,4 +1,4 @@
-import { fromUnixTime, formatDistanceToNow, isSameDay, format } from 'date-fns';
+import { fromUnixTime, formatDistanceToNow, isSameDay, isSameYear, format } from 'date-fns';
 import i18n from '@/i18n';
 import { UnixTimestamp } from '@/types';
 
@@ -70,4 +70,18 @@ export const messageStamp = ({
 }) => {
   const unixTime = fromUnixTime(time);
   return format(unixTime, dateFormat);
+};
+
+/**
+ * Provides a formatted timestamp matching web's MessageMeta.vue format.
+ * Uses 'LLL d, h:mm a' (e.g., "Feb 28, 2:30 PM") for same-year dates,
+ * and 'LLL d y, h:mm a' (e.g., "Feb 28 2023, 2:30 PM") for different-year dates.
+ */
+export const messageTimestamp = (time: number, dateFormat = 'LLL d, h:mm a'): string => {
+  const messageTime = fromUnixTime(time);
+  const now = new Date();
+  if (!isSameYear(messageTime, now)) {
+    return format(messageTime, 'LLL d y, h:mm a');
+  }
+  return format(messageTime, dateFormat);
 };

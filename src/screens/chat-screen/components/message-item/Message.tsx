@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectConversationById } from '@/store/conversation/conversationSelectors';
 import { useChatWindowContext } from '@/context';
 import { conversationActions } from '@/store/conversation/conversationActions';
-import { unixTimestampToReadableTime, useHaptic } from '@/utils';
+import { messageTimestamp, useHaptic } from '@/utils';
 import {
   ComposedBubble,
   DeliveryStatus,
@@ -71,11 +71,12 @@ type MessageWrapperProps = {
  * PRIVATE                 => bg-n-solid-amber  => bg-solid-amber
  * ERROR                   => bg-n-ruby-4       => bg-ruby-4
  */
-const variantTextMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-slate-12',
-  [MESSAGE_VARIANTS.USER]: 'text-slate-12',
-  [MESSAGE_VARIANTS.BOT]: 'text-slate-12',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-12',
+const variantTextMap: Record<string, string> = {
+  [MESSAGE_VARIANTS.AGENT]: 'text-slate-11',
+  [MESSAGE_VARIANTS.USER]: 'text-slate-11',
+  [MESSAGE_VARIANTS.BOT]: 'text-slate-11',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-11',
+  [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-11',
   [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
 };
 
@@ -177,7 +178,7 @@ const MessageWrapper = ({
                     'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
                     variantTextMap[variant],
                   )}>
-                  {unixTimestampToReadableTime(item.createdAt)}
+                  {messageTimestamp(item.createdAt)}
                 </Animated.Text>
                 <DeliveryStatus
                   isPrivate={item.private}
@@ -310,19 +311,28 @@ export const MessageComponent = (props: MessageComponentProps) => {
   };
 
   const avatarInfo = () => {
-    if (!sender || sender.type === SENDER_TYPES.AGENT_BOT) {
+    // If no sender, return generic info (Avatar will show initials)
+    if (!sender) {
       return {
         name: i18n.t('CONVERSATION.BOT'),
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        src: require('../../../../assets/local/bot-avatar.png'),
+        src: undefined,
       };
     }
 
+    // For agent bots, use avatarUrl or thumbnail (matches web avatarInfo computed)
+    if (sender.type === SENDER_TYPES.AGENT_BOT) {
+      const botSender = sender as { avatarUrl?: string | null; thumbnail?: string | null; name?: string | null };
+      const botAvatarSrc = botSender.avatarUrl || botSender.thumbnail;
+      return {
+        name: sender?.name || i18n.t('CONVERSATION.BOT'),
+        src: botAvatarSrc ? { uri: botAvatarSrc } : undefined,
+      };
+    }
+
+    // For all other senders, use thumbnail
     return {
       name: sender?.name || '',
-      src: {
-        uri: sender?.thumbnail || null,
-      },
+      src: sender?.thumbnail ? { uri: sender.thumbnail } : undefined,
     };
   };
   // TODO: Add this once we have a proper way to render single attachments

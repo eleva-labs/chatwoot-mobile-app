@@ -262,7 +262,7 @@ export const MessageTextInput = ({
               'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
               'ml-[5px] mr-2 py-2 pl-3 pr-[36px] rounded-2xl text-slate-12',
               'min-h-9 max-h-[76px]',
-              isPrivateMessage ? 'bg-amber-3' : 'bg-slate-3',
+              isPrivateMessage ? 'bg-solid-amber' : 'bg-slate-3',
             ),
             // TODO: Try settings includeFontPadding to false and have a single lineHeight value of 20
           ]}

@@ -6,7 +6,7 @@ import { FileErrorIcon, LockIcon } from '@/svg-icons';
 import { differenceInHours } from 'date-fns';
 import { tailwind } from '@/theme';
 import { Channel, Message } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 import { Avatar, Icon } from '@/components-next';
 import { MarkdownDisplay } from './MarkdownDisplay';
 import { MenuOption, MessageMenu } from '../message-menu';
@@ -129,13 +129,8 @@ export const ComposedCell = (props: ComposedCellProps) => {
                   : '',
               ),
             ]}>
-            <Animated.View style={tailwind.style('flex flex-row')}>
-              {isPrivate ? (
-                <Animated.View
-                  style={tailwind.style('w-[3px] bg-amber-9 h-auto rounded-[4px]')}
-                />
-              ) : null}
-              <Animated.View style={tailwind.style(isPrivate ? 'pl-2.5' : '')}>
+            <Animated.View>
+              <Animated.View>
                 {isReplyMessage && replyMessage ? (
                   <ReplyMessageCell {...{ replyMessage, isIncoming, isOutgoing }} />
                 ) : null}
@@ -219,11 +214,11 @@ export const ComposedCell = (props: ComposedCellProps) => {
                   <Text
                     style={tailwind.style(
                       'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
-                      isIncoming ? 'text-slate-11' : '',
-                      isOutgoing ? 'text-slate-11' : '',
-                      isPrivate ? 'pl-1' : '',
+                      isPrivate ? 'pl-1 text-amber-11' : '',
+                      !isPrivate && isIncoming ? 'text-slate-11' : '',
+                      !isPrivate && isOutgoing ? 'text-slate-11' : '',
                     )}>
-                    {unixTimestampToReadableTime(createdAt)}
+                    {messageTimestamp(createdAt)}
                   </Text>
                   <DeliveryStatus
                     isPrivate={isPrivate}
@@ -245,11 +240,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
             <Avatar
               size={'md'}
-              src={
-                isTemplate
-                  ? require('../../../../assets/local/bot-avatar.png') // eslint-disable-line @typescript-eslint/no-require-imports
-                  : { uri: sender?.thumbnail }
-              }
+              src={sender?.thumbnail ? { uri: sender.thumbnail } : undefined}
               name={sender?.name || ''}
             />
           </Animated.View>

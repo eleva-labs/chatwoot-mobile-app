@@ -64,11 +64,8 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
   const isMessageSending = status === MESSAGE_STATUS.PROGRESS;
 
   return (
-    <Animated.View style={tailwind.style('flex flex-row')}>
-      {isPrivate ? (
-        <Animated.View style={tailwind.style('w-[3px] bg-amber-9 h-auto rounded-[4px]')} />
-      ) : null}
-      <Animated.View style={tailwind.style(isPrivate ? 'pl-2.5' : '')}>
+    <Animated.View>
+      <Animated.View>
         {isReplyMessage && replyMessage ? (
           <ReplyMessageBubble replyMessage={replyMessage} variant={props.variant} />
         ) : null}

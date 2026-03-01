@@ -4,7 +4,7 @@ import { Animated, Text, Dimensions } from 'react-native';
 import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
 import { Channel, Message, MessageStatus, MessageType } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 
 import { MarkdownDisplay } from './MarkdownDisplay';
 import { MESSAGE_STATUS, INBOX_TYPES, TEXT_MAX_WIDTH } from '@/constants';
@@ -131,7 +131,7 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
             isOutgoing ? 'text-slate-11' : '',
             isMessageFailed ? 'text-ruby-12' : '',
           )}>
-          {unixTimestampToReadableTime(timeStamp)}
+          {messageTimestamp(timeStamp)}
         </Text>
         <DeliveryStatus
           isPrivate={isPrivate}

@@ -12,7 +12,7 @@ import { Image, ImageBackground } from 'expo-image';
 
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 import { Avatar } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';
@@ -197,7 +197,7 @@ export const VideoCell = (props: VideoCellProps) => {
                     style={tailwind.style(
                       'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
                     )}>
-                    {unixTimestampToReadableTime(timeStamp)}
+                    {messageTimestamp(timeStamp)}
                   </Text>
                   <DeliveryStatus
                     isPrivate={isPrivate}

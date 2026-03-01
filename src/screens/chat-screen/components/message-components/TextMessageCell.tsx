@@ -115,11 +115,14 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
             <Avatar
               size={'md'}
-              src={
-                isTemplate || isSentByBot
-                  ? require('../../../../assets/local/bot-avatar.png') // eslint-disable-line @typescript-eslint/no-require-imports
-                  : { uri: sender?.thumbnail }
-              }
+              src={(() => {
+                if (isSentByBot) {
+                  const botSender = sender as { avatarUrl?: string | null; thumbnail?: string | null } | null;
+                  const botSrc = botSender?.avatarUrl || botSender?.thumbnail;
+                  return botSrc ? { uri: botSrc } : undefined;
+                }
+                return sender?.thumbnail ? { uri: sender.thumbnail } : undefined;
+              })()}
               name={sender?.name || ''}
             />
           </Animated.View>

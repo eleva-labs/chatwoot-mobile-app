@@ -11,7 +11,7 @@ import {
 
 import { tailwind } from '@/theme';
 import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 import { Avatar, Icon, Slider } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
@@ -244,7 +244,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
                   isIncoming ? 'text-slate-11' : '',
                   isOutgoing ? 'text-slate-11' : '',
                 )}>
-                {unixTimestampToReadableTime(timeStamp)}
+                {messageTimestamp(timeStamp)}
               </Text>
               <DeliveryStatus
                 isPrivate={isPrivate}

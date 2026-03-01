@@ -10,5 +10,6 @@ export interface AgentBot {
   accountId: number | null;
   accessToken: string | null;
   thumbnail?: string | null;
+  avatarUrl?: string | null;
   type: string;
 }

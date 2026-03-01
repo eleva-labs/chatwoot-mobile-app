@@ -4,7 +4,7 @@ import AutoHeightWebView from 'react-native-autoheight-webview';
 
 import { tailwind } from '@/theme';
 import { Channel, Message, MessageStatus, MessageType } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
+import { messageTimestamp } from '@/utils';
 
 import { MESSAGE_STATUS } from '@/constants';
 import { DeliveryStatus } from './DeliveryStatus';
@@ -95,7 +95,7 @@ export const Email = (props: EmailProps) => {
             'text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-slate-11',
             isMessageFailed ? 'text-whiteA-A11' : '',
           )}>
-          {unixTimestampToReadableTime(timeStamp)}
+          {messageTimestamp(timeStamp)}
         </Text>
         <DeliveryStatus
           isPrivate={isPrivate}
