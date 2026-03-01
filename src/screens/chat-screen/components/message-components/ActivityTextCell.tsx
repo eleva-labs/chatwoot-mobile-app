@@ -3,6 +3,7 @@ import Animated from 'react-native-reanimated';
 
 import { tailwind } from '@/theme';
 import { messageTimestamp } from '@/utils/dateTimeUtils';
+import { localizeActivityMessage } from '@/utils/activityMessageUtils';
 
 type ActivityTextCellProps = {
   text: string;
@@ -11,13 +12,14 @@ type ActivityTextCellProps = {
 
 export const ActivityTextCell = (props: ActivityTextCellProps) => {
   const { text, timeStamp } = props;
+  const localizedText = localizeActivityMessage(text);
   return (
     <Animated.View style={tailwind.style('flex flex-row flex-wrap justify-center py-1 px-10')}>
       <Animated.Text
         style={tailwind.style(
           'text-cxs font-inter-420-20 tracking-[0.32px] leading-[18px] text-slate-11 text-center',
         )}>
-        {text} {messageTimestamp(timeStamp)}
+        {localizedText} {messageTimestamp(timeStamp)}
       </Animated.Text>
     </Animated.View>
   );
