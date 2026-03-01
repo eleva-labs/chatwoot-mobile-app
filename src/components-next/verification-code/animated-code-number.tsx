@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
+import { tailwind } from '@/theme';
 import Animated, {
   Easing,
   FadeIn,
@@ -23,8 +24,8 @@ export const AnimatedCodeNumber: React.FC<AnimatedCodeNumberProps> = ({
   highlighted,
   status,
 }) => {
-  const correctColor = 'hsl(151, 40.2%, 54.1%)'; // green-600
-  const defaultColor = 'hsl(0, 0%, 89.5%)'; // gray-300
+  const correctColor = tailwind.color('text-teal-9') ?? 'hsl(151, 40.2%, 54.1%)';
+  const defaultColor = tailwind.color('text-slate-6') ?? 'hsl(0, 0%, 89.5%)';
 
   const rBoxStyle = useAnimatedStyle(() => {
     return {

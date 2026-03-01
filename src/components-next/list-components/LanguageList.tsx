@@ -45,7 +45,7 @@ const LanguageCell = (props: LanguageCellProps) => {
         <Animated.View
           style={themedTailwind.style(
             'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-            !isLastItem && 'border-b-[1px] border-blackA-A3',
+            !isLastItem && 'border-b-[1px] border-slate-6',
           )}>
           <Animated.Text
             style={themedTailwind.style(

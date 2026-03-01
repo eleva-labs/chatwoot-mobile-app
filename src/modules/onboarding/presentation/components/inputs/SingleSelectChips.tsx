@@ -49,7 +49,7 @@ function SingleSelectChipsComponent({
             onPress={() => handleOptionPress(option.value)}
             style={themedStyles.style(
               'px-4 py-2 rounded-full border',
-              isSelected ? 'bg-brand-600 border-brand-600' : 'bg-solid-1 border-slate-7',
+              isSelected ? 'bg-brand border-brand' : 'bg-solid-1 border-slate-7',
             )}
             accessible
             accessibilityRole="button"
@@ -82,7 +82,7 @@ function SingleSelectChipsComponent({
         </View>
       )}
 
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-2')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-2')}>{error}</Text>}
     </View>
   );
 }

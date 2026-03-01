@@ -236,7 +236,7 @@ export const AudioRecorder = ({
       </Pressable>
       <Animated.View
         style={tailwind.style(
-          'bg-blue-800 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
+          'bg-iris-9 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
           `w-[${RecorderSegmentWidth}px]`,
         )}>
         <Pressable onPress={toggleRecorder} hitSlop={12}>
@@ -263,7 +263,7 @@ export const AudioRecorder = ({
         style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
         <Animated.View
           style={tailwind.style(
-            'flex items-center justify-center h-7 w-7 rounded-full bg-blue-800',
+            'flex items-center justify-center h-7 w-7 rounded-full bg-iris-9',
           )}>
           <Icon icon={<SendIcon />} size={16} />
         </Animated.View>

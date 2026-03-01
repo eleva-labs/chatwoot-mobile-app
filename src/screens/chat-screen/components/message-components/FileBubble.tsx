@@ -64,7 +64,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
             stroke={
               variant === MESSAGE_VARIANTS.USER
                 ? tailwind.color('text-white')
-                : tailwind.color('bg-brand-600')
+                : tailwind.color('bg-brand')
             }
           />
         </Animated.View>
@@ -77,7 +77,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
                 fill={
                   variant === MESSAGE_VARIANTS.USER
                     ? tailwind.color('bg-solid-1')
-                    : tailwind.color('text-brand-600')
+                    : tailwind.color('text-brand')
                 }
               />
             }
@@ -110,7 +110,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
               tailwind.style(
                 'border-b-[1px] absolute left-0 right-0 ios:bottom-[1px] android:bottom-0',
                 variant === MESSAGE_VARIANTS.USER ? 'border-white' : '',
-                variant === MESSAGE_VARIANTS.AGENT ? 'border-brand-600' : '',
+                variant === MESSAGE_VARIANTS.AGENT ? 'border-brand' : '',
               ),
             ]}
           />

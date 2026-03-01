@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { IconProps } from '../../types';
 
 export const FileIcon = (props: IconProps) => {
-  const { fill = 'white', color } = props;
+  const { fill = 'currentColor', color } = props;
   return (
     <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path
@@ -22,7 +22,7 @@ export const FileIcon = (props: IconProps) => {
 };
 
 export const FileErrorIcon = (props: IconProps) => {
-  const { fill = 'white' } = props;
+  const { fill = 'currentColor' } = props;
   return (
     <Svg width="16" height="16" viewBox="0 0 24 24">
       <Path

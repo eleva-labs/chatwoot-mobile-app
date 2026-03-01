@@ -44,7 +44,7 @@ const ListItem = (props: ListItemProps) => {
           style={themedTailwind.style(
             'flex-1 flex-row items-center justify-between py-[11px]',
             listItem.icon ? 'ml-3' : '',
-            !isLastItem ? 'border-b-[1px] border-b-blackA-A3' : '',
+            !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
           )}>
           <Animated.View>
             <Animated.Text

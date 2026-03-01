@@ -137,7 +137,7 @@ export const InboxItemContainerComponent = (props: InboxItemContainerProps) => {
       handleOnRightOverswiped={onSwipeRightAction}
       handlePress={onPressAction}
       triggerOverswipeOnFlick
-      rightElementBgColor="bg-ruby-800"
+      rightElementBgColor="bg-ruby-9"
       {...{ index, openedRowIndex }}>
       <InboxItem
         isRead={isRead}

@@ -92,7 +92,7 @@ const ForgotPassword = () => {
                   autoCapitalize="none"
                 />
                 {errors.email && (
-                  <Animated.Text style={tailwind.style('text-ruby-900')}>
+                  <Animated.Text style={tailwind.style('text-ruby-11')}>
                     {errors.email.message}
                   </Animated.Text>
                 )}

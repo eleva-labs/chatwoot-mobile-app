@@ -47,7 +47,7 @@ const MacroItem = (props: MacroItemProps) => {
         <Animated.View
           style={tailwind.style(
             'flex-1 ml-3 flex-row items-center justify-between py-[11px]',
-            !isLastItem ? ' border-b-[1px] border-b-blackA-A3' : '',
+            !isLastItem ? ' border-b-[1px] border-b-slate-6' : '',
           )}>
           <Animated.View>
             <Animated.Text

@@ -47,7 +47,7 @@ const SortByCell = (props: SortByCellProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          index !== sortByList.length - 1 ? 'border-b-[1px] border-blackA-A3' : '',
+          index !== sortByList.length - 1 ? 'border-b-[1px] border-slate-6' : '',
         )}>
         <Animated.Text
           style={tailwind.style(

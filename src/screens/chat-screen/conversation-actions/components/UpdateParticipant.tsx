@@ -35,7 +35,7 @@ const ParticipantCell = (props: ParticipantCellProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !lastItem ? 'border-b-[1px] border-blackA-A3' : '',
+          !lastItem ? 'border-b-[1px] border-slate-6' : '',
         )}>
         <Animated.Text
           style={[

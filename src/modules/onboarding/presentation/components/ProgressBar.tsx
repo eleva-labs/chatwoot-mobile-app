@@ -54,7 +54,7 @@ export function ProgressBar({
       <View
         style={[themedStyles.style('w-full bg-slate-4 rounded-full overflow-hidden'), { height }]}>
         <Animated.View
-          style={[themedStyles.style('bg-brand-600 h-full rounded-full'), animatedStyle]}
+          style={[themedStyles.style('bg-brand h-full rounded-full'), animatedStyle]}
         />
       </View>
       {showPercentage && (

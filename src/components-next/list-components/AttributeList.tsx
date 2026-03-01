@@ -65,7 +65,7 @@ const AttributeItem = (props: AttributeItemProps) => {
           style={tailwind.style(
             'flex-1 flex-row items-center justify-between py-[11px]',
             listItem.icon ? 'ml-3' : '',
-            !isLastItem ? 'border-b-[1px] border-b-blackA-A3' : '',
+            !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
           )}>
           <Animated.View>
             <Animated.Text
@@ -82,7 +82,7 @@ const AttributeItem = (props: AttributeItemProps) => {
               style={tailwind.style(
                 'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] overflow-hidden',
                 listItem.subtitleType === 'light' ? 'text-slate-12' : 'text-slate-12',
-                listItem.type === 'link' ? 'text-blue-800 underline' : '',
+                listItem.type === 'link' ? 'text-iris-11 underline' : '',
               )}>
               {formattedValue}
             </Animated.Text>

@@ -107,7 +107,7 @@ export const ChatHeader = ({
               <Icon
                 icon={
                   isResolved ? (
-                    <ResolvedIcon strokeWidth={2} stroke={tailwind.color('bg-green-700')} />
+                    <ResolvedIcon strokeWidth={2} stroke={tailwind.color('bg-teal-9')} />
                   ) : (
                     <OpenIcon strokeWidth={2} stroke={tailwind.color('text-slate-12') ?? '#202020'} />
                   )

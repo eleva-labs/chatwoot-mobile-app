@@ -56,7 +56,7 @@ export const Email = (props: EmailProps) => {
         tailwind.style(
           'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden bg-slate-3',
           `max-w-[${WIDTH}px]`,
-          isMessageFailed ? 'bg-ruby-700' : '',
+          isMessageFailed ? 'bg-ruby-5' : '',
           isAvatarRendered
             ? isOutgoing
               ? 'rounded-br-none'

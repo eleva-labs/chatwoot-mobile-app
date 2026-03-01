@@ -150,7 +150,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
                       style={themedTailwind.style(
                         'flex-1 flex-row justify-between py-[11px] pr-3',
                         index !== dropdownMenuList.length - 1
-                          ? 'border-b-[1px] border-blackA-A3'
+                          ? 'border-b-[1px] border-slate-6'
                           : '',
                       )}>
                       <Animated.Text

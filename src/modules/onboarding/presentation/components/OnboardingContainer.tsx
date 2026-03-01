@@ -152,7 +152,7 @@ export function OnboardingContainer({
   if (onboarding.loading && !onboarding.flow) {
     return (
       <SafeAreaView style={themedStyles.style('flex-1 bg-solid-1 items-center justify-center')}>
-        <ActivityIndicator size="large" color={themedStyles.color('bg-brand-600')} />
+        <ActivityIndicator size="large" color={themedStyles.color('bg-brand')} />
         <Text style={themedStyles.style('text-slate-10 mt-4')}>Loading onboarding...</Text>
       </SafeAreaView>
     );

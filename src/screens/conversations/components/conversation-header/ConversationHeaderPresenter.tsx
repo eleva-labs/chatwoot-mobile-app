@@ -109,7 +109,7 @@ const FilterSection = ({
         <Text
           style={themedTailwind.style(
             'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px]',
-            filtersAppliedCount === 0 ? 'text-slate-11' : 'text-blue-800',
+            filtersAppliedCount === 0 ? 'text-slate-11' : 'text-iris-11',
           )}>
           {i18n.t('CONVERSATION.HEADER.CLEAR_FILTER')}
           {filtersAppliedCount > 0 ? ` (${filtersAppliedCount})` : ''}

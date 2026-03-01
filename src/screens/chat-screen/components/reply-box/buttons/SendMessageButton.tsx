@@ -25,7 +25,7 @@ export const SendMessageButton = (props: SendMessageButtonProps) => {
         <Animated.View
           style={themedTailwind.style(
             'flex items-center justify-center h-7 w-7 rounded-full',
-            isPrivateMessage ? 'bg-amber-700' : 'bg-slate-12',
+            isPrivateMessage ? 'bg-amber-9' : 'bg-slate-12',
           )}>
           <Icon icon={<SendIcon />} size={16} />
         </Animated.View>

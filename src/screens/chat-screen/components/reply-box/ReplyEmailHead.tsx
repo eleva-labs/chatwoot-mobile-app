@@ -21,7 +21,7 @@ export const ReplyEmailHead = (props: EmailMetaProps) => {
   return (
     <Animated.View style={tailwind.style('flex flex-col mb-2')}>
       <Animated.View
-        style={tailwind.style('flex flex-col gap-1 px-3 py-1 border-b border-b-blackA-A3')}>
+        style={tailwind.style('flex flex-col gap-1 px-3 py-1 border-b border-b-slate-6')}>
         {toEmails && (
           <Animated.View style={tailwind.style('flex flex-row items-center gap-1 ')}>
             <Text
@@ -42,7 +42,7 @@ export const ReplyEmailHead = (props: EmailMetaProps) => {
       </Animated.View>
       <Animated.View
         style={tailwind.style(
-          'flex flex-row items-center gap-1 py-1 px-3 border-b border-b-blackA-A3',
+          'flex flex-row items-center gap-1 py-1 px-3 border-b border-b-slate-6',
         )}>
         <Text
           style={tailwind.style(
@@ -58,7 +58,7 @@ export const ReplyEmailHead = (props: EmailMetaProps) => {
           placeholderTextColor={tailwind.color('text-slate-9')}
         />
         <Pressable style={tailwind.style('')} onPress={() => setShowBcc(!showBcc)}>
-          <Animated.Text style={tailwind.style('text-blue-800')}>
+          <Animated.Text style={tailwind.style('text-iris-11')}>
             {i18n.t('CONVERSATION.EMAIL_HEAD.BCC')}
           </Animated.Text>
         </Pressable>
@@ -66,7 +66,7 @@ export const ReplyEmailHead = (props: EmailMetaProps) => {
       {showBcc && (
         <Animated.View
           style={tailwind.style(
-            'flex flex-row items-center gap-1 px-3 border-b py-1 border-b-blackA-A3',
+            'flex flex-row items-center gap-1 px-3 border-b py-1 border-b-slate-6',
           )}>
           <Text
             style={tailwind.style(

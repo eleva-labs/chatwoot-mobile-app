@@ -47,9 +47,9 @@ export function SliderInput({
         minimumValue={min}
         maximumValue={max}
         step={step}
-        minimumTrackTintColor={themedStyles.color('bg-brand-600')}
+        minimumTrackTintColor={themedStyles.color('bg-brand')}
         maximumTrackTintColor={themedStyles.color('bg-slate-5')}
-        thumbTintColor={themedStyles.color('bg-brand-600')}
+        thumbTintColor={themedStyles.color('bg-brand')}
         accessible
         accessibilityRole="adjustable"
         accessibilityValue={{
@@ -68,7 +68,7 @@ export function SliderInput({
         </Text>
       </View>
 
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-2')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-2')}>{error}</Text>}
     </View>
   );
 }

@@ -36,7 +36,7 @@ export const ThemeSettingsItem: React.FC<ThemeSettingsItemProps> = ({ isLastItem
       <Animated.View
         style={tailwind.style(
           'flex-1 flex-row items-center justify-between py-[11px] ml-3',
-          !isLastItem ? 'border-b-[1px] border-b-blackA-A3' : '',
+          !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
         )}>
         <Animated.View style={tailwind.style('flex-1')}>
           <Animated.Text

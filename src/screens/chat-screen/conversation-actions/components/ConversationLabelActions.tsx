@@ -129,14 +129,14 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
             styles.labelShadow,
             tailwind.style(
               'flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3',
-              pressed ? 'bg-blue-100' : '',
+              pressed ? 'bg-iris-3' : '',
             ),
             Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
           ]}>
           <Icon icon={<LabelTag />} size={16} />
           <Animated.Text
             style={tailwind.style(
-              'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px] pl-1.5 text-blue-800',
+              'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px] pl-1.5 text-iris-11',
             )}>
             Add
           </Animated.Text>

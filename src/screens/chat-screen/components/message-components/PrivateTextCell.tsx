@@ -58,7 +58,7 @@ export const PrivateTextCell = (props: PrivateTextCellProps) => {
         ),
       ]}>
       <Animated.View style={tailwind.style('flex flex-row')}>
-        <Animated.View style={tailwind.style('w-[3px] bg-amber-700 h-auto rounded-[4px]')} />
+        <Animated.View style={tailwind.style('w-[3px] bg-amber-9 h-auto rounded-[4px]')} />
         <Animated.View style={tailwind.style('pl-2.5')}>
           {/* <Text
             // onTextLayout={handleTextLayout}

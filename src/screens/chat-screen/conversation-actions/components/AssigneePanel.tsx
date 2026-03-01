@@ -34,7 +34,7 @@ const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
         {assigneeAvatar(assignee)}
         <Animated.View
           style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px] border-b-[1px] border-b-blackA-A3',
+            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px] border-b-[1px] border-b-slate-6',
           )}>
           <Animated.Text
             style={tailwind.style(

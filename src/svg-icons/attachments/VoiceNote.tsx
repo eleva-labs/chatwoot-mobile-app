@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { IconProps } from '../../types';
 
 export const VoiceNote = (props: IconProps) => {
-  const { stroke = 'black', strokeOpacity = '0.565', color } = props;
+  const { stroke = 'currentColor', strokeOpacity = '0.565', color } = props;
   return (
     <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path

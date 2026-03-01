@@ -78,7 +78,7 @@ const DebugActionCell = ({ item, index, isLastItem }: DebugActionCellProps) => {
   );
   const rowStyle = themedTailwind.style(
     'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-    !isLastItem && 'border-b-[1px] border-blackA-A3',
+    !isLastItem && 'border-b-[1px] border-slate-6',
   );
 
   const debugValue = (key: string) => {

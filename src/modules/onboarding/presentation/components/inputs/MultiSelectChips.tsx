@@ -61,7 +61,7 @@ function MultiSelectChipsComponent({
             style={themedStyles.style(
               'px-4 py-2 rounded-full border',
               isSelected
-                ? 'bg-brand-600 border-brand-600'
+                ? 'bg-brand border-brand'
                 : isDisabled
                   ? 'bg-slate-3 border-slate-6 opacity-50'
                   : 'bg-solid-1 border-slate-7',
@@ -96,7 +96,7 @@ function MultiSelectChipsComponent({
         </Text>
       )}
 
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-2')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-2')}>{error}</Text>}
     </View>
   );
 }

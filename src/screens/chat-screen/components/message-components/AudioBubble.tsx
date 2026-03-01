@@ -151,8 +151,8 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
   const sliderProps = useMemo(
     () => ({
       trackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-whiteA-A9' : 'bg-slate-9',
-      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-solid-1' : 'bg-brand-600',
-      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-brand-300' : 'border-brand-600',
+      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-solid-1' : 'bg-brand',
+      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-iris-7' : 'border-brand',
       manualSeekTo,
       currentPosition,
       totalDuration,

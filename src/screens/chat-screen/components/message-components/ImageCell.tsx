@@ -65,7 +65,7 @@ export const ImageCell = (props: ImageCellProps) => {
                 'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
                 isIncoming ? 'bg-slate-4' : '',
                 isOutgoing ? 'bg-solid-blue' : '',
-                isPrivate ? ' bg-amber-100' : '',
+                isPrivate ? ' bg-amber-3' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'

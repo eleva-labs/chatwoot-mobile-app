@@ -21,7 +21,7 @@ const AudioIcon = () => {
   return (
     <Animated.View style={tailwind.style('flex-1 justify-center items-center')}>
       <Icon
-        icon={<VoiceNote stroke={tailwind.color('text-blue-800')} strokeOpacity={1} />}
+        icon={<VoiceNote stroke={tailwind.color('text-iris-11')} strokeOpacity={1} />}
         size={24}
       />
     </Animated.View>
@@ -30,7 +30,7 @@ const AudioIcon = () => {
 const File = () => {
   return (
     <Animated.View style={tailwind.style('flex-1  justify-center items-center')}>
-      <Icon icon={<FileIcon fill={tailwind.color('text-blue-800')} />} size={24} />
+      <Icon icon={<FileIcon fill={tailwind.color('text-iris-11')} />} size={24} />
     </Animated.View>
   );
 };

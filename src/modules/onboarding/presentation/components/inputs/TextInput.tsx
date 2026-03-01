@@ -69,9 +69,9 @@ export function TextInput({
         style={themedStyles.style(
           'w-full px-4 py-3 rounded-lg border',
           error
-            ? 'border-ruby-500 bg-ruby-50'
+            ? 'border-ruby-8 bg-ruby-3'
             : isFocused
-              ? 'border-brand-600 bg-solid-1'
+              ? 'border-brand bg-solid-1'
               : 'border-slate-7 bg-solid-1',
           multiline && 'min-h-[100px]',
         )}
@@ -87,7 +87,7 @@ export function TextInput({
           style={themedStyles.style(
             'text-xs mt-1 text-right',
             characterCountStatus.isError
-              ? 'text-ruby-500 font-semibold'
+              ? 'text-ruby-11 font-semibold'
               : characterCountStatus.isWarning
                 ? 'text-orange-500 font-medium'
                 : 'text-slate-9',
@@ -100,7 +100,7 @@ export function TextInput({
       )}
 
       {/* Error message */}
-      {error && <Text style={themedStyles.style('text-ruby-500 text-sm mt-1')}>{error}</Text>}
+      {error && <Text style={themedStyles.style('text-ruby-11 text-sm mt-1')}>{error}</Text>}
     </View>
   );
 }

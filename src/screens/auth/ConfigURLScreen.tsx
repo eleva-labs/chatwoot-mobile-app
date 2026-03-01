@@ -96,7 +96,7 @@ const ConfigURLScreen = () => {
                   autoCapitalize="none"
                 />
                 {errors.url && (
-                  <Animated.Text style={tailwind.style('text-ruby-900')}>
+                  <Animated.Text style={tailwind.style('text-ruby-11')}>
                     {errors.url.message}
                   </Animated.Text>
                 )}

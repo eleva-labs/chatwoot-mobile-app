@@ -67,7 +67,7 @@ export const FilePreview = (props: FilePreviewProps) => {
         <Animated.View style={tailwind.style('pr-1.5')}>
           <Spinner
             size={20}
-            stroke={isIncoming ? tailwind.color('text-white') : tailwind.color('bg-brand-600')}
+            stroke={isIncoming ? tailwind.color('text-white') : tailwind.color('bg-brand')}
           />
         </Animated.View>
       ) : (
@@ -76,7 +76,7 @@ export const FilePreview = (props: FilePreviewProps) => {
             size={24}
             icon={
               <FileIcon
-                fill={isIncoming ? tailwind.color('bg-solid-1') : tailwind.color('text-brand-600')}
+                fill={isIncoming ? tailwind.color('bg-solid-1') : tailwind.color('text-brand')}
               />
             }
           />
@@ -94,7 +94,7 @@ export const FilePreview = (props: FilePreviewProps) => {
                   ? 'text-base tracking-[0.32px] leading-[22px] font-inter-normal-20'
                   : '',
                 isIncoming ? 'text-white' : '',
-                isOutgoing ? 'text-brand-600' : '',
+                isOutgoing ? 'text-brand' : '',
               ),
               style.androidTextOnlyStyle,
             ]}>
@@ -105,7 +105,7 @@ export const FilePreview = (props: FilePreviewProps) => {
               tailwind.style(
                 'border-b-[1px] absolute left-0 right-0 ios:bottom-[1px] android:bottom-0',
                 isIncoming ? 'border-white' : '',
-                isOutgoing ? 'border-brand-600' : '',
+                isOutgoing ? 'border-brand' : '',
               ),
             ]}
           />
@@ -169,7 +169,7 @@ export const FileCell = (props: FileCellProps) => {
             style={[
               tailwind.style(
                 'flex flex-row items-center relative max-w-[300px] pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
-                isIncoming ? 'bg-brand-600' : '',
+                isIncoming ? 'bg-brand' : '',
                 isOutgoing ? 'bg-slate-3' : '',
                 shouldRenderAvatar
                   ? isOutgoing

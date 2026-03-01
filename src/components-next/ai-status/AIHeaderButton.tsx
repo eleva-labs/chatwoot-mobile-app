@@ -13,7 +13,7 @@ export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPre
     ? (tailwind.color('bg-brand') ?? '#5d17ea')
     : (tailwind.color('bg-slate-3') ?? '#e8e8e8');
   const textColor = isEnabled
-    ? '#FFFFFF'
+    ? (tailwind.color('text-white') ?? '#FFFFFF')
     : (tailwind.color('text-slate-11') ?? '#646464');
 
   return (

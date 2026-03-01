@@ -71,9 +71,9 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
               tailwind.style(
                 'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
                 `max-w-[${TEXT_MAX_WIDTH}px]`,
-                isIncoming ? 'bg-brand-600' : '',
+                isIncoming ? 'bg-brand' : '',
                 isOutgoing ? 'bg-slate-3' : '',
-                isMessageFailed ? 'bg-ruby-400' : '',
+                isMessageFailed ? 'bg-ruby-5' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -108,7 +108,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                   'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
                   isIncoming ? 'text-whiteA-A11' : '',
                   isOutgoing ? 'text-slate-11' : '',
-                  isMessageFailed ? 'text-ruby-900' : '',
+                  isMessageFailed ? 'text-ruby-12' : '',
                 )}>
                 {unixTimestampToReadableTime(timeStamp)}
               </Text>

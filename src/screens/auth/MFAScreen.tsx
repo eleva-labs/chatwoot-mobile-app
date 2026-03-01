@@ -182,7 +182,7 @@ const MFAScreen = () => {
                 {/* Error message for authenticator */}
                 {error && (
                   <Animated.Text
-                    style={tailwind.style('font-inter-normal-20 text-ruby-900 mb-6 pl-2')}>
+                    style={tailwind.style('font-inter-normal-20 text-ruby-11 mb-6 pl-2')}>
                     {error}
                   </Animated.Text>
                 )}
@@ -227,7 +227,7 @@ const MFAScreen = () => {
                 {/* Error message for backup code */}
                 {error && (
                   <Animated.Text
-                    style={tailwind.style('font-inter-normal-20 text-ruby-900 mb-6 pl-2')}>
+                    style={tailwind.style('font-inter-normal-20 text-ruby-11 mb-6 pl-2')}>
                     {error}
                   </Animated.Text>
                 )}

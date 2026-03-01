@@ -3,7 +3,7 @@ import { Path, Svg } from 'react-native-svg';
 
 import { IconProps } from '../../types';
 
-export const CameraIcon = ({ stroke = 'black', color }: IconProps): JSX.Element => {
+export const CameraIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
   return (
     <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
       <Path

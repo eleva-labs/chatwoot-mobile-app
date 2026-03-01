@@ -132,7 +132,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
             <Animated.View style={tailwind.style('flex flex-row')}>
               {isPrivate ? (
                 <Animated.View
-                  style={tailwind.style('w-[3px] bg-amber-700 h-auto rounded-[4px]')}
+                  style={tailwind.style('w-[3px] bg-amber-9 h-auto rounded-[4px]')}
                 />
               ) : null}
               <Animated.View style={tailwind.style(isPrivate ? 'pl-2.5' : '')}>
@@ -160,7 +160,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                       return isAnInstagramStory && isInstagramStoryExpired ? (
                         <Animated.View
                           style={tailwind.style(
-                            'flex flex-row items-center justify-center py-8 bg-slate-100 gap-1',
+                            'flex flex-row items-center justify-center py-8 bg-slate-3 gap-1',
                           )}>
                           <Icon icon={<FileErrorIcon fill={tailwind.color('text-slate-12')} />} />
                           <Animated.Text

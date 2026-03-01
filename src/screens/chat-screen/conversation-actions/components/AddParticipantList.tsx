@@ -26,7 +26,7 @@ const ListItem = (props: ListItemProps) => {
           <Avatar src={{ uri: listItem.thumbnail || undefined }} size="lg" />
         </Animated.View>
         <Animated.View
-          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-blackA-A3')}>
+          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>
           <Animated.Text
             style={tailwind.style(
               'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
@@ -47,7 +47,7 @@ const ParticipantOverflowCell = ({ count }: { count: number }) => {
           <Icon icon={<Overflow stroke={tailwind.color('text-slate-10')} />} size={28} />
         </Animated.View>
         <Animated.View
-          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-blackA-A3')}>
+          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>
           <Animated.Text
             style={tailwind.style(
               'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
@@ -88,16 +88,16 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
         <Pressable
           onPress={onAddParticipant}
           style={({ pressed }) => [
-            tailwind.style('rounded-b-[13px]', pressed ? 'bg-blue-100' : ''),
+            tailwind.style('rounded-b-[13px]', pressed ? 'bg-iris-3' : ''),
           ]}>
           <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
             <Animated.View style={tailwind.style('p-0.5')}>
-              <Icon icon={<AddParticipant stroke={tailwind.color('text-blue-800')} />} size={24} />
+              <Icon icon={<AddParticipant stroke={tailwind.color('text-iris-11')} />} size={24} />
             </Animated.View>
             <Animated.View style={tailwind.style('flex-1 py-[11px] ml-2')}>
               <Animated.Text
                 style={tailwind.style(
-                  'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-blue-800',
+                  'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-iris-11',
                 )}>
                 {i18n.t('CONVERSATION_PARTICIPANTS.ADD_PARTICIPANT')}
               </Animated.Text>

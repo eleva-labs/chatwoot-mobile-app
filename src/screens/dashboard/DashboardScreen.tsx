@@ -54,7 +54,7 @@ const DashboardScreen = () => {
     <Animated.View style={tailwind.style('flex-1')}>
       <Animated.View
         style={tailwind.style(
-          'flex flex-row items-center justify-between px-4 border-b-[1px] border-b-blackA-A3 py-[12px] bg-solid-1',
+          'flex flex-row items-center justify-between px-4 border-b-[1px] border-b-slate-6 py-[12px] bg-solid-1',
         )}>
         <Pressable hitSlop={16} onPress={handleBackPress}>
           <Animated.View>

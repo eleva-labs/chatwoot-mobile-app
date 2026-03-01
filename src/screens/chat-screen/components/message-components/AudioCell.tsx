@@ -175,8 +175,8 @@ export const AudioPlayer = (props: AudioPlayerProps) => {
       </Pressable>
       <Slider
         trackColor={isIncoming ? 'bg-whiteA-A9' : 'bg-slate-9'}
-        filledTrackColor={isIncoming ? 'bg-solid-1' : 'bg-brand-600'}
-        knobStyle={isIncoming ? 'border-brand-300' : 'border-brand-600'}
+        filledTrackColor={isIncoming ? 'bg-solid-1' : 'bg-brand'}
+        knobStyle={isIncoming ? 'border-iris-7' : 'border-brand'}
         {...{ manualSeekTo, currentPosition, totalDuration, pauseAudio }}
       />
     </View>
