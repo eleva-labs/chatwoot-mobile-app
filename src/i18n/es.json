@@ -536,10 +536,10 @@
     "ALERT_RESTART": "Reiniciar ahora"
   },
   "BANNER": {
-    "TWILIO_WHATSAPP_CAN_REPLY": "Sólo puede responder a esta conversación usando una plantilla de mensaje debido a",
+    "TWILIO_WHATSAPP_CAN_REPLY": "Sólo puedes responder a esta conversación usando una plantilla de mensaje debido a",
     "TWILIO_WHATSAPP_24_HOURS_WINDOW": "Restricción de la ventana de mensajes de 24 horas",
     "24_HOURS_WINDOW": "Restricción de la ventana de mensajes de 24 horas",
-    "CANNOT_REPLY": "No puede responder debido a"
+    "CANNOT_REPLY": "No puedes responder debido a"
   },
   "SLA": {
     "FRT": "FRT",
