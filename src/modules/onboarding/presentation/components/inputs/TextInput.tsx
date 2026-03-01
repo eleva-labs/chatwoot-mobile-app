@@ -59,7 +59,7 @@ export function TextInput({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={themedStyles.color('text-gray-400')}
+        placeholderTextColor={themedStyles.color('text-slate-9')}
         multiline={multiline}
         numberOfLines={numberOfLines}
         autoFocus={autoFocus}
@@ -71,8 +71,8 @@ export function TextInput({
           error
             ? 'border-ruby-500 bg-ruby-50'
             : isFocused
-              ? 'border-brand-600 bg-white'
-              : 'border-gray-300 bg-white',
+              ? 'border-brand-600 bg-solid-1'
+              : 'border-slate-7 bg-solid-1',
           multiline && 'min-h-[100px]',
         )}
         accessible
@@ -90,7 +90,7 @@ export function TextInput({
               ? 'text-ruby-500 font-semibold'
               : characterCountStatus.isWarning
                 ? 'text-orange-500 font-medium'
-                : 'text-gray-500',
+                : 'text-slate-9',
           )}
           accessible
           accessibilityLabel={`${characterCountStatus.remaining} characters remaining`}>

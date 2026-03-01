@@ -252,9 +252,9 @@ export function OnboardingModule({
   // Loading state
   if (onboarding.loading && !onboarding.flow) {
     return (
-      <SafeAreaView style={themedStyles.style('flex-1 bg-white items-center justify-center')}>
+      <SafeAreaView style={themedStyles.style('flex-1 bg-solid-1 items-center justify-center')}>
         <ActivityIndicator size="large" color={themedStyles.color('bg-brand-600')} />
-        <Text style={themedStyles.style('text-gray-600 mt-4')}>{t(TranslationKeys.LOADING)}</Text>
+        <Text style={themedStyles.style('text-slate-10 mt-4')}>{t(TranslationKeys.LOADING)}</Text>
       </SafeAreaView>
     );
   }
@@ -264,11 +264,11 @@ export function OnboardingModule({
   // to a local bundled flow JSON when running locally, instead of always requiring S3.
   if (onboarding.error && !onboarding.flow) {
     return (
-      <SafeAreaView style={themedStyles.style('flex-1 bg-white items-center justify-center p-4')}>
+      <SafeAreaView style={themedStyles.style('flex-1 bg-solid-1 items-center justify-center p-4')}>
         <Text style={themedStyles.style('text-ruby-500 text-lg font-semibold mb-2')}>
           {t(TranslationKeys.ERROR_TITLE)}
         </Text>
-        <Text style={themedStyles.style('text-gray-600 text-center mb-4')}>
+        <Text style={themedStyles.style('text-slate-10 text-center mb-4')}>
           {onboarding.error.message}
         </Text>
         <View style={themedStyles.style('gap-3 w-full items-center')}>
@@ -294,7 +294,7 @@ export function OnboardingModule({
   const error = validation.getError(onboarding.currentScreen.id.toString());
 
   return (
-    <SafeAreaView style={themedStyles.style('flex-1 bg-white')}>
+    <SafeAreaView style={themedStyles.style('flex-1 bg-solid-1')}>
       <View style={themedStyles.style('flex-1')}>
         {/* Offline Indicator */}
         {networkState.isOffline && (

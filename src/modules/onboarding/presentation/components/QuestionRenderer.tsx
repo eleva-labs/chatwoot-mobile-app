@@ -14,7 +14,7 @@ import type { AnswerValue, Answers } from '../../domain/common';
 import { ConditionalLogicService } from '../../domain/services/ConditionalLogicService';
 
 const DEFAULT_INPUT_CONTAINER_STYLE =
-  'w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50';
+  'w-full px-4 py-3 rounded-lg border border-slate-7 bg-slate-2';
 
 interface QuestionRendererProps {
   screen: Screen;
@@ -139,7 +139,7 @@ function QuestionRendererComponent({
         // File upload will be implemented separately
         return (
           <View style={themedStyles.style(DEFAULT_INPUT_CONTAINER_STYLE)}>
-            <Text style={themedStyles.style('text-gray-600 text-center')}>
+            <Text style={themedStyles.style('text-slate-10 text-center')}>
               File upload not yet implemented
             </Text>
           </View>
@@ -147,7 +147,7 @@ function QuestionRendererComponent({
       default:
         return (
           <View style={themedStyles.style(DEFAULT_INPUT_CONTAINER_STYLE)}>
-            <Text style={themedStyles.style('text-gray-600 text-center')}>
+            <Text style={themedStyles.style('text-slate-10 text-center')}>
               Unknown question type: {screen.type}
             </Text>
           </View>
@@ -164,14 +164,14 @@ function QuestionRendererComponent({
         style={themedStyles.style('flex-1')}
         contentContainerStyle={themedStyles.style('p-4')}>
         <View style={themedStyles.style('mb-6')}>
-          <Text style={themedStyles.style('text-2xl font-semibold text-gray-900 mb-2')}>
+          <Text style={themedStyles.style('text-2xl font-semibold text-slate-12 mb-2')}>
             {screen.title}
           </Text>
           {screen.description && (
-            <Text style={themedStyles.style('text-base text-gray-600')}>{screen.description}</Text>
+            <Text style={themedStyles.style('text-base text-slate-10')}>{screen.description}</Text>
           )}
           {screen.isRequired() && (
-            <Text style={themedStyles.style('text-sm text-gray-500 mt-1')}>* Required</Text>
+            <Text style={themedStyles.style('text-sm text-slate-9 mt-1')}>* Required</Text>
           )}
         </View>
 

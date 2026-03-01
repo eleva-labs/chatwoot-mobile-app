@@ -52,13 +52,13 @@ export function ProgressBar({
         now: clampedProgress,
       }}>
       <View
-        style={[themedStyles.style('w-full bg-gray-200 rounded-full overflow-hidden'), { height }]}>
+        style={[themedStyles.style('w-full bg-slate-4 rounded-full overflow-hidden'), { height }]}>
         <Animated.View
           style={[themedStyles.style('bg-brand-600 h-full rounded-full'), animatedStyle]}
         />
       </View>
       {showPercentage && (
-        <Text style={themedStyles.style('text-sm text-gray-600 mt-1 text-right')}>
+        <Text style={themedStyles.style('text-sm text-slate-10 mt-1 text-right')}>
           {Math.round(clampedProgress)}%
         </Text>
       )}

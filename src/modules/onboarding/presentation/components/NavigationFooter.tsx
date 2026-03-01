@@ -60,7 +60,7 @@ export function NavigationFooter({
     customTranslations?.skip || currentScreen?.getSkipButtonText() || t(TranslationKeys.SKIP);
 
   return (
-    <View style={themedStyles.style('w-full px-4 py-4 border-t border-gray-200 bg-white')}>
+    <View style={themedStyles.style('w-full px-4 py-4 border-t border-slate-6 bg-solid-1')}>
       <View style={themedStyles.style('flex-row gap-3 justify-between items-center')}>
         {/* Previous Button */}
         {canGoPrevious && (

@@ -151,9 +151,9 @@ export function OnboardingContainer({
   // Loading state
   if (onboarding.loading && !onboarding.flow) {
     return (
-      <SafeAreaView style={themedStyles.style('flex-1 bg-white items-center justify-center')}>
+      <SafeAreaView style={themedStyles.style('flex-1 bg-solid-1 items-center justify-center')}>
         <ActivityIndicator size="large" color={themedStyles.color('bg-brand-600')} />
-        <Text style={themedStyles.style('text-gray-600 mt-4')}>Loading onboarding...</Text>
+        <Text style={themedStyles.style('text-slate-10 mt-4')}>Loading onboarding...</Text>
       </SafeAreaView>
     );
   }
@@ -161,9 +161,9 @@ export function OnboardingContainer({
   // Error state
   if (onboarding.error && !onboarding.flow) {
     return (
-      <SafeAreaView style={themedStyles.style('flex-1 bg-white items-center justify-center p-4')}>
+      <SafeAreaView style={themedStyles.style('flex-1 bg-solid-1 items-center justify-center p-4')}>
         <Text style={themedStyles.style('text-ruby-500 text-lg font-semibold mb-2')}>Error</Text>
-        <Text style={themedStyles.style('text-gray-600 text-center mb-4')}>
+        <Text style={themedStyles.style('text-slate-10 text-center mb-4')}>
           {onboarding.error.message}
         </Text>
         <Button text="Retry" variant="primary" handlePress={() => onboarding.loadFlow(locale)} />
@@ -180,7 +180,7 @@ export function OnboardingContainer({
   const error = validation.getError(onboarding.currentScreen.id.toString());
 
   return (
-    <SafeAreaView style={themedStyles.style('flex-1 bg-white')}>
+    <SafeAreaView style={themedStyles.style('flex-1 bg-solid-1')}>
       <View style={themedStyles.style('flex-1')}>
         {/* Offline Indicator */}
         {networkState.isOffline && (
