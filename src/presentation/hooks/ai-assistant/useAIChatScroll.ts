@@ -8,7 +8,12 @@ import {
 
 export interface FlashListRef {
   scrollToEnd: (opts: { animated: boolean }) => void;
-  scrollToIndex: (opts: { index: number; animated: boolean }) => void;
+  scrollToIndex: (opts: {
+    index: number;
+    animated: boolean;
+    viewPosition?: number;
+    viewOffset?: number;
+  }) => void;
   scrollToOffset?: (opts: { offset: number; animated: boolean }) => void;
 }
 
@@ -28,7 +33,7 @@ export interface UseAIChatScrollReturn {
  */
 function safeScroll(
   listRef: React.RefObject<FlashListRef | null>,
-  target: 'end' | { index: number },
+  target: 'end' | { index: number; viewPosition?: number },
   animated: boolean,
 ): void {
   if (!listRef.current) return;
@@ -36,7 +41,11 @@ function safeScroll(
     if (target === 'end') {
       listRef.current.scrollToEnd({ animated });
     } else {
-      listRef.current.scrollToIndex({ index: target.index, animated });
+      listRef.current.scrollToIndex({
+        index: target.index,
+        animated,
+        viewPosition: target.viewPosition,
+      });
     }
   } catch {
     try {
@@ -141,7 +150,7 @@ export function useAIChatScroll(
       scrollTimeoutIdRef.current = setTimeout(() => {
         if (listRef.current && shouldAutoScrollRef.current && listDataLength > 0) {
           isProgrammaticScrollRef.current = true;
-          safeScroll(listRef, { index: listDataLength - 1 }, false);
+          safeScroll(listRef, { index: listDataLength - 1, viewPosition: 1 }, false);
           lastScrollLengthRef.current = messagesLength;
         }
       }, 32);
@@ -201,7 +210,7 @@ export function useAIChatScroll(
     (animated = true) => {
       if (listRef.current && listDataLength > 0) {
         isProgrammaticScrollRef.current = true;
-        safeScroll(listRef, { index: listDataLength - 1 }, animated);
+        safeScroll(listRef, { index: listDataLength - 1, viewPosition: 1 }, animated);
       }
     },
     [listDataLength],
