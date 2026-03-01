@@ -106,9 +106,12 @@ export const MessageSchema = z.object({
   account_id: z.number(),
   inbox_id: z.number(),
   conversation_id: z.number(),
-  message_type: z.enum(['incoming', 'outgoing', 'activity', 'template']),
+  message_type: z.union([
+    z.enum(['incoming', 'outgoing', 'activity', 'template']),
+    z.number(), // API sometimes returns numeric codes (0=incoming, 1=outgoing, 2=activity, 3=template)
+  ]),
   created_at: z.number(),
-  updated_at: z.number().optional(),
+  updated_at: z.union([z.number(), z.string()]).optional(), // API returns string ISO date or Unix timestamp
   private: z.boolean(),
   status: z.enum(['sent', 'delivered', 'read', 'failed', 'progress']).optional(),
   source_id: z.string().nullable().optional(),
@@ -143,11 +146,14 @@ export type Message = z.infer<typeof MessageSchema>;
 // ============================================================================
 
 const ChannelSchema = z
-  .object({
-    id: z.number(),
-    name: z.string(),
-    type: z.string(),
-  })
+  .union([
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      type: z.string(),
+    }),
+    z.string(), // API sometimes returns channel as a string identifier
+  ])
   .nullable()
   .optional();
 
