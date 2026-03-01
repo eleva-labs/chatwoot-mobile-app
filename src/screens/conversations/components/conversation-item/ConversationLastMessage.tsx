@@ -86,7 +86,7 @@ const MessageContent = ({
         <Text
           numberOfLines={1}
           style={themedTailwind.style(
-            'text-md flex-1 font-inter-420-20 tracking-[0.32px] leading-[21px] text-gray-900',
+            'text-md flex-1 font-inter-420-20 tracking-[0.32px] leading-[21px] text-slate-12',
           )}>
           <MessageType message={message} style={tailwind.style('ml-1')} />
           {i18n.t(`CONVERSATION.ATTACHMENTS.image.CONTENT`)}
@@ -99,13 +99,13 @@ const MessageContent = ({
         <Text
           numberOfLines={numberOfLines}
           style={themedTailwind.style(
-            'text-md flex-1 font-inter-420-20 tracking-[0.3px] leading-[21px] text-gray-900',
+            'text-md flex-1 font-inter-420-20 tracking-[0.3px] leading-[21px] text-slate-12',
           )}>
           <MessageType message={message} style={tailwind.style('ml-1')} />
           <Text
             numberOfLines={numberOfLines}
             style={themedTailwind.style(
-              'text-md flex-1 font-inter-420-20 tracking-[0.3px] leading-[21px] text-gray-900',
+              'text-md flex-1 font-inter-420-20 tracking-[0.3px] leading-[21px] text-slate-12',
             )}>
             {lastMessageContent}
           </Text>
@@ -120,7 +120,7 @@ const MessageContent = ({
         <Text
           numberOfLines={1}
           style={themedTailwind.style(
-            'text-md flex-1 font-inter-420-20 tracking-[0.32px] leading-[21px] text-gray-900',
+            'text-md flex-1 font-inter-420-20 tracking-[0.32px] leading-[21px] text-slate-12',
           )}>
           {i18n.t(`CONVERSATION.ATTACHMENTS.${lastMessageFileType}.CONTENT`)}
         </Text>
@@ -130,7 +130,7 @@ const MessageContent = ({
   return (
     <Text
       style={themedTailwind.style(
-        'text-md flex-1 font-inter-420-20 tracking-[0.32px] leading-[21px] text-gray-900',
+        'text-md flex-1 font-inter-420-20 tracking-[0.32px] leading-[21px] text-slate-12',
       )}>
       {i18n.t('CONVERSATION.NO_CONTENT')}
     </Text>

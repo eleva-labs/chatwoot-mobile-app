@@ -49,7 +49,7 @@ const HeaderTitle = () => {
         adjustsFontSizeToFit
         minimumFontScale={0.85}
         style={themedTailwind.style(
-          'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[22px] text-center text-gray-12',
+          'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[22px] text-center text-slate-12',
         )}>
         {i18n.t('CONVERSATION.HEADER.TITLE')}
       </Text>
@@ -81,7 +81,7 @@ const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSecti
               isSelectedAll ? (
                 <CheckedIcon />
               ) : (
-                <UncheckedIcon stroke={tailwind.color('text-gray-11') ?? '#646464'} />
+                <UncheckedIcon stroke={tailwind.color('text-slate-11') ?? '#646464'} />
               )
             }
           />
@@ -109,7 +109,7 @@ const FilterSection = ({
         <Text
           style={themedTailwind.style(
             'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px]',
-            filtersAppliedCount === 0 ? 'text-gray-700' : 'text-blue-800',
+            filtersAppliedCount === 0 ? 'text-slate-11' : 'text-blue-800',
           )}>
           {i18n.t('CONVERSATION.HEADER.CLEAR_FILTER')}
           {filtersAppliedCount > 0 ? ` (${filtersAppliedCount})` : ''}
@@ -131,7 +131,7 @@ const RightSection = ({
       <Pressable onPress={onRightIconPress} hitSlop={16}>
         {currentState === 'Filter' || currentState === 'Select' ? (
           <Animated.View exiting={exiting} entering={entering}>
-            <Icon size={24} icon={<CloseIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />} />
+            <Icon size={24} icon={<CloseIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />} />
           </Animated.View>
         ) : (
           <Animated.View exiting={exiting} entering={entering}>
@@ -142,7 +142,7 @@ const RightSection = ({
                 )}
               />
             )}
-            <Icon size={24} icon={<FilterIcon stroke={tailwind.color('text-gray-12') ?? '#202020'} />} />
+            <Icon size={24} icon={<FilterIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />} />
           </Animated.View>
         )}
       </Pressable>

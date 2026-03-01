@@ -45,11 +45,11 @@ const StatusCell = (props: StatusCellProps) => {
       <Animated.View
         style={themedTailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !isLastItem ? 'border-b-[1px] border-b-gray-200' : '',
+          !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
         )}>
         <Animated.Text
           style={themedTailwind.style(
-            'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+            'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
           )}>
           {i18n.t(`CONVERSATION.ASSIGNEE.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>

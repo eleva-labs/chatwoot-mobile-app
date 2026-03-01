@@ -256,7 +256,7 @@ const ConversationList = () => {
         `pb-[${TAB_BAR_HEIGHT}px]`,
       )}>
       <EmptyStateIcon />
-      <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
+      <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-slate-12')}>
         {i18n.t('CONVERSATION.EMPTY')}
       </Animated.Text>
     </Animated.ScrollView>
@@ -319,10 +319,10 @@ const ConversationScreen = () => {
   }, [currentBottomSheet]);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={themedTailwind.color('bg-white')}
+        backgroundColor={themedTailwind.color('bg-solid-1')}
         barStyle={isDark ? 'light-content' : 'dark-content'}
       />
       <ConversationListStateProvider>
