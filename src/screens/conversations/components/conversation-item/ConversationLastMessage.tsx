@@ -32,30 +32,34 @@ export const ATTACHMENT_ICONS = {
   fallback: 'link',
 };
 
+const iconColor = () => tailwind.color('text-slate-11') ?? '#60646C';
+
 const getAttachmentIcon = (fileType: string) => {
+  const color = iconColor();
   switch (fileType) {
     case 'image':
-      return <ImageAttachmentIcon />;
+      return <ImageAttachmentIcon stroke={color} />;
     case 'audio':
-      return <AudioIcon />;
+      return <AudioIcon stroke={color} />;
     case 'file':
-      return <DocumentAttachmentIcon />;
+      return <DocumentAttachmentIcon stroke={color} />;
     default:
-      return <DocumentAttachmentIcon />;
+      return <DocumentAttachmentIcon stroke={color} />;
   }
 };
 
 const MessageType = ({ message, style }: { message: Message; style?: StyleProp<ViewStyle> }) => {
   const { private: isPrivate } = message;
   const isOutgoing = message?.messageType === MESSAGE_TYPES.OUTGOING;
+  const color = iconColor();
 
   if (isOutgoing || isPrivate) {
     return (
       <NativeView style={[tailwind.style('flex-row items-center gap-1'), style]}>
         {isPrivate ? (
-          <Icon icon={<PrivateNoteIcon />} />
+          <Icon icon={<PrivateNoteIcon stroke={color} />} />
         ) : (
-          isOutgoing && <Icon icon={<OutgoingIcon />} />
+          isOutgoing && <Icon icon={<OutgoingIcon stroke={color} />} />
         )}
       </NativeView>
     );

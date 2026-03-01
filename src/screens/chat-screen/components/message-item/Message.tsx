@@ -35,6 +35,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { CopyIcon, Trash } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { useThemedStyles } from '@/hooks';
+import { tailwind } from '@/theme';
 import { Dimensions, View } from 'react-native';
 import { Avatar } from '@/components-next';
 
@@ -148,24 +149,20 @@ const MessageWrapper = ({
           <Animated.View
             style={[
               themedTailwind.style(
-                'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
+                'relative pl-3 pr-2.5 py-2 rounded-xl overflow-hidden',
                 `${variant === MESSAGE_VARIANTS.EMAIL ? `max-w-[${EMAIL_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`}`,
                 variantBaseMap[variant],
                 variantBorderMap[variant],
-                shouldGroupWithNext && shouldGroupWithPrevious
-                  ? orientation === ORIENTATION.LEFT
-                    ? 'rounded-l-none'
-                    : 'rounded-r-none'
+                // Avatar-adjacent corner is always sharper (matches web BaseBubble.vue)
+                orientation === ORIENTATION.LEFT ? 'rounded-bl-sm' : '',
+                orientation === ORIENTATION.RIGHT ? 'rounded-br-sm' : '',
+                // When grouped with previous, sharpen the top corner on avatar side too
+                // (matches web's .group-with-next + .message-bubble-container CSS)
+                shouldGroupWithPrevious && orientation === ORIENTATION.LEFT
+                  ? 'rounded-tl-sm'
                   : '',
-                shouldGroupWithNext && !shouldGroupWithPrevious
-                  ? orientation === ORIENTATION.LEFT
-                    ? 'rounded-tl-none'
-                    : 'rounded-tr-none'
-                  : '',
-                !shouldGroupWithNext && shouldGroupWithPrevious
-                  ? orientation === ORIENTATION.LEFT
-                    ? 'rounded-bl-none'
-                    : 'rounded-br-none'
+                shouldGroupWithPrevious && orientation === ORIENTATION.RIGHT
+                  ? 'rounded-tr-sm'
                   : '',
               ),
             ]}>
@@ -272,7 +269,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.COPY'),
-        icon: <CopyIcon />,
+        icon: <CopyIcon stroke={tailwind.color('text-slate-12') ?? '#1C2024'} />,
         handleOnPressMenuOption: () => handleCopyMessage(content),
         destructive: false,
       });
@@ -281,7 +278,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasAttachments || hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.DELETE_MESSAGE'),
-        icon: <Trash />,
+        icon: <Trash stroke={tailwind.color('text-ruby-9') ?? '#E54666'} />,
         handleOnPressMenuOption: () => handleDeleteMessage(message.id),
         destructive: true,
       });

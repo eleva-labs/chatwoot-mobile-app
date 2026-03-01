@@ -58,17 +58,19 @@ export const ReplyWarning = (props: ReplyWarningProps) => {
 
   return (
     <Pressable
-      style={tailwind.style('flex flex-row items-center px-4 py-3 max-h-[64px] bg-ruby-700 -z-10')}>
+      style={tailwind.style(
+        'flex flex-row items-center px-4 py-3 max-h-[64px] bg-ruby-3 rounded-lg mx-2 mt-2 -z-10',
+      )}>
       <Animated.View style={tailwind.style('flex-1')}>
         <Animated.Text
           style={tailwind.style(
-            'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-white',
+            'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-ruby-12',
           )}>
           {`${replyBannerMessage()} `}
           <Animated.Text
             onPress={() => openURL({ URL: replyWindowLink() })}
             style={tailwind.style(
-              'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-white underline',
+              'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-ruby-12 underline',
             )}>
             {replyWindowLinkText()}
           </Animated.Text>

@@ -1,6 +1,7 @@
 export * from './Add';
 export * from './AddParticipant';
 export * from './AIOnIcon';
+export * from './BotIcon';
 export * from './AttachFile';
 export * from './Attachment';
 export * from './Camera';
