@@ -76,7 +76,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
               <FileIcon
                 fill={
                   variant === MESSAGE_VARIANTS.USER
-                    ? tailwind.color('bg-white')
+                    ? tailwind.color('bg-solid-1')
                     : tailwind.color('text-brand-600')
                 }
               />
@@ -98,7 +98,7 @@ export const FileBubblePreview = (props: FilePreviewProps) => {
                 variant === MESSAGE_VARIANTS.USER
                   ? 'text-white'
                   : variant === MESSAGE_VARIANTS.AGENT
-                    ? 'text-gray-700'
+                    ? 'text-slate-11'
                     : '',
               ),
               style.androidTextOnlyStyle,

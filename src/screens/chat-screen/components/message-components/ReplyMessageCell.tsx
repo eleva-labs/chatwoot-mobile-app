@@ -61,12 +61,12 @@ export const ReplyMessageCell = (props: ReplyMessageCellProps) => {
           'relative max-w-[300px] pl-2 pr-2.5 py-2 mb-2 rounded-[10px] overflow-hidden -ml-[5px]',
           `max-w-[${TEXT_MAX_WIDTH}px]`,
           isIncoming ? 'bg-blackA-A7' : '',
-          isOutgoing ? 'bg-white' : '',
+          isOutgoing ? 'bg-solid-1' : '',
           // singleLineShortText ? "flex flex-row" : "",
         ),
       ]}>
       <Animated.View style={tailwind.style('flex flex-row')}>
-        <Animated.View style={tailwind.style('w-[3px] bg-gray-300 h-auto rounded-[4px]')} />
+        <Animated.View style={tailwind.style('w-[3px] bg-slate-5 h-auto rounded-[4px]')} />
         <Animated.View style={tailwind.style('pl-2.5')}>
           <Animated.Text
             style={tailwind.style(
@@ -79,7 +79,7 @@ export const ReplyMessageCell = (props: ReplyMessageCellProps) => {
               {renderAttachmentSection()}
               <Animated.Text
                 style={tailwind.style(
-                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-gray-950 capitalize pl-1.5',
+                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-slate-12 capitalize pl-1.5',
                 )}>
                 {replyMessageItem?.attachments[0].fileType}
               </Animated.Text>
@@ -90,7 +90,7 @@ export const ReplyMessageCell = (props: ReplyMessageCellProps) => {
             isMarkdown(replyMessageItem?.content) ? (
               <MarkdownDisplay
                 // style={tailwind.style(
-                //   "text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-gray-950",
+                //   "text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-slate-12",
                 // )}
                 messageContent={replyMessageItem?.content?.split('\n')?.[0]}
               />
@@ -98,7 +98,7 @@ export const ReplyMessageCell = (props: ReplyMessageCellProps) => {
               <Animated.Text
                 numberOfLines={1}
                 style={tailwind.style(
-                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-gray-950 capitalize',
+                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-slate-12 capitalize',
                 )}>
                 {replyMessageItem?.content}
               </Animated.Text>

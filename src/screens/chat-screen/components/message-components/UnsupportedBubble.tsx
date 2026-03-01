@@ -9,7 +9,7 @@ export const UnsupportedBubble = () => {
       style={tailwind.style(
         'px-4 py-3 bg-amber-100 border border-dashed border-amber-700 rounded-lg',
       )}>
-      <Text style={tailwind.style('text-gray-950')}>
+      <Text style={tailwind.style('text-slate-12')}>
         {i18n.t('CONVERSATION.UNSUPPORTED_MESSAGE')}
       </Text>
     </View>

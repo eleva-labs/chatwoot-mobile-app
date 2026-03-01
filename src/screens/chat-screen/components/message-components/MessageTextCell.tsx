@@ -92,7 +92,7 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
           'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
           isEmailMessage ? `max-w-[${EMAIL_MESSAGE_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`,
           isIncoming ? 'bg-brand-600' : '',
-          isOutgoing ? 'bg-gray-100' : '',
+          isOutgoing ? 'bg-slate-3' : '',
           isMessageFailed ? 'bg-ruby-700' : '',
           isAvatarRendered
             ? isOutgoing
@@ -112,7 +112,7 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
             ? "text-base tracking-[0.32px] leading-[22px] font-inter-normal-20"
             : "",
           isIncoming ? "text-white" : "",
-          isOutgoing ? "text-gray-950" : "",
+          isOutgoing ? "text-slate-12" : "",
         )} 
       >
         {text}
@@ -128,7 +128,7 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
           style={tailwind.style(
             'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
             isIncoming ? 'text-whiteA-A11' : '',
-            isOutgoing ? 'text-gray-700' : '',
+            isOutgoing ? 'text-slate-11' : '',
             isMessageFailed ? 'text-whiteA-A11' : '',
           )}>
           {unixTimestampToReadableTime(timeStamp)}
@@ -140,8 +140,8 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
           channel={channel}
           sourceId={sourceId}
           errorMessage={errorMessage}
-          deliveredColor="text-gray-700"
-          sentColor="text-gray-700"
+          deliveredColor="text-slate-11"
+          sentColor="text-slate-11"
         />
       </Animated.View>
     </Animated.View>

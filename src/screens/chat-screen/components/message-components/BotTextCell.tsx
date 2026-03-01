@@ -77,7 +77,7 @@ export const BotTextCell = (props: BotTextCellProps) => {
       {/* <Text
         // onTextLayout={handleTextLayout}
         style={tailwind.style(
-          "text-base tracking-[0.32px] leading-[22px] font-inter-normal-20 text-gray-950",
+          "text-base tracking-[0.32px] leading-[22px] font-inter-normal-20 text-slate-12",
         )}
       >
         {text} 
@@ -92,7 +92,7 @@ export const BotTextCell = (props: BotTextCellProps) => {
           // multiLineShortText ? " absolute bottom-0.5 right-2.5" : "",
         )}>
         <Text
-          style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-gray-700')}>
+          style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-slate-11')}>
           {unixTimestampToReadableTime(timeStamp)}
         </Text>
         <DeliveryStatus
@@ -102,8 +102,8 @@ export const BotTextCell = (props: BotTextCellProps) => {
           channel={channel}
           sourceId={sourceId || ''}
           errorMessage={errorMessage || ''}
-          deliveredColor="text-gray-700"
-          sentColor="text-gray-700"
+          deliveredColor="text-slate-11"
+          sentColor="text-slate-11"
         />
       </Animated.View>
     </Animated.View>

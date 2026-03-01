@@ -118,7 +118,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                 'relative pl-3 pr-2.5 py-2 h-full rounded-2xl overflow-hidden',
                 isEmailMessage ? `max-w-[${EMAIL_MESSAGE_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`,
                 isIncoming ? 'bg-brand-600' : '',
-                isOutgoing ? 'bg-gray-100' : '',
+                isOutgoing ? 'bg-slate-3' : '',
                 isPrivate ? ' bg-amber-100' : '',
                 shouldRenderAvatar
                   ? isOutgoing
@@ -162,10 +162,10 @@ export const ComposedCell = (props: ComposedCellProps) => {
                           style={tailwind.style(
                             'flex flex-row items-center justify-center py-8 bg-slate-100 gap-1',
                           )}>
-                          <Icon icon={<FileErrorIcon fill={tailwind.color('text-gray-900')} />} />
+                          <Icon icon={<FileErrorIcon fill={tailwind.color('text-slate-12')} />} />
                           <Animated.Text
                             style={tailwind.style(
-                              'text-cxs font-inter-420-20 text-gray-900 mt-[1px]',
+                              'text-cxs font-inter-420-20 text-slate-12 mt-[1px]',
                             )}>
                             {i18n.t('CONVERSATION.STORY_NOT_AVAILABLE')}
                           </Animated.Text>
@@ -220,7 +220,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                     style={tailwind.style(
                       'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
                       isIncoming ? 'text-whiteA-A11' : '',
-                      isOutgoing ? 'text-gray-700' : '',
+                      isOutgoing ? 'text-slate-11' : '',
                       isPrivate ? 'pl-1' : '',
                     )}>
                     {unixTimestampToReadableTime(createdAt)}
@@ -232,8 +232,8 @@ export const ComposedCell = (props: ComposedCellProps) => {
                     channel={channel}
                     sourceId={sourceId}
                     errorMessage={errorMessage || ''}
-                    deliveredColor="text-gray-700"
-                    sentColor="text-gray-700"
+                    deliveredColor="text-slate-11"
+                    sentColor="text-slate-11"
                   />
                 </Animated.View>
               </Animated.View>

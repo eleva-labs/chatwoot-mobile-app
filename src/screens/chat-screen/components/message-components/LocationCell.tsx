@@ -72,7 +72,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                 'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
                 `max-w-[${TEXT_MAX_WIDTH}px]`,
                 isIncoming ? 'bg-brand-600' : '',
-                isOutgoing ? 'bg-gray-100' : '',
+                isOutgoing ? 'bg-slate-3' : '',
                 isMessageFailed ? 'bg-ruby-400' : '',
                 shouldRenderAvatar
                   ? isOutgoing
@@ -93,7 +93,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                     ? 'text-base tracking-[0.32px] leading-[22px] font-inter-normal-20 underline'
                     : '',
                   isIncoming ? 'text-white' : '',
-                  isOutgoing ? 'text-gray-950' : '',
+                  isOutgoing ? 'text-slate-12' : '',
                 )}>
                 See on map
               </Text>
@@ -107,7 +107,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
                   isIncoming ? 'text-whiteA-A11' : '',
-                  isOutgoing ? 'text-gray-700' : '',
+                  isOutgoing ? 'text-slate-11' : '',
                   isMessageFailed ? 'text-ruby-900' : '',
                 )}>
                 {unixTimestampToReadableTime(timeStamp)}
@@ -119,8 +119,8 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                 channel={channel}
                 sourceId={sourceId}
                 errorMessage={errorMessage || ''}
-                deliveredColor="text-gray-700"
-                sentColor="text-gray-700"
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
               />
             </Animated.View>
           </Animated.View>

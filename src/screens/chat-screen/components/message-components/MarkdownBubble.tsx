@@ -12,10 +12,10 @@ type MarkdownBubbleProps = {
 };
 
 const variantTextMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-gray-950',
+  [MESSAGE_VARIANTS.AGENT]: 'text-slate-12',
   [MESSAGE_VARIANTS.USER]: 'text-white',
-  [MESSAGE_VARIANTS.BOT]: 'text-gray-950',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-gray-950',
+  [MESSAGE_VARIANTS.BOT]: 'text-slate-12',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-12',
   [MESSAGE_VARIANTS.ERROR]: 'text-white',
   [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-950 font-inter-medium-24',
 };

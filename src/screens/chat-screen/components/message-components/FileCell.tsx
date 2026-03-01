@@ -76,7 +76,7 @@ export const FilePreview = (props: FilePreviewProps) => {
             size={24}
             icon={
               <FileIcon
-                fill={isIncoming ? tailwind.color('bg-white') : tailwind.color('text-brand-600')}
+                fill={isIncoming ? tailwind.color('bg-solid-1') : tailwind.color('text-brand-600')}
               />
             }
           />
@@ -170,7 +170,7 @@ export const FileCell = (props: FileCellProps) => {
               tailwind.style(
                 'flex flex-row items-center relative max-w-[300px] pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
                 isIncoming ? 'bg-brand-600' : '',
-                isOutgoing ? 'bg-gray-100' : '',
+                isOutgoing ? 'bg-slate-3' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -187,7 +187,7 @@ export const FileCell = (props: FileCellProps) => {
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
                   isIncoming ? 'text-whiteA-A11' : '',
-                  isOutgoing ? 'text-gray-700' : '',
+                  isOutgoing ? 'text-slate-11' : '',
                 )}>
                 {unixTimestampToReadableTime(timeStamp)}
               </Animated.Text>
@@ -198,8 +198,8 @@ export const FileCell = (props: FileCellProps) => {
                 channel={channel}
                 sourceId={sourceId}
                 errorMessage={errorMessage || ''}
-                deliveredColor="text-gray-700"
-                sentColor="text-gray-700"
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
               />
             </Animated.View>
           </Animated.View>

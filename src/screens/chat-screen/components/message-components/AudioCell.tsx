@@ -174,8 +174,8 @@ export const AudioPlayer = (props: AudioPlayerProps) => {
         )}
       </Pressable>
       <Slider
-        trackColor={isIncoming ? 'bg-whiteA-A9' : 'bg-gray-500'}
-        filledTrackColor={isIncoming ? 'bg-white' : 'bg-brand-600'}
+        trackColor={isIncoming ? 'bg-whiteA-A9' : 'bg-slate-9'}
+        filledTrackColor={isIncoming ? 'bg-solid-1' : 'bg-brand-600'}
         knobStyle={isIncoming ? 'border-brand-300' : 'border-brand-600'}
         {...{ manualSeekTo, currentPosition, totalDuration, pauseAudio }}
       />
@@ -223,7 +223,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
               tailwind.style(
                 'relative flex flex-row items-center w-[300px] pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
                 isIncoming ? 'bg-brand-600' : '',
-                isOutgoing ? 'bg-gray-100' : '',
+                isOutgoing ? 'bg-slate-3' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -242,7 +242,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
                   isIncoming ? 'text-whiteA-A11' : '',
-                  isOutgoing ? 'text-gray-700' : '',
+                  isOutgoing ? 'text-slate-11' : '',
                 )}>
                 {unixTimestampToReadableTime(timeStamp)}
               </Text>
@@ -253,8 +253,8 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
                 channel={channel}
                 sourceId={sourceId}
                 errorMessage={errorMessage || ''}
-                deliveredColor="text-gray-700"
-                sentColor="text-gray-700"
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
               />
             </Animated.View>
           </Animated.View>

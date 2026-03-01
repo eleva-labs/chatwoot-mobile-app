@@ -75,7 +75,7 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
         {content && <MarkdownBubble messageContent={content} variant={props.variant} />}
         {isMessageSending && (
           <Animated.View style={tailwind.style('flex h-8 w-16 items-center justify-center')}>
-            <Spinner size={12} stroke={tailwind.color('text-gray-900')} />
+            <Spinner size={12} stroke={tailwind.color('text-slate-12')} />
           </Animated.View>
         )}
         {props.item.attachments &&
@@ -87,9 +87,9 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
                   style={tailwind.style(
                     'flex flex-row items-center justify-center py-8 bg-slate-100 gap-1 rounded-lg',
                   )}>
-                  <Icon icon={<FileErrorIcon fill={tailwind.color('text-gray-900')} />} />
+                  <Icon icon={<FileErrorIcon fill={tailwind.color('text-slate-12')} />} />
                   <Animated.Text
-                    style={tailwind.style('text-cxs font-inter-420-20 text-gray-900 mt-[1px]')}>
+                    style={tailwind.style('text-cxs font-inter-420-20 text-slate-12 mt-[1px]')}>
                     {i18n.t('CONVERSATION.STORY_NOT_AVAILABLE')}
                   </Animated.Text>
                 </Animated.View>
