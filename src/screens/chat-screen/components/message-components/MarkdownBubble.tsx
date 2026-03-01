@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 import { openURL } from '@/utils/urlUtils';
 
-import { tailwind } from '@/theme';
 import { MESSAGE_VARIANTS } from '@/constants';
+import { useThemedStyles } from '@/hooks';
 
 type MarkdownBubbleProps = {
   messageContent: string;
@@ -22,12 +22,13 @@ const variantTextMap = {
 
 export const MarkdownBubble = (props: MarkdownBubbleProps) => {
   const { messageContent, variant } = props;
+  const themedTailwind = useThemedStyles();
   const handleURL = (url: string) => {
     openURL({ URL: url });
     return true;
   };
 
-  const textStyle = tailwind.style(variantTextMap[variant]);
+  const textStyle = themedTailwind.style(variantTextMap[variant]);
 
   const styles = StyleSheet.create({
     text: {

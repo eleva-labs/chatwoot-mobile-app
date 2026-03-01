@@ -79,7 +79,7 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
           {i18n.t('CONVERSATION_PARTICIPANTS.TITLE')}
         </Animated.Text>
       </Animated.View>
-      <Animated.View style={[tailwind.style('rounded-[13px] mx-4 bg-solid-1'), styles.listShadow]}>
+      <Animated.View style={[tailwind.style('rounded-[13px] mx-4 bg-solid-1'), styles.listShadow, Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' }]}>
         {conversationParticipants &&
           conversationParticipants.slice(0, 4).map((listItem, index) => {
             return <ListItem key={index} {...{ listItem, index }} />;
@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 4,
-        backgroundColor: 'white',
       },
     }) || {}, // Add fallback empty object
 });

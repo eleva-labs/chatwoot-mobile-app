@@ -26,6 +26,7 @@ import {
   updateBadgeCount,
 } from '@/utils/pushUtils';
 import { extractConversationIdFromUrl } from '@/utils/conversationUtils';
+import { tailwind } from '@/theme';
 import { useAppSelector, useThemedStyles } from '@/hooks';
 import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSelectors';
 import { SSO_CALLBACK_URL } from '@/constants';
@@ -313,16 +314,16 @@ export const AppNavigationContainer = () => {
     return null;
   }
 
-  // Create a custom dark theme with pure black colors
+  // Create a custom dark theme with Radix-resolved colors
   const customDarkTheme = {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
-      background: '#000000', // Pure black background
-      card: '#111827', // gray-900 - card backgrounds
-      text: '#ffffff', // Pure white text
-      border: '#374151', // gray-700 - borders
-      notification: '#3b82f6', // blue-500 - notifications
+      background: tailwind.color('bg-solid-1') ?? '#000000',
+      card: tailwind.color('bg-slate-2') ?? '#111827',
+      text: tailwind.color('text-slate-12') ?? '#ffffff',
+      border: tailwind.color('bg-slate-6') ?? '#374151',
+      notification: tailwind.color('bg-iris-9') ?? '#3b82f6',
     },
   };
 
@@ -340,7 +341,7 @@ export const AppNavigationContainer = () => {
       fallback={<ActivityIndicator animating />}>
       <BottomSheetModalProvider>
         <View
-          style={[themedTailwind.style('bg-black'), styles.navigationLayout]}
+          style={[themedTailwind.style('bg-background'), styles.navigationLayout]}
           onLayout={onLayoutRootView}>
           <AppTabs />
         </View>
@@ -352,10 +353,10 @@ export const AppNavigator = () => {
   const themedTailwind = useThemedStyles();
 
   return (
-    <GestureHandlerRootView style={[themedTailwind.style('bg-black'), styles.navigationLayout]}>
+    <GestureHandlerRootView style={[themedTailwind.style('bg-background'), styles.navigationLayout]}>
       <KeyboardProvider>
         <RefsProvider>
-          <SafeAreaProvider style={themedTailwind.style('bg-black')}>
+          <SafeAreaProvider style={themedTailwind.style('bg-background')}>
             <AppNavigationContainer />
           </SafeAreaProvider>
         </RefsProvider>

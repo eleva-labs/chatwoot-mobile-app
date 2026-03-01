@@ -45,7 +45,7 @@ type MessageTextInputProps = {
 type AgentSuggestion = Omit<Agent, 'id'> & Suggestion;
 
 const Unlock = ({
-  stroke = 'black',
+  stroke = '#202020',
   strokeOpacity = '0.565',
 }: {
   stroke?: string;
@@ -66,9 +66,9 @@ const Unlock = ({
 };
 
 const Locked = ({
-  stroke = 'black',
+  stroke = '#202020',
   strokeOpacity = '0.565',
-  fill = 'white',
+  fill = '#f0f0f0',
 }: {
   stroke?: string;
   strokeOpacity?: string;
@@ -211,6 +211,7 @@ export const MessageTextInput = ({
               Platform.OS === 'ios' ? 'absolute bottom-full' : 'relative h-[150px]',
             ),
             styles.listShadow,
+            Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
           ]}>
           <ScrollView keyboardShouldPersistTaps="always">
             {filteredSuggestions.map(agent => {
@@ -328,7 +329,6 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 4,
-        backgroundColor: 'white',
       },
     }) || {}, // Add fallback empty object
 });

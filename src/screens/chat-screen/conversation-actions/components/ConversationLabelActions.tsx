@@ -131,6 +131,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
               'flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3',
               pressed ? 'bg-blue-100' : '',
             ),
+            Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
           ]}>
           <Icon icon={<LabelTag />} size={16} />
           <Animated.Text
@@ -147,6 +148,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
+        backgroundStyle={tailwind.style('bg-solid-1')}
         enablePanDownToClose
         snapPoints={[316]}
         keyboardBehavior="interactive"
@@ -186,7 +188,6 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 4,
-        backgroundColor: 'white',
       },
     }) || {}, // Add fallback empty object
 });

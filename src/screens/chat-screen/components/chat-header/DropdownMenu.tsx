@@ -124,7 +124,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
           )}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('mx-3 rounded-[26px] overflow-hidden')}
-          backgroundStyle={themedTailwind.style('bg-black')}
+          backgroundStyle={themedTailwind.style('bg-solid-1')}
           detached
           bottomInset={bottom === 0 ? 12 : bottom}
           animationConfigs={animationConfigs}

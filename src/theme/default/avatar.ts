@@ -1,5 +1,5 @@
 export const avatarTheme = {
-  base: 'relative items-center justify-center bg-gray-100',
+  base: 'relative items-center justify-center bg-slate-3',
   size: {
     xs: 'h-4 w-4',
     sm: 'h-5 w-5',
@@ -40,7 +40,7 @@ export const avatarTheme = {
     '5xl': 'w-7',
   },
   initials: {
-    base: 'text-center uppercase text-gray-800',
+    base: 'text-center uppercase text-slate-12',
     size: {
       xs: 'font-inter-medium-24 text-xs',
       sm: 'font-inter-medium-24 text-cxs',
@@ -66,8 +66,8 @@ export const avatarTheme = {
       '5xl': 0,
     },
     active: {
-      container: 'absolute border-[1.5px] border-white bg-white rounded-full',
-      base: 'bg-green-700 rounded-full',
+      container: 'absolute border-[1.5px] border-solid-1 bg-solid-1 rounded-full',
+      base: 'bg-teal-10 rounded-full',
       size: {
         xs: 'h-1 w-1',
         sm: 'h-[5px] w-[5px]',
@@ -81,8 +81,8 @@ export const avatarTheme = {
       },
     },
     away: {
-      container: 'absolute border-[1.5px] border-white bg-white rounded-full bottom-0 right-0',
-      base: 'bg-white rounded-full',
+      container: 'absolute border-[1.5px] border-solid-1 bg-solid-1 rounded-full bottom-0 right-0',
+      base: 'bg-solid-1 rounded-full',
       size: {
         xs: 'h-1 w-1',
         sm: 'h-[5px] w-[5px]',
@@ -95,8 +95,8 @@ export const avatarTheme = {
       },
     },
     sleep: {
-      container: 'absolute border-[1.5px] border-white bg-white rounded-full bottom-0 right-0',
-      base: 'bg-white rounded-full',
+      container: 'absolute border-[1.5px] border-solid-1 bg-solid-1 rounded-full bottom-0 right-0',
+      base: 'bg-solid-1 rounded-full',
       size: {
         xs: 'h-1 w-1',
         sm: 'h-[5px] w-[5px]',
@@ -109,8 +109,8 @@ export const avatarTheme = {
       },
     },
     typing: {
-      container: 'absolute border-[1.5px] border-white bg-white rounded-full bottom-0 right-0',
-      base: 'rounded-full flex flex-row justify-evenly items-center bg-gray-800',
+      container: 'absolute border-[1.5px] border-solid-1 bg-solid-1 rounded-full bottom-0 right-0',
+      base: 'rounded-full flex flex-row justify-evenly items-center bg-slate-10',
       size: {
         xs: 'w-2 h-[5px]',
         sm: 'w-[9px] h-1.5',
@@ -138,7 +138,7 @@ export const avatarTheme = {
       },
     },
     icon: {
-      container: 'absolute border-[1.5px] border-white bg-white rounded-full bottom-0 right-0',
+      container: 'absolute border-[1.5px] border-solid-1 bg-solid-1 rounded-full bottom-0 right-0',
       size: {
         xs: 'w-[9px]',
         sm: 'w-2.5',
@@ -153,7 +153,7 @@ export const avatarTheme = {
   },
   counter: {
     container:
-      'absolute border-[1.5px] border-white bg-green-600 rounded-full flex items-center justify-center',
+      'absolute border-[1.5px] border-solid-1 bg-teal-9 rounded-full flex items-center justify-center',
     position: {
       xs: -2,
       sm: -2,

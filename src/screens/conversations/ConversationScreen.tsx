@@ -336,6 +336,7 @@ const ConversationScreen = () => {
           )}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
+          backgroundStyle={themedTailwind.style('bg-solid-1')}
           animationConfigs={animationConfigs}
           enablePanDownToClose
           snapPoints={filterSnapPoints}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Linking, StyleSheet } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
-import { tailwind } from '@/theme';
+import { useThemedStyles } from '@/hooks';
 
 type MarkdownDisplayProps = {
   messageContent: string;
@@ -15,12 +15,13 @@ type MarkdownDisplayProps = {
 
 export const MarkdownDisplay = (props: MarkdownDisplayProps) => {
   const { messageContent, isIncoming, isOutgoing, isBotText, isPrivate, isMessageFailed } = props;
+  const themedTailwind = useThemedStyles();
   const handleURL = (url: string) => {
     Linking.openURL(url).then(() => {});
     return true;
   };
 
-  const textStyle = tailwind.style(
+  const textStyle = themedTailwind.style(
     isIncoming ? 'text-white' : '',
     isOutgoing || isBotText ? 'text-slate-12' : '',
     isPrivate ? 'text-amber-950 font-inter-medium-24' : '',

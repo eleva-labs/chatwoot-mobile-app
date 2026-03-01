@@ -27,11 +27,11 @@ type DateSectionProps = { item: { date: string } };
 const DateSection = ({ item }: DateSectionProps) => {
   const themedTailwind = useThemedStyles();
   return (
-    <Animated.View style={tailwind.style('flex flex-row justify-center items-center py-4')}>
-      <Animated.View style={themedTailwind.style('rounded-lg py-1 px-[7px] bg-gray-100')}>
+    <Animated.View style={themedTailwind.style('flex flex-row justify-center items-center py-4')}>
+      <Animated.View style={themedTailwind.style('rounded-lg py-1 px-[7px] bg-slate-3')}>
         <Animated.Text
           style={themedTailwind.style(
-            'text-cxs font-inter-420-20 tracking-[0.32px] text-gray-700 leading-[15px]',
+            'text-cxs font-inter-420-20 tracking-[0.32px] text-slate-11 leading-[15px]',
           )}>
           {item.date}
         </Animated.Text>

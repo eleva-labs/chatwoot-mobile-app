@@ -41,7 +41,7 @@ const DeleteIcon = () => {
     <Svg width="100%" height="100%" viewBox="0 0 12 12" fill="none">
       <Path
         d="M9 3L3 9M3 3L9 9"
-        stroke="black"
+        stroke={tailwind.color('text-slate-12') ?? '#000'}
         strokeOpacity="0.478"
         strokeWidth="1.5"
         strokeLinecap="round"

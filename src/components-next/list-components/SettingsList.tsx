@@ -7,7 +7,6 @@ import { GenericListType } from '@/types';
 import { Icon } from '@/components-next/common/icon';
 import { tailwind } from '@/theme';
 import { useThemedStyles } from '@/hooks';
-import { useTheme } from '@/context';
 
 type GenericListProps = {
   sectionTitle?: string;
@@ -76,13 +75,12 @@ const ListItem = (props: ListItemProps) => {
 export const SettingsList = (props: GenericListProps) => {
   const { list, sectionTitle } = props;
   const themedTailwind = useThemedStyles();
-  const { isDark } = useTheme();
 
   // Create theme-aware shadow styles
   const themedShadowStyles = {
     ...styles.listShadow,
     ...(Platform.OS === 'android' && {
-      backgroundColor: isDark ? 'transparent' : 'white',
+      backgroundColor: tailwind.color('bg-solid-1') ?? 'white',
     }),
   };
 
@@ -126,7 +124,6 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 4,
-        backgroundColor: 'white',
       },
     }) || {}, // Add fallback empty object
 });

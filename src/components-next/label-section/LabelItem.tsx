@@ -17,6 +17,7 @@ export const LabelItem = (props: LabelItemProps) => {
       style={[
         styles.labelShadow,
         tailwind.style('flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3'),
+        Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
       ]}>
       <Animated.View style={tailwind.style('h-2 w-2 rounded-full', `bg-[${item.color}]`)} />
       <Animated.Text
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 4,
-        backgroundColor: 'white',
       },
     }) || {}, // Add fallback empty object
 });

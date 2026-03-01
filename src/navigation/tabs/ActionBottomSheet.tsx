@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
-import tailwind from 'twrnc';
+import { tailwind } from '@/theme';
 import { BottomSheetBackdrop } from '@/components-next';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import {
@@ -56,10 +56,10 @@ const ActionBottomSheet = () => {
     <BottomSheetModal
       ref={actionsModalSheetRef}
       backdropComponent={BottomSheetBackdrop}
-      handleIndicatorStyle={tailwind.style('overflow-hidden w-8 h-1 rounded-[11px]')}
+      handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
       handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
       style={tailwind.style('rounded-[26px] overflow-hidden')}
-      backgroundStyle={themedTailwind.style('bg-black')}
+      backgroundStyle={themedTailwind.style('bg-solid-1')}
       animationConfigs={animationConfigs}
       enablePanDownToClose
       snapPoints={actionSnapPoints}
