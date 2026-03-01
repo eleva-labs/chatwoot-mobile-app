@@ -1,8 +1,7 @@
 import React from 'react';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
-import { Icon } from '@/components-next/common';
-import { SendIcon } from '@/svg-icons';
+import { ArrowUp } from 'lucide-react-native';
 import { useScaleAnimation } from '@/utils';
 import { tailwind } from '@/theme';
 import { useAppSelector, useThemedStyles } from '@/hooks';
@@ -27,7 +26,7 @@ export const SendMessageButton = (props: SendMessageButtonProps) => {
             'flex items-center justify-center h-7 w-7 rounded-full',
             isPrivateMessage ? 'bg-amber-9' : 'bg-slate-12',
           )}>
-          <Icon icon={<SendIcon />} size={16} />
+          <ArrowUp size={16} strokeWidth={2} color="#FFFFFF" />
         </Animated.View>
       </Animated.View>
     </Pressable>

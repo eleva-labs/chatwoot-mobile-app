@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Alert, Keyboard, TextInput } from 'react-native';
+import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, {
   FadeIn,
@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Lock, LockOpen } from 'lucide-react-native';
 
 import { useChatWindowContext, useRefsContext } from '@/context';
 import {
@@ -205,6 +206,13 @@ const BottomSheetContent = () => {
       Keyboard.dismiss();
       hapticSelection?.();
       setAddMenuOptionSheetState(true);
+    }
+  };
+
+  const handleTogglePrivateMode = () => {
+    if (replyEditorMode === REPLY_EDITOR_MODES.REPLY) {
+      hapticSelection?.();
+      dispatch(togglePrivateMessage(!isPrivate));
     }
   };
 
@@ -433,6 +441,26 @@ const BottomSheetContent = () => {
         ) : null}
         {!isVoiceRecorderOpen ? (
           <Animated.View style={tailwind.style('flex flex-row px-1 items-end z-20 relative')}>
+            {replyEditorMode === REPLY_EDITOR_MODES.REPLY && (
+              <Pressable
+                onPress={handleTogglePrivateMode}
+                hitSlop={4}
+                style={tailwind.style('flex items-center justify-center h-10 w-10')}>
+                {isPrivate ? (
+                  <Lock
+                    size={20}
+                    strokeWidth={2}
+                    color={tailwind.color('text-amber-9') ?? '#FFC53D'}
+                  />
+                ) : (
+                  <LockOpen
+                    size={20}
+                    strokeWidth={2}
+                    color={tailwind.color('text-slate-11') ?? '#60646C'}
+                  />
+                )}
+              </Pressable>
+            )}
             {attachmentsLength === 0 && shouldShowFileUpload && (
               <AddCommandButton
                 onPress={handleShowAddMenuOption}
