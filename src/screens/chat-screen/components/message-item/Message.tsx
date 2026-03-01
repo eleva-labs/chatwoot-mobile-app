@@ -348,7 +348,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
 
   const renderMessageContent = () => {
     if (messageType === MESSAGE_TYPES.ACTIVITY) {
-      return <ActivityBubble text={item.content} timeStamp={item.createdAt} />;
+      return <ActivityBubble text={item.content ?? ''} timeStamp={item.createdAt} />;
     }
 
     const attachments = item.attachments;

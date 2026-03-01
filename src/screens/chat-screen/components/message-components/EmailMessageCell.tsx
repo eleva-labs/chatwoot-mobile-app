@@ -79,7 +79,7 @@ export const EmailMessageCell = (props: EmailMessageCellProps) => {
           <React.Fragment>
             {isPrivate ? (
               <React.Fragment>
-                <PrivateTextCell text={content} timeStamp={createdAt} />
+                <PrivateTextCell text={content ?? ''} timeStamp={createdAt} />
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -101,7 +101,7 @@ export const EmailMessageCell = (props: EmailMessageCellProps) => {
                 ) : null}
                 {isTemplate ? (
                   <BotTextCell
-                    text={content}
+                    text={content ?? ''}
                     timeStamp={createdAt}
                     status={messageItem.status}
                     isAvatarRendered={shouldRenderAvatar}
@@ -112,7 +112,9 @@ export const EmailMessageCell = (props: EmailMessageCellProps) => {
                     errorMessage={errorMessage}
                   />
                 ) : null}
-                {isActivity ? <ActivityTextCell text={content} timeStamp={createdAt} /> : null}
+                {isActivity ? (
+                  <ActivityTextCell text={content ?? ''} timeStamp={createdAt} />
+                ) : null}
               </React.Fragment>
             )}
           </React.Fragment>

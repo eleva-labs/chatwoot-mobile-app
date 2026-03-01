@@ -70,14 +70,14 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
           <React.Fragment>
             {isPrivate ? (
               <React.Fragment>
-                <PrivateTextCell text={content} timeStamp={createdAt} />
+                <PrivateTextCell text={content ?? ''} timeStamp={createdAt} />
               </React.Fragment>
             ) : (
               <React.Fragment>
                 {(isOutgoing && !isSentByBot) || isIncoming ? (
                   <MessageTextCell
                     {...{ isActivity, isIncoming, isOutgoing }}
-                    text={content}
+                    text={content ?? ''}
                     timeStamp={createdAt}
                     status={status}
                     isAvatarRendered={shouldRenderAvatar}
@@ -92,7 +92,7 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
                 ) : null}
                 {(isOutgoing && isSentByBot) || isTemplate ? (
                   <BotTextCell
-                    text={content}
+                    text={content ?? ''}
                     timeStamp={createdAt}
                     status={messageItem.status}
                     isAvatarRendered={shouldRenderAvatar}
@@ -103,7 +103,9 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
                     errorMessage={errorMessage}
                   />
                 ) : null}
-                {isActivity ? <ActivityTextCell text={content} timeStamp={createdAt} /> : null}
+                {isActivity ? (
+                  <ActivityTextCell text={content ?? ''} timeStamp={createdAt} />
+                ) : null}
               </React.Fragment>
             )}
           </React.Fragment>
