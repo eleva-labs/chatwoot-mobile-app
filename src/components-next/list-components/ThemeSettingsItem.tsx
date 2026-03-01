@@ -41,13 +41,13 @@ export const ThemeSettingsItem: React.FC<ThemeSettingsItemProps> = ({ isLastItem
         <Animated.View style={tailwind.style('flex-1')}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-gray-950',
+              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
             )}>
             {i18n.t('SETTINGS.THEME')}
           </Animated.Text>
           <Animated.Text
             style={tailwind.style(
-              'text-sm font-inter-normal-20 leading-[18px] tracking-[0.14px] text-gray-700 mt-1',
+              'text-sm font-inter-normal-20 leading-[18px] tracking-[0.14px] text-slate-11 mt-1',
             )}>
             {getThemeLabel()}
           </Animated.Text>

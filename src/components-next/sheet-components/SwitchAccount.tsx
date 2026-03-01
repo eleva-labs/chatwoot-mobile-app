@@ -43,13 +43,13 @@ const AccountCell = ({
           <View>
             <Text
               style={themedTailwind.style(
-                'text-base capitalize text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+                'text-base capitalize text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
               )}>
               {item.name}
             </Text>
             <Text
               style={themedTailwind.style(
-                'text-sm text-gray-900 font-inter-420-20 leading-[18px] tracking-[0.16px] capitalize',
+                'text-sm text-slate-12 font-inter-420-20 leading-[18px] tracking-[0.16px] capitalize',
               )}>
               {item.role}
             </Text>

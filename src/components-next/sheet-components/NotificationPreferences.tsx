@@ -75,14 +75,14 @@ export const NotificationPreferences = () => {
           key={item}
           style={tailwind.style('flex flex-row items-center justify-between ml-2 mt-2')}>
           <Animated.Text
-            style={themedTailwind.style('flex-1 leading-[17px] tracking-[0.24px] text-gray-950')}>
+            style={themedTailwind.style('flex-1 leading-[17px] tracking-[0.24px] text-slate-12')}>
             {i18n.t(`NOTIFICATION_PREFERENCE.${NOTIFICATION_PREFERENCE_TYPES[item]}`)}
           </Animated.Text>
           <Switch
             trackColor={{ false: '#C9D7E3', true: '#1F93FF' }}
             thumbColor="#FFFFFF"
             style={styles.switch}
-            ios_backgroundColor="#C9D7E3"
+            ios_backgroundColor={tailwind.color('bg-slate-7') ?? '#C9D7E3'}
             onValueChange={() => onPushItemChange(item)}
             value={selectedPushFlags.includes(item)}
           />
