@@ -147,7 +147,7 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
                       )}>
                       <Animated.Text
                         style={tailwind.style(
-                          'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+                          'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
                         )}>
                         {option.title}
                       </Animated.Text>
