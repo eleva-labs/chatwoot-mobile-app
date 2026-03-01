@@ -38,7 +38,7 @@ const AvatarStatus = ({
     <View
       style={[
         tailwind.style(
-          'absolute border-[1.5px] border-white bg-white rounded-full bottom-[2px] right-[2px]',
+          'absolute border-[1.5px] border-solid-1 bg-solid-1 rounded-full bottom-[2px] right-[2px]',
         ),
         { borderColor: tailwind.color(parentsBackground) },
       ]}>
@@ -95,7 +95,7 @@ export const UserAvatar: React.FC<Partial<UserAvatarProps>> = props => {
     <View
       style={[
         themedTailwind.style(
-          'relative items-center justify-center bg-gray-100 rounded-full h-24 w-24',
+          'relative items-center justify-center bg-slate-3 rounded-full h-24 w-24',
         ),
         styleAdapter(style),
       ]}
@@ -109,7 +109,7 @@ export const UserAvatar: React.FC<Partial<UserAvatarProps>> = props => {
         <Text
           style={[
             themedTailwind.style(
-              'text-center uppercase text-gray-800 font-inter-medium-24 text-3xl',
+              'text-center uppercase text-slate-12 font-inter-medium-24 text-3xl',
             ),
           ]}
           adjustsFontSizeToFit

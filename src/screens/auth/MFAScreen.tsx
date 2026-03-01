@@ -98,29 +98,29 @@ const MFAScreen = () => {
   };
 
   return (
-    <SafeAreaView style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView style={tailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
+        backgroundColor={tailwind.color('bg-solid-1')}
         barStyle={'dark-content'}
       />
-      <View style={tailwind.style('flex-1 bg-white')}>
+      <View style={tailwind.style('flex-1 bg-solid-1')}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={tailwind.style('px-6 pt-8')}
           keyboardShouldPersistTaps="handled">
           <View style={tailwind.style('pt-6 gap-4')}>
             <Animated.Text
-              style={tailwind.style('text-2xl text-gray-950 font-inter-semibold-20 text-center')}>
+              style={tailwind.style('text-2xl text-slate-12 font-inter-semibold-20 text-center')}>
               {i18n.t('MFA.TITLE')}
             </Animated.Text>
           </View>
 
           {/* Tab Selector */}
-          <View style={tailwind.style('flex-row mt-8 mb-6 bg-gray-100 rounded-lg p-1')}>
+          <View style={tailwind.style('flex-row mt-8 mb-6 bg-slate-3 rounded-lg p-1')}>
             <Pressable
               style={tailwind.style(
-                `flex-1 py-3 px-4 rounded-md ${activeTab === 'authenticator' ? 'bg-white' : ''}`,
+                `flex-1 py-3 px-4 rounded-md ${activeTab === 'authenticator' ? 'bg-solid-1' : ''}`,
               )}
               onPress={() => {
                 setActiveTab('authenticator');
@@ -131,7 +131,7 @@ const MFAScreen = () => {
               <Text
                 style={tailwind.style(
                   `text-center font-inter-normal-20 ${
-                    activeTab === 'authenticator' ? 'text-gray-950' : 'text-gray-600'
+                    activeTab === 'authenticator' ? 'text-slate-12' : 'text-slate-10'
                   }`,
                 )}>
                 {i18n.t('MFA.TABS.AUTHENTICATOR_APP')}
@@ -139,7 +139,7 @@ const MFAScreen = () => {
             </Pressable>
             <Pressable
               style={tailwind.style(
-                `flex-1 py-3 px-4 rounded-md ${activeTab === 'backup' ? 'bg-white' : ''}`,
+                `flex-1 py-3 px-4 rounded-md ${activeTab === 'backup' ? 'bg-solid-1' : ''}`,
               )}
               onPress={() => {
                 setActiveTab('backup');
@@ -150,7 +150,7 @@ const MFAScreen = () => {
               <Text
                 style={tailwind.style(
                   `text-center font-inter-normal-20 ${
-                    activeTab === 'backup' ? 'text-gray-950' : 'text-gray-600'
+                    activeTab === 'backup' ? 'text-slate-12' : 'text-slate-10'
                   }`,
                 )}>
                 {i18n.t('MFA.TABS.BACKUP_CODE')}
@@ -160,7 +160,7 @@ const MFAScreen = () => {
 
           {/* Code Input */}
           <View style={tailwind.style('mt-4')}>
-            <Text style={[tailwind.style('text-gray-700 font-inter-normal-20 mb-4 pl-2')]}>
+            <Text style={[tailwind.style('text-slate-11 font-inter-normal-20 mb-4 pl-2')]}>
               {activeTab === 'authenticator'
                 ? i18n.t('MFA.INSTRUCTIONS.AUTHENTICATOR')
                 : i18n.t('MFA.INSTRUCTIONS.BACKUP')}
@@ -208,7 +208,7 @@ const MFAScreen = () => {
                   <TextInput
                     ref={backupInputRef}
                     style={tailwind.style(
-                      'w-full p-4 border-2 rounded-lg text-left border-gray-300',
+                      'w-full p-4 border-2 rounded-lg text-left border-slate-7',
                     )}
                     value={backupCode}
                     onChangeText={text => {

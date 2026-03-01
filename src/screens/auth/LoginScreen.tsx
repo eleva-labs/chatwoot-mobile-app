@@ -177,34 +177,25 @@ const LoginScreen = () => {
     }
   };
 
-  // Theme-aware styles
-  const backgroundColor = isDark ? 'bg-grayDark-50' : 'bg-white';
-  const textColor = isDark ? 'text-grayDark-950' : 'text-gray-950';
-  const inputBackgroundColor = isDark ? 'bg-grayDark-100' : 'bg-blackA-A4';
-  const placeholderTextColor = isDark ? 'text-grayDark-600' : 'text-gray-500';
-  const errorTextColor = isDark ? 'text-rubyDark-700' : 'text-ruby-900';
-  const linkTextColor = isDark ? 'text-brandDark-700' : 'text-brand-800';
-  const secondaryTextColor = isDark ? 'text-grayDark-700' : 'text-gray-900';
-
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style(`flex-1 ${backgroundColor}`)}>
+    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color(backgroundColor)}
+        backgroundColor={tailwind.color('bg-solid-1')}
         barStyle={isDark ? 'light-content' : 'dark-content'}
       />
-      <View style={tailwind.style(`flex-1 ${backgroundColor}`)}>
+      <View style={tailwind.style('flex-1 bg-solid-1')}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={tailwind.style('px-6 pt-24')}>
           <Image source={appLogo} style={tailwind.style('w-10 h-10')} resizeMode="contain" />
           {/* <View style={tailwind.style('pt-6 gap-4')}>
-            <Animated.Text style={tailwind.style('text-2xl text-gray-950 font-inter-semibold-20')}>
+            <Animated.Text style={tailwind.style('text-2xl text-slate-12 font-inter-semibold-20')}>
               {i18n.t('LOGIN.TITLE')}
             </Animated.Text>
             <Animated.Text
               style={tailwind.style(
-                'font-inter-normal-20 leading-[18px] tracking-[0.32px] text-gray-900',
+                'font-inter-normal-20 leading-[18px] tracking-[0.32px] text-slate-12',
               )}>
               {i18n.t('LOGIN.DESCRIPTION', { baseUrl })}
             </Animated.Text>
@@ -222,11 +213,11 @@ const LoginScreen = () => {
               />
 
               <View style={tailwind.style('flex-row items-center my-6')}>
-                <View style={tailwind.style('flex-1 h-px bg-gray-300')} />
-                <Animated.Text style={tailwind.style('px-4 text-sm text-gray-600')}>
+                <View style={tailwind.style('flex-1 h-px bg-slate-5')} />
+                <Animated.Text style={tailwind.style('px-4 text-sm text-slate-10')}>
                   OR
                 </Animated.Text>
-                <View style={tailwind.style('flex-1 h-px bg-gray-300')} />
+                <View style={tailwind.style('flex-1 h-px bg-slate-5')} />
               </View>
             </View>
           )}
@@ -242,26 +233,26 @@ const LoginScreen = () => {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <View style={tailwind.style('pt-8 gap-2')}>
-                <Animated.Text style={tailwind.style(`font-inter-420-20 ${textColor}`)}>
+                <Animated.Text style={tailwind.style('font-inter-420-20 text-slate-12')}>
                   {i18n.t('LOGIN.EMAIL')}
                 </Animated.Text>
                 <TextInput
                   style={[
                     tailwind.style(
                       'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
-                      `py-2 px-3 rounded-xl ${textColor} ${inputBackgroundColor}`,
+                      'py-2 px-3 rounded-xl text-slate-12 bg-slate-3',
                       'h-10',
                     ),
                   ]}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  placeholderTextColor={tailwind.color(placeholderTextColor)}
+                  placeholderTextColor={tailwind.color('text-slate-9')}
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
                 {errors.email && (
-                  <Animated.Text style={tailwind.style(`font-inter-normal-20 ${errorTextColor}`)}>
+                  <Animated.Text style={tailwind.style('font-inter-normal-20 text-ruby-11')}>
                     {errors.email.message}
                   </Animated.Text>
                 )}
@@ -281,7 +272,7 @@ const LoginScreen = () => {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <View style={tailwind.style('pt-8 gap-2')}>
-                <Animated.Text style={tailwind.style(`font-inter-420-20 ${textColor}`)}>
+                <Animated.Text style={tailwind.style('font-inter-420-20 text-slate-12')}>
                   {i18n.t('LOGIN.PASSWORD')}
                 </Animated.Text>
                 <View style={tailwind.style('relative')}>
@@ -289,14 +280,14 @@ const LoginScreen = () => {
                     style={[
                       tailwind.style(
                         'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
-                        `py-2 pl-3 pr-10 rounded-xl ${textColor} ${inputBackgroundColor}`,
+                        'py-2 pl-3 pr-10 rounded-xl text-slate-12 bg-slate-3',
                         'h-10',
                       ),
                     ]}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    placeholderTextColor={tailwind.color(placeholderTextColor)}
+                    placeholderTextColor={tailwind.color('text-slate-9')}
                     secureTextEntry={!showPassword}
                   />
                   <Pressable
@@ -306,7 +297,7 @@ const LoginScreen = () => {
                   </Pressable>
                 </View>
                 {errors.password && (
-                  <Animated.Text style={tailwind.style(`${errorTextColor}`)}>
+                  <Animated.Text style={tailwind.style('text-ruby-11')}>
                     {errors.password.message}
                   </Animated.Text>
                 )}
@@ -317,7 +308,7 @@ const LoginScreen = () => {
 
           <Pressable style={tailwind.style('pt-1 mb-8')} onPress={openResetPassword}>
             <Animated.Text
-              style={tailwind.style(`${linkTextColor} font-inter-medium-24 text-right`)}>
+              style={tailwind.style('text-iris-11 font-inter-medium-24 text-right')}>
               {i18n.t('LOGIN.FORGOT_PASSWORD')}
             </Animated.Text>
           </Pressable>
@@ -330,14 +321,14 @@ const LoginScreen = () => {
           {/* <Pressable
             style={tailwind.style('flex-row justify-center items-center mt-6')}
             onPress={openConfigInstallationURL}>
-            <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
+            <Animated.Text style={tailwind.style('text-sm text-slate-12')}>
               {i18n.t('LOGIN.CHANGE_URL')}
             </Animated.Text>
           </Pressable> */}
           <Pressable
             style={tailwind.style('flex-row justify-center items-center mt-4')}
             onPress={() => languagesModalSheetRef.current?.present()}>
-            <Animated.Text style={tailwind.style(`text-sm ${secondaryTextColor}`)}>
+            <Animated.Text style={tailwind.style('text-sm text-slate-12')}>
               {i18n.t('LOGIN.CHANGE_LANGUAGE')}
             </Animated.Text>
           </Pressable>
@@ -351,14 +342,14 @@ const LoginScreen = () => {
         ref={languagesModalSheetRef}
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={themedTailwind.style(
-          'overflow-hidden bg-gray-400 w-8 h-1 rounded-[11px]',
+          'overflow-hidden bg-slate-8 w-8 h-1 rounded-[11px]',
         )}
         detached
         enablePanDownToClose
         animationConfigs={animationConfigs}
         handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
         style={themedTailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-white')}
+        backgroundStyle={themedTailwind.style('bg-solid-1')}
         snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />
