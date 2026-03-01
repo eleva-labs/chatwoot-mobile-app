@@ -45,7 +45,6 @@ import { AddCommandButton } from './buttons/AddCommandButton';
 import { SendMessageButton } from './buttons/SendMessageButton';
 import { MessageTextInput } from './MessageTextInput';
 import { QuoteReply } from './QuoteReply';
-import { ReplyWarning } from './ReplyWarning';
 import { CannedResponses } from './CannedResponses';
 import { AttachedMedia } from '../message-components/AttachedMedia';
 import { CommandOptionsMenu } from '../message-components/CommandOptionsMenu';
@@ -401,11 +400,6 @@ const BottomSheetContent = () => {
   return (
     <AnimatedKeyboardStickyView
       style={[themedTailwind.style('bg-solid-1'), animatedInputWrapperStyle]}>
-      {!canReply && inbox && conversation && (
-        <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
-          <ReplyWarning inbox={inbox} conversation={conversation} />
-        </Animated.View>
-      )}
       {shouldShowCannedResponses && (
         <CannedResponses searchKey={messageContent} onSelect={onSelectCannedResponse} />
       )}
