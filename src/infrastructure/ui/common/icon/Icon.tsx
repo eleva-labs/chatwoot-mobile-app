@@ -4,12 +4,26 @@ import { View, ViewStyle } from 'react-native';
 
 import { tailwind } from '@infrastructure/theme';
 import { RenderPropType } from '@domain/types';
+import { NamedIcon } from './NamedIcon';
+import type { IconName, IconVariant } from './iconRegistry';
 
 export interface IconComponentProps {
   /**
-   * Svg Icon
+   * Svg Icon (JSX element) - for backward compatibility
+   * @deprecated Use `name` prop instead for better DX with autocomplete
    */
-  icon: RenderPropType;
+  icon?: RenderPropType;
+  /**
+   * Icon name in kebab-case (e.g., 'attach-file', 'bot', 'conversation')
+   * Provides autocomplete and type safety
+   */
+  name?: IconName;
+  /**
+   * Icon variant - 'default', 'filled', or 'outline' (if available)
+   * Only used when `name` prop is provided
+   * @default 'default'
+   */
+  variant?: IconVariant;
   /**
    * Bounding Box style for Icon
    */
@@ -33,8 +47,22 @@ export interface IconComponentProps {
 // makes `currentColor` in stroke/fill resolve to a themed value instead of black.
 // This Icon wrapper injects a default color (slate-11) via cloneElement.
 // Pass color={null} to skip injection for multi-color icons.
+//
+// NEW: Use the `name` prop for string-based icons with autocomplete:
+// <Icon name="bot" size={24} />
+// <Icon name="conversation" variant="filled" />
 export const Icon: React.FC<Partial<IconComponentProps>> = props => {
-  const { icon, style, size, color } = props;
+  const { icon, name, variant, style, size, color } = props;
+
+  // If name is provided, delegate to NamedIcon (new string-based API)
+  if (name) {
+    const numericSize = typeof size === 'number' ? size : 24;
+    return (
+      <NamedIcon name={name} variant={variant} size={numericSize} color={color || undefined} />
+    );
+  }
+
+  // Otherwise, use existing icon JSX behavior (backward compatibility)
   const iconAspectRatio = 1;
   const sizer = typeof size === 'number' ? `w-[${size}px]` : typeof size === 'string' ? size : '';
 
