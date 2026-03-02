@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { NativeView } from '@infrastructure/ui/native-components';
 import { Icon } from '@infrastructure/ui/common/icon';
 import { getChannelIcon } from '@infrastructure/utils';
@@ -16,12 +16,13 @@ type ChannelIndicatorProps = {
 export const ChannelIndicator = (props: ChannelIndicatorProps) => {
   const { channelType = '', medium = '' } = props.inbox || {};
   const { type = '' } = props.additionalAttributes || {};
+  const { colors } = useThemeColors();
 
   return (
     <NativeView
       style={[
         tailwind.style('pl-1 h-3 w-3 justify-center items-center'),
-        { color: tailwind.color('text-slate-11') ?? '#60646C' },
+        { color: colors.slate[11] },
       ]}>
       <Icon icon={getChannelIcon(channelType as Channel, medium, type)} size={12} />
     </NativeView>

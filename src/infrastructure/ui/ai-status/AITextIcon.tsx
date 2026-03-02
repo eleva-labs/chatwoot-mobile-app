@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { tailwind } from '@infrastructure/theme';
+import { useThemeColors } from '@infrastructure/theme';
 
 interface AITextIconProps {
   isEnabled: boolean;
@@ -9,6 +9,8 @@ interface AITextIconProps {
 }
 
 export const AITextIcon: React.FC<AITextIconProps> = ({ isEnabled, size = 16, onPress }) => {
+  const { colors } = useThemeColors();
+
   // Don't render anything when AI is not enabled
   if (!isEnabled) {
     return null;
@@ -30,7 +32,7 @@ export const AITextIcon: React.FC<AITextIconProps> = ({ isEnabled, size = 16, on
           styles.text,
           {
             fontSize: textSize,
-            color: tailwind.color('text-brand') ?? '#5d17ea', // Always use purple color when visible
+            color: colors.iris[9], // Always use purple color when visible
           },
         ]}>
         AI

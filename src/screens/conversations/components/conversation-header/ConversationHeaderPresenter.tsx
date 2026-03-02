@@ -5,7 +5,7 @@ import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 
 import { Icon } from '@infrastructure/ui/common';
 import { CheckedIcon, FilterIcon, UncheckedIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { useScaleAnimation } from '@infrastructure/utils';
 import { useHeaderAnimation } from '@infrastructure/hooks/useHeaderAnimation';
@@ -61,6 +61,7 @@ const HeaderTitle = () => {
 
 const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
+  const { colors } = useThemeColors();
 
   if (currentState === 'Filter' || currentState === 'Search') return null;
   if (currentState !== 'Select') {
@@ -79,13 +80,7 @@ const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSecti
         <Animated.View exiting={exiting} entering={entering}>
           <Icon
             size={24}
-            icon={
-              isSelectedAll ? (
-                <CheckedIcon />
-              ) : (
-                <UncheckedIcon stroke={tailwind.color('text-slate-11') ?? '#646464'} />
-              )
-            }
+            icon={isSelectedAll ? <CheckedIcon /> : <UncheckedIcon stroke={colors.slate[11]} />}
           />
         </Animated.View>
       </Pressable>
@@ -127,13 +122,14 @@ const RightSection = ({
   onRightIconPress,
 }: RightSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View style={tailwind.style('flex-1 items-end')}>
       <Pressable onPress={onRightIconPress} hitSlop={16}>
         {currentState === 'Filter' || currentState === 'Select' ? (
           <Animated.View exiting={exiting} entering={entering}>
-            <CloseIcon size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
+            <CloseIcon size={24} color={colors.slate[12]} />
           </Animated.View>
         ) : (
           <Animated.View exiting={exiting} entering={entering}>
@@ -142,10 +138,7 @@ const RightSection = ({
                 style={tailwind.style('absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-brand')}
               />
             )}
-            <Icon
-              size={24}
-              icon={<FilterIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />}
-            />
+            <Icon size={24} icon={<FilterIcon stroke={colors.slate[12]} />} />
           </Animated.View>
         )}
       </Pressable>

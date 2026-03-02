@@ -12,7 +12,7 @@ import { BlurView, BlurViewProps } from '@react-native-community/blur';
 
 import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { useRefsContext } from '@infrastructure/context';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { Icon } from '../common';
 import { useAppDispatch, useAppSelector } from '@/hooks';
@@ -140,10 +140,11 @@ const ActionItem = (props: ActionItemProps) => {
 export const ActionTabs = () => {
   const { bottom } = useSafeAreaInsets();
   const dispatch = useAppDispatch();
+  const { colors } = useThemeColors();
 
   const { actionsModalSheetRef } = useRefsContext();
 
-  const iconStroke = tailwind.color('text-slate-12') ?? '#000';
+  const iconStroke = colors.slate[12];
 
   const handleBulkChangeStatus = () => {
     dispatch(setActionState('Status'));

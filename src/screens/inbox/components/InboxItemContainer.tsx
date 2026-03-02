@@ -11,7 +11,7 @@ import { MarkAsRead, MarkAsUnRead, DeleteIcon } from '@/svg-icons';
 import { InboxItem } from './InboxItem';
 import { formatRelativeTime } from '@infrastructure/utils/dateTimeUtils';
 import { formatTimeToShortForm } from '@infrastructure/utils/dateTimeUtils';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { Icon, Swipeable } from '@infrastructure/ui';
 import { selectInboxById } from '@application/store/inbox/inboxSelectors';
 import i18n from '@infrastructure/i18n';
@@ -42,10 +42,15 @@ const ReadComponent = React.memo(() => {
 });
 
 const DeleteComponent = React.memo(() => {
+  const { semanticColors } = useThemeColors();
   return (
     <Animated.View style={tailwind.style('flex justify-center items-center')}>
       <Icon icon={<DeleteIcon />} size={24} />
-      <Animated.Text style={tailwind.style('text-sm font-inter-420-20 pt-[3px] text-white')}>
+      <Animated.Text
+        style={[
+          tailwind.style('text-sm font-inter-420-20 pt-[3px]'),
+          { color: semanticColors.textInverse },
+        ]}>
         {i18n.t('NOTIFICATION.DELETE')}
       </Animated.Text>
     </Animated.View>

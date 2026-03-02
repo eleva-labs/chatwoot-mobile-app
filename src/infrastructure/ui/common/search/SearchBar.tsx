@@ -4,7 +4,7 @@ import Animated, { withTiming } from 'react-native-reanimated';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 import { SearchIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { RenderPropType } from '@domain/types';
 import { Spinner } from '@infrastructure/ui/spinner';
 import { Icon } from '../icon';
@@ -17,6 +17,7 @@ interface SearchBarProps extends TextInputProps {
 
 export const SearchBar = (props: SearchBarProps) => {
   const { isLoading = false, prefix, isInsideBottomSheet = false, ...otherProps } = props;
+  const { colors } = useThemeColors();
 
   // Row Exit Animation
   const exiting = () => {
@@ -51,7 +52,7 @@ export const SearchBar = (props: SearchBarProps) => {
             isLoading ? 'px-8.5' : 'pl-8.5 pr-4',
           ),
         ]}
-        placeholderTextColor={tailwind.color('text-slate-12')}
+        placeholderTextColor={colors.slate[10]}
         {...otherProps}
       />
       {isLoading ? (

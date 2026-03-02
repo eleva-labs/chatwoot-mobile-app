@@ -3,7 +3,7 @@ import { Switch, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@/hooks';
 import i18n from '@infrastructure/i18n';
 import { selectNotificationSettings } from '@application/store/settings/settingsSelectors';
@@ -25,6 +25,7 @@ type NotificationPreferenceType = keyof typeof NOTIFICATION_PREFERENCE_TYPES;
 
 export const NotificationPreferences = () => {
   const themedTailwind = useThemedStyles();
+  const { colors, semanticColors } = useThemeColors();
   const {
     all_push_flags: allPushFlags,
     selected_email_flags: selectedEmailFlags,
@@ -80,12 +81,12 @@ export const NotificationPreferences = () => {
           </Animated.Text>
           <Switch
             trackColor={{
-              false: tailwind.color('bg-slate-7') ?? '#C9D7E3',
-              true: tailwind.color('bg-iris-9') ?? '#1F93FF',
+              false: colors.slate[7],
+              true: colors.iris[9],
             }}
-            thumbColor="#FFFFFF" // Intentional: white thumb on colored track, consistent across themes
+            thumbColor={semanticColors.textInverse}
             style={styles.switch}
-            ios_backgroundColor={tailwind.color('bg-slate-7') ?? '#C9D7E3'}
+            ios_backgroundColor={colors.slate[7]}
             onValueChange={() => onPushItemChange(item)}
             value={selectedPushFlags.includes(item)}
           />

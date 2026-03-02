@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, ViewStyle } from 'react-native';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { RenderPropType } from '@domain/types';
 import { NamedIcon } from './NamedIcon';
 import type { IconName, IconVariant } from './iconRegistry';
@@ -53,6 +53,7 @@ export interface IconComponentProps {
 // <Icon name="conversation" variant="filled" />
 export const Icon: React.FC<Partial<IconComponentProps>> = props => {
   const { icon, name, variant, style, size, color } = props;
+  const { colors } = useThemeColors();
 
   // If name is provided, delegate to NamedIcon (new string-based API)
   if (name) {
@@ -66,9 +67,8 @@ export const Icon: React.FC<Partial<IconComponentProps>> = props => {
   const iconAspectRatio = 1;
   const sizer = typeof size === 'number' ? `w-[${size}px]` : typeof size === 'string' ? size : '';
 
-  // Resolve default icon color: explicit prop > slate-11 > fallback hex
-  const resolvedColor =
-    color === null ? undefined : (color ?? tailwind.color('text-slate-11') ?? '#6B7280');
+  // Resolve default icon color: explicit prop > slate-11 theme token
+  const resolvedColor = color === null ? undefined : (color ?? colors.slate[11]);
 
   // Inject `color` into the SVG icon element via cloneElement so that
   // `currentColor` in react-native-svg resolves to a themed value

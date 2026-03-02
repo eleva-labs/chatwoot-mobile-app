@@ -21,7 +21,7 @@ import { resetNotifications } from '@application/store/notification/notification
 import { clearAllContacts } from '@application/store/contact/contactSlice';
 
 import i18n from '@infrastructure/i18n';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@/hooks';
 
 import {
@@ -146,6 +146,7 @@ const SettingsScreen = () => {
 
   const { theme, setTheme, isDark } = useTheme();
   const themedTailwind = useThemedStyles();
+  const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
 
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -240,7 +241,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_AVAILABILITY'),
-      icon: <SwitchIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <SwitchIcon stroke={colors.slate[12]} />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => openSheet(),
@@ -248,7 +249,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.NOTIFICATIONS'),
-      icon: <NotificationIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <NotificationIcon stroke={colors.slate[12]} />,
       subtitle: '',
       subtitleType: 'light',
       disabled: !hasConversationPermission,
@@ -258,7 +259,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_LANGUAGE'),
-      icon: <TranslateIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <TranslateIcon stroke={colors.slate[12]} />,
       subtitle: LANGUAGES[activeLocale as keyof typeof LANGUAGES],
       subtitleType: 'light',
       onPressListItem: () => languagesModalSheetRef.current?.present(),
@@ -266,7 +267,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.THEME'),
-      icon: <ThemeIcon color={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <ThemeIcon color={colors.slate[12]} />,
       subtitle: getThemeLabel(),
       subtitleType: 'light',
       onPressListItem: () => {
@@ -281,7 +282,7 @@ const SettingsScreen = () => {
     {
       hasChevron: enableAccountSwitch,
       title: i18n.t('SETTINGS.SWITCH_ACCOUNT'),
-      icon: <SwitchIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <SwitchIcon stroke={colors.slate[12]} />,
       subtitle: activeAccountName,
       subtitleType: 'light',
       onPressListItem: () => {

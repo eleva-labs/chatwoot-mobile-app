@@ -5,7 +5,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import * as Sentry from '@sentry/react-native';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { AttributeListType } from '@domain/types';
 import { Icon } from '@infrastructure/ui/common';
 import { showToast } from '@infrastructure/utils/toastUtils';
@@ -18,6 +18,7 @@ type AttributeItemProps = {
 
 const AttributeItem = (props: AttributeItemProps) => {
   const { listItem, index, isLastItem } = props;
+  const { colors } = useThemeColors();
 
   const handlePress = () => {
     if (formattedValue) {
@@ -86,9 +87,7 @@ const AttributeItem = (props: AttributeItemProps) => {
               )}>
               {formattedValue}
             </Animated.Text>
-            {listItem.hasChevron ? (
-              <CaretRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
-            ) : null}
+            {listItem.hasChevron ? <CaretRight size={20} color={colors.slate[12]} /> : null}
           </Animated.View>
         </Animated.View>
       </Animated.View>

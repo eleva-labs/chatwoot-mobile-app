@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Text } from 'react-native';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { NativeView } from '@infrastructure/ui/native-components';
 import { SlaMissedIcon } from '@/svg-icons';
@@ -27,6 +27,7 @@ export const SLAIndicator = ({
   onSLAStatusChange: (hasThreshold: boolean) => void;
 }) => {
   const themedTailwind = useThemedStyles();
+  const { colors } = useThemeColors();
   const [slaStatus, setSlaStatus] = useState<SLAStatus | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -83,13 +84,7 @@ export const SLAIndicator = ({
 
   return (
     <NativeView style={tailwind.style('flex flex-row justify-center items-center')}>
-      <SlaMissedIcon
-        color={
-          slaStatus?.isSlaMissed
-            ? (tailwind.color('text-ruby-9') ?? '#E13D45')
-            : (tailwind.color('text-slate-8') ?? '#BBBBBB')
-        }
-      />
+      <SlaMissedIcon color={slaStatus?.isSlaMissed ? colors.ruby[9] : colors.slate[8]} />
       <Text
         style={themedTailwind.style(
           'pl-1 text-sm leading-[20px] text-center',

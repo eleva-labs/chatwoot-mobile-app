@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@infrastructure/theme';
+import { useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { Icon } from '../common';
@@ -55,6 +55,7 @@ export const IconButton = ({
   const { handlers, animatedStyle } = useScaleAnimation();
   const haptic = useHaptic(isDestructive ? 'medium' : 'selection');
   const themedTailwind = useThemedStyles();
+  const { semanticColors } = useThemeColors();
 
   const handleButtonPress = useCallback(() => {
     if (!disabled) {
@@ -75,10 +76,7 @@ export const IconButton = ({
         accessibilityState={{ disabled }}
         style={({ pressed }) => getButtonStyles(isPrimary, pressed, themedTailwind)}
         {...handlers}>
-        <Icon
-          icon={<PhoneIcon strokeWidth={2} stroke={tailwind.color('text-white') ?? '#FFFFFF'} />}
-          size={24}
-        />
+        <Icon icon={<PhoneIcon strokeWidth={2} stroke={semanticColors.textInverse} />} size={24} />
         <Animated.Text style={getTextStyles(isPrimary, isDestructive, themedTailwind)}>
           {text}
         </Animated.Text>

@@ -10,7 +10,7 @@ interface AIHeaderButtonProps {
 
 export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPress }) => {
   const { colors, semanticColors } = useThemeColors();
-  const backgroundColor = isEnabled ? (tailwind.color('bg-brand') ?? '#5d17ea') : colors.slate[3];
+  const backgroundColor = isEnabled ? colors.iris[9] : colors.slate[3];
   const textColor = isEnabled ? semanticColors.textInverse : colors.slate[11];
 
   return (

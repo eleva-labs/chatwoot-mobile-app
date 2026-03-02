@@ -5,7 +5,7 @@ import { CaretRight } from '@/svg-icons/common/CaretRight';
 
 import { GenericListType } from '@domain/types';
 import { Icon } from '@infrastructure/ui/common/icon';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 
 type GenericListProps = {
@@ -22,6 +22,7 @@ type ListItemProps = {
 const ListItem = (props: ListItemProps) => {
   const { listItem, index, isLastItem } = props;
   const themedTailwind = useThemedStyles();
+  const { colors } = useThemeColors();
 
   return (
     <Pressable
@@ -62,9 +63,7 @@ const ListItem = (props: ListItemProps) => {
               )}>
               {listItem.subtitle}
             </Animated.Text>
-            {listItem.hasChevron ? (
-              <CaretRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
-            ) : null}
+            {listItem.hasChevron ? <CaretRight size={20} color={colors.slate[12]} /> : null}
           </Animated.View>
         </Animated.View>
       </Animated.View>
