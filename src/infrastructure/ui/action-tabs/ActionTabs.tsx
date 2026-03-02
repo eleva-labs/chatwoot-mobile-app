@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   listShadow:
     Platform.select({
       ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
+        shadowColor: 'rgba(0,0,0,0.25)', // Platform shadow, theme-independent
         shadowOffset: { width: 0, height: 0.15 },
         shadowRadius: 2,
         shadowOpacity: 0.35,

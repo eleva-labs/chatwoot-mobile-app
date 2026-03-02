@@ -57,7 +57,6 @@ type DisplayState = 'pending' | 'running' | 'completed' | 'error';
 interface StateDisplayData {
   iconName: 'wrench' | 'loader' | 'check' | 'close';
   iconColorToken: string;
-  iconColorFallback: string;
   labelKey: string;
   accentColor: AIAccentColor;
 }
@@ -79,28 +78,24 @@ const STATE_DATA: Record<DisplayState, StateDisplayData> = {
   pending: {
     iconName: 'wrench',
     iconColorToken: 'slate-10',
-    iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.PENDING',
     accentColor: 'slate',
   },
   running: {
     iconName: 'loader',
     iconColorToken: 'slate-10',
-    iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.RUNNING',
     accentColor: 'slate',
   },
   completed: {
     iconName: 'check',
     iconColorToken: 'teal-9',
-    iconColorFallback: '#12A594',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.COMPLETED',
     accentColor: 'teal',
   },
   error: {
     iconName: 'close',
     iconColorToken: 'ruby-9',
-    iconColorFallback: '#E5484D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.ERROR',
     accentColor: 'ruby',
   },

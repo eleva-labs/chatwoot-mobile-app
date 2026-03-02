@@ -4,7 +4,6 @@ import { useThemeColors } from '@infrastructure/theme';
 interface IconProps {
   size?: number;
   color?: string;
-  stroke?: string;
   [key: string]: unknown;
 }
 

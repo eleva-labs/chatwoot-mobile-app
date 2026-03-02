@@ -15,6 +15,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useAIChatRegistries } from '@presentation/ai-chat/hooks/ai-assistant/useAIChatProvider';
 import { AITextPart } from './AITextPart';
@@ -63,10 +64,12 @@ interface PartErrorBoundaryState {
   error: Error | null;
 }
 
-class PartErrorBoundary extends React.Component<
-  { children: React.ReactNode; partType: string },
-  PartErrorBoundaryState
-> {
+interface PartErrorBoundaryProps {
+  children: React.ReactNode;
+  partType: string;
+}
+
+class PartErrorBoundary extends React.Component<PartErrorBoundaryProps, PartErrorBoundaryState> {
   state: PartErrorBoundaryState = { hasError: false, error: null };
 
   static getDerivedStateFromError(error: Error): PartErrorBoundaryState {
@@ -76,20 +79,36 @@ class PartErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       if (__DEV__) {
-        return (
-          <View
-            style={{ padding: 8, backgroundColor: '#FFF3CD', borderRadius: 4, marginVertical: 2 }}>
-            <Text style={{ fontSize: 11, fontFamily: 'monospace', color: '#856404' }}>
-              Error in custom part renderer ({this.props.partType}): {this.state.error?.message}
-            </Text>
-          </View>
-        );
+        return <PartErrorDisplay partType={this.props.partType} error={this.state.error} />;
       }
       return null;
     }
     return this.props.children;
   }
 }
+
+/**
+ * Functional component for error display with theme support
+ */
+const PartErrorDisplay: React.FC<{ partType: string; error: Error | null }> = ({
+  partType,
+  error,
+}) => {
+  const { colors } = useThemeColors();
+  return (
+    <View
+      style={{
+        padding: 8,
+        backgroundColor: colors.amber[3],
+        borderRadius: 4,
+        marginVertical: 2,
+      }}>
+      <Text style={{ fontSize: 11, fontFamily: 'monospace', color: colors.amber[11] }}>
+        Error in custom part renderer ({partType}): {error?.message}
+      </Text>
+    </View>
+  );
+};
 
 // ============================================================================
 // Component

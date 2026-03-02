@@ -7,7 +7,7 @@ import type { ComponentType } from 'react';
 export type IconName =
   | 'add'
   | 'add-participant'
-  | 'ai-assisst'
+  | 'ai-assist'
   | 'ai-on'
   | 'assign'
   | 'attach-file'
@@ -127,15 +127,22 @@ export type IconName =
 export type IconVariant = 'default' | 'filled' | 'outline';
 
 /**
+ * Icon component props interface
+ */
+export interface IconComponentProps {
+  size?: number;
+  color?: string;
+  strokeWidth?: number;
+  [key: string]: unknown;
+}
+
+/**
  * Icon registry entry - maps variants to components
  */
 export interface IconRegistryEntry {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  default: ComponentType<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filled?: ComponentType<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  outline?: ComponentType<any>;
+  default: ComponentType<IconComponentProps>;
+  filled?: ComponentType<IconComponentProps>;
+  outline?: ComponentType<IconComponentProps>;
 }
 
 /**
@@ -147,7 +154,7 @@ export interface IconRegistryEntry {
 export const iconRegistry: Record<IconName, IconRegistryEntry> = {
   add: { default: Icons.AddIcon },
   'add-participant': { default: Icons.AddParticipant },
-  'ai-assisst': { default: Icons.AIAssisst },
+  'ai-assist': { default: Icons.AIAssist },
   'ai-on': { default: Icons.AIOnIcon },
   assign: { default: Icons.AssignIcon },
   'attach-file': { default: Icons.AttachFileIcon },

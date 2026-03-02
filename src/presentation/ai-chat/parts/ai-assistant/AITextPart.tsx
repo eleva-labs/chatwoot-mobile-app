@@ -122,6 +122,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   // Assistant: slate-12 text on slate-3 background
   const textColor = isUser ? colors.iris[12] : colors.slate[12];
   const linkColor = colors.blue[9];
+  // White overlay with 15% opacity for readability on iris-3 user message background
   const codeBackground = isUser ? 'rgba(255,255,255,0.15)' : colors.slate[3];
   const cursorColor = isUser ? colors.iris[12] : colors.slate[9];
 

@@ -172,3 +172,17 @@ For each file:
 - Test fixtures and developer tools have lower priority
 - Keep brand colors in theme definition files (unified.ts, semantic.ts)
 - When in doubt, use semantic colors over direct scale values
+
+## Icon Default Colors Reference
+
+Icons use different default colors based on their semantic purpose:
+
+| Default Color | Radix Token | Usage | Examples |
+|---------------|-------------|-------|----------|
+| **High-Contrast Neutral** | `colors.slate[12]` | Close buttons, navigation icons, interactive UI elements | CloseIcon, ChevronLeft, CaretRight |
+| **Low-Contrast Neutral** | `colors.slate[11]` | General utility icons, secondary actions | SearchIcon, FilterIcon, SettingsIcon |
+| **Subtle Neutral** | `colors.slate[8]` | Low-emphasis icons, social media badges | Channel icons (Facebook, WhatsApp, Line) |
+| **AI/Bot Purple** | `colors.iris[9]` | AI features, bot interactions | AIOnIcon, BotIcon, AIAssist |
+| **Primary Action Blue** | `colors.blue[9]` | Primary interactive icons (context-dependent) | ConversationIcon (when active) |
+
+**Note:** These are *default* colors. All icons accept a `color` prop to override the default for specific contexts.
