@@ -1,18 +1,21 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { Loader2 } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '@domain/types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const LoadingIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M12 2V6M12 18V22M6 12H2M22 12H18M19.0784 19.0784L16.25 16.25M19.0784 4.99994L16.25 7.82837M4.92157 19.0784L7.75 16.25M4.92157 4.99994L7.75 7.82837"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * LoadingIcon - Proxies to Lucide Loader2
+ *
+ * @migrated 2026-03-02 (Cycle 2 Phase 1+2)
+ * @lucide https://lucide.dev/icons/loader-2
+ * @usage 3 files
+ */
+export const LoadingIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <Loader2 color={iconColor} size={size} {...props} />;
 };
