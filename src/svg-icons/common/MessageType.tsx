@@ -1,35 +1,33 @@
-import React from 'react';
-import Svg, { G, Path, Rect } from 'react-native-svg';
+import { Lock, CornerUpLeft } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-export const PrivateNoteIcon = ({
-  stroke = 'currentColor',
-  color,
-}: {
-  stroke?: string;
+interface IconProps {
+  size?: number;
   color?: string;
-}) => {
-  return (
-    <Svg width="14" height="14" viewBox="0 0 24 24" color={color}>
-      <G fill="none" stroke={stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-        <Rect width="18" height="11" x="3" y="11" rx="2" ry="2"></Rect>
-        <Path d="M7 11V7a5 5 0 0 1 10 0v4"></Path>
-      </G>
-    </Svg>
-  );
+  stroke?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * PrivateNoteIcon - Proxies to Lucide Lock
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 6)
+ * @lucide https://lucide.dev/icons/lock
+ */
+export const PrivateNoteIcon = ({ color, size = 14, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[11];
+  return <Lock color={iconColor} size={size} {...props} />;
 };
-export const OutgoingIcon = ({
-  stroke = 'currentColor',
-  color,
-}: {
-  stroke?: string;
-  color?: string;
-}) => {
-  return (
-    <Svg width="14" height="16" viewBox="0 0 24 24" color={color}>
-      <G fill="none" stroke={stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-        <Path d="M9 14L4 9l5-5"></Path>
-        <Path d="M20 20v-7a4 4 0 0 0-4-4H4"></Path>
-      </G>
-    </Svg>
-  );
+
+/**
+ * OutgoingIcon - Proxies to Lucide CornerUpLeft
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 6)
+ * @lucide https://lucide.dev/icons/corner-up-left
+ */
+export const OutgoingIcon = ({ color, size = 14, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <CornerUpLeft color={iconColor} size={size} {...props} />;
 };

@@ -1,17 +1,20 @@
-import React from 'react';
-import Svg, { G, Mask, Rect } from 'react-native-svg';
+import { BarChart3 } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-export const PriorityIcon = () => {
-  return (
-    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <Mask id="mask0_2222_48128" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-        <Rect width="24" height="24" fill="#ED8A5C" />
-      </Mask>
-      <G mask="url(#mask0_2222_48128)">
-        <Rect x="4" y="12" width="4" height="8" rx="2" fill="#FFC53D" />
-        <Rect x="10" y="8" width="4" height="12" rx="2" fill="#FFC53D" />
-        <Rect x="16" y="4" width="4" height="16" rx="2" fill="#FFC53D" />
-      </G>
-    </Svg>
-  );
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * PriorityIcon - Proxies to Lucide BarChart3
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 6)
+ * @lucide https://lucide.dev/icons/bar-chart-3
+ */
+export const PriorityIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.amber[9];
+  return <BarChart3 color={iconColor} size={size} {...props} />;
 };
