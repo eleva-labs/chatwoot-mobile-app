@@ -6,7 +6,7 @@ import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 
 import { Spinner } from '@infrastructure/ui';
 import i18n from '@infrastructure/i18n';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { Agent, Macro } from '@domain/types';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { useAppSelector } from '@/hooks';
@@ -30,6 +30,7 @@ type MacroDetailsProps = {
 
 const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
   const hapticSelection = useHaptic();
+  const { colors } = useThemeColors();
   const labels = useAppSelector(selectAllLabels);
   const teams = useAppSelector(selectAllTeams);
   const { executeMacro, executingMacroId, conversationId } = useMacroContext();
@@ -82,7 +83,7 @@ const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
       <View style={tailwind.style('flex-row items-center p-4')}>
         <Pressable onPress={onBack} style={tailwind.style('flex-1 flex-row items-center')}>
           <View style={tailwind.style('mr-1')}>
-            <ChevronLeft size={18} color={tailwind.color('text-slate-12') ?? '#202020'} />
+            <ChevronLeft size={18} color={colors.slate[12]} />
           </View>
           <Animated.Text style={tailwind.style('flex-1 text-base')} numberOfLines={1}>
             {macro.name}

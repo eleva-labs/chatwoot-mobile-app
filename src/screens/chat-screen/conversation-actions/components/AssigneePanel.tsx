@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
 import { Avatar, Icon } from '@infrastructure/ui';
 import { UnassignedIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { Agent } from '@domain/types';
 import i18n from '@infrastructure/i18n';
 
@@ -23,6 +23,7 @@ const assigneeAvatar = (assignee: Agent | null) => {
 };
 
 const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
+  const { colors } = useThemeColors();
   const assigneeName = assignee ? assignee.name : i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EMPTY');
   const assigneeActionText = assignee
     ? i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EDIT')
@@ -50,7 +51,7 @@ const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
               )}>
               {assigneeActionText}
             </Animated.Text>
-            <CaretRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
+            <CaretRight size={20} color={colors.slate[12]} />
           </Animated.View>
         </Animated.View>
       </Animated.View>

@@ -36,7 +36,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { CopyIcon } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { useThemedStyles } from '@/hooks';
-import { tailwind } from '@infrastructure/theme';
+import { useThemeColors } from '@infrastructure/theme';
 import { Dimensions, View } from 'react-native';
 import { Avatar } from '@infrastructure/ui';
 
@@ -209,6 +209,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
   const { messageType, contentType, status, sender, groupWithNext, groupWithPrevious } = item;
 
   const hapticSelection = useHaptic();
+  const { colors } = useThemeColors();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
   const channel = conversation?.channel || conversation?.meta?.channel;
 
@@ -268,7 +269,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.COPY'),
-        icon: <CopyIcon stroke={tailwind.color('text-slate-12') ?? '#1C2024'} />,
+        icon: <CopyIcon stroke={colors.slate[12]} />,
         handleOnPressMenuOption: () => handleCopyMessage(content),
         destructive: false,
       });
@@ -277,7 +278,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasAttachments || hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.DELETE_MESSAGE'),
-        icon: <Trash size={20} color={tailwind.color('text-ruby-9') ?? '#E54666'} />,
+        icon: <Trash size={20} color={colors.ruby[9]} />,
         handleOnPressMenuOption: () => handleDeleteMessage(message.id),
         destructive: true,
       });

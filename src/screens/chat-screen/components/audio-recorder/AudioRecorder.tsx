@@ -14,7 +14,7 @@ import { TEXT_INPUT_CONTAINER_HEIGHT } from '@domain/constants';
 import { useChatWindowContext } from '@infrastructure/context';
 import i18n from '@infrastructure/i18n';
 import { SendIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { Icon } from '@infrastructure/ui';
 import { PauseIcon, PlayIcon } from '../message-components';
 import { useAppDispatch, useAppSelector } from '@/hooks';
@@ -73,6 +73,7 @@ export const AudioRecorder = ({
   const localRecordedAudioCacheFilePaths = useAppSelector(selectLocalRecordedAudioCacheFilePaths);
   const dispatch = useAppDispatch();
   const [isSending, setIsSending] = useState(false);
+  const { colors } = useThemeColors();
 
   const { setIsVoiceRecorderOpen } = useChatWindowContext();
 
@@ -234,7 +235,7 @@ export const AudioRecorder = ({
       <Pressable
         onPress={deleteRecorder}
         style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
-        <Trash size={28} color={tailwind.color('text-danger-9') ?? '#E13D45'} />
+        <Trash size={28} color={colors.ruby[9]} />
       </Pressable>
       <Animated.View
         style={tailwind.style(

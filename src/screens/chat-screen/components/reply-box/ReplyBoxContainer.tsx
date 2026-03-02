@@ -27,7 +27,7 @@ import {
 } from '@infrastructure/utils';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@domain/constants';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import {
   selectMessageContent,
   selectAttachments,
@@ -84,6 +84,7 @@ const SHEET_APPEAR_SPRING_CONFIG = {
 const AnimatedKeyboardStickyView = Animated.createAnimatedComponent(KeyboardStickyView);
 const BottomSheetContent = () => {
   const themedTailwind = useThemedStyles();
+  const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
   const dispatch = useAppDispatch();
   const { bottom } = useSafeAreaInsets();
@@ -466,17 +467,9 @@ const BottomSheetContent = () => {
               hitSlop={4}
               style={tailwind.style('flex items-center justify-center h-10 w-10')}>
               {isPrivate ? (
-                <Lock
-                  size={20}
-                  strokeWidth={2}
-                  color={tailwind.color('text-amber-9') ?? '#FFC53D'}
-                />
+                <Lock size={20} strokeWidth={2} color={colors.amber[9]} />
               ) : (
-                <LockOpen
-                  size={20}
-                  strokeWidth={2}
-                  color={tailwind.color('text-slate-11') ?? '#60646C'}
-                />
+                <LockOpen size={20} strokeWidth={2} color={colors.slate[11]} />
               )}
             </Pressable>
             {(messageContent.length > 0 || attachmentsLength > 0) && (

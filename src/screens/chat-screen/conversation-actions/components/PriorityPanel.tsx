@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
 import { Icon } from '@infrastructure/ui';
 import { PriorityIcon, NoPriorityIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { ConversationPriority } from '@domain/types';
 import i18n from '@infrastructure/i18n';
 
@@ -21,6 +21,7 @@ const priorityAvatar = (priority: ConversationPriority) => {
 };
 
 const PriorityPanel = ({ priority, onPress }: PriorityPanelProps) => {
+  const { colors } = useThemeColors();
   const priorityName = priority
     ? i18n.t(`CONVERSATION.PRIORITY.OPTIONS.${priority.toUpperCase()}`)
     : i18n.t('CONVERSATION.ACTIONS.PRIORITY.EMPTY');
@@ -47,7 +48,7 @@ const PriorityPanel = ({ priority, onPress }: PriorityPanelProps) => {
               )}>
               {i18n.t('CONVERSATION.ACTIONS.PRIORITY.EDIT')}
             </Animated.Text>
-            <CaretRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
+            <CaretRight size={20} color={colors.slate[12]} />
           </Animated.View>
         </Animated.View>
       </Animated.View>
