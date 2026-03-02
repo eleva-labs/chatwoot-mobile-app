@@ -21,7 +21,7 @@ import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 import { Brain } from 'lucide-react-native';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useTheme } from '@infrastructure/context/ThemeContext';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
+import { useThemeColors } from '@infrastructure/theme';
 import { AICollapsible } from './AICollapsible';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 
@@ -69,11 +69,11 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   const { t } = useAIi18n();
   const irisTokens = getCollapsible('iris');
   const { themeVersion } = useTheme();
-  const resolveColor = useResolveColor();
+  const { colors } = useThemeColors();
 
-  const reasoningTextColor = resolveColor('text-slate-12', 'rgb(28, 32, 36)');
-  const reasoningCodeBg = resolveColor('bg-slate-3', 'rgb(240, 240, 243)');
-  const reasoningLinkColor = resolveColor('text-blue-9', 'rgb(39, 129, 246)');
+  const reasoningTextColor = colors.slate[12];
+  const reasoningCodeBg = colors.slate[3];
+  const reasoningLinkColor = colors.blue[9];
 
   // Markdown styles for reasoning content (smaller than main text)
   const markdownStyles = useMemo(
@@ -129,13 +129,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
       accentColor="iris"
       isStreaming={isStreaming}
       defaultExpanded={defaultExpanded}
-      icon={
-        <Brain
-          size={14}
-          color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')}
-          strokeWidth={1.5}
-        />
-      }>
+      icon={<Brain size={14} color={colors.iris[9]} strokeWidth={1.5} />}>
       <ScrollView
         style={style('max-h-64')}
         contentContainerStyle={style('pr-1')}
@@ -166,11 +160,7 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         ) : (
           // Loading state while waiting for content
           <View style={style('flex-row items-center')}>
-            <ActivityIndicator
-              size="small"
-              color={resolveColor('text-iris-9', 'rgb(91, 91, 214)')}
-              style={style('mr-2')}
-            />
+            <ActivityIndicator size="small" color={colors.iris[9]} style={style('mr-2')} />
             <Text style={style('text-sm font-inter-normal-20 italic', tokens.text.secondary)}>
               {t('AI_ASSISTANT.CHAT.REASONING.PROCESSING')}
             </Text>

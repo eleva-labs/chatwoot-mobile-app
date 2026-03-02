@@ -25,8 +25,8 @@ import Animated, {
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
 import { useTheme } from '@infrastructure/context/ThemeContext';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 
 // Import domain types (single source of truth)
 import type { TextPart } from '@domain/types/ai-chat/parts';
@@ -70,7 +70,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
 }) => {
   const { style } = useAIStyles();
   const { themeVersion } = useTheme();
-  const resolveColor = useResolveColor();
+  const { colors } = useThemeColors();
 
   const isUser = role === 'user';
   const text = part.text || '';
@@ -120,16 +120,10 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   // Get colors from theme context (extraction-ready)
   // User: iris-12 text on iris-3 background
   // Assistant: slate-12 text on slate-3 background
-  const textColor = isUser
-    ? resolveColor('text-iris-12', 'rgb(39, 41, 98)')
-    : resolveColor('text-slate-12', 'rgb(28, 32, 36)');
-  const linkColor = resolveColor('text-blue-9', 'rgb(39, 129, 246)');
-  const codeBackground = isUser
-    ? 'rgba(255,255,255,0.15)'
-    : resolveColor('bg-slate-3', 'rgb(240, 240, 243)');
-  const cursorColor = isUser
-    ? resolveColor('text-iris-12', 'rgb(39, 41, 98)')
-    : resolveColor('text-slate-9', 'rgb(139, 141, 152)');
+  const textColor = isUser ? colors.iris[12] : colors.slate[12];
+  const linkColor = colors.blue[9];
+  const codeBackground = isUser ? 'rgba(255,255,255,0.15)' : colors.slate[3];
+  const cursorColor = isUser ? colors.iris[12] : colors.slate[9];
 
   // Markdown styles based on role using Radix colors (memoized for performance)
   const markdownStyles = useMemo(

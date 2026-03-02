@@ -17,8 +17,8 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
 import { CircleCheck, CircleX, Wrench, LoaderCircle } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles, type AIAccentColor } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import { AICollapsible } from './AICollapsible';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 import {
@@ -78,28 +78,28 @@ interface StateDisplayData {
 const STATE_DATA: Record<DisplayState, StateDisplayData> = {
   pending: {
     iconName: 'wrench',
-    iconColorToken: 'text-slate-10',
+    iconColorToken: 'slate-10',
     iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.PENDING',
     accentColor: 'slate',
   },
   running: {
     iconName: 'loader',
-    iconColorToken: 'text-slate-10',
+    iconColorToken: 'slate-10',
     iconColorFallback: '#80838D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.RUNNING',
     accentColor: 'slate',
   },
   completed: {
     iconName: 'check',
-    iconColorToken: 'text-teal-9',
+    iconColorToken: 'teal-9',
     iconColorFallback: '#12A594',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.COMPLETED',
     accentColor: 'teal',
   },
   error: {
     iconName: 'close',
-    iconColorToken: 'text-ruby-9',
+    iconColorToken: 'ruby-9',
     iconColorFallback: '#E5484D',
     labelKey: 'AI_ASSISTANT.CHAT.TOOLS.ERROR',
     accentColor: 'ruby',
@@ -109,13 +109,15 @@ const STATE_DATA: Record<DisplayState, StateDisplayData> = {
 /**
  * Create the icon element at render time (theme-aware).
  * Called inside useMemo so icons update when theme changes.
- * Accepts a resolveColor function for extraction readiness.
  */
 function renderStateIcon(
   data: StateDisplayData,
-  resolveColor: (token: string, fallback: string) => string,
+  colors: ReturnType<typeof useThemeColors>['colors'],
 ): React.ReactNode {
-  const color = resolveColor(data.iconColorToken, data.iconColorFallback);
+  const colorParts = data.iconColorToken.split('-');
+  const scale = colorParts[0] as 'slate' | 'teal' | 'ruby';
+  const step = parseInt(colorParts[1], 10) as 9 | 10;
+  const color = colors[scale][step];
   const iconProps = { size: 14, color, strokeWidth: 1.5 };
   const iconMap = {
     wrench: <Wrench {...iconProps} />,
@@ -172,12 +174,12 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
 }) => {
   const { style, tokens } = useAIStyles();
   const { t } = useAIi18n();
-  const resolveColor = useResolveColor();
+  const { colors } = useThemeColors();
 
   // Derive state and display configuration using domain helper
   const state = useMemo(() => getDisplayState(part), [part]);
   const data = STATE_DATA[state];
-  const iconElement = useMemo(() => renderStateIcon(data, resolveColor), [data, resolveColor]);
+  const iconElement = useMemo(() => renderStateIcon(data, colors), [data, colors]);
 
   // Get input and output content separately
   const hasInput = useMemo(() => {

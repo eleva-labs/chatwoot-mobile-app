@@ -2,8 +2,8 @@ import React, { useState, useCallback, useRef } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { Mic, Send } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import type { AIInputFieldProps } from '@presentation/ai-chat/containers/ai-assistant/types';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 
@@ -12,7 +12,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
   const inputRef = useRef<TextInput>(null);
   const { style, tokens } = useAIStyles();
   const { t } = useAIi18n();
-  const resolveColor = useResolveColor();
+  const { colors } = useThemeColors();
   const inputTokens = tokens.input;
   const [isFocused, setIsFocused] = useState(false);
 
@@ -47,7 +47,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
           value={text}
           onChangeText={setText}
           placeholder={t('AI_ASSISTANT.CHAT.INPUT.PLACEHOLDER')}
-          placeholderTextColor={resolveColor('text-slate-9', '#696e77')}
+          placeholderTextColor={colors.slate[9]}
           style={[
             style(
               'flex-1 text-sm font-inter-normal-20 min-h-[32px] max-h-[128px]',
@@ -87,7 +87,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
               accessibilityLabel="Voice input (coming soon)"
               accessibilityState={{ disabled: true }}>
               <View style={style('w-7 h-7 rounded-full items-center justify-center')}>
-                <Mic size={16} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
+                <Mic size={16} color={colors.slate[9]} strokeWidth={2} />
               </View>
             </Pressable>
             {/* Send button */}

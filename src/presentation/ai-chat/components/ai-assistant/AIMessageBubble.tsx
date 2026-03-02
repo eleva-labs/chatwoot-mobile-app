@@ -19,8 +19,8 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { useHaptic } from '@infrastructure/utils';
 import { Copy } from 'lucide-react-native';
 import { TickIcon } from '@/svg-icons/common/TickIcon';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import type { AIMessageBubbleProps } from '@presentation/ai-chat/containers/ai-assistant/types';
 import { AIPartRenderer } from '@presentation/ai-chat/parts/ai-assistant/AIPartRenderer';
 import { Avatar } from '@infrastructure/ui/common/avatar/Avatar';
@@ -45,7 +45,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
 }) => {
   const { style, message: getMessageTokens } = useAIStyles();
   const { t } = useAIi18n();
-  const resolveColor = useResolveColor();
+  const { colors } = useThemeColors();
   const { isDark } = useTheme();
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const defaultHaptic = useHaptic('success');
@@ -168,10 +168,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
                 'px-4 py-2 rounded-2xl rounded-bl-sm overflow-hidden',
                 messageTokens.background,
               )}>
-              <ActivityIndicator
-                size="small"
-                color={resolveColor('text-slate-9', 'rgb(139, 141, 152)')}
-              />
+              <ActivityIndicator size="small" color={colors.slate[9]} />
             </View>
           ) : hasTextContent ? (
             <View
@@ -217,13 +214,9 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
                 style={style('p-1.5 rounded-md')}
                 accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
                 {copiedId === message.id ? (
-                  <TickIcon
-                    size={16}
-                    color={resolveColor('text-teal-9', '#12A594')}
-                    strokeWidth={2}
-                  />
+                  <TickIcon size={16} color={colors.teal[9]} strokeWidth={2} />
                 ) : (
-                  <Copy size={16} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
+                  <Copy size={16} color={colors.slate[9]} strokeWidth={2} />
                 )}
               </Pressable>
             </View>

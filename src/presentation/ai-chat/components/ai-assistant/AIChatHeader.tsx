@@ -4,8 +4,8 @@ import { Plus, History, Bot } from 'lucide-react-native';
 import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 import { Avatar } from '@infrastructure/ui/common/avatar/Avatar';
 import type { AIChatBot } from '@application/store/ai-chat/aiChatTypes';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 
 export interface AIChatHeaderProps {
@@ -30,7 +30,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
   }) => {
     const { style, tokens } = useAIStyles();
     const { t } = useAIi18n();
-    const resolveColor = useResolveColor();
+    const { colors } = useThemeColors();
     const headerTokens = tokens.header;
 
     return (
@@ -52,7 +52,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               />
             ) : (
               <View style={style('w-7 h-7 rounded-full bg-slate-3 items-center justify-center')}>
-                <Bot size={16} color={resolveColor('text-slate-11', '#60646C')} strokeWidth={2} />
+                <Bot size={16} color={colors.slate[11]} strokeWidth={2} />
               </View>
             )}
             <Text
@@ -91,7 +91,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
               accessible
               accessibilityRole="button"
               accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.NEW_CONVERSATION')}>
-              <Plus size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
+              <Plus size={20} color={colors.slate[10]} strokeWidth={2} />
             </Pressable>
           )}
           <Pressable
@@ -102,7 +102,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.SESSIONS_COUNT', {
               count: sessionsCount,
             })}>
-            <History size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
+            <History size={20} color={colors.slate[10]} strokeWidth={2} />
           </Pressable>
           <Pressable
             onPress={onClose}
@@ -111,7 +111,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityRole="button"
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE')}
             accessibilityHint={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_HINT')}>
-            <CloseIcon size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
+            <CloseIcon size={20} color={colors.slate[10]} strokeWidth={2} />
           </Pressable>
         </View>
       </View>

@@ -23,8 +23,8 @@ import Animated, {
 
 import { ChevronUp } from 'lucide-react-native';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles, type AIAccentColor } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 
 // ============================================================================
@@ -78,7 +78,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
 }) => {
   const { style, getCollapsible } = useAIStyles();
   const { t } = useAIi18n();
-  const resolveColor = useResolveColor();
+  const { colors: themeColors } = useThemeColors();
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const colors = getCollapsible(accentColor);
 
@@ -181,11 +181,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
 
         {/* Chevron (rotates 90deg like Vue) */}
         <Animated.View style={[chevronAnimatedStyle, style('w-4 h-4 items-center justify-center')]}>
-          <CaretRight
-            size={14}
-            color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')}
-            strokeWidth={2}
-          />
+          <CaretRight size={14} color={themeColors.slate[10]} strokeWidth={2} />
         </Animated.View>
       </Pressable>
 
@@ -197,11 +193,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
               {children}
               {/* Collapse footer button */}
               <Pressable onPress={handleToggle} style={style('flex-row items-center gap-1 pt-2')}>
-                <ChevronUp
-                  size={12}
-                  color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')}
-                  strokeWidth={2}
-                />
+                <ChevronUp size={12} color={themeColors.slate[10]} strokeWidth={2} />
                 <Text style={style('text-xs', colors.label)}>
                   {t('AI_ASSISTANT.CHAT.COLLAPSIBLE.COLLAPSE')}
                 </Text>

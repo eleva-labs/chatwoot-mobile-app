@@ -7,8 +7,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { MessageCircle } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 
 // TODO: Re-enable when prompt list is finalized (see JSX comment below)
@@ -29,13 +29,13 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({
 }) => {
   const { style } = useAIStyles();
   const { t } = useAIi18n();
-  const resolveColor = useResolveColor();
+  const { colors } = useThemeColors();
 
   return (
     <View style={style('flex-1 items-center justify-center p-8')}>
       {/* Icon container */}
       <View style={style('mb-4 rounded-full bg-slate-2 p-4')}>
-        <MessageCircle size={28} color={resolveColor('text-slate-9', '#8B8D98')} strokeWidth={2} />
+        <MessageCircle size={28} color={colors.slate[9]} strokeWidth={2} />
       </View>
 
       {/* Title */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { BotIcon } from '@/svg-icons';
 
 interface AIHeaderButtonProps {
@@ -9,12 +9,9 @@ interface AIHeaderButtonProps {
 }
 
 export const AIHeaderButton: React.FC<AIHeaderButtonProps> = ({ isEnabled, onPress }) => {
-  const backgroundColor = isEnabled
-    ? (tailwind.color('bg-brand') ?? '#5d17ea')
-    : (tailwind.color('bg-slate-3') ?? '#e8e8e8');
-  const textColor = isEnabled
-    ? (tailwind.color('text-white') ?? '#FFFFFF')
-    : (tailwind.color('text-slate-11') ?? '#646464');
+  const { colors, semanticColors } = useThemeColors();
+  const backgroundColor = isEnabled ? (tailwind.color('bg-brand') ?? '#5d17ea') : colors.slate[3];
+  const textColor = isEnabled ? semanticColors.textInverse : colors.slate[11];
 
   return (
     <Pressable

@@ -6,8 +6,8 @@
 import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { WifiOff, Clock, Lock, ServerCrash, CircleAlert, RefreshCw } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 import {
   categorizeError,
@@ -33,10 +33,8 @@ const ICON_COMPONENTS = {
 
 /** Renders the appropriate Lucide icon for an error category */
 const ErrorCategoryIcon: React.FC<{ config: ErrorDisplayConfig }> = ({ config }) => {
-  const resolveColor = useResolveColor();
-  const iconColor = config.accentText.includes('amber')
-    ? resolveColor('text-amber-11', '#AD5700')
-    : resolveColor('text-ruby-11', '#CA3A31');
+  const { colors } = useThemeColors();
+  const iconColor = config.accentText.includes('amber') ? colors.amber[11] : colors.ruby[11];
 
   const IconComponent = ICON_COMPONENTS[config.iconType];
   return <IconComponent size={16} color={iconColor} strokeWidth={2} />;
