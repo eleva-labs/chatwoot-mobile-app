@@ -1,19 +1,20 @@
-import React from 'react';
-import { Path, Svg } from 'react-native-svg';
+import { Plus } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '@domain/types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const AddIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M12 3L12 21M21 12L3 12"
-        stroke={stroke}
-        strokeOpacity="0.565"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * AddIcon - Proxies to Lucide Plus
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/plus
+ */
+export const AddIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <Plus color={iconColor} size={size} {...props} />;
 };

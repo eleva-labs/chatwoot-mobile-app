@@ -1,50 +1,37 @@
-import React from 'react';
-import { Path, Svg } from 'react-native-svg';
+import { CheckCheck, Clock } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '@domain/types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-type DoubleCheckIconProps = IconProps & {
+interface DoubleCheckIconProps extends IconProps {
   renderSecondTick?: boolean;
+}
+
+/**
+ * DoubleCheckIcon - Proxies to Lucide CheckCheck
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/check-check
+ * @note renderSecondTick prop no longer used as Lucide CheckCheck is always double
+ */
+export const DoubleCheckIcon = ({ color, size = 24, ...props }: DoubleCheckIconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.teal[9];
+  return <CheckCheck color={iconColor} size={size} {...props} />;
 };
 
-export const DoubleCheckIcon = ({
-  stroke = 'currentColor',
-  renderSecondTick = true,
-  color,
-}: DoubleCheckIconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M16 5L4.92045 18L1 12.0909"
-        stroke={stroke}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {renderSecondTick ? (
-        <Path
-          d="M23 5L12 18"
-          stroke={stroke}
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      ) : null}
-    </Svg>
-  );
-};
-
-export const MessagePendingIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 14 15" fill="none" color={color}>
-      <Path
-        d="M7 4.5V7.5L9 8.5M12 7.5C12 10.2614 9.76142 12.5 7 12.5C4.23858 12.5 2 10.2614 2 7.5C2 4.73858 4.23858 2.5 7 2.5C9.76142 2.5 12 4.73858 12 7.5Z"
-        stroke={stroke}
-        strokeOpacity="0.662"
-        strokeWidth="0.857143"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * MessagePendingIcon - Proxies to Lucide Clock
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/clock
+ */
+export const MessagePendingIcon = ({ color, size = 14, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.amber[9];
+  return <Clock color={iconColor} size={size} {...props} />;
 };

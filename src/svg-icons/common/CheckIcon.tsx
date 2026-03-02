@@ -1,18 +1,20 @@
-import React from 'react';
-import { Path, Svg } from 'react-native-svg';
+import { Check } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '@domain/types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const CheckIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 20 20" fill="none" color={color}>
-      <Path
-        d="M16.6667 5L7.50004 14.1667L3.33337 10"
-        stroke={stroke}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * CheckIcon - Proxies to Lucide Check
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/check
+ */
+export const CheckIcon = ({ color, size = 20, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.teal[9];
+  return <Check color={iconColor} size={size} {...props} />;
 };

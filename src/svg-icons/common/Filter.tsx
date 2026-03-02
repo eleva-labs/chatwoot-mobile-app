@@ -1,32 +1,34 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { ListFilter, ArrowUpDown } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '@domain/types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const FilterIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M6 12H18M3 6H21M9 18H15"
-        stroke={stroke}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * FilterIcon - Proxies to Lucide ListFilter
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/list-filter
+ * @note Original showed horizontal lines of decreasing length
+ */
+export const FilterIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[11];
+  return <ListFilter color={iconColor} size={size} {...props} />;
 };
 
-export const InboxFilterIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M17 4V20M17 20L13 16M17 20L21 16M7 20L7 4M7 4L3 8M7 4L11 8"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * InboxFilterIcon - Proxies to Lucide ArrowUpDown
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/arrow-up-down
+ * @note Original showed vertical arrows with sort indicators
+ */
+export const InboxFilterIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[11];
+  return <ArrowUpDown color={iconColor} size={size} {...props} />;
 };
