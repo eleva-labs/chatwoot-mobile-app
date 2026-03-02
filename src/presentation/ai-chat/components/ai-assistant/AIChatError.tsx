@@ -72,6 +72,8 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
         {canRetry && onRetry && (
           <Pressable
             onPress={onRetry}
+            accessibilityRole="button"
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ERRORS.RETRY')}
             style={style('bg-iris-9 px-3 py-1.5 rounded-lg flex-row items-center gap-1')}>
             <RefreshCw size={12} color="white" strokeWidth={2} />
             <Text style={style('text-xs font-medium text-white')}>
@@ -80,14 +82,22 @@ export const AIChatError: React.FC<AIChatErrorProps> = ({
           </Pressable>
         )}
         {onFreshStart && (
-          <Pressable onPress={onFreshStart} style={style('px-3 py-1.5 rounded-lg')}>
+          <Pressable
+            onPress={onFreshStart}
+            accessibilityRole="button"
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ERRORS.FRESH_START')}
+            style={style('px-3 py-1.5 rounded-lg')}>
             <Text style={style('text-xs text-slate-11')}>
               {t('AI_ASSISTANT.CHAT.ERRORS.FRESH_START')}
             </Text>
           </Pressable>
         )}
         {onDismiss && (
-          <Pressable onPress={onDismiss} style={style('ml-auto px-3 py-1.5')}>
+          <Pressable
+            onPress={onDismiss}
+            accessibilityRole="button"
+            accessibilityLabel={t('AI_ASSISTANT.CHAT.ERRORS.DISMISS')}
+            style={style('ml-auto px-3 py-1.5')}>
             <Text style={style('text-xs text-slate-10')}>
               {t('AI_ASSISTANT.CHAT.ERRORS.DISMISS')}
             </Text>

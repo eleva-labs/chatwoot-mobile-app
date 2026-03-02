@@ -30,7 +30,11 @@ export const AISessionItem: React.FC<SessionItemProps> = React.memo(
     );
 
     return (
-      <Pressable onPress={onPress}>
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityState={{ selected: isActive }}>
         {({ pressed }) => (
           <Animated.View
             style={[
