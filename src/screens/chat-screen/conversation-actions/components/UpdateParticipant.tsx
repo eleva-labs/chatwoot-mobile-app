@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { Check } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
@@ -45,7 +45,9 @@ const ParticipantCell = (props: ParticipantCellProps) => {
           ]}>
           {value.name}
         </Animated.Text>
-        {value.isParticipant ? <Check size={20} color={tailwind.color('text-slate-12')} /> : null}
+        {value.isParticipant ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

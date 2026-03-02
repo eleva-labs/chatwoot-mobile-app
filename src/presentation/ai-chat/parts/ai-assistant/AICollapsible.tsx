@@ -21,7 +21,8 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
-import { ChevronRight, ChevronUp } from 'lucide-react-native';
+import { ChevronUp } from 'lucide-react-native';
+import { CaretRight } from '@/svg-icons/common/CaretRight';
 import { useAIStyles, type AIAccentColor } from '@presentation/ai-chat/styles/ai-assistant';
 import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
@@ -180,7 +181,7 @@ export const AICollapsible: React.FC<AICollapsibleProps> = ({
 
         {/* Chevron (rotates 90deg like Vue) */}
         <Animated.View style={[chevronAnimatedStyle, style('w-4 h-4 items-center justify-center')]}>
-          <ChevronRight
+          <CaretRight
             size={14}
             color={resolveColor(colors.chevron || 'text-slate-10', '#80838D')}
             strokeWidth={2}

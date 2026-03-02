@@ -17,7 +17,8 @@ import React, { useMemo } from 'react';
 import { View, Pressable, ActivityIndicator, Text } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useHaptic } from '@infrastructure/utils';
-import { Copy, Check } from 'lucide-react-native';
+import { Copy } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useResolveColor } from '@presentation/ai-chat/hooks/ai-assistant/useAITheme';
 import type { AIMessageBubbleProps } from '@presentation/ai-chat/containers/ai-assistant/types';
@@ -216,7 +217,11 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
                 style={style('p-1.5 rounded-md')}
                 accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.COPY_MESSAGE')}>
                 {copiedId === message.id ? (
-                  <Check size={16} color={resolveColor('text-teal-9', '#12A594')} strokeWidth={2} />
+                  <TickIcon
+                    size={16}
+                    color={resolveColor('text-teal-9', '#12A594')}
+                    strokeWidth={2}
+                  />
                 ) : (
                   <Copy size={16} color={resolveColor('text-slate-9', '#80838D')} strokeWidth={2} />
                 )}

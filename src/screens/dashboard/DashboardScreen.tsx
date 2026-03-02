@@ -3,7 +3,7 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { WebView } from 'react-native-webview';
 import snakecaseKeys from 'snakecase-keys';
-import { X } from 'lucide-react-native';
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 
 import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
 
@@ -57,7 +57,7 @@ const DashboardScreen = () => {
         )}>
         <Pressable hitSlop={16} onPress={handleBackPress}>
           <Animated.View>
-            <X size={24} color={tailwind.color('text-slate-12')} />
+            <CloseIcon size={24} color={tailwind.color('text-slate-12')} />
           </Animated.View>
         </Pressable>
         <Animated.View>
@@ -70,7 +70,7 @@ const DashboardScreen = () => {
         </Animated.View>
         <Pressable style={tailwind.style('opacity-0')}>
           <Animated.View>
-            <X size={24} color={tailwind.color('text-slate-12')} />
+            <CloseIcon size={24} color={tailwind.color('text-slate-12')} />
           </Animated.View>
         </Pressable>
       </Animated.View>

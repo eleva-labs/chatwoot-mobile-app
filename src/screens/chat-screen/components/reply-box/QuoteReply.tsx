@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 import Animated from 'react-native-reanimated';
 import { Image } from 'expo-image';
-import { X } from 'lucide-react-native';
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { FileIcon, VoiceNote } from '@/svg-icons';
@@ -173,7 +173,7 @@ export const QuoteReply = () => {
       <Pressable
         style={tailwind.style('h-10 w-10 items-center justify-center -mr-[1px]')}
         onPress={handleOnPressClose}>
-        <X size={24} color={tailwind.color('text-slate-12')} />
+        <CloseIcon size={24} color={tailwind.color('text-slate-12')} />
       </Pressable>
     </Pressable>
   );

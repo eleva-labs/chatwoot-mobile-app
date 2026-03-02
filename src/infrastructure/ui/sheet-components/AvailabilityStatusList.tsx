@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, Text, Animated } from 'react-native';
-import { Check } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { AVAILABILITY_STATUS_LIST } from '@domain/constants';
 import { tailwind } from '@infrastructure/theme';
@@ -47,7 +47,7 @@ const StatusCell = ({
             )}>
             {item.status}
           </Text>
-          {isSelected && <Check size={20} color={tailwind.color('text-slate-12')} />}
+          {isSelected && <TickIcon size={20} color={tailwind.color('text-slate-12')} />}
         </Animated.View>
       </Animated.View>
     </Pressable>

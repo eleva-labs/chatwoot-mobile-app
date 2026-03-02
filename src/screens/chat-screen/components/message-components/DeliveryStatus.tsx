@@ -1,7 +1,8 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
-import { Check, CheckCheck, Clock } from 'lucide-react-native';
+import { CheckCheck, Clock } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 import { tailwind } from '@infrastructure/theme';
@@ -196,7 +197,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
     const sentIconColor = tailwind.color(sentColor ?? 'text-whiteA-A12') ?? '#FFFFFF';
     return (
       <Icon
-        icon={<Check size={ICON_SIZE} color={sentIconColor} strokeWidth={2} />}
+        icon={<TickIcon size={ICON_SIZE} color={sentIconColor} strokeWidth={2} />}
         size={ICON_SIZE}
         color={null}
       />

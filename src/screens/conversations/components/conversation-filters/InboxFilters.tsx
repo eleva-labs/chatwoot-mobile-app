@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Check } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
@@ -64,7 +64,7 @@ const InboxCell = (props: InboxCellProps) => {
           </Animated.Text>
         </Animated.View>
         {filters.inbox_id === value.id.toString() ? (
-          <Check size={20} color={tailwind.color('text-slate-12')} />
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
         ) : null}
       </Animated.View>
     </Pressable>

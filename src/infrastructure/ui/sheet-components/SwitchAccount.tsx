@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, Text, Animated, View } from 'react-native';
-import { Check } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useThemedStyles } from '@infrastructure/hooks';
 import { useHaptic } from '@infrastructure/utils';
@@ -54,7 +54,7 @@ const AccountCell = ({
               {item.role}
             </Text>
           </View>
-          {isSelected && <Check size={20} color={tailwind.color('text-slate-12')} />}
+          {isSelected && <TickIcon size={20} color={tailwind.color('text-slate-12')} />}
         </Animated.View>
       </Animated.View>
     </Pressable>

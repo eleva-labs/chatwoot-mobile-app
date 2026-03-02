@@ -2,7 +2,8 @@ import React from 'react';
 import { ImageSourcePropType, Keyboard, Platform, Pressable } from 'react-native';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
-import { ChevronLeft, MoreVertical } from 'lucide-react-native';
+import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
+import { Overflow } from '@/svg-icons/common/Overflow';
 
 import { Avatar, Icon } from '@infrastructure/ui';
 import { OpenIcon, ResolvedIcon, SLAIcon } from '@/svg-icons';
@@ -128,7 +129,7 @@ export const ChatHeader = ({
           </Animated.View>
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>
-              <MoreVertical size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
+              <Overflow size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
             </ChatDropdownMenu>
           )}
         </Animated.View>

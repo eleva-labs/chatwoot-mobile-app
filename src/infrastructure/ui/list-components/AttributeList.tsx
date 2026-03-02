@@ -3,7 +3,7 @@ import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as Sentry from '@sentry/react-native';
-import { ChevronRight } from 'lucide-react-native';
+import { CaretRight } from '@/svg-icons/common/CaretRight';
 
 import { tailwind } from '@infrastructure/theme';
 import { AttributeListType } from '@domain/types';
@@ -87,7 +87,7 @@ const AttributeItem = (props: AttributeItemProps) => {
               {formattedValue}
             </Animated.Text>
             {listItem.hasChevron ? (
-              <ChevronRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
+              <CaretRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
             ) : null}
           </Animated.View>
         </Animated.View>

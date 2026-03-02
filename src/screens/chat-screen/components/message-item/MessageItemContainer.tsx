@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2 } from 'lucide-react-native';
+import { Trash } from '@/svg-icons/common/Trash';
 import { Message } from '@domain/types';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
@@ -91,7 +91,7 @@ export const MessageItemContainer = (props: MessageItemContainerProps) => {
     if (hasAttachments || hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.DELETE_MESSAGE'),
-        icon: <Trash2 size={20} color={'#E13D45'} />,
+        icon: <Trash size={20} color={'#E13D45'} />,
         handleOnPressMenuOption: () => handleDeleteMessage(message.id),
         destructive: true,
       });

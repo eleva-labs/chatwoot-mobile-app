@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 
 import { Spinner } from '@infrastructure/ui';
 import i18n from '@infrastructure/i18n';

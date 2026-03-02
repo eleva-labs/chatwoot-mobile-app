@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
-import { Check } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
@@ -63,7 +63,7 @@ const StatusCell = (props: StatusCellProps) => {
           {i18n.t(`CONVERSATION.FILTERS.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
         {filters.status === value.id ? (
-          <Check size={20} color={tailwind.color('text-slate-12')} />
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
         ) : null}
       </Animated.View>
     </Pressable>

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { ChevronRight } from 'lucide-react-native';
+import { CaretRight } from '@/svg-icons/common/CaretRight';
 
 import { Icon, Spinner } from '@infrastructure/ui';
 import { InfoIcon, MacroIcon } from '@/svg-icons';
@@ -61,7 +61,7 @@ const MacroItem = (props: MacroItemProps) => {
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             style={tailwind.style('flex flex-row items-center pr-3')}>
             {macro.hasChevron ? (
-              <ChevronRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
+              <CaretRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
             ) : (
               <Icon icon={<InfoIcon />} size={22} />
             )}

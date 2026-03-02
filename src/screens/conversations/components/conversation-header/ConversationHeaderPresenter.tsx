@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, Text, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
-import { X } from 'lucide-react-native';
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 
 import { Icon } from '@infrastructure/ui/common';
 import { CheckedIcon, FilterIcon, UncheckedIcon } from '@/svg-icons';
@@ -133,7 +133,7 @@ const RightSection = ({
       <Pressable onPress={onRightIconPress} hitSlop={16}>
         {currentState === 'Filter' || currentState === 'Select' ? (
           <Animated.View exiting={exiting} entering={entering}>
-            <X size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
+            <CloseIcon size={24} color={tailwind.color('text-slate-12') ?? '#202020'} />
           </Animated.View>
         ) : (
           <Animated.View exiting={exiting} entering={entering}>

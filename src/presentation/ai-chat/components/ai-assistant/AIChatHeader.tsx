@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { X, Plus, History, Bot } from 'lucide-react-native';
+import { Plus, History, Bot } from 'lucide-react-native';
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 import { Avatar } from '@infrastructure/ui/common/avatar/Avatar';
 import type { AIChatBot } from '@application/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
@@ -110,7 +111,7 @@ export const AIChatHeader: React.FC<AIChatHeaderProps> = React.memo(
             accessibilityRole="button"
             accessibilityLabel={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE')}
             accessibilityHint={t('AI_ASSISTANT.CHAT.ACCESSIBILITY.CLOSE_HINT')}>
-            <X size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
+            <CloseIcon size={20} color={resolveColor('text-slate-10', '#80838D')} strokeWidth={2} />
           </Pressable>
         </View>
       </View>

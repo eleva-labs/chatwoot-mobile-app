@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { ChevronRight } from 'lucide-react-native';
+import { CaretRight } from '@/svg-icons/common/CaretRight';
 import { Icon } from '@infrastructure/ui';
 import { TeamIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
@@ -38,7 +38,7 @@ const TeamPanel = ({ team, onPress }: TeamPanelProps) => {
               )}>
               {i18n.t('CONVERSATION.ACTIONS.TEAM.ASSIGN')}
             </Animated.Text>
-            <ChevronRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
+            <CaretRight size={20} color={tailwind.color('text-slate-12') ?? '#202020'} />
           </Animated.View>
         </Animated.View>
       </Animated.View>
