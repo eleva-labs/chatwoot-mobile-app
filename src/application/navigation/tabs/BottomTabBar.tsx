@@ -39,9 +39,9 @@ type TabBarIconsProps = {
 const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
   const { semanticColors } = useThemeColors();
 
-  // Focused: Use accent color (blue-9 in light, lighter blue in dark)
+  // Focused: Use primary brand color (iris-9 purple in both modes)
   // Unfocused: Use muted text color (slate-10)
-  const iconColor = focused ? semanticColors.accent : semanticColors.textMuted;
+  const iconColor = focused ? semanticColors.primary : semanticColors.textMuted;
 
   switch (route.name) {
     case 'Conversations':
