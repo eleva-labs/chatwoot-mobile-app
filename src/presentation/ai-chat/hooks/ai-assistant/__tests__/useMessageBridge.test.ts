@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-native';
 import type { UIMessage } from 'ai';
 import type { AIChatMessage } from '@application/store/ai-chat/aiChatTypes';
 import { useMessageBridge, type UseMessageBridgeOptions } from '../useMessageBridge';

@@ -5,9 +5,7 @@
  * navigation, answers, submission, and event callbacks.
  */
 
-// eslint-disable-next-line import/no-unresolved
-import { renderHook, act } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react-native';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useOnboarding } from '../../../presentation/hooks/useOnboarding';
 import { createMockOnboardingRepository, createMockStorageRepository } from '../../helpers/mocks';
 import { testData } from '../../helpers/builders';
