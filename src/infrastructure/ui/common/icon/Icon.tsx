@@ -84,7 +84,12 @@ export const Icon: React.FC<Partial<IconComponentProps>> = props => {
   }
 
   return (
-    <View style={[tailwind.style(sizer), style, { aspectRatio: iconAspectRatio }]}>
+    <View
+      style={[
+        tailwind.style(sizer, 'flex items-center justify-center'),
+        style,
+        { aspectRatio: iconAspectRatio },
+      ]}>
       {/* @ts-ignore */}
       {renderedIcon}
     </View>

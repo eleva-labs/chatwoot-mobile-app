@@ -7,6 +7,7 @@ import { useRefsContext } from '@infrastructure/context';
 import { CaretBottomSmall } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
+import { Icon } from '../icon';
 
 type FilterButtonProps = {
   value: string;
@@ -39,13 +40,7 @@ export const FilterButton = (props: FilterButtonProps) => {
           )}>
           {value}
         </Animated.Text>
-        <Animated.View
-          style={[
-            tailwind.style('flex items-center justify-center'),
-            { height: 16, alignSelf: 'center' },
-          ]}>
-          <CaretBottomSmall size={16} />
-        </Animated.View>
+        <Icon icon={<CaretBottomSmall />} size={16} />
       </Pressable>
     </Animated.View>
   );
