@@ -2,8 +2,8 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
-import { Icon } from '@infrastructure/ui';
-import { PriorityIcon, NoPriorityIcon } from '@/svg-icons';
+import { Icon, PriorityIndicator } from '@infrastructure/ui';
+import { NoPriorityIcon } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { ConversationPriority } from '@domain/types';
 import i18n from '@infrastructure/i18n';
@@ -15,7 +15,7 @@ type PriorityPanelProps = {
 
 const priorityAvatar = (priority: ConversationPriority) => {
   if (priority) {
-    return <Icon icon={<PriorityIcon />} />;
+    return <PriorityIndicator priority={priority} />;
   }
   return <Icon icon={<NoPriorityIcon />} />;
 };
