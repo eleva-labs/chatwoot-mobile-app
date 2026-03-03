@@ -45,7 +45,6 @@ export type IconName =
   | 'filter'
   | 'github'
   | 'grid'
-  | 'high'
   | 'image-attachment'
   | 'inbox'
   | 'inbox-filter'
@@ -59,7 +58,6 @@ export type IconName =
   | 'loading'
   | 'location'
   | 'lock'
-  | 'low'
   | 'macro'
   | 'macros'
   | 'mail'
@@ -67,7 +65,6 @@ export type IconName =
   | 'map'
   | 'mark-as-read'
   | 'mark-as-unread'
-  | 'medium'
   | 'message-pending'
   | 'messenger-filled'
   | 'mute'
@@ -109,7 +106,6 @@ export type IconName =
   | 'trash'
   | 'unassigned'
   | 'unchecked'
-  | 'urgent'
   | 'user'
   | 'video-call'
   | 'voice-note'
@@ -196,7 +192,6 @@ export const iconRegistry: Record<IconName, IconRegistryEntry> = {
   filter: { default: Icons.FilterIcon },
   github: { default: Icons.GithubIcon },
   grid: { default: Icons.GridIcon },
-  high: { default: Icons.HighIcon },
   'image-attachment': { default: Icons.ImageAttachmentIcon },
   inbox: {
     default: Icons.InboxIcon,
@@ -214,7 +209,6 @@ export const iconRegistry: Record<IconName, IconRegistryEntry> = {
   loading: { default: Icons.LoadingIcon },
   location: { default: Icons.LocationIcon },
   lock: { default: Icons.LockIcon },
-  low: { default: Icons.LowIcon },
   macro: { default: Icons.MacroIcon },
   macros: { default: Icons.MacrosIcon },
   mail: { default: Icons.MailIcon },
@@ -222,7 +216,6 @@ export const iconRegistry: Record<IconName, IconRegistryEntry> = {
   map: { default: Icons.MapIcon },
   'mark-as-read': { default: Icons.MarkAsRead },
   'mark-as-unread': { default: Icons.MarkAsUnRead },
-  medium: { default: Icons.MediumIcon },
   'message-pending': { default: Icons.MessagePendingIcon },
   'messenger-filled': { default: Icons.MessengerFilledIcon },
   mute: { default: Icons.MuteIcon },
@@ -277,7 +270,6 @@ export const iconRegistry: Record<IconName, IconRegistryEntry> = {
   trash: { default: Icons.Trash },
   unassigned: { default: Icons.UnassignedIcon },
   unchecked: { default: Icons.UncheckedIcon },
-  urgent: { default: Icons.UrgentIcon },
   user: { default: Icons.UserIcon },
   'video-call': { default: Icons.VideoCall },
   'voice-note': { default: Icons.VoiceNote },

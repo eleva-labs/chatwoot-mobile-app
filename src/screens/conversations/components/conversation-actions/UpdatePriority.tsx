@@ -7,8 +7,8 @@ import { TickIcon } from '@/svg-icons/common/TickIcon';
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationPriority, PriorityOptions } from '@domain/types';
-import { getPriorityIcon, useHaptic } from '@infrastructure/utils';
-import { BottomSheetHeader } from '@infrastructure/ui';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, PriorityIndicator } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
@@ -21,7 +21,6 @@ import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 type PriorityCellProps = {
   value: {
     id: string;
-    icon: React.ReactElement | null;
   };
   isLastItem: boolean;
   selectedPriority: ConversationPriority | undefined;
@@ -29,18 +28,20 @@ type PriorityCellProps = {
 };
 
 const PriorityList = [
-  { id: 'none', icon: null },
-  { id: 'low', icon: getPriorityIcon('low') },
-  { id: 'medium', icon: getPriorityIcon('medium') },
-  { id: 'high', icon: getPriorityIcon('high') },
-  { id: 'urgent', icon: getPriorityIcon('urgent') },
+  { id: 'none' },
+  { id: 'low' },
+  { id: 'medium' },
+  { id: 'high' },
+  { id: 'urgent' },
 ];
 
 const PriorityCell = (props: PriorityCellProps) => {
   const { value, isLastItem, onPress, selectedPriority } = props;
   return (
     <Pressable onPress={() => onPress()} style={tailwind.style('flex flex-row items-center')}>
-      <Animated.View>{/* <Icon icon={value.icon} size={24} /> */}</Animated.View>
+      <Animated.View style={tailwind.style('w-6 items-center justify-center')}>
+        {value.id !== 'none' && <PriorityIndicator priority={value.id as ConversationPriority} />}
+      </Animated.View>
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
