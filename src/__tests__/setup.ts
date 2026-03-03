@@ -8,12 +8,10 @@
 
 import 'reflect-metadata';
 
-// TODO: Cycle 3 will add result matchers
-// import { resultMatchers } from './helpers/matchers/resultMatchers';
+import { resultMatchers } from './helpers/matchers/resultMatchers';
 
 // ─── Custom Matchers ─────────────────────────────────────────────
-// TODO: Cycle 3 will add result matchers
-// expect.extend(resultMatchers);
+expect.extend(resultMatchers);
 
 // ─── React Native Core Mocks ────────────────────────────────────
 jest.mock('react-native', () => ({
