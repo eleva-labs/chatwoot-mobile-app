@@ -6,7 +6,7 @@ import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 import { Overflow } from '@/svg-icons/common/Overflow';
 
 import { Avatar, Icon } from '@infrastructure/ui';
-import { OpenIcon, ResolvedIcon, SLAIcon } from '@/svg-icons';
+import { /* OpenIcon, ResolvedIcon, */ SLAIcon } from '@/svg-icons';
 import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
@@ -102,6 +102,7 @@ export const ChatHeader = ({
               </Pressable>
             )}
             <AIHeaderButton isEnabled={isAIEnabled} onPress={onToggleAI} />
+            {/* Status icon temporarily hidden - was causing user confusion
             <Icon
               icon={
                 isResolved ? (
@@ -112,6 +113,7 @@ export const ChatHeader = ({
               }
               size={24}
             />
+            */}
           </Animated.View>
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>
