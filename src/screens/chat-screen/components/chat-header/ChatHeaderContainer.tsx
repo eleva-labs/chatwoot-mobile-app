@@ -4,11 +4,9 @@ import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { conversationActions } from '@application/store/conversation/conversationActions';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { contactActions } from '@application/store/contact/contactActions';
 import { CONVERSATION_STATUS } from '@domain/constants';
-import { ConversationStatus } from '@domain/types/common/ConversationStatus';
 import { ChatHeader } from './ChatHeader';
 import { DashboardList } from './DropdownMenu';
 import { ImageSourcePropType } from 'react-native';
@@ -122,23 +120,6 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
     }
   };
 
-  const toggleChatStatus = async () => {
-    const updatedStatus =
-      conversationStatus === CONVERSATION_STATUS.RESOLVED
-        ? CONVERSATION_STATUS.OPEN
-        : CONVERSATION_STATUS.RESOLVED;
-    await dispatch(
-      conversationActions.toggleConversationStatus({
-        conversationId,
-        payload: { status: updatedStatus as ConversationStatus, snoozed_until: null },
-      }),
-    );
-
-    showToast({
-      message: i18n.t('CONVERSATION.STATUS_CHANGE'),
-    });
-  };
-
   const toggleAI = async () => {
     if (!contactId) return;
 
@@ -205,7 +186,6 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
       isAIEnabled={isAIEnabled}
       onBackPress={handleBackPress}
       onContactDetailsPress={handleNavigationToContactDetails}
-      onToggleChatStatus={toggleChatStatus}
       onToggleAI={toggleAI}
     />
   );

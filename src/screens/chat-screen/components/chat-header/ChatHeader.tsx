@@ -28,7 +28,6 @@ type ChatHeaderProps = {
   isAIEnabled?: boolean;
   onBackPress: () => void;
   onContactDetailsPress: () => void;
-  onToggleChatStatus: () => void;
   onToggleAI: () => void;
 };
 
@@ -44,7 +43,6 @@ export const ChatHeader = ({
   isAIEnabled = false,
   onBackPress,
   onContactDetailsPress,
-  onToggleChatStatus,
   onToggleAI,
 }: ChatHeaderProps) => {
   const themedTailwind = useThemedStyles();
@@ -104,18 +102,16 @@ export const ChatHeader = ({
               </Pressable>
             )}
             <AIHeaderButton isEnabled={isAIEnabled} onPress={onToggleAI} />
-            <Pressable hitSlop={8} onPress={onToggleChatStatus}>
-              <Icon
-                icon={
-                  isResolved ? (
-                    <ResolvedIcon strokeWidth={2} stroke={colors.teal[9]} />
-                  ) : (
-                    <OpenIcon strokeWidth={2} stroke={colors.slate[12]} />
-                  )
-                }
-                size={24}
-              />
-            </Pressable>
+            <Icon
+              icon={
+                isResolved ? (
+                  <ResolvedIcon strokeWidth={2} stroke={colors.teal[9]} />
+                ) : (
+                  <OpenIcon strokeWidth={2} stroke={colors.slate[12]} />
+                )
+              }
+              size={24}
+            />
           </Animated.View>
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>

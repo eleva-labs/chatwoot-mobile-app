@@ -18,7 +18,7 @@ const meta: Meta<typeof ChatHeader> = {
     ],
     onBackPress: () => {},
     onContactDetailsPress: () => {},
-    onToggleChatStatus: () => {},
+    onToggleAI: () => {},
   },
   decorators: [
     Story => (
@@ -68,7 +68,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
         />
       </HeaderContainer>
@@ -85,7 +84,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
         />
       </HeaderContainer>
@@ -102,7 +100,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
         />
       </HeaderContainer>
@@ -119,7 +116,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
           isSlaMissed={true}
           hasSla={true}
@@ -138,7 +134,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
           isSlaMissed={false}
           hasSla={true}
