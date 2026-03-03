@@ -14,7 +14,7 @@ import { filterLabels } from '@application/store/label/labelSelectors';
 import { useAppDispatch } from '@/hooks';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
-import { LabelCell, LabelItem } from '@infrastructure/ui/label-section';
+import { LabelCell, LabelItemRemovable } from '@infrastructure/ui/label-section';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
 
@@ -120,10 +120,14 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
           {i18n.t('CONVERSATION.ACTIONS.LABELS.TITLE')}
         </Animated.Text>
       </Animated.View>
-      <Animated.View style={tailwind.style('flex flex-row flex-wrap pl-4')}>
+      <Animated.View style={tailwind.style('flex flex-row flex-wrap gap-2 pl-4')}>
         {conversationLabels.map(label => (
-          <Animated.View key={label.title} style={tailwind.style('mr-2 mt-3')}>
-            <LabelItem title={label.title} color={label.color} />
+          <Animated.View key={label.title} style={tailwind.style('mt-3')}>
+            <LabelItemRemovable
+              title={label.title}
+              color={label.color}
+              onRemove={() => handleAddOrUpdateLabels(label.title)}
+            />
           </Animated.View>
         ))}
         <Pressable

@@ -67,28 +67,26 @@ export const UpdateLabels = () => {
 
   const handleLabelPress = (_selectedLabel: string) => {
     setSelectedLabels(prevLabels => {
-      const updatedLabels = prevLabels.includes(_selectedLabel)
+      const isRemoving = prevLabels.includes(_selectedLabel);
+      const updatedLabels = isRemoving
         ? prevLabels.filter(item => item !== _selectedLabel)
         : [...prevLabels, _selectedLabel];
-
-      // If label is already selected, return current labels without changes
-      if (prevLabels.includes(_selectedLabel)) {
-        return prevLabels;
-      }
 
       const payload = {
         type: 'Conversation',
         ids: selectedIds,
-        labels: { add: [_selectedLabel] },
+        labels: isRemoving ? { remove: [_selectedLabel] } : { add: [_selectedLabel] },
       };
+
       dispatch(conversationActions.bulkAction(payload));
+
       AnalyticsHelper.track(LABEL_EVENTS.APPLY_LABEL, {
         label: _selectedLabel,
         bulkAction: true,
         conversationCount: selectedIds.length,
+        action: isRemoving ? 'remove' : 'add',
       });
-      // actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
-      // dispatch(setCurrentState('none'));
+
       return updatedLabels;
     });
   };
