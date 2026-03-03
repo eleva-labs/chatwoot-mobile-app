@@ -28,18 +28,6 @@ jest.mock('i18n-js', () => ({
   },
 }));
 
-// Mock document for @testing-library/react-hooks (needed for React Native tests)
-if (typeof document === 'undefined') {
-  // Mocking document for React Native test environment
-  (global as Record<string, unknown>).document = {
-    createElement: jest.fn(),
-    body: {
-      appendChild: jest.fn(),
-      removeChild: jest.fn(),
-    },
-  } as unknown as Document;
-}
-
 // Extend Jest matchers with custom Result matchers
 expect.extend(resultMatchers);
 

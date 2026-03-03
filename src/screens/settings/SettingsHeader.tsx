@@ -1,9 +1,9 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 
-import i18n from 'i18n';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
+import i18n from '@infrastructure/i18n';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 export const SettingsHeader = () => {
   const themedTailwind = useThemedStyles();

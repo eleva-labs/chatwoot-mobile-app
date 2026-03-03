@@ -2,12 +2,12 @@ import React from 'react';
 import { Animated, Text } from 'react-native';
 
 import { LockIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { messageTimestamp } from '@/utils';
-import { Icon } from '@/components-next/common';
+import { tailwind } from '@infrastructure/theme';
+import { messageTimestamp } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui/common';
 
 import { MarkdownDisplay } from './MarkdownDisplay';
-import { TEXT_MAX_WIDTH } from '@/constants';
+import { TEXT_MAX_WIDTH } from '@domain/constants';
 
 type PrivateTextCellProps = {
   text: string;

@@ -2,10 +2,10 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { StackActions, useNavigation } from '@react-navigation/native';
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 
-import { Icon, Avatar } from '@/components-next/common';
-import { CloseIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
+import { Avatar } from '@infrastructure/ui/common';
+import { tailwind } from '@infrastructure/theme';
 
 type ContactDetailsScreenHeaderProps = {
   name: string;
@@ -28,7 +28,7 @@ export const ContactDetailsScreenHeader = (props: ContactDetailsScreenHeaderProp
       )}>
       <Pressable hitSlop={16} onPress={handleBackPress} style={tailwind.style('flex-1')}>
         <Animated.View>
-          <Icon icon={<CloseIcon />} size={24} />
+          <CloseIcon size={24} color={tailwind.color('text-slate-12')} />
         </Animated.View>
       </Pressable>
       <Animated.View>

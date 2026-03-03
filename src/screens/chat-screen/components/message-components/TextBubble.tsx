@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message } from '@/types';
+import { Message } from '@domain/types';
 import { MarkdownBubble } from './MarkdownBubble';
 import { EmailMeta } from './EmailMeta';
 
@@ -17,7 +17,7 @@ export const TextBubble = (props: TextBubbleProps) => {
   return (
     <React.Fragment>
       {contentAttributes && <EmailMeta {...{ contentAttributes, sender }} />}
-      <MarkdownBubble messageContent={content} variant={variant} />
+      <MarkdownBubble messageContent={content ?? ''} variant={variant} />
     </React.Fragment>
   );
 };

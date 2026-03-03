@@ -3,20 +3,20 @@ import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { useChatWindowContext, useRefsContext } from '@/context';
+import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { LabelTag } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Label } from '@/types';
-import { BottomSheetBackdrop, Icon, SearchBar } from '@/components-next';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import { Label } from '@domain/types';
+import { BottomSheetBackdrop, Icon, SearchBar } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
 import { useAppSelector } from '@/hooks';
-import { filterLabels } from '@/store/label/labelSelectors';
+import { filterLabels } from '@application/store/label/labelSelectors';
 import { useAppDispatch } from '@/hooks';
-import { conversationActions } from '@/store/conversation/conversationActions';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 
-import { LabelCell, LabelItem } from '@/components-next/label-section';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { LABEL_EVENTS } from '@/constants/analyticsEvents';
+import { LabelCell, LabelItemRemovable } from '@infrastructure/ui/label-section';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
 
 type LabelStackProps = {
   filteredLabels: Label[];
@@ -120,10 +120,14 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
           {i18n.t('CONVERSATION.ACTIONS.LABELS.TITLE')}
         </Animated.Text>
       </Animated.View>
-      <Animated.View style={tailwind.style('flex flex-row flex-wrap pl-4')}>
+      <Animated.View style={tailwind.style('flex flex-row flex-wrap gap-2 pl-4')}>
         {conversationLabels.map(label => (
-          <Animated.View key={label.title} style={tailwind.style('mr-2 mt-3')}>
-            <LabelItem title={label.title} color={label.color} />
+          <Animated.View key={label.title} style={tailwind.style('mt-3')}>
+            <LabelItemRemovable
+              title={label.title}
+              color={label.color}
+              onRemove={() => handleAddOrUpdateLabels(label.title)}
+            />
           </Animated.View>
         ))}
         <Pressable
@@ -155,7 +159,8 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={tailwind.style('bg-solid-1')}
         enablePanDownToClose
-        snapPoints={[316]}
+        snapPoints={[400, '75%']}
+        index={1}
         keyboardBehavior="interactive"
         keyboardBlurBehavior="restore"
         onChange={handleChange}>

@@ -9,8 +9,8 @@ import {
   VideoFullscreenUpdateEvent,
 } from 'expo-av';
 import { Image } from 'expo-image';
-import { tailwind } from '@/theme';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import { Spinner } from '@infrastructure/ui/spinner';
 
 type VideoBubbleProps = {
   videoSrc: string;

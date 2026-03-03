@@ -23,7 +23,7 @@ import {
   AssigneeTypeFilters,
 } from './components';
 
-import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
+import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 // AI assistant FAB disabled — not yet ready for production
 // import { FloatingAIAssistant } from '@/presentation';
 
@@ -33,41 +33,44 @@ import {
   TAB_BAR_HEIGHT,
   LAST_ACTIVE_TIMESTAMP_KEY,
   LAST_ACTIVE_TIMESTAMP_THRESHOLD,
-} from '@/constants';
+} from '@domain/constants';
 import {
   ConversationListStateProvider,
   useConversationListStateContext,
   useRefsContext,
-} from '@/context';
+} from '@infrastructure/context';
 
-import { tailwind } from '@/theme';
-import { Conversation } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { Conversation } from '@domain/types';
 import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
-import { useTheme } from '@/context';
+import { useTheme } from '@infrastructure/context';
 import {
   selectBottomSheetState,
   setBottomSheetState,
-} from '@/store/conversation/conversationHeaderSlice';
-import { resetActionState } from '@/store/conversation/conversationActionSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
+} from '@application/store/conversation/conversationHeaderSlice';
+import { resetActionState } from '@application/store/conversation/conversationActionSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 import {
   selectConversationsLoading,
   selectIsAllConversationsFetched,
   getFilteredConversations,
-} from '@/store/conversation/conversationSelectors';
-import { selectFilters, FilterState } from '@/store/conversation/conversationFilterSlice';
-import { ConversationPayload } from '@/store/conversation/conversationTypes';
-import { clearAllConversations } from '@/store/conversation/conversationSlice';
-import { selectUserId } from '@/store/auth/authSelectors';
-import { clearAllContacts } from '@/store/contact/contactSlice';
-import { clearAssignableAgents } from '@/store/assignable-agent/assignableAgentSlice';
+} from '@application/store/conversation/conversationSelectors';
+import {
+  selectFilters,
+  FilterState,
+} from '@application/store/conversation/conversationFilterSlice';
+import { ConversationPayload } from '@application/store/conversation/conversationTypes';
+import { clearAllConversations } from '@application/store/conversation/conversationSlice';
+import { selectUserId } from '@application/store/auth/authSelectors';
+import { clearAllContacts } from '@application/store/contact/contactSlice';
+import { clearAssignableAgents } from '@application/store/assignable-agent/assignableAgentSlice';
 
-import i18n from '@/i18n';
-import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
-import { getCurrentRouteName } from '@/utils/navigationUtils';
+import i18n from '@infrastructure/i18n';
+import ActionBottomSheet from '@application/navigation/tabs/ActionBottomSheet';
+import { getCurrentRouteName } from '@infrastructure/utils/navigationUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 // The screen list thats need to be checked for refreshing the conversations list
 const REFRESH_SCREEN_LIST = [SCREENS.CONVERSATION, SCREENS.INBOX, SCREENS.SETTINGS];

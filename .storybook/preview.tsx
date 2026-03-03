@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { RefsProvider } from '../src/context/RefsContext';
+import { RefsProvider } from '@infrastructure/context/RefsContext';
 
 const preview = {
   parameters: {

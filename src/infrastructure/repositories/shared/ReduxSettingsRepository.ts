@@ -6,7 +6,7 @@
 
 import { injectable } from 'tsyringe';
 import type { ISettingsRepository } from '@/domain/interfaces/repositories/shared';
-import { getStore } from '@/store/storeAccessor';
+import { getStore } from '@application/store/storeAccessor';
 
 /**
  * Repository for accessing settings from Redux store

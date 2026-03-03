@@ -3,14 +3,14 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
-import { BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
+import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 
-import { Icon } from '@/components-next/common/icon';
+import { Icon } from '@infrastructure/ui/common/icon';
 import { DoubleCheckIcon, InboxFilterIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { InboxFilters } from './InboxFilters';
-import i18n from '@/i18n';
-import { useRefsContext } from '@/context';
+import i18n from '@infrastructure/i18n';
+import { useRefsContext } from '@infrastructure/context';
 
 type InboxHeaderProps = {
   markAllAsRead: () => void;

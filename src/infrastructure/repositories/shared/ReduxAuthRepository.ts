@@ -6,7 +6,7 @@
 
 import { injectable } from 'tsyringe';
 import type { IAuthRepository, AuthHeaders } from '@/domain/interfaces/repositories/shared';
-import { getStore } from '@/store/storeAccessor';
+import { getStore } from '@application/store/storeAccessor';
 
 /**
  * Repository for accessing auth state from Redux store

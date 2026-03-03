@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ChatHeader } from './ChatHeader';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { ScrollView, View, Text } from 'react-native';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { RefsProvider } from '@/context';
+import { RefsProvider } from '@infrastructure/context';
 
 const meta: Meta<typeof ChatHeader> = {
   title: 'Chat Header',
@@ -18,7 +18,7 @@ const meta: Meta<typeof ChatHeader> = {
     ],
     onBackPress: () => {},
     onContactDetailsPress: () => {},
-    onToggleChatStatus: () => {},
+    onToggleAI: () => {},
   },
   decorators: [
     Story => (
@@ -68,7 +68,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
         />
       </HeaderContainer>
@@ -85,7 +84,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
         />
       </HeaderContainer>
@@ -102,7 +100,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
         />
       </HeaderContainer>
@@ -119,7 +116,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
           isSlaMissed={true}
           hasSla={true}
@@ -138,7 +134,6 @@ export const AllVariants: Story = {
           ]}
           onBackPress={() => {}}
           onContactDetailsPress={() => {}}
-          onToggleChatStatus={() => {}}
           onToggleAI={() => {}}
           isSlaMissed={false}
           hasSla={true}

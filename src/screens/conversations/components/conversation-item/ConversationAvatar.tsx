@@ -3,9 +3,9 @@ import { ImageURISource } from 'react-native';
 import { LinearTransition } from 'react-native-reanimated';
 import { isEqual } from 'lodash';
 
-import { Avatar, AvatarStatusType } from '@/components-next/common';
-import { AnimatedNativeView } from '@/components-next/native-components';
-import { AvailabilityStatus } from '@/types';
+import { Avatar, AvatarStatusType } from '@infrastructure/ui/common';
+import { AnimatedNativeView } from '@infrastructure/ui/native-components';
+import { AvailabilityStatus } from '@domain/types';
 
 type ConversationAvatarProps = {
   src: ImageURISource;

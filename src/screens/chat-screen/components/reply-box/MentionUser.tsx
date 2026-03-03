@@ -1,9 +1,9 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { tailwind } from '@/theme';
-import { Agent } from '@/types';
-import { Avatar } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Agent } from '@domain/types';
+import { Avatar } from '@infrastructure/ui';
 type MentionUserProps = {
   agent: Agent;
   lastItem: boolean;

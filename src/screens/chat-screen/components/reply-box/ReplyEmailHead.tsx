@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Animated, TextInput, Text, Pressable } from 'react-native';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
 
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 type EmailMetaProps = {
   ccEmails: string;

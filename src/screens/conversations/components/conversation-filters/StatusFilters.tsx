@@ -2,19 +2,19 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { selectFilters, setFilters } from '@/store/conversation/conversationFilterSlice';
-import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { StatusCollection } from '@/types';
-import { getStatusTypeIcon, useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
+import { useRefsContext } from '@infrastructure/context';
+import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
+import { tailwind } from '@infrastructure/theme';
+import { StatusCollection } from '@domain/types';
+import { getStatusTypeIcon, useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, Icon } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import i18n from '@/i18n';
-import { StatusOptions } from '@/types';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import i18n from '@infrastructure/i18n';
+import { StatusOptions } from '@domain/types';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 type StatusCellProps = {
   value: StatusCollection;
@@ -62,7 +62,9 @@ const StatusCell = (props: StatusCellProps) => {
           )}>
           {i18n.t(`CONVERSATION.FILTERS.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
-        {filters.status === value.id ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {filters.status === value.id ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

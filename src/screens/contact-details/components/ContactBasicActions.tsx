@@ -2,13 +2,13 @@ import React from 'react';
 import { Dimensions, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { Icon, IconButton } from '@/components-next';
+import { Icon, IconButton } from '@infrastructure/ui';
 
 import { MailIcon, PhoneIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic, useScaleAnimation } from '@/utils';
-import i18n from '@/i18n';
-import { openNumber, openEmail } from '@/utils/urlUtils';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
+import i18n from '@infrastructure/i18n';
+import { openNumber, openEmail } from '@infrastructure/utils/urlUtils';
 
 type ContactOption = {
   contactType: string;
@@ -66,6 +66,7 @@ type ContactBasicActionsProps = {
 
 export const ContactBasicActions = (props: ContactBasicActionsProps) => {
   const { phoneNumber, email } = props;
+  const { colors } = useThemeColors();
 
   const onCallPress = () => {
     if (phoneNumber) openNumber({ phoneNumber });
@@ -86,7 +87,7 @@ export const ContactBasicActions = (props: ContactBasicActionsProps) => {
           key="email"
           option={{
             contactType: i18n.t('CONTACT_DETAILS.EMAIL'),
-            icon: <MailIcon strokeWidth={2} stroke={tailwind.color('text-iris-11')} />,
+            icon: <MailIcon strokeWidth={2} stroke={colors.iris[11]} />,
           }}
           handleOptionPress={onEmailPress}
         />
@@ -94,7 +95,7 @@ export const ContactBasicActions = (props: ContactBasicActionsProps) => {
           key="phoneNumber"
           option={{
             contactType: i18n.t('CONTACT_DETAILS.CALL'),
-            icon: <PhoneIcon strokeWidth={2} stroke={tailwind.color('text-iris-11')} />,
+            icon: <PhoneIcon strokeWidth={2} stroke={colors.iris[11]} />,
           }}
           handleOptionPress={onCallPress}
         />

@@ -3,22 +3,22 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { ConversationStatus, StatusCollection } from '@/types';
-import { getStatusTypeIcon, useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { ConversationStatus, StatusCollection } from '@domain/types';
+import { getStatusTypeIcon, useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, Icon } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import {
   selectSelectedConversation,
   selectSelectedIds,
-} from '@/store/conversation/conversationSelectedSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { setCurrentState } from '@/store/conversation/conversationHeaderSlice';
-import i18n from '@/i18n';
-import { StatusOptions } from '@/types';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+} from '@application/store/conversation/conversationSelectedSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { setCurrentState } from '@application/store/conversation/conversationHeaderSlice';
+import i18n from '@infrastructure/i18n';
+import { StatusOptions } from '@domain/types';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 type StatusCellProps = {
   value: StatusCollection;
   isLastItem: boolean;

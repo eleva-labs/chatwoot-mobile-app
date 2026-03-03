@@ -1,8 +1,8 @@
 import React, { useMemo, useEffect } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useThemedStyles } from '@/hooks/useThemedStyles';
-import { Button } from '@/components-next/button/Button';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
+import { Button } from '@infrastructure/ui/button/Button';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { useValidation } from '../hooks/useValidation';
 import { useNetworkState } from '../hooks/useNetworkState';

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Channel, Message } from '@/types';
+import { Trash } from '@/svg-icons/common/Trash';
+import { Channel, Message } from '@domain/types';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { useChatWindowContext } from '@/context';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { getAvatarSource, messageTimestamp, useHaptic } from '@/utils';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { useChatWindowContext } from '@infrastructure/context';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { getAvatarSource, messageTimestamp, useHaptic } from '@infrastructure/utils';
 import {
   ComposedBubble,
   DeliveryStatus,
@@ -19,7 +20,7 @@ import {
   EmailBubble,
   UnsupportedBubble,
 } from '../message-components';
-import { showToast } from '@/utils/toastUtils';
+import { showToast } from '@infrastructure/utils/toastUtils';
 import {
   // ATTACHMENT_TYPES,
   MESSAGE_STATUS,
@@ -29,17 +30,17 @@ import {
   TEXT_MAX_WIDTH,
   CONTENT_TYPES,
   MESSAGE_TYPES,
-} from '@/constants';
-import i18n from '@/i18n';
+} from '@domain/constants';
+import i18n from '@infrastructure/i18n';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { CopyIcon, Trash } from '@/svg-icons';
+import { CopyIcon } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { useThemedStyles } from '@/hooks';
-import { tailwind } from '@/theme';
+import { useThemeColors } from '@infrastructure/theme';
 import { Dimensions, View } from 'react-native';
-import { Avatar } from '@/components-next';
+import { Avatar } from '@infrastructure/ui';
 
-// import { ImageMetadata } from '@/types';
+// import { ImageMetadata } from '@domain/types';
 
 type MessageComponentProps = {
   item: Message;
@@ -208,6 +209,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
   const { messageType, contentType, status, sender, groupWithNext, groupWithPrevious } = item;
 
   const hapticSelection = useHaptic();
+  const { colors } = useThemeColors();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
   const channel = conversation?.channel || conversation?.meta?.channel;
 
@@ -267,7 +269,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.COPY'),
-        icon: <CopyIcon stroke={tailwind.color('text-slate-12') ?? '#1C2024'} />,
+        icon: <CopyIcon stroke={colors.slate[12]} />,
         handleOnPressMenuOption: () => handleCopyMessage(content),
         destructive: false,
       });
@@ -276,7 +278,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
     if (hasAttachments || hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.DELETE_MESSAGE'),
-        icon: <Trash stroke={tailwind.color('text-ruby-9') ?? '#E54666'} />,
+        icon: <Trash size={20} color={colors.ruby[9]} />,
         handleOnPressMenuOption: () => handleDeleteMessage(message.id),
         destructive: true,
       });
@@ -347,7 +349,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
 
   const renderMessageContent = () => {
     if (messageType === MESSAGE_TYPES.ACTIVITY) {
-      return <ActivityBubble text={item.content} timeStamp={item.createdAt} />;
+      return <ActivityBubble text={item.content ?? ''} timeStamp={item.createdAt} />;
     }
 
     const attachments = item.attachments;

@@ -5,8 +5,7 @@
  * It validates answers using ValidateAnswerUseCase and tracks errors per question.
  */
 
-// eslint-disable-next-line import/no-unresolved
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-native';
 import { useValidation } from '../../../presentation/hooks/useValidation';
 import type { IValidateAnswerUseCase } from '../../../domain/use-cases/IValidateAnswerUseCase';
 import { Result } from '../../../domain/entities/Result';

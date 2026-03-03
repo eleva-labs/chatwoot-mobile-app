@@ -60,3 +60,6 @@ service-account-key.json
 # Log files
 *.txt
 *.log
+
+# Test coverage
+/coverage/

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Overflow } from '@/svg-icons/common/Overflow';
 
-import { AddParticipant, Overflow } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Avatar, Icon } from '@/components-next';
-import { Agent } from '@/types';
-import i18n from '@/i18n';
+import { AddParticipant } from '@/svg-icons';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { Avatar, Icon } from '@infrastructure/ui';
+import { Agent } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 type ListItemProps = {
   listItem: Agent;
@@ -40,11 +41,12 @@ const ListItem = (props: ListItemProps) => {
 };
 
 const ParticipantOverflowCell = ({ count }: { count: number }) => {
+  const { colors } = useThemeColors();
   return (
     <Pressable style={({ pressed }) => [tailwind.style(pressed ? 'bg-slate-3' : '')]}>
       <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
         <Animated.View>
-          <Icon icon={<Overflow stroke={tailwind.color('text-slate-10')} />} size={28} />
+          <Overflow size={28} color={colors.slate[10]} />
         </Animated.View>
         <Animated.View
           style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>

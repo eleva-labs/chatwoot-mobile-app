@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { Image } from 'expo-image';
 
 type TypingIndicatorProps = {

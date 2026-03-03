@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, Animated } from 'react-native';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 interface ErrorInformationProps {
   errorCode?: string;

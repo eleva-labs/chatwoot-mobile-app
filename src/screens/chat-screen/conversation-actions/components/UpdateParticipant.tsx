@@ -2,23 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { Agent } from '@/types';
-import { Avatar, Icon, SearchBar } from '@/components-next';
-import { TickIcon } from '@/svg-icons';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { Agent } from '@domain/types';
+import { Avatar, SearchBar } from '@infrastructure/ui';
 
-import { assignableAgentActions } from '@/store/assignable-agent/assignableAgentActions';
+import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAssignableParticipantsByInboxId } from '@/store/assignable-agent/assignableAgentSelectors';
-import { selectSelectedConversation } from '@/store/conversation/conversationSelectedSlice';
-import { isAssignableAgentFetching } from '@/store/assignable-agent/assignableAgentSelectors';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { conversationParticipantActions } from '@/store/conversation-participant/conversationParticipantActions';
+import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
+import { isAssignableAgentFetching } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { conversationParticipantActions } from '@application/store/conversation-participant/conversationParticipantActions';
 
 type ParticipantCellProps = {
   value: Agent & { isParticipant: boolean };
@@ -45,7 +45,9 @@ const ParticipantCell = (props: ParticipantCellProps) => {
           ]}>
           {value.name}
         </Animated.Text>
-        {value.isParticipant ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {value.isParticipant ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

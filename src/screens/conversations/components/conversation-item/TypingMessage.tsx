@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { NativeView } from '@/components-next/native-components';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { NativeView } from '@infrastructure/ui/native-components';
 
 type TypingMessageProps = {
   typingText: string;

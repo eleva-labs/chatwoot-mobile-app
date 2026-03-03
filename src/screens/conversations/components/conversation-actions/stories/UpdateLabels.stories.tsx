@@ -12,10 +12,10 @@ import { useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
 import { UpdateLabels } from '../UpdateLabels';
 
-import { BottomSheetBackdrop } from '@/components-next/common/bottomsheet/BottomSheetBackdrop';
-import { useRefsContext, RefsProvider } from '@/context/RefsContext';
-import { tailwind } from '@/theme';
-import { initialState as defaultHeaderState } from '@/store/conversation/conversationHeaderSlice';
+import { BottomSheetBackdrop } from '@infrastructure/ui/common/bottomsheet/BottomSheetBackdrop';
+import { useRefsContext, RefsProvider } from '@infrastructure/context/RefsContext';
+import { tailwind } from '@infrastructure/theme';
+import { initialState as defaultHeaderState } from '@application/store/conversation/conversationHeaderSlice';
 
 const mockSelectedSlice = createSlice({
   name: 'conversationSelected',

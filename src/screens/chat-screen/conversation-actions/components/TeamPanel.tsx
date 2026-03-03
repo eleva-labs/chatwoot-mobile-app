@@ -1,11 +1,12 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Icon } from '@/components-next';
-import { CaretRight, TeamIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Team } from '@/types';
-import i18n from '@/i18n';
+import { CaretRight } from '@/svg-icons/common/CaretRight';
+import { Icon } from '@infrastructure/ui';
+import { TeamIcon } from '@/svg-icons';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { Team } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 type TeamPanelProps = {
   team: Team | null;
@@ -13,6 +14,7 @@ type TeamPanelProps = {
 };
 
 const TeamPanel = ({ team, onPress }: TeamPanelProps) => {
+  const { colors } = useThemeColors();
   const teamName = team ? team.name : i18n.t('CONVERSATION.ACTIONS.TEAM.EMPTY');
   return (
     <Pressable
@@ -37,7 +39,7 @@ const TeamPanel = ({ team, onPress }: TeamPanelProps) => {
               )}>
               {i18n.t('CONVERSATION.ACTIONS.TEAM.ASSIGN')}
             </Animated.Text>
-            <Icon icon={<CaretRight />} size={20} />
+            <CaretRight size={20} color={colors.slate[12]} />
           </Animated.View>
         </Animated.View>
       </Animated.View>

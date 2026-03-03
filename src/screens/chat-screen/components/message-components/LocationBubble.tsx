@@ -2,12 +2,12 @@ import React from 'react';
 import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { Icon } from '@/components-next/common';
+import { tailwind } from '@infrastructure/theme';
+import { Icon } from '@infrastructure/ui/common';
 
-import { MESSAGE_VARIANTS } from '@/constants';
+import { MESSAGE_VARIANTS } from '@domain/constants';
 import { MapIcon } from '@/svg-icons';
-import { openURL } from '@/utils/urlUtils';
+import { openURL } from '@infrastructure/utils/urlUtils';
 
 type LocationBubbleProps = {
   latitude: number | 0;

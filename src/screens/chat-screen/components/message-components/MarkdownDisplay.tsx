@@ -2,7 +2,7 @@ import React from 'react';
 import { Linking, StyleSheet } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 type MarkdownDisplayProps = {
   messageContent: string;

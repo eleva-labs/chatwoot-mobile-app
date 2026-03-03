@@ -1,20 +1,20 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next/common';
-import { selectFilters, setFilters } from '@/store/conversation/conversationFilterSlice';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, Icon } from '@infrastructure/ui/common';
+import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAllInboxes } from '@/store/inbox/inboxSelectors';
-import { getChannelIcon } from '@/utils';
-import { Channel } from '@/types';
-import i18n from '@/i18n';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import { selectAllInboxes } from '@application/store/inbox/inboxSelectors';
+import { getChannelIcon } from '@infrastructure/utils';
+import { Channel } from '@domain/types';
+import i18n from '@infrastructure/i18n';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 type InboxCellProps = {
   value: { id: number; name: string; channelType: Channel; medium: string };
@@ -63,7 +63,9 @@ const InboxCell = (props: InboxCellProps) => {
             {value.name}
           </Animated.Text>
         </Animated.View>
-        {filters.inbox_id === value.id.toString() ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {filters.inbox_id === value.id.toString() ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

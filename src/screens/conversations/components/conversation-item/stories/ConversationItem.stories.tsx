@@ -14,7 +14,7 @@ import {
   conversationWithNewLineMessage,
 } from './ConversationItemMockData';
 import { Text, ScrollView, View } from 'react-native';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 const meta: Meta<typeof ConversationItem> = {
   title: 'Conversation Item',

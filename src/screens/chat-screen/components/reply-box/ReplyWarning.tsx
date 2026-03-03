@@ -2,13 +2,13 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { INBOX_TYPES } from '@/constants';
-import { Inbox } from '@/types/Inbox';
-import { Conversation } from '@/types';
-import i18n from '@/i18n';
-import { REPLY_POLICY } from '@/constants/url';
-import { openURL } from '@/utils/urlUtils';
+import { tailwind } from '@infrastructure/theme';
+import { INBOX_TYPES } from '@domain/constants';
+import { Inbox } from '@domain/types/Inbox';
+import { Conversation } from '@domain/types';
+import i18n from '@infrastructure/i18n';
+import { REPLY_POLICY } from '@domain/constants/url';
+import { openURL } from '@infrastructure/utils/urlUtils';
 
 type ReplyWarningProps = {
   inbox: Inbox;

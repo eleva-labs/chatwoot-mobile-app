@@ -1,22 +1,22 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { AssigneeTypes } from '@/types';
-import { useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
-import { selectFilters, setFilters } from '@/store/conversation/conversationFilterSlice';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { AssigneeTypes } from '@domain/types';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader } from '@infrastructure/ui';
+import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import i18n from '@/i18n';
-import { AssigneeOptions } from '@/types';
+import i18n from '@infrastructure/i18n';
+import { AssigneeOptions } from '@domain/types';
 import { useSelector } from 'react-redux';
-import { selectUser } from '@/store/auth/authSelectors';
-import { getUserPermissions } from '@/utils/permissionUtils';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import { selectUser } from '@application/store/auth/authSelectors';
+import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 type AssigneeTypeCellProps = {
   value: string;
@@ -57,7 +57,9 @@ const AssigneeTypeCell = (props: AssigneeTypeCellProps) => {
           )}>
           {i18n.t(`CONVERSATION.FILTERS.ASSIGNEE_TYPE.OPTIONS.${value.toUpperCase()}`)}
         </Animated.Text>
-        {filters.assignee_type === value ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {filters.assignee_type === value ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

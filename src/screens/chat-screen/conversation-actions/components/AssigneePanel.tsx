@@ -1,15 +1,18 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Avatar, Icon } from '@/components-next';
-import { CaretRight, UnassignedIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Agent } from '@/types';
-import i18n from '@/i18n';
+import { CaretRight } from '@/svg-icons/common/CaretRight';
+import { Avatar, Icon } from '@infrastructure/ui';
+import { UnassignedIcon } from '@/svg-icons';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { Agent } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 type AssigneePanelProps = {
   assignee: Agent | null;
   onPress: () => void;
+  isFirstItem?: boolean;
+  isLastItem?: boolean;
 };
 
 const assigneeAvatar = (assignee: Agent | null) => {
@@ -21,7 +24,13 @@ const assigneeAvatar = (assignee: Agent | null) => {
   return <Icon icon={<UnassignedIcon />} />;
 };
 
-const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
+const AssigneePanel = ({
+  assignee,
+  onPress,
+  isFirstItem = false,
+  isLastItem = false,
+}: AssigneePanelProps) => {
+  const { colors } = useThemeColors();
   const assigneeName = assignee ? assignee.name : i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EMPTY');
   const assigneeActionText = assignee
     ? i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EDIT')
@@ -29,12 +38,19 @@ const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [tailwind.style(pressed ? 'bg-slate-3' : '', 'rounded-t-[13px]')]}>
+      style={({ pressed }) => [
+        tailwind.style(
+          pressed ? 'bg-slate-3' : '',
+          isFirstItem ? 'rounded-t-[13px]' : '',
+          isLastItem ? 'rounded-b-[13px]' : '',
+        ),
+      ]}>
       <Animated.View style={tailwind.style('flex-row items-center justify-between pl-3')}>
         {assigneeAvatar(assignee)}
         <Animated.View
           style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px] border-b-[1px] border-b-slate-6',
+            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px]',
+            !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
           )}>
           <Animated.Text
             style={tailwind.style(
@@ -49,7 +65,7 @@ const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
               )}>
               {assigneeActionText}
             </Animated.Text>
-            <Icon icon={<CaretRight />} size={20} />
+            <CaretRight size={20} color={colors.slate[12]} />
           </Animated.View>
         </Animated.View>
       </Animated.View>

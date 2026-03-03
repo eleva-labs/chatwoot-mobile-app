@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { Channel, Message } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { Channel, Message } from '@domain/types';
 import { MenuOption } from '../message-menu';
 import {
   AudioCell,
@@ -14,9 +14,9 @@ import {
   VideoCell,
 } from '../message-components';
 import { TextMessageCell } from '../message-components';
-import { ATTACHMENT_TYPES } from '@/constants';
+import { ATTACHMENT_TYPES } from '@domain/constants';
 import { LocationCell } from '../message-components/LocationCell';
-import { CONTENT_TYPES } from '@/constants';
+import { CONTENT_TYPES } from '@domain/constants';
 
 type DateSectionProps = { item: { date: string } };
 

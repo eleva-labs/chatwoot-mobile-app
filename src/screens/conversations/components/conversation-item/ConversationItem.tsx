@@ -2,9 +2,9 @@
 import React, { memo } from 'react';
 import { ImageURISource } from 'react-native';
 
-import { NativeView } from '@/components-next/native-components';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
+import { NativeView } from '@infrastructure/ui/native-components';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
 import {
   Agent,
   AvailabilityStatus,
@@ -12,13 +12,13 @@ import {
   ConversationPriority,
   Label,
   Message,
-} from '@/types';
-import { Inbox } from '@/types/Inbox';
+} from '@domain/types';
+import { Inbox } from '@domain/types/Inbox';
 
 import { ConversationAvatar } from './ConversationAvatar';
 import { ConversationItemDetail } from './ConversationItemDetail';
 import { ConversationSelect } from './ConversationSelect';
-import { SLA } from '@/types/common/SLA';
+import { SLA } from '@domain/types/common/SLA';
 
 export type ConversationItemProps = {
   // Basic info

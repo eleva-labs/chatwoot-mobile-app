@@ -2,16 +2,16 @@ import React, { useEffect } from 'react';
 import { Pressable, Text, Animated, View } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-import { showToast } from '@/utils/toastUtils';
+import { showToast } from '@infrastructure/utils/toastUtils';
 import { useThemedStyles } from '@/hooks';
-import { useHaptic } from '@/utils';
+import { useHaptic } from '@infrastructure/utils';
 import { useAppSelector } from '@/hooks';
 import {
   selectChatwootVersion,
   selectInstallationUrl,
   selectPushToken,
   selectWebSocketUrl,
-} from '@/store/settings/settingsSelectors';
+} from '@application/store/settings/settingsSelectors';
 
 type DebugActionCellProps = {
   item: DebugAction;

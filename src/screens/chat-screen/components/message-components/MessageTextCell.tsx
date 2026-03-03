@@ -1,13 +1,13 @@
 import React from 'react';
 import { Animated, Text, Dimensions } from 'react-native';
 
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { Channel, Message, MessageStatus, MessageType } from '@/types';
-import { messageTimestamp } from '@/utils';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { Channel, Message, MessageStatus, MessageType } from '@domain/types';
+import { messageTimestamp } from '@infrastructure/utils';
 
 import { MarkdownDisplay } from './MarkdownDisplay';
-import { MESSAGE_STATUS, INBOX_TYPES, TEXT_MAX_WIDTH } from '@/constants';
+import { MESSAGE_STATUS, INBOX_TYPES, TEXT_MAX_WIDTH } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 import { EmailMeta } from './EmailMeta';
 

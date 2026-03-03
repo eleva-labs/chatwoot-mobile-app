@@ -1,14 +1,14 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
-import { Avatar } from '@/components-next';
-import { tailwind } from '@/theme';
-import type { NotificationType } from '@/types/Notification';
-import { ConversationPriority } from '@/types/common';
-import { AnimatedNativeView, NativeView } from '@/components-next/native-components';
-import { PriorityIndicator, ChannelIndicator } from '@/components-next/list-components';
+import { Avatar } from '@infrastructure/ui';
+import { tailwind } from '@infrastructure/theme';
+import type { NotificationType } from '@domain/types/Notification';
+import { ConversationPriority } from '@domain/types/common';
+import { AnimatedNativeView, NativeView } from '@infrastructure/ui/native-components';
+import { PriorityIndicator, ChannelIndicator } from '@infrastructure/ui/list-components';
 
-import { Inbox } from '@/types/Inbox';
-import { ConversationAdditionalAttributes } from '@/types/Conversation';
+import { Inbox } from '@domain/types/Inbox';
+import { ConversationAdditionalAttributes } from '@domain/types/Conversation';
 import { NotificationTypeIndicator } from './NotificationTypeIndicator';
 import { Dimensions } from 'react-native';
 

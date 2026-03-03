@@ -1,10 +1,10 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { Macro } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { Macro } from '@domain/types';
 import MacroItem from './MacroItem';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
 
 type MacroStackProps = {
   macrosList: Macro[];

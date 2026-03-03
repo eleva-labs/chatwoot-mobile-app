@@ -2,8 +2,8 @@ import React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { Agent, ConversationPriority } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { Agent, ConversationPriority } from '@domain/types';
 import AssigneePanel from './AssigneePanel';
 // import TeamPanel from './TeamPanel';
 import PriorityPanel from './PriorityPanel';
@@ -32,10 +32,10 @@ export const ConversationSettingsPanel = ({
         styles.listShadow,
         Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
       ]}>
-      <AssigneePanel assignee={assignee} onPress={onChangeAssignee} />
+      <AssigneePanel assignee={assignee} onPress={onChangeAssignee} isFirstItem={true} />
       {/* Team assignment disabled — not currently in use */}
       {/* <TeamPanel team={team} onPress={onChangeTeamAssignee} /> */}
-      <PriorityPanel priority={priority} onPress={onChangePriority} />
+      <PriorityPanel priority={priority} onPress={onChangePriority} isLastItem={true} />
     </Animated.View>
   );
 };

@@ -12,11 +12,14 @@ import { ResizeMode, Video } from 'expo-av';
 import { Image } from 'expo-image';
 
 import { AttachFileIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useScaleAnimation } from '@/utils';
-import { Icon } from '@/components-next/common';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui/common';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAttachments, deleteAttachment } from '@/store/conversation/sendMessageSlice';
+import {
+  selectAttachments,
+  deleteAttachment,
+} from '@application/store/conversation/sendMessageSlice';
 
 export const PlayIcon = () => {
   return (
@@ -36,12 +39,12 @@ const formatSecondsToMinutes = (seconds: number) => {
   return `${formattedMinutes}:${formattedSeconds}`;
 };
 
-const DeleteIcon = () => {
+const DeleteIcon = ({ color }: { color: string }) => {
   return (
     <Svg width="100%" height="100%" viewBox="0 0 12 12" fill="none">
       <Path
         d="M9 3L3 9M3 3L9 9"
-        stroke={tailwind.color('text-slate-12') ?? '#000'}
+        stroke={color}
         strokeOpacity="0.478"
         strokeWidth="1.5"
         strokeLinecap="round"
@@ -61,6 +64,7 @@ type AttachedImageProps = AttachedMediaProps & { attachmentsLength: number };
 const AttachedImage = (props: AttachedImageProps) => {
   const { item, index, attachmentsLength } = props;
   const dispatch = useAppDispatch();
+  const { colors } = useThemeColors();
 
   const { animatedStyle, handlers } = useScaleAnimation();
 
@@ -83,7 +87,7 @@ const AttachedImage = (props: AttachedImageProps) => {
         <Animated.View
           style={[
             StyleSheet.absoluteFillObject,
-            tailwind.style('border-[1px] rounded-lg border-[#0000000F] z-50'),
+            tailwind.style('border-[1px] rounded-lg border-blackA-A3 z-50'),
           ]}
         />
         <Animated.View
@@ -94,7 +98,7 @@ const AttachedImage = (props: AttachedImageProps) => {
             animatedStyle,
           ]}>
           <Pressable onPress={handleOnDelete} hitSlop={8} {...handlers}>
-            <Icon icon={<DeleteIcon />} size={12} />
+            <Icon icon={<DeleteIcon color={colors.slate[12]} />} size={12} />
           </Pressable>
         </Animated.View>
       </Animated.View>
@@ -108,6 +112,7 @@ const AttachedVideo = (props: AttachedVideoProps) => {
   const { item, index, attachmentsLength } = props;
 
   const dispatch = useAppDispatch();
+  const { colors } = useThemeColors();
 
   const { animatedStyle, handlers } = useScaleAnimation();
 
@@ -137,7 +142,7 @@ const AttachedVideo = (props: AttachedVideoProps) => {
         <Animated.View
           style={[
             StyleSheet.absoluteFillObject,
-            tailwind.style('border-[1px] rounded-lg border-[#0000000F] z-50'),
+            tailwind.style('border-[1px] rounded-lg border-blackA-A3 z-50'),
           ]}
         />
         <Animated.View
@@ -148,7 +153,7 @@ const AttachedVideo = (props: AttachedVideoProps) => {
             animatedStyle,
           ]}>
           <Pressable onPress={handleOnDelete} hitSlop={8} {...handlers}>
-            <Icon icon={<DeleteIcon />} size={12} />
+            <Icon icon={<DeleteIcon color={colors.slate[12]} />} size={12} />
           </Pressable>
         </Animated.View>
         <Image
@@ -182,6 +187,7 @@ type AttachedFileProps = AttachedMediaProps & { attachmentsLength: number };
 const AttachedFile = (props: AttachedFileProps) => {
   const { item, index, attachmentsLength } = props;
   const dispatch = useAppDispatch();
+  const { colors } = useThemeColors();
 
   const { animatedStyle, handlers } = useScaleAnimation();
 
@@ -216,7 +222,7 @@ const AttachedFile = (props: AttachedFileProps) => {
         <Animated.View
           style={[
             StyleSheet.absoluteFillObject,
-            tailwind.style('border-[1px] rounded-lg border-[#0000000F] z-50'),
+            tailwind.style('border-[1px] rounded-lg border-blackA-A3 z-50'),
           ]}
         />
         <Animated.View
@@ -227,7 +233,7 @@ const AttachedFile = (props: AttachedFileProps) => {
             animatedStyle,
           ]}>
           <Pressable onPress={handleOnDelete} hitSlop={8} {...handlers}>
-            <Icon icon={<DeleteIcon />} size={12} />
+            <Icon icon={<DeleteIcon color={colors.slate[12]} />} size={12} />
           </Pressable>
         </Animated.View>
       </Animated.View>

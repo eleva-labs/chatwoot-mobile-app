@@ -7,13 +7,13 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { FlashList } from '@shopify/flash-list';
-import { useAppKeyboardAnimation } from '@/utils';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { Message } from '@/types';
+import { useAppKeyboardAnimation } from '@infrastructure/utils';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { Message } from '@domain/types';
 import { MessageComponent } from '../message-item/Message';
 // import { MessageItemContainer } from '../message-item/MessageItemContainer';
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 
 export type FlashListRenderProps = {
   item: { date: string } | Message;

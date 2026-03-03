@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, Animated } from 'react-native';
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { SLAEvent } from '@/types/common/SLA';
-import { SLA_MISS_TYPES } from '@/constants';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { SLAEvent } from '@domain/types/common/SLA';
+import { SLA_MISS_TYPES } from '@domain/constants';
 import { SlaEvents as SlaEventItem } from './SLAEventItem';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
 
 interface SlaEventsProps {
   slaEvents?: SLAEvent[];

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
 
 export const UnsupportedBubble = () => {
   return (

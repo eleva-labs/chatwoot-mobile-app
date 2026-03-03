@@ -1,46 +1,46 @@
-import React from 'react';
-import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
+import { MessageCircle } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-export const ConversationIconOutline = ({
-  stroke = 'currentColor',
-  color,
-}: {
-  stroke?: string;
+interface IconProps {
+  size?: number;
   color?: string;
-}) => {
-  return (
-    <Svg width="49" height="40" viewBox="0 0 49 40" fill="none" color={color}>
-      <G clipPath="url(#clip0_1_1630)">
-        <Path
-          d="M35 25H23.9991C17.935 25 13 20.0646 13 13.999C13 7.93537 17.935 3 23.9992 3C30.065 3 35 7.93537 35 13.999V25Z"
-          stroke={stroke}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </G>
-      <Defs>
-        <ClipPath id="clip0_1_1630">
-          <Rect width="24" height="24" fill="white" transform="translate(12 2)" />
-        </ClipPath>
-      </Defs>
-    </Svg>
-  );
+  [key: string]: unknown;
+}
+
+/**
+ * ConversationIcon - Proxies to Lucide MessageCircle
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 4)
+ * @lucide https://lucide.dev/icons/message-circle
+ */
+export const ConversationIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <MessageCircle color={iconColor} size={size} {...props} />;
 };
 
-export const ConversationIconFilled = ({
-  fill = 'currentColor',
-  color,
-}: {
-  fill?: string;
-  color?: string;
-}) => {
-  return (
-    <Svg width="49" height="40" viewBox="0 0 49 40" fill="none" color={color}>
-      <Path
-        d="M35 25H23.9991C17.935 25 13 20.0646 13 13.999C13 7.93537 17.935 3 23.9992 3C30.065 3 35 7.93537 35 13.999V25Z"
-        fill={fill}
-      />
-    </Svg>
-  );
+/**
+ * ConversationIconOutline - Proxies to Lucide MessageCircle
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 4)
+ * @lucide https://lucide.dev/icons/message-circle
+ * @deprecated Use ConversationIcon instead
+ */
+export const ConversationIconOutline = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <MessageCircle color={iconColor} size={size} {...props} />;
+};
+
+/**
+ * ConversationIconFilled - Proxies to Lucide MessageCircle
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 4)
+ * @lucide https://lucide.dev/icons/message-circle
+ * @note Lucide doesn't have a filled variant, using stroke-only for consistency
+ */
+export const ConversationIconFilled = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <MessageCircle color={iconColor} size={size} {...props} />;
 };

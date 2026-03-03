@@ -1,16 +1,20 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { User } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-type PersonIconProps = {
-  color?: string;
+interface IconProps {
   size?: number;
-};
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const PersonIcon = ({ color = 'black', size = 10 }: PersonIconProps) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <Path
-      d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
-      fill={color}
-    />
-  </Svg>
-);
+/**
+ * PersonIcon - Proxies to Lucide User
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 6)
+ * @lucide https://lucide.dev/icons/user
+ */
+export const PersonIcon = ({ color, size = 10, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[11];
+  return <User color={iconColor} size={size} {...props} />;
+};

@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
-import { BottomSheetBackdrop, Button } from '@/components-next';
+import { BottomSheetBackdrop, Button } from '@infrastructure/ui';
 import {
   ConversationBasicActions,
   ConversationLabelActions,
@@ -13,25 +13,25 @@ import {
   AddParticipantList,
   UpdateParticipant,
 } from './components';
-import { TAB_BAR_HEIGHT } from '@/constants';
-import { tailwind } from '@/theme';
-import { ConversationStatus } from '@/types';
-import i18n from '@/i18n';
-import { useChatWindowContext } from '@/context';
+import { TAB_BAR_HEIGHT } from '@domain/constants';
+import { tailwind } from '@infrastructure/theme';
+import { ConversationStatus } from '@domain/types';
+import i18n from '@infrastructure/i18n';
+import { useChatWindowContext } from '@infrastructure/context';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { conversationActions } from '@/store/conversation/conversationActions';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 
-import { setActionState } from '@/store/conversation/conversationActionSlice';
-import { useRefsContext } from '@/context';
-import { selectSingleConversation } from '@/store/conversation/conversationSelectedSlice';
-// import { teamActions } from '@/store/team/teamActions';
-// import { selectAllTeams } from '@/store/team/teamSelectors';
-import { selectInstallationUrl } from '@/store/settings/settingsSelectors';
+import { setActionState } from '@application/store/conversation/conversationActionSlice';
+import { useRefsContext } from '@infrastructure/context';
+import { selectSingleConversation } from '@application/store/conversation/conversationSelectedSlice';
+// import { teamActions } from '@application/store/team/teamActions';
+// import { selectAllTeams } from '@application/store/team/teamSelectors';
+import { selectInstallationUrl } from '@application/store/settings/settingsSelectors';
 import { ConversationMetaInformation } from './components/ConversationMetaInformation';
-import { selectConversationParticipantsByConversationId } from '@/store/conversation-participant/conversationParticipantSelectors';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import { selectConversationParticipantsByConversationId } from '@application/store/conversation-participant/conversationParticipantSelectors';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 

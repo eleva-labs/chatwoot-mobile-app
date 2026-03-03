@@ -1,35 +1,21 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { Palette } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-interface ThemeIconProps {
-  color?: string;
+interface IconProps {
   size?: number;
+  color?: string;
+  [key: string]: unknown;
 }
 
-export const ThemeIcon: React.FC<ThemeIconProps> = ({ color = 'currentColor', size = 20 }) => {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" color={color}>
-      {/* Sun rays */}
-      <Path
-        d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Sun/Moon circle */}
-      <Path
-        d="M12 7C9.24 7 7 9.24 7 12C7 14.76 9.24 17 12 17C14.76 17 17 14.76 17 12C17 9.24 14.76 7 12 7Z"
-        stroke={color}
-        strokeWidth="2"
-        fill="none"
-      />
-      {/* Moon crescent overlay */}
-      <Path
-        d="M12 7C10.34 7 8.93 7.83 8.13 9.13C7.33 10.43 7.33 12.07 8.13 13.37C8.93 14.67 10.34 15.5 12 15.5"
-        fill={color}
-        opacity="0.3"
-      />
-    </Svg>
-  );
+/**
+ * ThemeIcon - Proxies to Lucide Palette
+ *
+ * @migrated 2026-03-02 (Cycle 2 Phase 1+2)
+ * @lucide https://lucide.dev/icons/palette
+ * @usage 3 files
+ */
+export const ThemeIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <Palette color={iconColor} size={size} {...props} />;
 };

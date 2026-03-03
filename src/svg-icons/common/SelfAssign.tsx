@@ -1,28 +1,21 @@
-import React from 'react';
-import { Path, Svg } from 'react-native-svg';
+import { UserPlus } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-export const SelfAssign = ({
-  stroke = 'currentColor',
-  color,
-}: {
-  stroke?: string;
+interface IconProps {
+  size?: number;
   color?: string;
-}): JSX.Element => {
-  return (
-    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M1.5293 20.5C3.72769 18.1683 6.71237 16.7353 9.99989 16.7353C13.2874 16.7353 16.2721 18.1683 18.4705 20.5M14.2352 8.73529C14.2352 11.0744 12.339 12.9706 9.99989 12.9706C7.6608 12.9706 5.76459 11.0744 5.76459 8.73529C5.76459 6.39621 7.6608 4.5 9.99989 4.5C12.339 4.5 14.2352 6.39621 14.2352 8.73529Z"
-        stroke={stroke}
-        strokeWidth="1.41176"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M21.8182 11L17.8182 15L16 13.1818"
-        stroke={stroke}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+  [key: string]: unknown;
+}
+
+/**
+ * SelfAssign - Proxies to Lucide UserPlus
+ *
+ * @migrated 2026-03-02 (Cycle 2 Phase 1+2)
+ * @lucide https://lucide.dev/icons/user-plus
+ * @usage 3 files
+ */
+export const SelfAssign = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <UserPlus color={iconColor} size={size} {...props} />;
 };

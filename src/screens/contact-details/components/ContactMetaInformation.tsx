@@ -1,9 +1,9 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 
-import { CustomAttribute, AttributeListType } from '@/types';
-import { AttributeList } from '@/components-next';
-import i18n from '@/i18n';
+import { CustomAttribute, AttributeListType } from '@domain/types';
+import { AttributeList } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
 
 export const ContactMetaInformation = ({ attributes }: { attributes: CustomAttribute[] }) => {
   const processedAttributes = attributes.map(attribute => ({

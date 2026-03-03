@@ -3,13 +3,13 @@ import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { BottomSheetBackdrop } from '@/components-next';
-import i18n from '@/i18n';
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { Macro } from '@/types';
+import { BottomSheetBackdrop } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { Macro } from '@domain/types';
 import { useAppSelector } from '@/hooks';
-import { selectAllMacros } from '@/store/macro/macroSelectors';
+import { selectAllMacros } from '@application/store/macro/macroSelectors';
 
 import MacroStack from './MacroStack';
 import MacroDetails from './MacroDetails';

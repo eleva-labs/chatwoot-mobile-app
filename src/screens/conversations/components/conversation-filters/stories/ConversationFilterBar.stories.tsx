@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
-import { defaultFilterState } from '@/store/conversation/conversationFilterSlice';
-import { ConversationFilterOptions } from '@/types';
+import { defaultFilterState } from '@application/store/conversation/conversationFilterSlice';
+import { ConversationFilterOptions } from '@domain/types';
 
 import { ConversationFilterBar as ConversationFilterBarComponent } from '../ConversationFilterBar';
 

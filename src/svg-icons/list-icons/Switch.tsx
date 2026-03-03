@@ -1,18 +1,34 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { Repeat } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '../../types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  stroke?: string;
+  [key: string]: unknown;
+}
 
-export const SwitchIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M20 17H4M4 17L8 13M4 17L8 21M4 7H20M20 7L16 3M20 7L16 11"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * Switch - Proxies to Lucide Repeat
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 4)
+ * @lucide https://lucide.dev/icons/repeat
+ */
+export const Switch = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <Repeat color={iconColor} size={size} {...props} />;
+};
+
+/**
+ * SwitchIcon - Proxies to Lucide Repeat
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 4)
+ * @lucide https://lucide.dev/icons/repeat
+ * @deprecated Use Switch instead
+ */
+export const SwitchIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <Repeat color={iconColor} size={size} {...props} />;
 };

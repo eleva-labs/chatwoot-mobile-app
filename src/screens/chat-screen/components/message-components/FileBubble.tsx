@@ -5,11 +5,11 @@ import Animated from 'react-native-reanimated';
 import RNFetchBlob from 'rn-fetch-blob';
 
 import { FileIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { Icon } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
-import { MESSAGE_VARIANTS } from '@/constants';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
+import { Icon } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
+import { MESSAGE_VARIANTS } from '@domain/constants';
 type FilePreviewProps = Pick<FileBubbleProps, 'fileSrc'> & {
   isComposed?: boolean;
   variant: string;

@@ -5,9 +5,7 @@
  * navigation, answers, submission, and event callbacks.
  */
 
-// eslint-disable-next-line import/no-unresolved
-import { renderHook, act } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react-native';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useOnboarding } from '../../../presentation/hooks/useOnboarding';
 import { createMockOnboardingRepository, createMockStorageRepository } from '../../helpers/mocks';
 import { testData } from '../../helpers/builders';
@@ -38,9 +36,11 @@ describe('useOnboarding', () => {
   });
 
   // Helper function to create hook with use cases
-  const createHook = (options = {}) => {
+  // Default autoLoad to false to prevent async side effects during render
+  const createHook = (options: Record<string, unknown> = {}) => {
+    const mergedOptions = { autoLoad: false, ...options };
     return renderHook(() =>
-      useOnboarding(fetchFlowUseCase, submitAnswersUseCase, saveProgressUseCase, options),
+      useOnboarding(fetchFlowUseCase, submitAnswersUseCase, saveProgressUseCase, mergedOptions),
     );
   };
 
@@ -86,19 +86,14 @@ describe('useOnboarding', () => {
       expect(result.current.error).toBeNull();
     });
 
-    it('should set loading true during fetch', async () => {
+    it('should set loading false after fetch completes', async () => {
       const { result } = createHook();
 
-      const loadPromise = act(async () => {
+      await act(async () => {
         await result.current.loadFlow('en');
       });
 
-      // Check loading state
-      await waitFor(() => {
-        expect(result.current.loading).toBe(false); // Complete
-      });
-
-      await loadPromise;
+      expect(result.current.loading).toBe(false);
     });
 
     it('should set current screen to first screen', async () => {
@@ -240,6 +235,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         await result.current.goToNext();
       });
 
@@ -256,6 +254,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         await result.current.goToStep(2);
       });
 
@@ -314,6 +315,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         result.current.setAnswer('q1', 'answer');
       });
 
@@ -365,8 +369,14 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         result.current.setAnswer('q1', 'answer1');
         result.current.setAnswer('q2', 'answer2');
+      });
+
+      await act(async () => {
         await result.current.submitAnswers();
       });
 
@@ -383,6 +393,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         await result.current.submitAnswers();
       });
 
@@ -395,6 +408,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         await result.current.submitAnswers();
       });
 
@@ -423,6 +439,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         await result.current.skipQuestion();
       });
 
@@ -439,6 +458,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         await result.current.skipFlow();
       });
 
@@ -468,6 +490,9 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         result.current.setAnswer('q1', 'answer');
         await result.current.goToNext();
       });
@@ -613,8 +638,17 @@ describe('useOnboarding', () => {
 
       await act(async () => {
         await result.current.loadFlow('en');
+      });
+
+      await act(async () => {
         await result.current.goToNext();
+      });
+
+      await act(async () => {
         await result.current.goToNext();
+      });
+
+      await act(async () => {
         await result.current.goToPrevious();
       });
 

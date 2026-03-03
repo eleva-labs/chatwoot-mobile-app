@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import Animated, { LayoutAnimationConfig, LinearTransition } from 'react-native-reanimated';
 
-import { useChatWindowContext } from '@/context';
-import { tailwind } from '@/theme';
+import { useChatWindowContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 
 import { MentionInput, MentionSuggestionsProps, Suggestion } from './mentions-input';
@@ -18,12 +18,12 @@ import {
   selectIsPrivateMessage,
   selectQuoteMessage,
   selectMessageContent,
-} from '@/store/conversation/sendMessageSlice';
-import i18n from '@/i18n';
+} from '@application/store/conversation/sendMessageSlice';
+import i18n from '@infrastructure/i18n';
 import { createTypingIndicator } from '@chatwoot/utils';
-import { conversationActions } from '@/store/conversation/conversationActions';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 import { MentionUser } from './MentionUser';
-import { Agent } from '@/types';
+import { Agent } from '@domain/types';
 
 type MessageTextInputProps = {
   maxLength: number;

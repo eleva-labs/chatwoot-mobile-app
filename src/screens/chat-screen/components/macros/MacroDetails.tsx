@@ -2,24 +2,24 @@ import React, { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 
-import { Icon, Spinner } from '@/components-next';
-import i18n from '@/i18n';
-import { ChevronLeft } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Agent, Macro } from '@/types';
-import { useHaptic, useScaleAnimation } from '@/utils';
+import { Spinner } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { Agent, Macro } from '@domain/types';
+import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { useAppSelector } from '@/hooks';
-import { selectAllLabels } from '@/store/label/labelSelectors';
-import { selectAllTeams } from '@/store/team/teamSelectors';
-import { selectAssignableAgentsByInboxId } from '@/store/assignable-agent/assignableAgentSelectors';
+import { selectAllLabels } from '@application/store/label/labelSelectors';
+import { selectAllTeams } from '@application/store/team/teamSelectors';
+import { selectAssignableAgentsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
 import {
   resolveActionName,
   resolveTeamIds,
   resolveLabels,
   resolveAgents,
-} from '@/utils/macroUtils';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
+} from '@infrastructure/utils/macroUtils';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { useMacroContext } from './MacroContext';
 
 type MacroDetailsProps = {
@@ -30,6 +30,7 @@ type MacroDetailsProps = {
 
 const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
   const hapticSelection = useHaptic();
+  const { colors } = useThemeColors();
   const labels = useAppSelector(selectAllLabels);
   const teams = useAppSelector(selectAllTeams);
   const { executeMacro, executingMacroId, conversationId } = useMacroContext();
@@ -81,7 +82,9 @@ const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
     <Animated.View entering={FadeIn.duration(300).springify()} style={tailwind.style('flex-1')}>
       <View style={tailwind.style('flex-row items-center p-4')}>
         <Pressable onPress={onBack} style={tailwind.style('flex-1 flex-row items-center')}>
-          <Icon icon={<ChevronLeft />} size={18} style={tailwind.style('mr-1')} />
+          <View style={tailwind.style('mr-1')}>
+            <ChevronLeft size={18} color={colors.slate[12]} />
+          </View>
           <Animated.Text style={tailwind.style('flex-1 text-base')} numberOfLines={1}>
             {macro.name}
           </Animated.Text>

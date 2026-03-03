@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { Team } from '@/types';
-import { Avatar, Icon, SearchBar } from '@/components-next';
-import { TickIcon } from '@/svg-icons';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { Team } from '@domain/types';
+import { Avatar, SearchBar } from '@infrastructure/ui';
 
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectSelectedConversation } from '@/store/conversation/conversationSelectedSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { selectLoading } from '@/store/team/teamSelectors';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { filterTeams } from '@/store/team/teamSelectors';
+import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { selectLoading } from '@application/store/team/teamSelectors';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { filterTeams } from '@application/store/team/teamSelectors';
 
 type TeamCellProps = {
   value: Team;
@@ -63,7 +63,9 @@ const TeamCell = (props: TeamCellProps) => {
           ]}>
           {value.name}
         </Animated.Text>
-        {teamId === value.id ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {teamId === value.id ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

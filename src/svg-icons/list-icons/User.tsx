@@ -1,18 +1,34 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { User as LucideUser } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '../../types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  stroke?: string;
+  [key: string]: unknown;
+}
 
-export const UserIcon = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M3 20C5.33579 17.5226 8.50702 16 12 16C15.493 16 18.6642 17.5226 21 20M16.5 7.5C16.5 9.98528 14.4853 12 12 12C9.51472 12 7.5 9.98528 7.5 7.5C7.5 5.01472 9.51472 3 12 3C14.4853 3 16.5 5.01472 16.5 7.5Z"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * User - Proxies to Lucide User
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 4)
+ * @lucide https://lucide.dev/icons/user
+ */
+export const User = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[11];
+  return <LucideUser color={iconColor} size={size} {...props} />;
+};
+
+/**
+ * UserIcon - Proxies to Lucide User
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 4)
+ * @lucide https://lucide.dev/icons/user
+ * @deprecated Use User instead
+ */
+export const UserIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[11];
+  return <LucideUser color={iconColor} size={size} {...props} />;
 };

@@ -1,17 +1,20 @@
-import React from 'react';
-import { Path, Svg } from 'react-native-svg';
+import { ChevronDown } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '../../types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const CaretBottomSmall = ({ fill = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 8 5" fill="none" color={color}>
-      <Path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M0.21967 0.21967C0.512563 -0.0732236 0.987437 -0.0732236 1.28033 0.21967L3.75 2.68934L6.21967 0.21967C6.51256 -0.0732233 6.98744 -0.0732233 7.28033 0.21967C7.57322 0.512563 7.57322 0.987437 7.28033 1.28033L4.28033 4.28033C3.98744 4.57322 3.51256 4.57322 3.21967 4.28033L0.21967 1.28033C-0.0732236 0.987437 -0.0732236 0.512563 0.21967 0.21967Z"
-        fill={fill}
-      />
-    </Svg>
-  );
+/**
+ * CaretBottomSmall - Proxies to Lucide ChevronDown
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/chevron-down
+ */
+export const CaretBottomSmall = ({ color, size = 16, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[11];
+  return <ChevronDown color={iconColor} size={size} {...props} />;
 };

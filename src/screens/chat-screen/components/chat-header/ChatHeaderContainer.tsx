@@ -1,22 +1,20 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import { useChatWindowContext, useRefsContext } from '@/context';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
+import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { contactActions } from '@/store/contact/contactActions';
-import { CONVERSATION_STATUS } from '@/constants';
-import { ConversationStatus } from '@/types/common/ConversationStatus';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { contactActions } from '@application/store/contact/contactActions';
+import { CONVERSATION_STATUS } from '@domain/constants';
 import { ChatHeader } from './ChatHeader';
 import { DashboardList } from './DropdownMenu';
 import { ImageSourcePropType } from 'react-native';
-import { SLAStatus } from '@/types/common/SLA';
+import { SLAStatus } from '@domain/types/common/SLA';
 import { evaluateSLAStatus } from '@chatwoot/utils';
-import { resetSentMessage } from '@/store/conversation/sendMessageSlice';
-import { selectAllDashboardApps } from '@/store/dashboard-app/dashboardAppSlice';
-import { selectUser } from '@/store/auth/authSelectors';
+import { resetSentMessage } from '@application/store/conversation/sendMessageSlice';
+import { selectAllDashboardApps } from '@application/store/dashboard-app/dashboardAppSlice';
+import { selectUser } from '@application/store/auth/authSelectors';
 
 type ChatScreenHeaderProps = {
   name: string;
@@ -122,23 +120,6 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
     }
   };
 
-  const toggleChatStatus = async () => {
-    const updatedStatus =
-      conversationStatus === CONVERSATION_STATUS.RESOLVED
-        ? CONVERSATION_STATUS.OPEN
-        : CONVERSATION_STATUS.RESOLVED;
-    await dispatch(
-      conversationActions.toggleConversationStatus({
-        conversationId,
-        payload: { status: updatedStatus as ConversationStatus, snoozed_until: null },
-      }),
-    );
-
-    showToast({
-      message: i18n.t('CONVERSATION.STATUS_CHANGE'),
-    });
-  };
-
   const toggleAI = async () => {
     if (!contactId) return;
 
@@ -205,7 +186,6 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
       isAIEnabled={isAIEnabled}
       onBackPress={handleBackPress}
       onContactDetailsPress={handleNavigationToContactDetails}
-      onToggleChatStatus={toggleChatStatus}
       onToggleAI={toggleAI}
     />
   );

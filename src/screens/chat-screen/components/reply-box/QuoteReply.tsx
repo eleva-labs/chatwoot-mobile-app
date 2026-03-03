@@ -3,19 +3,23 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 import Animated from 'react-native-reanimated';
 import { Image } from 'expo-image';
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 
-import { useRefsContext } from '@/context';
-import { CloseIcon, FileIcon, VoiceNote } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { isMarkdown } from '@/utils';
-import { Icon } from '@/components-next/common';
+import { useRefsContext } from '@infrastructure/context';
+import { FileIcon, VoiceNote } from '@/svg-icons';
+import { tailwind } from '@infrastructure/theme';
+import { isMarkdown } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui/common';
 
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
-import { selectQuoteMessage, setQuoteMessage } from '@/store/conversation/sendMessageSlice';
+import {
+  selectQuoteMessage,
+  setQuoteMessage,
+} from '@application/store/conversation/sendMessageSlice';
 
 import { VideoPlayer } from '../message-components';
-import { Message } from '@/types';
+import { Message } from '@domain/types';
 
 const AudioIcon = () => {
   return (
@@ -169,7 +173,7 @@ export const QuoteReply = () => {
       <Pressable
         style={tailwind.style('h-10 w-10 items-center justify-center -mr-[1px]')}
         onPress={handleOnPressClose}>
-        <Icon icon={<CloseIcon />} size={24} />
+        <CloseIcon size={24} color={tailwind.color('text-slate-12')} />
       </Pressable>
     </Pressable>
   );

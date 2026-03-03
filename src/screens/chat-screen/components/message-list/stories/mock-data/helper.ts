@@ -1,6 +1,6 @@
 import camelcaseKeys from 'camelcase-keys';
-import { Message } from '@/types';
-import { getGroupedMessages } from '@/utils';
+import { Message } from '@domain/types';
+import { getGroupedMessages } from '@infrastructure/utils';
 import { flatMap } from 'lodash';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

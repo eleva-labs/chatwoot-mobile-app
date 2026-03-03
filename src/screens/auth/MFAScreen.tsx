@@ -3,15 +3,15 @@ import { Animated, StatusBar, View, TextInput, Text, Pressable, ScrollView } fro
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSharedValue } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
-import { Button, VerificationCode } from '@/components-next';
-import { useAnimatedShake } from '@/components-next/verification-code/hooks/use-animated-shake';
-import type { StatusType } from '@/components-next/verification-code';
-import { tailwind } from '@/theme';
+import { Button, VerificationCode } from '@infrastructure/ui';
+import { useAnimatedShake } from '@infrastructure/ui/verification-code/hooks/use-animated-shake';
+import type { StatusType } from '@infrastructure/ui/verification-code';
+import { tailwind } from '@infrastructure/theme';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { resetSettings } from '@/store/settings/settingsSlice';
-import { authActions } from '@/store/auth/authActions';
-import { resetAuth, clearAuthError } from '@/store/auth/authSlice';
-import i18n from '@/i18n';
+import { resetSettings } from '@application/store/settings/settingsSlice';
+import { authActions } from '@application/store/auth/authActions';
+import { resetAuth, clearAuthError } from '@application/store/auth/authSlice';
+import i18n from '@infrastructure/i18n';
 
 const MFAScreen = () => {
   const navigation = useNavigation();

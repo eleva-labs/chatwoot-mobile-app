@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleProp, Text, ViewStyle } from 'react-native';
 
-import { tailwind } from '@/theme';
-import { useThemedStyles } from '@/hooks';
-import { NativeView } from '@/components-next/native-components';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { NativeView } from '@infrastructure/ui/native-components';
 import {
   AudioIcon,
   ImageAttachmentIcon,
@@ -11,11 +11,11 @@ import {
   PrivateNoteIcon,
   OutgoingIcon,
 } from '@/svg-icons';
-import { Icon } from '@/components-next';
-import { Message } from '@/types';
-import { MESSAGE_TYPES } from '@/constants';
-import i18n from '@/i18n';
-import { getPlainText } from '@/utils/messageFormatterUtils';
+import { Icon } from '@infrastructure/ui';
+import { Message } from '@domain/types';
+import { MESSAGE_TYPES } from '@domain/constants';
+import i18n from '@infrastructure/i18n';
+import { getPlainText } from '@infrastructure/utils/messageFormatterUtils';
 
 type ConversationLastMessageProps = {
   numberOfLines: number;
@@ -80,7 +80,7 @@ const MessageContent = ({
   const { contentAttributes } = message || {};
   const { email: { subject = '' } = {} } = contentAttributes || {};
 
-  const lastMessageContent = getPlainText(subject || message?.content);
+  const lastMessageContent = getPlainText(subject || message?.content || '');
 
   const lastMessageFileType = message?.attachments?.[0]?.fileType;
 

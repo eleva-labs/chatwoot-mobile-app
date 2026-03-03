@@ -11,9 +11,9 @@ import {
 import { useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
 import { UpdateAssignee } from '../UpdateAssignee';
-import { BottomSheetBackdrop } from '@/components-next/common/bottomsheet/BottomSheetBackdrop';
-import { useRefsContext, RefsProvider } from '@/context/RefsContext';
-import { tailwind } from '@/theme';
+import { BottomSheetBackdrop } from '@infrastructure/ui/common/bottomsheet/BottomSheetBackdrop';
+import { useRefsContext, RefsProvider } from '@infrastructure/context/RefsContext';
+import { tailwind } from '@infrastructure/theme';
 
 const mockSelectedSlice = createSlice({
   name: 'conversationSelected',

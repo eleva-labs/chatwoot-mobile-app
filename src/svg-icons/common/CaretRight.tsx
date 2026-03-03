@@ -1,18 +1,20 @@
-import React from 'react';
-import { Path, Svg } from 'react-native-svg';
+import { ChevronRight } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '../../types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const CaretRight = ({ stroke = 'currentColor', color }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 20 20" fill="none" color={color}>
-      <Path
-        d="M8 15L13 10L8 5"
-        stroke={stroke}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * CaretRight - Proxies to Lucide ChevronRight icon
+ *
+ * @migrated 2026-03-01 (Cycle 2 - rollback to proxy pattern)
+ * @lucide https://lucide.dev/icons/chevron-right
+ */
+export const CaretRight = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[12];
+  return <ChevronRight color={iconColor} size={size} {...props} />;
 };

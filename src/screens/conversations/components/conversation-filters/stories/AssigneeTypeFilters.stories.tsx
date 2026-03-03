@@ -11,11 +11,11 @@ import {
 import { useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
 import { AssigneeTypeFilters } from '../AssigneeTypeFilters';
-import { defaultFilterState } from '@/store/conversation/conversationFilterSlice';
-import { BottomSheetBackdrop } from '@/components-next/common/bottomsheet/BottomSheetBackdrop';
-import { useRefsContext, RefsProvider } from '@/context/RefsContext';
-import { tailwind } from '@/theme';
-import { ConversationFilterOptions } from '@/types';
+import { defaultFilterState } from '@application/store/conversation/conversationFilterSlice';
+import { BottomSheetBackdrop } from '@infrastructure/ui/common/bottomsheet/BottomSheetBackdrop';
+import { useRefsContext, RefsProvider } from '@infrastructure/context/RefsContext';
+import { tailwind } from '@infrastructure/theme';
+import { ConversationFilterOptions } from '@domain/types';
 
 const mockFilterSlice = createSlice({
   name: 'conversationFilter',

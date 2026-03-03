@@ -1,12 +1,12 @@
 import React from 'react';
 import { Animated, Text } from 'react-native';
 
-import { tailwind } from '@/theme';
-import { Channel, MessageStatus, MessageType } from '@/types';
-import { messageTimestamp } from '@/utils';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, MessageStatus, MessageType } from '@domain/types';
+import { messageTimestamp } from '@infrastructure/utils';
 
 import { MarkdownDisplay } from './MarkdownDisplay';
-import { TEXT_MAX_WIDTH } from '@/constants';
+import { TEXT_MAX_WIDTH } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 
 type BotTextCellProps = {

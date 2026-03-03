@@ -3,15 +3,15 @@ import { Controller, useForm } from 'react-hook-form';
 import { Animated, StatusBar, TextInput, View } from 'react-native';
 import * as Application from 'expo-application';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Icon } from '@/components-next';
-import { URL_WITHOUT_HTTP_REGEX } from '@/constants';
+import { Button, Icon } from '@infrastructure/ui';
+import { URL_WITHOUT_HTTP_REGEX } from '@domain/constants';
 import { LinkIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
 import { useAppSelector, useAppDispatch } from '@/hooks';
-import { selectBaseUrl } from '@/store/settings/settingsSelectors';
-import { resetSettings } from '@/store/settings/settingsSlice';
-import { settingsActions } from '@/store/settings/settingsActions';
+import { selectBaseUrl } from '@application/store/settings/settingsSelectors';
+import { resetSettings } from '@application/store/settings/settingsSlice';
+import { settingsActions } from '@application/store/settings/settingsActions';
 
 type FormData = {
   url: string;

@@ -15,13 +15,13 @@ import DeviceInfo from 'react-native-device-info';
 import ChatWootWidget from '@chatwoot/react-native-widget';
 import { useSelector } from 'react-redux';
 import * as Application from 'expo-application';
-import { Account, AvailabilityStatus } from '@/types';
-import { clearAllConversations } from '@/store/conversation/conversationSlice';
-import { resetNotifications } from '@/store/notification/notificationSlice';
-import { clearAllContacts } from '@/store/contact/contactSlice';
+import { Account, AvailabilityStatus } from '@domain/types';
+import { clearAllConversations } from '@application/store/conversation/conversationSlice';
+import { resetNotifications } from '@application/store/notification/notificationSlice';
+import { clearAllContacts } from '@application/store/contact/contactSlice';
 
-import i18n from 'i18n';
-import { tailwind } from '@/theme';
+import i18n from '@infrastructure/i18n';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@/hooks';
 
 import {
@@ -34,37 +34,37 @@ import {
   NotificationPreferences,
   SwitchAccount,
   SettingsList,
-} from '@/components-next';
+} from '@infrastructure/ui';
 import { UserAvatar } from './components/UserAvatar';
-import { BuildInfo } from '@/components-next/common';
+import { BuildInfo } from '@infrastructure/ui/common';
 
-import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@/constants';
-import { useRefsContext, useTheme } from '@/context';
+import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { useRefsContext, useTheme } from '@infrastructure/context';
 import { NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
-import { GenericListType } from '@/types';
+import { GenericListType } from '@domain/types';
 
-import { useHaptic } from '@/utils';
+import { useHaptic } from '@infrastructure/utils';
 import { SettingsHeader } from './SettingsHeader';
 import { DebugActions } from './components/DebugActions';
 import {
   selectCurrentUserAvailability,
   selectUser,
   selectAccounts,
-} from '@/store/auth/authSelectors';
-import { logout, setAccount } from '@/store/auth/authSlice';
-import { authActions } from '@/store/auth/authActions';
+} from '@application/store/auth/authSelectors';
+import { logout, setAccount } from '@application/store/auth/authSlice';
+import { authActions } from '@application/store/auth/authActions';
 import {
   selectLocale,
   //selectIsChatwootCloud,
   selectPushToken,
-} from '@/store/settings/settingsSelectors';
-import { settingsActions } from '@/store/settings/settingsActions';
-import { setLocale } from '@/store/settings/settingsSlice';
+} from '@application/store/settings/settingsSelectors';
+import { settingsActions } from '@application/store/settings/settingsActions';
+import { setLocale } from '@application/store/settings/settingsSlice';
 
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@/constants/analyticsEvents';
-import { getUserPermissions } from '@/utils/permissionUtils';
-import { CONVERSATION_PERMISSIONS } from '@/constants/permissions';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';
+import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
+import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
 import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 const appName = Application.applicationName;
@@ -146,6 +146,7 @@ const SettingsScreen = () => {
 
   const { theme, setTheme, isDark } = useTheme();
   const themedTailwind = useThemedStyles();
+  const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
 
   const animationConfigs = useBottomSheetSpringConfigs({
@@ -240,7 +241,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_AVAILABILITY'),
-      icon: <SwitchIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <SwitchIcon stroke={colors.slate[12]} />,
       subtitle: '',
       subtitleType: 'light',
       onPressListItem: () => openSheet(),
@@ -248,7 +249,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.NOTIFICATIONS'),
-      icon: <NotificationIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <NotificationIcon stroke={colors.slate[12]} />,
       subtitle: '',
       subtitleType: 'light',
       disabled: !hasConversationPermission,
@@ -258,7 +259,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.CHANGE_LANGUAGE'),
-      icon: <TranslateIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <TranslateIcon stroke={colors.slate[12]} />,
       subtitle: LANGUAGES[activeLocale as keyof typeof LANGUAGES],
       subtitleType: 'light',
       onPressListItem: () => languagesModalSheetRef.current?.present(),
@@ -266,7 +267,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.THEME'),
-      icon: <ThemeIcon color={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <ThemeIcon color={colors.slate[12]} />,
       subtitle: getThemeLabel(),
       subtitleType: 'light',
       onPressListItem: () => {
@@ -281,7 +282,7 @@ const SettingsScreen = () => {
     {
       hasChevron: enableAccountSwitch,
       title: i18n.t('SETTINGS.SWITCH_ACCOUNT'),
-      icon: <SwitchIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
+      icon: <SwitchIcon stroke={colors.slate[12]} />,
       subtitle: activeAccountName,
       subtitleType: 'light',
       onPressListItem: () => {

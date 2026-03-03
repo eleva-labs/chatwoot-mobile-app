@@ -1,65 +1,20 @@
-import React from 'react';
-import Svg, { Path, Rect } from 'react-native-svg';
+import { Bot } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
 interface BotIconProps {
-  stroke?: string;
   size?: number;
   color?: string;
+  [key: string]: unknown;
 }
 
-export const BotIcon = ({
-  stroke = 'currentColor',
-  size = 24,
-  color,
-}: BotIconProps): JSX.Element => {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" color={color}>
-      <Path
-        d="M12 8V4H8"
-        stroke={stroke}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Rect
-        width={16}
-        height={12}
-        x={4}
-        y={8}
-        rx={2}
-        stroke={stroke}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M2 14h2"
-        stroke={stroke}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M20 14h2"
-        stroke={stroke}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M15 13v2"
-        stroke={stroke}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M9 13v2"
-        stroke={stroke}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * BotIcon - Proxies to Lucide Bot
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 5)
+ * @lucide https://lucide.dev/icons/bot
+ */
+export const BotIcon = ({ color, size = 24, ...props }: BotIconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.iris[9];
+  return <Bot color={iconColor} size={size} {...props} />;
 };

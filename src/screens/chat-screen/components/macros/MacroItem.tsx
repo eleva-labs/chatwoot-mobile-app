@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { CaretRight } from '@/svg-icons/common/CaretRight';
 
-import { Icon, Spinner } from '@/components-next';
-import { CaretRight, InfoIcon, MacroIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Macro } from '@/types';
+import { Icon, Spinner } from '@infrastructure/ui';
+import { InfoIcon, MacroIcon } from '@/svg-icons';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { Macro } from '@domain/types';
 import { useMacroContext } from './MacroContext';
 
 type MacroItemProps = {
@@ -19,6 +20,7 @@ type MacroItemProps = {
 const MacroItem = (props: MacroItemProps) => {
   const { macro, index, handleMacroPress, isInsideBottomSheet, isLastItem } = props;
   const { executeMacro, executingMacroId } = useMacroContext();
+  const { colors } = useThemeColors();
 
   // Check if this specific macro is executing
   const isThisMacroExecuting = executingMacroId === macro.id;
@@ -60,7 +62,7 @@ const MacroItem = (props: MacroItemProps) => {
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             style={tailwind.style('flex flex-row items-center pr-3')}>
             {macro.hasChevron ? (
-              <Icon icon={<CaretRight />} size={20} />
+              <CaretRight size={20} color={colors.slate[12]} />
             ) : (
               <Icon icon={<InfoIcon />} size={22} />
             )}
