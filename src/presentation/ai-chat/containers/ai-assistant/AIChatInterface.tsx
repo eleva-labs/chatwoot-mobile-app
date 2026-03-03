@@ -13,6 +13,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Platform } from 'react-native';
+import Markdown from 'react-native-markdown-display';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import type { UIMessage } from 'ai';
@@ -273,7 +274,7 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     );
 
     return (
-      <AIChatProvider i18n={chatwootI18n}>
+      <AIChatProvider i18n={chatwootI18n} registry={{ markdownRenderer: Markdown }}>
         <KeyboardAvoidingView
           style={tailwind.style('flex-1')}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

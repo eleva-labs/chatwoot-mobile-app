@@ -28,4 +28,7 @@ export type {
   PartRendererProps,
   PartComponent,
   AIChatRegistries,
+  MarkdownRendererComponent,
 } from './useAIChatProvider';
+
+export { useAIMarkdownRenderer } from './useAIMarkdownRenderer';

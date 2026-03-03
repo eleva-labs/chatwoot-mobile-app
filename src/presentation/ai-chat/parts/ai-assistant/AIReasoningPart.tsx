@@ -16,14 +16,13 @@
 
 import React, { useMemo } from 'react';
 import { View, ScrollView, ActivityIndicator, StyleSheet, Text } from 'react-native';
-import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-
 import { Brain } from 'lucide-react-native';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useTheme } from '@infrastructure/context/ThemeContext';
 import { useThemeColors } from '@infrastructure/theme';
 import { AICollapsible } from './AICollapsible';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
+import { useAIMarkdownRenderer } from '@presentation/ai-chat/hooks/ai-assistant/useAIMarkdownRenderer';
 
 // Import domain types (single source of truth)
 import type { ReasoningPart } from '@domain/types/ai-chat/parts';
@@ -70,6 +69,9 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   const irisTokens = getCollapsible('iris');
   const { themeVersion } = useTheme();
   const { colors } = useThemeColors();
+  const registryMarkdownRenderer = useAIMarkdownRenderer();
+  // Prop wins over registry (allows per-instance override)
+  const ResolvedMarkdownRenderer = CustomMarkdownRenderer ?? registryMarkdownRenderer;
 
   const reasoningTextColor = colors.slate[12];
   const reasoningCodeBg = colors.slate[3];
@@ -138,17 +140,15 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
         {reasoningText ? (
           <View style={{ width: '100%' }}>
             {/* Markdown content for reasoning text */}
-            {CustomMarkdownRenderer ? (
-              <CustomMarkdownRenderer style={markdownStyles as unknown as Record<string, unknown>}>
+            {ResolvedMarkdownRenderer ? (
+              <ResolvedMarkdownRenderer
+                style={markdownStyles as unknown as Record<string, unknown>}>
                 {reasoningText}
-              </CustomMarkdownRenderer>
+              </ResolvedMarkdownRenderer>
             ) : (
-              <Markdown
-                mergeStyle
-                markdownit={MarkdownIt({ linkify: true, typographer: true })}
-                style={markdownStyles}>
-                {reasoningText}
-              </Markdown>
+              // Fallback: plain text when no markdown renderer is registered.
+              // Register one via AIChatProvider registry.markdownRenderer to enable markdown rendering.
+              <Text style={markdownStyles.body as object}>{reasoningText}</Text>
             )}
             {/* Streaming cursor matching Vue's accent cursor */}
             {isStreaming && (

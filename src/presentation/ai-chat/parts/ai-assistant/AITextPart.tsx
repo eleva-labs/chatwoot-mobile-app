@@ -15,18 +15,17 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, Linking } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-
 import { useTheme } from '@infrastructure/context/ThemeContext';
 import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
+import { useAIMarkdownRenderer } from '@presentation/ai-chat/hooks/ai-assistant/useAIMarkdownRenderer';
 
 // Import domain types (single source of truth)
 import type { TextPart } from '@domain/types/ai-chat/parts';
@@ -71,6 +70,9 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   const { style } = useAIStyles();
   const { themeVersion } = useTheme();
   const { colors } = useThemeColors();
+  const registryMarkdownRenderer = useAIMarkdownRenderer();
+  // Prop wins over registry (allows per-instance override)
+  const ResolvedMarkdownRenderer = CustomMarkdownRenderer ?? registryMarkdownRenderer;
 
   const isUser = role === 'user';
   const text = part.text || '';
@@ -108,14 +110,6 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   useEffect(() => {
     setContentHeight(undefined);
   }, [text]);
-
-  // Handle URL presses in markdown
-  const handleLinkPress = (url: string) => {
-    Linking.openURL(url).catch(err => {
-      console.warn('[AITextPart] Failed to open URL:', err);
-    });
-    return true;
-  };
 
   // Get colors from theme context (extraction-ready)
   // User: iris-12 text on iris-3 background
@@ -230,21 +224,14 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   return (
     <View style={contentHeight ? { minHeight: contentHeight } : undefined}>
       <View onLayout={handleInnerLayout}>
-        {CustomMarkdownRenderer ? (
-          <CustomMarkdownRenderer style={markdownStyles as unknown as Record<string, unknown>}>
+        {ResolvedMarkdownRenderer ? (
+          <ResolvedMarkdownRenderer style={markdownStyles as unknown as Record<string, unknown>}>
             {text}
-          </CustomMarkdownRenderer>
+          </ResolvedMarkdownRenderer>
         ) : (
-          <Markdown
-            mergeStyle
-            markdownit={MarkdownIt({
-              linkify: true,
-              typographer: true,
-            })}
-            onLinkPress={handleLinkPress}
-            style={markdownStyles}>
-            {text}
-          </Markdown>
+          // Fallback: plain text when no markdown renderer is registered.
+          // Register one via AIChatProvider registry.markdownRenderer to enable markdown rendering.
+          <Text style={markdownStyles.body as object}>{text}</Text>
         )}
       </View>
       {isStreaming && (
