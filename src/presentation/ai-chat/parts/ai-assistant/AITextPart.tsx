@@ -46,8 +46,12 @@ export interface AITextPartProps {
   isStreaming?: boolean;
   /** Whether to render markdown or plain text */
   enableMarkdown?: boolean;
-  /** Optional custom markdown renderer. Default: react-native-markdown-display */
-  MarkdownRenderer?: React.ComponentType<{ children: string; style?: Record<string, unknown> }>;
+  /** Optional per-instance markdown renderer override. When not provided, falls back to the
+   *  renderer registered in AIChatProvider (via registry.markdownRenderer), or plain <Text> if none. */
+  MarkdownRenderer?: React.ComponentType<{
+    children: React.ReactNode;
+    style?: Record<string, unknown>;
+  }>;
 }
 
 // ============================================================================

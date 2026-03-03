@@ -35,11 +35,12 @@ export type PartComponent = React.ComponentType<PartRendererProps>;
 
 /**
  * A React component that renders markdown text.
- * Matches the minimal interface expected by AITextPart and AIReasoningPart.
- * Pass `Markdown` from `react-native-markdown-display` (or any compatible alternative).
+ * Must accept `children: ReactNode` (the markdown string) and an optional `style` prop.
+ * Note: advanced props like onLinkPress or markdownit configuration must be pre-applied
+ * by wrapping the renderer before passing it to AIChatProvider.
  */
 export type MarkdownRendererComponent = React.ComponentType<{
-  children: string;
+  children: React.ReactNode;
   style?: Record<string, unknown>;
 }>;
 
