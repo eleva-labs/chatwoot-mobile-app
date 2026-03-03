@@ -52,7 +52,6 @@ export const LabelItemRemovable = ({ title, color, onRemove }: LabelItemRemovabl
         onPress={handleRemove}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={({ pressed }) => [
-          styles.labelShadow,
           tailwind.style(
             'flex items-center justify-center rounded-r-lg',
             pressed ? 'bg-slate-4' : 'bg-solid-1',

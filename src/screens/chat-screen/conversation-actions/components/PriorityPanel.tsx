@@ -11,6 +11,8 @@ import i18n from '@infrastructure/i18n';
 type PriorityPanelProps = {
   priority: ConversationPriority;
   onPress: () => void;
+  isFirstItem?: boolean;
+  isLastItem?: boolean;
 };
 
 const priorityAvatar = (priority: ConversationPriority) => {
@@ -20,7 +22,12 @@ const priorityAvatar = (priority: ConversationPriority) => {
   return <Icon icon={<NoPriorityIcon />} />;
 };
 
-const PriorityPanel = ({ priority, onPress }: PriorityPanelProps) => {
+const PriorityPanel = ({
+  priority,
+  onPress,
+  isFirstItem = false,
+  isLastItem = false,
+}: PriorityPanelProps) => {
   const { colors } = useThemeColors();
   const priorityName = priority
     ? i18n.t(`CONVERSATION.PRIORITY.OPTIONS.${priority.toUpperCase()}`)
@@ -28,12 +35,19 @@ const PriorityPanel = ({ priority, onPress }: PriorityPanelProps) => {
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [tailwind.style(pressed ? 'bg-slate-3' : '', 'rounded-t-[13px]')]}>
+      style={({ pressed }) => [
+        tailwind.style(
+          pressed ? 'bg-slate-3' : '',
+          isFirstItem ? 'rounded-t-[13px]' : '',
+          isLastItem ? 'rounded-b-[13px]' : '',
+        ),
+      ]}>
       <Animated.View style={tailwind.style('flex-row items-center justify-between pl-3')}>
         {priorityAvatar(priority)}
         <Animated.View
           style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px] border-b-[1px] border-b-slate-6',
+            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px]',
+            !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
           )}>
           <Animated.Text
             style={tailwind.style(

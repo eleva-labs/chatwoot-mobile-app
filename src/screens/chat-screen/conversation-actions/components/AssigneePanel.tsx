@@ -11,6 +11,8 @@ import i18n from '@infrastructure/i18n';
 type AssigneePanelProps = {
   assignee: Agent | null;
   onPress: () => void;
+  isFirstItem?: boolean;
+  isLastItem?: boolean;
 };
 
 const assigneeAvatar = (assignee: Agent | null) => {
@@ -22,7 +24,12 @@ const assigneeAvatar = (assignee: Agent | null) => {
   return <Icon icon={<UnassignedIcon />} />;
 };
 
-const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
+const AssigneePanel = ({
+  assignee,
+  onPress,
+  isFirstItem = false,
+  isLastItem = false,
+}: AssigneePanelProps) => {
   const { colors } = useThemeColors();
   const assigneeName = assignee ? assignee.name : i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EMPTY');
   const assigneeActionText = assignee
@@ -31,12 +38,19 @@ const AssigneePanel = ({ assignee, onPress }: AssigneePanelProps) => {
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [tailwind.style(pressed ? 'bg-slate-3' : '', 'rounded-t-[13px]')]}>
+      style={({ pressed }) => [
+        tailwind.style(
+          pressed ? 'bg-slate-3' : '',
+          isFirstItem ? 'rounded-t-[13px]' : '',
+          isLastItem ? 'rounded-b-[13px]' : '',
+        ),
+      ]}>
       <Animated.View style={tailwind.style('flex-row items-center justify-between pl-3')}>
         {assigneeAvatar(assignee)}
         <Animated.View
           style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px] border-b-[1px] border-b-slate-6',
+            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px]',
+            !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
           )}>
           <Animated.Text
             style={tailwind.style(
