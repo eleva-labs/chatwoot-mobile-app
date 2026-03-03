@@ -19,7 +19,7 @@ import {
   SettingsIconFilled,
   SettingsIconOutline,
 } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, useTabBarHeight } from '@infrastructure/utils';
 
 import { TabParamList } from './AppTabs';
@@ -37,7 +37,11 @@ type TabBarIconsProps = {
 };
 
 const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
-  const iconColor = tailwind.color('text-slate-12') ?? '#171717';
+  const { semanticColors } = useThemeColors();
+
+  // Focused: Use accent color (blue-9 in light, lighter blue in dark)
+  // Unfocused: Use muted text color (slate-10)
+  const iconColor = focused ? semanticColors.accent : semanticColors.textMuted;
 
   switch (route.name) {
     case 'Conversations':
