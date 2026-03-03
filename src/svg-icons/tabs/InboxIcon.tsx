@@ -37,10 +37,10 @@ export const InboxIconOutline = ({ color, size = 24, ...props }: IconProps) => {
  *
  * @migrated 2026-03-02 (Cycle 2 Batch 4)
  * @lucide https://lucide.dev/icons/inbox
- * @note Lucide doesn't have a filled variant, using regular
+ * @note Lucide doesn't have a filled variant, using stroke-only for consistency
  */
 export const InboxIconFilled = ({ color, size = 24, ...props }: IconProps) => {
   const { colors } = useThemeColors();
   const iconColor = color || colors.blue[9];
-  return <Inbox color={iconColor} size={size} fill={iconColor} {...props} />;
+  return <Inbox color={iconColor} size={size} {...props} />;
 };

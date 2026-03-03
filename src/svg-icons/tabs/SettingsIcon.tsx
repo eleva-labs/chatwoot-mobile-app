@@ -37,10 +37,10 @@ export const SettingsIconOutline = ({ color, size = 24, ...props }: IconProps) =
  *
  * @migrated 2026-03-02 (Cycle 2 Batch 4)
  * @lucide https://lucide.dev/icons/settings
- * @note Lucide doesn't have a filled variant, using regular
+ * @note Lucide doesn't have a filled variant, using stroke-only for consistency
  */
 export const SettingsIconFilled = ({ color, size = 24, ...props }: IconProps) => {
   const { colors } = useThemeColors();
   const iconColor = color || colors.slate[11];
-  return <Settings color={iconColor} size={size} fill={iconColor} {...props} />;
+  return <Settings color={iconColor} size={size} {...props} />;
 };
