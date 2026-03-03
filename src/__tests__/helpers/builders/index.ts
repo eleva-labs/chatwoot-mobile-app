@@ -1,5 +1,12 @@
-// Builders will be added in Cycles 5-6
-// Re-export onboarding builders for backward compatibility
+// Domain type builders
+export { aConversation } from './conversationBuilder';
+export { aContact } from './contactBuilder';
+export { anAgent } from './agentBuilder';
+export { aNotification } from './notificationBuilder';
+export { aMessage } from './messageBuilder';
+export { anAIChatMessage } from './aiChatMessageBuilder';
+
+// Onboarding builders
 export {
   aScreen,
   anOnboardingFlow,
