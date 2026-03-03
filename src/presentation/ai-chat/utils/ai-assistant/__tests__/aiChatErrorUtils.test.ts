@@ -56,7 +56,7 @@ describe('ERROR_DISPLAY_CONFIG', () => {
     for (const category of allCategories) {
       const config = ERROR_DISPLAY_CONFIG[category];
       expect(config.titleKey).toBeTruthy();
-      expect(config.iconType).toMatch(/^(warning|lock)$/);
+      expect(config.iconType).toMatch(/^(wifi-off|clock|lock|server-crash|alert-circle)$/);
       expect(config.accentBg).toBeTruthy();
       expect(config.accentBorder).toBeTruthy();
       expect(config.accentText).toBeTruthy();
@@ -67,8 +67,8 @@ describe('ERROR_DISPLAY_CONFIG', () => {
     expect(ERROR_DISPLAY_CONFIG.auth.iconType).toBe('lock');
   });
 
-  it('network uses warning icon', () => {
-    expect(ERROR_DISPLAY_CONFIG.network.iconType).toBe('warning');
+  it('network uses wifi-off icon', () => {
+    expect(ERROR_DISPLAY_CONFIG.network.iconType).toBe('wifi-off');
   });
 
   it('network and rate_limit use amber accent', () => {

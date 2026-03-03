@@ -1,6 +1,6 @@
 import { ConversationService } from '../conversationService';
 import { apiService } from '@/services/APIService';
-import { conversation, conversationListResponse } from './conversationMockData';
+import { snakeCaseConversation, conversationListApiResponse } from './conversationMockData';
 import {
   transformConversation,
   transformConversationListMeta,
@@ -30,7 +30,7 @@ jest.mock('@/services/APIService', () => ({
 describe('ConversationService', () => {
   it('should fetch all conversations', async () => {
     (apiService.get as jest.Mock).mockResolvedValueOnce({
-      data: conversationListResponse,
+      data: conversationListApiResponse,
     });
 
     const result = await ConversationService.getConversations({
@@ -49,19 +49,19 @@ describe('ConversationService', () => {
       },
     });
     expect(result).toEqual({
-      conversations: conversationListResponse.data.payload.map(transformConversation),
-      meta: transformConversationListMeta(conversationListResponse.data.meta),
+      conversations: conversationListApiResponse.data.payload.map(transformConversation),
+      meta: transformConversationListMeta(conversationListApiResponse.data.meta),
     });
   });
 
   it('should fetch conversation', async () => {
     (apiService.get as jest.Mock).mockResolvedValueOnce({
-      data: conversation,
+      data: { data: snakeCaseConversation },
     });
 
     const result = await ConversationService.fetchConversation(1);
     expect(result).toEqual({
-      conversation: transformConversation(conversation),
+      conversation: transformConversation(snakeCaseConversation),
     });
 
     expect(apiService.get).toHaveBeenCalledWith('conversations/1');
@@ -74,6 +74,7 @@ describe('ConversationService', () => {
           conversation_id: 1,
           current_status: 'resolved',
           snoozed_until: null,
+          success: true,
         },
       },
     });

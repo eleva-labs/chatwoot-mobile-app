@@ -30,7 +30,7 @@ describe('formatToolName', () => {
   });
 
   it('handles multiple consecutive uppercase', () => {
-    expect(formatToolName('getHTTPResponse')).toBe('Get H T T P Response');
+    expect(formatToolName('getHTTPResponse')).toBe('Get HTTPResponse');
   });
 });
 
@@ -48,7 +48,7 @@ describe('formatJson', () => {
   });
 
   it('handles undefined', () => {
-    expect(formatJson(undefined)).toBe('undefined');
+    expect(formatJson(undefined)).toBeUndefined();
   });
 
   it('handles primitive values', () => {

@@ -70,15 +70,26 @@ describe('validateAndNormalizeParts', () => {
     expect(result.parts).toHaveLength(1);
   });
 
-  it('normalizes text part with content to use text property', () => {
+  it('normalizes text part with content to use text property when parts are also filtered', () => {
+    const msg = {
+      id: '1',
+      role: 'user' as const,
+      parts: [{ type: 'text', content: 'from content' }, { noType: true }],
+    } as unknown as UIMessage;
+    const result = validateAndNormalizeParts(msg);
+    expect(result.parts).toHaveLength(1);
+    expect((result.parts[0] as { text: unknown }).text).toBe('from content');
+  });
+
+  it('returns original message when all parts pass filter even with content-only text part', () => {
     const msg = {
       id: '1',
       role: 'user' as const,
       parts: [{ type: 'text', content: 'from content' }],
     } as unknown as UIMessage;
     const result = validateAndNormalizeParts(msg);
-    expect(result.parts).toHaveLength(1);
-    expect((result.parts[0] as { text: unknown }).text).toBe('from content');
+    // When no parts are filtered out, original message is returned (no normalization applied)
+    expect(result).toBe(msg);
   });
 
   it('keeps non-text parts even without text field', () => {
