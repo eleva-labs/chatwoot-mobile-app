@@ -159,7 +159,8 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={tailwind.style('bg-solid-1')}
         enablePanDownToClose
-        snapPoints={[316]}
+        snapPoints={[400, '75%']}
+        index={1}
         keyboardBehavior="interactive"
         keyboardBlurBehavior="restore"
         onChange={handleChange}>
