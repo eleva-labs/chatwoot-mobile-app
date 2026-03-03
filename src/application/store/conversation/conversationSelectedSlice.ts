@@ -3,6 +3,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@application/store';
 import { Conversation } from '@domain/types';
+import { conversationActions } from './conversationActions';
 
 interface SelectedConversationState {
   selectedConversations: {
@@ -47,6 +48,29 @@ const conversationSelectedSlice = createSlice({
     selectSingleConversation: (state, action: PayloadAction<Conversation>) => {
       state.selectedConversation = action.payload;
     },
+  },
+  extraReducers: builder => {
+    // Sync selectedConversation when conversation updates
+    builder
+      .addCase(conversationActions.toggleConversationStatus.fulfilled, (state, { payload }) => {
+        if (state.selectedConversation?.id === payload.conversationId) {
+          state.selectedConversation.status = payload.currentStatus;
+          state.selectedConversation.snoozedUntil = payload.snoozedUntil;
+        }
+      })
+      .addCase(conversationActions.assignConversation.fulfilled, (state, action) => {
+        const { conversationId } = action.meta.arg;
+        const assignee = action.payload;
+        if (state.selectedConversation?.id === conversationId && state.selectedConversation.meta) {
+          state.selectedConversation.meta.assignee = assignee;
+        }
+      })
+      .addCase(conversationActions.togglePriority.fulfilled, (state, action) => {
+        const { conversationId, priority } = action.meta.arg;
+        if (state.selectedConversation?.id === conversationId) {
+          state.selectedConversation.priority = priority;
+        }
+      });
   },
 });
 

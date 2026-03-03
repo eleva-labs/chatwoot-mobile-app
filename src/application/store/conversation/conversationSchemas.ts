@@ -314,19 +314,23 @@ export const ToggleConversationStatusResponseSchema = z.object({
   }),
 });
 
-export const AssigneeResponseSchema = z.object({
-  data: z.object({
-    payload: z.object({
-      id: z.number(),
-      name: z.string(),
-      available_name: z.string().optional(),
-      avatar_url: z.string().nullable().optional(),
-      type: z.string().optional(),
-      availability_status: z.enum(['online', 'busy', 'offline']).optional(),
-      thumbnail: z.string().nullable().optional(),
-    }),
-  }),
-});
+export const AssigneeResponseSchema = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    available_name: z.string().optional(),
+    avatar_url: z.string().nullable().optional(),
+    type: z.string().optional(),
+    availability_status: z.enum(['online', 'busy', 'offline']).optional(),
+    thumbnail: z.string().nullable().optional(),
+    account_id: z.number().optional(),
+    email: z.string().nullable().optional(),
+    provider: z.string().optional(),
+    confirmed: z.boolean().optional(),
+    auto_offline: z.boolean().optional(),
+    role: z.string().optional(),
+  })
+  .passthrough(); // Allow additional fields
 
 export const AssignTeamResponseSchema = z.object({
   data: z.object({

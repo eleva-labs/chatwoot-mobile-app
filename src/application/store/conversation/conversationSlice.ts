@@ -199,6 +199,23 @@ const conversationSlice = createSlice({
         }
         conversation.unreadCount = unreadCount;
         conversation.agentLastSeenAt = agentLastSeenAt;
+      })
+      .addCase(conversationActions.assignConversation.fulfilled, (state, action) => {
+        const { conversationId } = action.meta.arg;
+        const assignee = action.payload;
+        const conversation = state.entities[conversationId];
+        if (!conversation || !conversation.meta) {
+          return;
+        }
+        conversation.meta.assignee = assignee;
+      })
+      .addCase(conversationActions.togglePriority.fulfilled, (state, action) => {
+        const { conversationId, priority } = action.meta.arg;
+        const conversation = state.entities[conversationId];
+        if (!conversation) {
+          return;
+        }
+        conversation.priority = priority;
       });
   },
 });

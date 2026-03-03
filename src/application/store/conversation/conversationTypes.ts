@@ -188,11 +188,7 @@ export interface AssignTeamAPIResponse {
   };
 }
 
-export interface AssigneeAPIResponse {
-  data: {
-    payload: Agent;
-  };
-}
+export type AssigneeAPIResponse = Agent;
 
 export interface MarkMessagesUnreadPayload {
   conversationId: number;
