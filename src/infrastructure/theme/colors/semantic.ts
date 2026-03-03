@@ -105,7 +105,7 @@ export const darkSemanticColors: SemanticColors = {
   textInverse: 'rgb(17, 17, 19)', // slate-1 (inverse)
 
   // Interactive colors
-  primary: 'rgb(91, 91, 214)', // iris-9
+  primary: '#5d17ea', // Web brand color (was iris-9)
   primaryHover: 'rgb(89, 88, 177)', // iris-8
   primaryActive: 'rgb(74, 74, 149)', // iris-7
   accent: 'rgb(126, 182, 255)', // --text-blue dark
@@ -126,7 +126,7 @@ export const darkSemanticColors: SemanticColors = {
   // Input colors
   input: 'rgb(24, 25, 27)', // slate-2
   inputBorder: 'rgb(38, 38, 42)', // --border-weak dark
-  inputFocus: 'rgb(91, 91, 214)', // iris-9
+  inputFocus: '#5d17ea', // Web brand color (was iris-9)
 
   // Overlay colors
   overlay: 'rgba(0, 0, 0, 0.6)',
@@ -179,7 +179,7 @@ export const lightSemanticColors: SemanticColors = {
   textInverse: 'rgb(252, 252, 253)', // slate-1 light (inverse)
 
   // Interactive colors
-  primary: 'rgb(91, 91, 214)', // iris-9 light
+  primary: '#5d17ea', // Web brand color (was iris-9)
   primaryHover: 'rgb(81, 81, 205)', // iris-10 light
   primaryActive: 'rgb(87, 83, 198)', // iris-11 light
   accent: 'rgb(39, 129, 246)', // blue-9 light
@@ -200,7 +200,7 @@ export const lightSemanticColors: SemanticColors = {
   // Input colors
   input: 'rgb(252, 252, 253)', // slate-1 light
   inputBorder: 'rgb(217, 217, 224)', // slate-6 light
-  inputFocus: 'rgb(91, 91, 214)', // iris-9 light
+  inputFocus: '#5d17ea', // Web brand color (was iris-9)
 
   // Overlay colors
   overlay: 'rgba(0, 0, 0, 0.4)',
