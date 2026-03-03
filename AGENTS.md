@@ -77,6 +77,40 @@ kill %1  # or find PID with: ps aux | grep "log stream"
 - Captures all `console.log`, `console.warn`, `console.error` from JS
 - Can run in background without interfering with Metro bundler
 
+## Testing
+
+### Running Tests
+
+- **Run all tests**: `task test` or `pnpm test`
+- **Run with coverage**: `pnpm test -- --coverage`
+- **Run single test**: `npx jest path/to/test.ts`
+- **Run in watch mode**: `pnpm test -- --watch`
+- **Update snapshots**: `pnpm test -- -u`
+
+### Test Infrastructure
+
+- **Global setup**: `src/__tests__/setup.ts` - Mocks for 15+ modules
+- **Test utilities**: `src/__tests__/helpers/`
+  - `renderWithProviders(ui, { preloadedState })` - Redux-connected components
+  - `createTestStore(preloadedState)` - Redux store testing
+  - Type builders: `aConversation()`, `aContact()`, `anAgent()`, etc.
+  - Custom matchers: `toBeSuccess()`, `toBeFailure()`, `toHaveValue()`, `toHaveError()`
+
+### Writing Tests
+
+- **Domain tests**: Pure TypeScript, no React dependencies
+- **Redux tests**: Use `createTestStore` + type builders
+- **Component tests**: Use `renderWithProviders` + `screen` queries
+- **Hook tests**: Use `renderHook` from `@testing-library/react-native`
+
+See `docs/architecture/unit-testing.md` for complete testing guide.
+
+### CI/CD
+
+- Tests run automatically on PRs to `development` and `main`
+- Coverage thresholds: branches 13%, functions 15%, lines 15%, statements 15% (temporary baseline post-refactor)
+- GitHub Actions workflow: `.github/workflows/test.yml`
+
 ## Path Aliases
 
 The codebase uses TypeScript path aliases for Clean Architecture layer separation:
@@ -166,8 +200,18 @@ src/
     └── ai-chat/         # AI assistant feature
 ```
 
-For full architecture details and decision trees, see:
-- `docs/architecture/clean-architecture.md` - Canonical reference
+For full architecture details and decision trees, see `docs/architecture/` directory.
+
+## Architecture Documentation
+
+Complete architecture guides available in `docs/architecture/`:
+
+| Document | Description |
+|----------|-------------|
+| [clean-architecture.md](docs/architecture/clean-architecture.md) | Clean Architecture layers, dependency rules, icon system |
+| [ai-chat-architecture.md](docs/architecture/ai-chat-architecture.md) | AI assistant feature architecture |
+| [styling-architecture.md](docs/architecture/styling-architecture.md) | Theme system, Radix colors, styling patterns |
+| [unit-testing.md](docs/architecture/unit-testing.md) | Testing strategy, utilities, builders, patterns |
 
 ### AI Assistant Architecture (`src/presentation/`)
 
@@ -200,26 +244,50 @@ The AI assistant feature follows a layered structure:
 
 ### Theme System
 
-**Two theme providers coexist:**
+**Dual Theme Architecture:**
 
-1. **Legacy ThemeContext** (`src/context/ThemeContext.tsx`): Simple `isDark` boolean, used by ~170+ files. Dark mode via regex string replacement in `useThemedStyles`.
-2. **Radix ThemeProvider** (`src/theme/components/ThemeProvider.tsx`): Full 12-step Radix color scales + semantic tokens. Used by AI components via `useThemeColors()`.
+1. **Legacy ThemeContext** (`src/infrastructure/context/ThemeContext.tsx`)
+   - Simple `isDark` boolean
+   - Used by ~170+ files
+   - Dark mode via regex string replacement in `useThemedStyles()`
+
+2. **Radix ThemeProvider** (`src/infrastructure/theme/components/ThemeProvider.tsx`)
+   - Full 12-step Radix color scales + semantic tokens
+   - Used by AI components and new code
+   - Access via `useThemeColors()` hook
 
 Both are mounted in `app.tsx` (Radix nested inside Legacy).
 
-**Usage in AI components:**
+**Usage:**
 ```typescript
-// Correct - destructure colors from return value
 const { colors, semanticColors } = useThemeColors();
 
-// Wrong - useThemeColors() returns { colors, semanticColors }, not colors directly
-const colors = useThemeColors(); // TypeScript error
+// Scale-based colors
+color={colors.slate[12]}  // High-contrast text
+
+// Semantic colors
+color={semanticColors.text}  // Primary text (theme-aware)
 ```
 
+See `docs/architecture/styling-architecture.md` for complete theme guide.
+
 ### Icon System
-- Custom SVG icons from `@/svg-icons` (not Lucide)
-- `Avatar` component at `@/components-next/common/avatar/Avatar`
-- `Icon` component at `@/components-next/common/icon/Icon`
+
+The project uses a **standardized icon system** with unified theme-aware defaults:
+
+- **Custom SVG icons** from `@/svg-icons` (NOT Lucide React Native)
+- All icons proxy to Lucide with consistent defaults
+- Theme-aware colors: `colors.slate[12]`, `colors.slate[11]`, `colors.iris[9]`
+- Consistent prop interfaces: `size` and `color`
+
+**Usage:**
+```typescript
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
+
+<CloseIcon size={24} color={colors.slate[12]} />
+```
+
+See `docs/architecture/clean-architecture.md` for icon migration details.
 
 ## Development Guidelines
 
