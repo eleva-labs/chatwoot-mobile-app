@@ -43,6 +43,10 @@ const contactSlice = createSlice({
         }
       });
     },
+    removeContact: (state, action) => {
+      const contactId = action.payload as number;
+      contactAdapter.removeOne(state, contactId);
+    },
   },
   extraReducers: builder => {
     builder.addCase(contactActions.toggleAI.fulfilled, (state, action) => {
@@ -58,7 +62,13 @@ const contactSlice = createSlice({
   },
 });
 
-export const { clearAllContacts, updateContact, addContacts, addContact, updateContactsPresence } =
-  contactSlice.actions;
+export const {
+  clearAllContacts,
+  updateContact,
+  addContacts,
+  addContact,
+  updateContactsPresence,
+  removeContact,
+} = contactSlice.actions;
 
 export default contactSlice.reducer;

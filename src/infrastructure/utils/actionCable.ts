@@ -8,6 +8,7 @@ import {
   addContact,
   updateContact,
   updateContactsPresence,
+  removeContact,
 } from '@application/store/contact/contactSlice';
 import {
   setTypingUsers,
@@ -67,11 +68,10 @@ class ActionCableConnector extends BaseActionCableConnector {
       'notification.deleted': this.onNotificationRemoved,
       'presence.update': this.onPresenceUpdate,
 
-      // TODO: Handle all these events later
-      // 'conversation.contact_changed': this.onConversationContactChange,
-      // 'contact.deleted': this.onContactDelete,
-      // 'conversation.mentioned': this.onConversationMentioned,
-      // 'first.reply.created': this.onFirstReplyCreated,
+      'conversation.contact_changed': this.onConversationContactChange,
+      'contact.deleted': this.onContactDelete,
+      'conversation.mentioned': this.onConversationMentioned,
+      'first.reply.created': this.onFirstReplyCreated,
     };
   }
 
@@ -194,6 +194,49 @@ class ActionCableConnector extends BaseActionCableConnector {
         users,
       }),
     );
+  };
+
+  // Fix 3.1 — conversation.mentioned
+  onConversationMentioned = (data: Conversation) => {
+    const conversation = transformConversation(data);
+    store.dispatch(updateConversation(conversation));
+  };
+
+  // Fix 3.2 — first.reply.created (same pattern as onMessageCreated)
+  onFirstReplyCreated = (data: Message) => {
+    const message = transformMessage(data);
+    const { conversation, conversationId } = message;
+    const lastActivityAt = conversation?.lastActivityAt;
+    store.dispatch(updateConversationLastActivity({ lastActivityAt, conversationId }));
+    store.dispatch(addOrUpdateMessage(message));
+
+    // Guard: if the conversation is not yet in the store, fetch it
+    if (conversationId != null) {
+      const state = store.getState();
+      const isLoaded = state.conversations.entities[conversationId] != null;
+      if (!isLoaded && !fetchingConversations.has(conversationId)) {
+        fetchingConversations.add(conversationId);
+        store
+          .dispatch(conversationActions.fetchConversation(conversationId))
+          .then(() => {
+            fetchingConversations.delete(conversationId);
+          })
+          .catch(() => {
+            fetchingConversations.delete(conversationId);
+          });
+      }
+    }
+  };
+
+  // Fix 3.3 — contact.deleted
+  onContactDelete = (data: { id: number }) => {
+    store.dispatch(removeContact(data.id));
+  };
+
+  // Fix 3.4 — conversation.contact_changed
+  onConversationContactChange = (data: Conversation) => {
+    const conversation = transformConversation(data);
+    store.dispatch(updateConversation(conversation));
   };
 }
 

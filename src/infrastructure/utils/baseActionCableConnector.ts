@@ -77,6 +77,8 @@ class BaseActionCableConnector {
     if (this.isAValidEvent(data)) {
       if (this.events[event] && typeof this.events[event] === 'function') {
         this.events[event](data);
+      } else if (__DEV__ && !this.events[event]) {
+        console.warn(`[ActionCable] Unhandled event: ${event}`, data);
       }
     }
   };
