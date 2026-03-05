@@ -1,6 +1,5 @@
 import { ActionCable, Cable } from '@kesha-antonov/react-native-action-cable';
 
-const cable = new Cable({});
 const channelName = 'RoomChannel';
 const PRESENCE_INTERVAL = 20000;
 
@@ -12,13 +11,17 @@ export interface ActionCableEvent<T = unknown> {
 class BaseActionCableConnector {
   protected events: { [key: string]: (data: unknown) => void };
   protected accountId: number;
+  protected cable: InstanceType<typeof Cable>;
+  private consumer: ReturnType<typeof ActionCable.createConsumer>;
+  private presenceInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor(pubSubToken: string, webSocketUrl: string, accountId: number, userId: number) {
-    const connectActionCable = ActionCable.createConsumer(webSocketUrl);
+    this.cable = new Cable({});
+    this.consumer = ActionCable.createConsumer(webSocketUrl);
 
-    const channel = cable.setChannel(
+    const channel = this.cable.setChannel(
       channelName,
-      connectActionCable.subscriptions.create(
+      this.consumer.subscriptions.create(
         {
           channel: channelName,
           pubsub_token: pubSubToken,
@@ -40,9 +43,17 @@ class BaseActionCableConnector {
     this.events = {};
     this.accountId = accountId;
 
-    setInterval(() => {
-      cable.channel(channelName).perform('update_presence');
+    this.presenceInterval = setInterval(() => {
+      this.cable.channel(channelName).perform('update_presence');
     }, PRESENCE_INTERVAL);
+  }
+
+  disconnect(): void {
+    if (this.presenceInterval !== null) {
+      clearInterval(this.presenceInterval);
+      this.presenceInterval = null;
+    }
+    this.consumer.disconnect();
   }
 
   protected isAValidEvent = (data: unknown): boolean => {

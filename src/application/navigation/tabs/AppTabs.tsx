@@ -100,7 +100,6 @@ const Tabs = () => {
     dispatch(authActions.getProfile());
     dispatch(settingsActions.saveDeviceDetails());
     dispatch(inboxActions.fetchInboxes());
-    initActionCable();
     dispatch(labelActions.fetchLabels());
     dispatch(setCurrentState('none'));
     dispatch(clearSelection());
@@ -135,11 +134,18 @@ const Tabs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initActionCable = useCallback(async () => {
+  const initActionCable = useCallback(() => {
     if (pubSubToken && webSocketUrl && accountId && userId) {
       actionCableConnector.init({ pubSubToken, webSocketUrl, accountId, userId });
     }
   }, [accountId, pubSubToken, userId, webSocketUrl]);
+
+  useEffect(() => {
+    initActionCable();
+    return () => {
+      actionCableConnector.disconnect();
+    };
+  }, [initActionCable]);
 
   useEffect(() => {
     dispatch(settingsActions.getChatwootVersion({ installationUrl: installationUrl }));

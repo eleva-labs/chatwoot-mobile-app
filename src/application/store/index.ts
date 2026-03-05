@@ -97,7 +97,8 @@ export const store = configureStore({
   reducer: persistedReducer,
   enhancers: getDefaultEnhancers =>
     shouldLoadDebugger
-      ? getDefaultEnhancers().concat(reactotronInstance.createEnhancer!())
+      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getDefaultEnhancers().concat((reactotronInstance as any).createEnhancer())
       : getDefaultEnhancers(),
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
