@@ -31,6 +31,8 @@ import {
   NotificationCreatedResponse,
   NotificationRemovedResponse,
 } from '@application/store/notification/notificationTypes';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { MobileReconnectService } from './reconnectService';
 
 interface ActionCableConfig {
   pubSubToken: string;
@@ -38,6 +40,9 @@ interface ActionCableConfig {
   accountId: number;
   userId: number;
 }
+
+// Track in-flight fetchConversation calls to prevent duplicate concurrent requests
+const fetchingConversations = new Set<number>();
 
 class ActionCableConnector extends BaseActionCableConnector {
   private CancelTyping: { [key: number]: NodeJS.Timeout | null };
@@ -76,6 +81,23 @@ class ActionCableConnector extends BaseActionCableConnector {
     const lastActivityAt = conversation?.lastActivityAt;
     store.dispatch(updateConversationLastActivity({ lastActivityAt, conversationId }));
     store.dispatch(addOrUpdateMessage(message));
+
+    // Fix 2.2: If the conversation is not in the store, fetch it so the list stays up-to-date
+    if (conversationId != null) {
+      const state = store.getState();
+      const isLoaded = state.conversations.entities[conversationId] != null;
+      if (!isLoaded && !fetchingConversations.has(conversationId)) {
+        fetchingConversations.add(conversationId);
+        store
+          .dispatch(conversationActions.fetchConversation(conversationId))
+          .then(() => {
+            fetchingConversations.delete(conversationId);
+          })
+          .catch(() => {
+            fetchingConversations.delete(conversationId);
+          });
+      }
+    }
   };
 
   onConversationCreated = (data: Conversation) => {
@@ -179,12 +201,20 @@ let activeConnector: ActionCableConnector | null = null;
 
 export default {
   init({ pubSubToken, webSocketUrl, accountId, userId }: ActionCableConfig): ActionCableConnector {
+    fetchingConversations.clear();
     activeConnector?.disconnect();
     activeConnector = new ActionCableConnector(pubSubToken, webSocketUrl, accountId, userId);
+
+    const reconnectService = new MobileReconnectService();
+    activeConnector.setReconnectService(reconnectService);
+
     return activeConnector;
   },
   disconnect() {
     activeConnector?.disconnect();
     activeConnector = null;
+  },
+  get isConnected(): boolean {
+    return activeConnector?.isConnected ?? false;
   },
 };

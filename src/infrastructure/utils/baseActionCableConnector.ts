@@ -1,4 +1,5 @@
 import { ActionCable, Cable } from '@kesha-antonov/react-native-action-cable';
+import type { MobileReconnectService } from './reconnectService';
 
 const channelName = 'RoomChannel';
 const PRESENCE_INTERVAL = 20000;
@@ -14,6 +15,8 @@ class BaseActionCableConnector {
   protected cable: InstanceType<typeof Cable>;
   private consumer: ReturnType<typeof ActionCable.createConsumer>;
   private presenceInterval: ReturnType<typeof setInterval> | null = null;
+  private reconnectService: MobileReconnectService | null = null;
+  private connected = false;
 
   constructor(pubSubToken: string, webSocketUrl: string, accountId: number, userId: number) {
     this.cable = new Cable({});
@@ -38,7 +41,7 @@ class BaseActionCableConnector {
 
     channel.on('received', this.onReceived);
     channel.on('connected', this.handleConnected);
-    channel.on('disconnect', this.handleDisconnected);
+    channel.on('disconnected', this.handleDisconnected);
 
     this.events = {};
     this.accountId = accountId;
@@ -48,11 +51,20 @@ class BaseActionCableConnector {
     }, PRESENCE_INTERVAL);
   }
 
+  get isConnected(): boolean {
+    return this.connected;
+  }
+
+  setReconnectService(service: MobileReconnectService): void {
+    this.reconnectService = service;
+  }
+
   disconnect(): void {
     if (this.presenceInterval !== null) {
       clearInterval(this.presenceInterval);
       this.presenceInterval = null;
     }
+    this.connected = false;
     this.consumer.disconnect();
   }
 
@@ -71,10 +83,16 @@ class BaseActionCableConnector {
 
   private handleConnected = (): void => {
     console.warn('Connected to ActionCable');
+    this.connected = true;
+    this.reconnectService?.onReconnect().catch((err: Error) => {
+      console.warn('[ActionCable] ReconnectService.onReconnect failed:', err);
+    });
   };
 
   private handleDisconnected = (): void => {
     console.warn('Disconnected from ActionCable');
+    this.connected = false;
+    this.reconnectService?.onDisconnect();
   };
 }
 

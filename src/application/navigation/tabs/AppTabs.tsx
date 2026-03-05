@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -134,6 +135,12 @@ const Tabs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Keep a ref to the latest cable config so the AppState callback always uses fresh values
+  const cableConfigRef = useRef({ pubSubToken, webSocketUrl, accountId, userId });
+  useEffect(() => {
+    cableConfigRef.current = { pubSubToken, webSocketUrl, accountId, userId };
+  }, [pubSubToken, webSocketUrl, accountId, userId]);
+
   const initActionCable = useCallback(() => {
     if (pubSubToken && webSocketUrl && accountId && userId) {
       actionCableConnector.init({ pubSubToken, webSocketUrl, accountId, userId });
@@ -142,7 +149,31 @@ const Tabs = () => {
 
   useEffect(() => {
     initActionCable();
+
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        const {
+          pubSubToken: token,
+          webSocketUrl: wsUrl,
+          accountId: acctId,
+          userId: uid,
+        } = cableConfigRef.current;
+        // Re-init cable on foreground only if we have credentials and cable is not already connected
+        if (token && wsUrl && acctId && uid && !actionCableConnector.isConnected) {
+          actionCableConnector.init({
+            pubSubToken: token,
+            webSocketUrl: wsUrl,
+            accountId: acctId,
+            userId: uid,
+          });
+        }
+      }
+    };
+
+    const appStateSub = AppState.addEventListener('change', handleAppStateChange);
+
     return () => {
+      appStateSub.remove();
       actionCableConnector.disconnect();
     };
   }, [initActionCable]);
