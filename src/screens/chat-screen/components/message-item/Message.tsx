@@ -165,6 +165,7 @@ const MessageWrapper = ({
               ),
             ]}>
             {children}
+            {/* Timestamp row — only shown for last message of a group */}
             {!shouldGroupWithPrevious && (
               <Animated.View
                 style={themedTailwind.style(
@@ -178,18 +179,25 @@ const MessageWrapper = ({
                   )}>
                   {messageTimestamp(item.createdAt)}
                 </Animated.Text>
-                <DeliveryStatus
-                  isPrivate={item.private}
-                  status={item.status}
-                  messageType={item.messageType}
-                  channel={channel}
-                  sourceId={item.sourceId}
-                  errorMessage={item.contentAttributes?.externalError || ''}
-                  deliveredColor="text-slate-11"
-                  sentColor="text-slate-11"
-                />
               </Animated.View>
             )}
+            {/* Delivery status — always shown on outgoing messages */}
+            <Animated.View
+              style={themedTailwind.style(
+                'h-[16px] pb-0.5 flex flex-row items-center',
+                orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
+              )}>
+              <DeliveryStatus
+                isPrivate={item.private}
+                status={item.status}
+                messageType={item.messageType}
+                channel={channel}
+                sourceId={item.sourceId}
+                errorMessage={item.contentAttributes?.externalError || ''}
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
+              />
+            </Animated.View>
           </Animated.View>
         </MessageMenu>
         {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (
