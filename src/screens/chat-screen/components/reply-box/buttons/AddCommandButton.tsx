@@ -1,10 +1,9 @@
 import React from 'react';
 import Animated, { LinearTransition, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
-import { Icon } from '@/components-next/common';
-import { AddIcon } from '@/svg-icons';
-import { useScaleAnimation } from '@/utils';
-import { tailwind } from '@/theme';
+import { Plus } from 'lucide-react-native';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { AddCommandButtonProps } from '../types';
 
 export const AddCommandButton = ({
@@ -12,6 +11,7 @@ export const AddCommandButton = ({
   ...otherProps
 }: AddCommandButtonProps) => {
   const { animatedStyle, handlers } = useScaleAnimation();
+  const { colors } = useThemeColors();
 
   const addIconAnimation = useAnimatedStyle(() => {
     return {
@@ -36,7 +36,7 @@ export const AddCommandButton = ({
             tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
             addIconAnimation,
           ]}>
-          <Icon icon={<AddIcon />} size={24} />
+          <Plus size={20} strokeWidth={2} color={colors.slate[11]} />
         </Animated.View>
       </Pressable>
     </Animated.View>

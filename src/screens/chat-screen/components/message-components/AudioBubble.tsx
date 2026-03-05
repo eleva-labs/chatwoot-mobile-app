@@ -8,17 +8,17 @@ import * as Sentry from '@sentry/react-native';
 import {
   selectCurrentPlayingAudioSrc,
   setCurrentPlayingAudioSrc,
-} from '@/store/conversation/audioPlayerSlice';
+} from '@application/store/conversation/audioPlayerSlice';
 
-import { tailwind } from '@/theme';
-import { IconProps } from '@/types';
-import { Icon, Slider } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import { IconProps } from '@domain/types';
+import { Icon, Slider } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
-import { MESSAGE_VARIANTS } from '@/constants';
+import { MESSAGE_VARIANTS } from '@domain/constants';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/hooks';
-import { convertOggToWav } from '@/utils/audioConverter';
+import { convertOggToWav } from '@infrastructure/utils';
 
 // eslint-disable-next-line react/display-name
 const PlayIcon = React.memo(({ fill, fillOpacity }: IconProps) => {
@@ -62,8 +62,8 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
   const totalDuration = useSharedValue(0);
 
   const audioPlayBackStatus = useCallback(
-    (data: any) => {
-      const playBackData = data.data as PlayBackType;
+    (args: { status: unknown; data?: PlayBackType }) => {
+      const playBackData = args.data;
       if (playBackData) {
         currentPosition.value = playBackData.currentPosition;
         totalDuration.value = playBackData.duration;
@@ -84,7 +84,9 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
         setIsSoundLoading(true);
         try {
           const convertedSrc = await convertOggToWav(audioSrc);
-          setConvertedAudioSrc(convertedSrc);
+          if (typeof convertedSrc === 'string') {
+            setConvertedAudioSrc(convertedSrc);
+          }
         } catch (error) {
           Sentry.captureException(error);
         } finally {
@@ -148,9 +150,9 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
 
   const sliderProps = useMemo(
     () => ({
-      trackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-whiteA-A9' : 'bg-gray-500',
-      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-white' : 'bg-blue-700',
-      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-blue-300' : 'border-blue-700',
+      trackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-whiteA-A9' : 'bg-slate-9',
+      filledTrackColor: variant === MESSAGE_VARIANTS.USER ? 'bg-solid-1' : 'bg-brand',
+      knobStyle: variant === MESSAGE_VARIANTS.USER ? 'border-iris-7' : 'border-brand',
       manualSeekTo,
       currentPosition,
       totalDuration,

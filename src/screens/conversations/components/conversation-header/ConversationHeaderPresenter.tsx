@@ -1,12 +1,15 @@
 import React from 'react';
 import { Pressable, Text, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
-import { Icon } from '@/components-next/common';
-import { CheckedIcon, CloseIcon, FilterIcon, UncheckedIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { useScaleAnimation } from '@/utils';
-import { useHeaderAnimation } from '@/hooks/useHeaderAnimation';
+import { CloseIcon } from '@/svg-icons/common/CloseIcon';
+
+import { Icon } from '@infrastructure/ui/common';
+import { CheckedIcon, FilterIcon, UncheckedIcon } from '@/svg-icons';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
+import { useScaleAnimation } from '@infrastructure/utils';
+import { useHeaderAnimation } from '@infrastructure/hooks/useHeaderAnimation';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 type HeaderState = 'Search' | 'Filter' | 'Select' | 'none';
 
@@ -38,19 +41,27 @@ type RightSectionProps = {
   onRightIconPress: () => void;
 };
 
-const HeaderTitle = () => (
-  <Animated.View style={tailwind.style('flex-1')}>
-    <Text
-      style={tailwind.style(
-        'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[17px] text-center text-gray-950',
-      )}>
-      {i18n.t('CONVERSATION.HEADER.TITLE')}
-    </Text>
-  </Animated.View>
-);
+const HeaderTitle = () => {
+  const themedTailwind = useThemedStyles();
+
+  return (
+    <Animated.View style={[tailwind.style('items-center'), { flex: 2 }]}>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.85}
+        style={themedTailwind.style(
+          'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[22px] text-center text-slate-12',
+        )}>
+        {i18n.t('CONVERSATION.HEADER.TITLE')}
+      </Text>
+    </Animated.View>
+  );
+};
 
 const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
+  const { colors } = useThemeColors();
 
   if (currentState === 'Filter' || currentState === 'Search') return null;
   if (currentState !== 'Select') {
@@ -69,13 +80,7 @@ const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSecti
         <Animated.View exiting={exiting} entering={entering}>
           <Icon
             size={24}
-            icon={
-              isSelectedAll ? (
-                <CheckedIcon />
-              ) : (
-                <UncheckedIcon stroke={tailwind.color('text-gray-800')} />
-              )
-            }
+            icon={isSelectedAll ? <CheckedIcon /> : <UncheckedIcon stroke={colors.slate[11]} />}
           />
         </Animated.View>
       </Pressable>
@@ -90,6 +95,7 @@ const FilterSection = ({
   animatedStyle,
 }: FilterSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
+  const themedTailwind = useThemedStyles();
 
   return (
     <Animated.View
@@ -98,9 +104,9 @@ const FilterSection = ({
       entering={entering}>
       <Pressable onPress={onClearFilter} disabled={filtersAppliedCount === 0} {...handlers}>
         <Text
-          style={tailwind.style(
+          style={themedTailwind.style(
             'text-md font-inter-medium-24 leading-[17px] tracking-[0.24px]',
-            filtersAppliedCount === 0 ? 'text-gray-700' : 'text-blue-800',
+            filtersAppliedCount === 0 ? 'text-slate-11' : 'text-iris-11',
           )}>
           {i18n.t('CONVERSATION.HEADER.CLEAR_FILTER')}
           {filtersAppliedCount > 0 ? ` (${filtersAppliedCount})` : ''}
@@ -116,24 +122,23 @@ const RightSection = ({
   onRightIconPress,
 }: RightSectionProps) => {
   const { entering, exiting } = useHeaderAnimation();
+  const { colors } = useThemeColors();
 
   return (
     <Animated.View style={tailwind.style('flex-1 items-end')}>
       <Pressable onPress={onRightIconPress} hitSlop={16}>
         {currentState === 'Filter' || currentState === 'Select' ? (
           <Animated.View exiting={exiting} entering={entering}>
-            <Icon size={24} icon={<CloseIcon />} />
+            <CloseIcon size={24} color={colors.slate[12]} />
           </Animated.View>
         ) : (
           <Animated.View exiting={exiting} entering={entering}>
             {filtersAppliedCount > 0 && (
               <Animated.View
-                style={tailwind.style(
-                  'absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-blue-800',
-                )}
+                style={tailwind.style('absolute z-10 -right-0.5 h-2.5 w-2.5 rounded-full bg-brand')}
               />
             )}
-            <Icon size={24} icon={<FilterIcon />} />
+            <Icon size={24} icon={<FilterIcon stroke={colors.slate[12]} />} />
           </Animated.View>
         )}
       </Pressable>

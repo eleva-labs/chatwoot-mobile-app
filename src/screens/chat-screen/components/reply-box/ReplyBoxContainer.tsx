@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Alert, Keyboard, TextInput } from 'react-native';
+import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, {
   FadeIn,
@@ -10,8 +10,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Lock, LockOpen } from 'lucide-react-native';
 
-import { useChatWindowContext, useRefsContext } from '@/context';
+import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import {
   useHaptic,
   isAWhatsAppChannel,
@@ -23,10 +24,10 @@ import {
   isAWebWidgetInbox,
   isAPIInbox,
   isAnInstagramChannel,
-} from '@/utils';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES, AUDIO_FORMATS } from '@/constants';
-import { tailwind } from '@/theme';
+} from '@infrastructure/utils';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@domain/constants';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
 import {
   selectMessageContent,
   selectAttachments,
@@ -35,38 +36,40 @@ import {
   selectIsPrivateMessage,
   togglePrivateMessage,
   setMessageContent,
-} from '@/store/conversation/sendMessageSlice';
-import { selectUserId, selectUserName, selectUserThumbnail } from '@/store/auth/authSelectors';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { selectInboxById } from '@/store/inbox/inboxSelectors';
-import { conversationActions } from '@/store/conversation/conversationActions';
+} from '@application/store/conversation/sendMessageSlice';
+import {
+  selectUserId,
+  selectUserName,
+  selectUserThumbnail,
+} from '@application/store/auth/authSelectors';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { selectInboxById } from '@application/store/inbox/inboxSelectors';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import { AddCommandButton } from './buttons/AddCommandButton';
 import { SendMessageButton } from './buttons/SendMessageButton';
 import { MessageTextInput } from './MessageTextInput';
 import { QuoteReply } from './QuoteReply';
-import { ReplyWarning } from './ReplyWarning';
 import { CannedResponses } from './CannedResponses';
 import { AttachedMedia } from '../message-components/AttachedMedia';
 import { CommandOptionsMenu } from '../message-components/CommandOptionsMenu';
-import { SendMessagePayload } from '@/store/conversation/conversationTypes';
+import { SendMessagePayload } from '@application/store/conversation/conversationTypes';
 import { TypingIndicator } from './TypingIndicator';
-import { getTypingUsersText } from '@/utils';
-import { selectTypingUsersByConversationId } from '@/store/conversation/conversationTypingSlice';
-import { Agent, CannedResponse, Conversation } from '@/types';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
+import { getTypingUsersText } from '@infrastructure/utils';
+import { selectTypingUsersByConversationId } from '@application/store/conversation/conversationTypingSlice';
+import { Agent, CannedResponse, Conversation } from '@domain/types';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 import {
   allMessageVariables,
   replaceMessageVariables,
   getAllUndefinedVariablesInMessage,
-} from '@/utils/messageVariableUtils';
+} from '@infrastructure/utils/messageVariableUtils';
 import { ReplyEmailHead } from './ReplyEmailHead';
-import { getLastEmailInSelectedChat } from '@/store/conversation/conversationSelectors';
-import { selectAssignableParticipantsByInboxId } from '@/store/assignable-agent/assignableAgentSelectors';
+import { getLastEmailInSelectedChat } from '@application/store/conversation/conversationSelectors';
+import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
 import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
-import { is } from 'date-fns/locale';
 
 const SHEET_APPEAR_SPRING_CONFIG = {
   damping: 20,
@@ -80,6 +83,8 @@ const SHEET_APPEAR_SPRING_CONFIG = {
 
 const AnimatedKeyboardStickyView = Animated.createAnimatedComponent(KeyboardStickyView);
 const BottomSheetContent = () => {
+  const themedTailwind = useThemedStyles();
+  const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
   const dispatch = useAppDispatch();
   const { bottom } = useSafeAreaInsets();
@@ -131,9 +136,12 @@ const BottomSheetContent = () => {
 
   useEffect(() => {
     if (!lastEmail) return;
-    const {
-      contentAttributes: { email: emailAttributes = {} },
-    } = lastEmail;
+    const contentAttributes = lastEmail.contentAttributes as
+      | Record<string, unknown>
+      | null
+      | undefined;
+    const emailAttributes =
+      (contentAttributes?.email as Record<string, string[]> | undefined) ?? {};
 
     // Retrieve the email of the current conversation's sender
     const conversationContact = conversation?.meta?.sender?.email || '';
@@ -156,7 +164,7 @@ const BottomSheetContent = () => {
     }
 
     // Remove the conversation contact's email from the BCC list if present
-    let bcc = (emailAttributes.bcc || []).filter(email => email !== conversationContact);
+    let bcc = (emailAttributes.bcc || []).filter((email: string) => email !== conversationContact);
 
     // Ensure only unique email addresses are in the CC list
     bcc = [...new Set(bcc)];
@@ -165,6 +173,7 @@ const BottomSheetContent = () => {
     setCCEmails(cc.join(', '));
     setBCCEmails(bcc.join(', '));
     setToEmails(to.join(', '));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastEmail]);
 
   const messageVariables = allMessageVariables({
@@ -205,18 +214,34 @@ const BottomSheetContent = () => {
     }
   };
 
+  const handleTogglePrivateMode = () => {
+    if (replyEditorMode === REPLY_EDITOR_MODES.REPLY) {
+      hapticSelection?.();
+      dispatch(togglePrivateMessage(!isPrivate));
+    }
+  };
+
   // TODO: Implement this
-  const setReplyToInPayload = (messagePayload: any) => {
+  const setReplyToInPayload = (messagePayload: SendMessagePayload): SendMessagePayload => {
     //     ...(quoteMessage?.id && {
     //       contentAttributes: { inReplyTo: quoteMessage.id },
     //     }),
     return messagePayload;
   };
 
-  const getMessagePayload = (message: string, audioFile: File | null) => {
+  type MobileFileType = { uri: string; fileName: string; type: string };
+
+  const getMessagePayload = (message: string, audioFile: MobileFileType | null) => {
     let updatedMessage = message;
     if (isPrivate) {
       const regex = /@\[([\w\s]+)\]\((\d+)\)/g;
+      const mentionMatches = message.match(regex);
+      if (mentionMatches && mentionMatches.length > 0) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.USED_MENTIONS, {
+          conversationId,
+          mentionCount: mentionMatches.length,
+        });
+      }
       updatedMessage = message.replace(
         regex,
         '[@$1](mention://user/$2/' + encodeURIComponent('$1') + ')',
@@ -242,6 +267,10 @@ const BottomSheetContent = () => {
     }
 
     if (attachedFiles && attachedFiles.length) {
+      AnalyticsHelper.track(CONVERSATION_EVENTS.SELECTED_ATTACHMENT, {
+        conversationId,
+        attachmentCount: attachedFiles.length,
+      });
       // messagePayload.files = [];
       // TODO: Implement this
       // attachedFiles.forEach(attachment => {
@@ -273,11 +302,11 @@ const BottomSheetContent = () => {
     return messagePayload;
   };
 
-  const onRecordingComplete = async (audioFile: File | null) => {
+  const onRecordingComplete = async (audioFile: MobileFileType | null) => {
     confirmOnSendReply(audioFile);
   };
 
-  const confirmOnSendReply = (audioFile: File | null) => {
+  const confirmOnSendReply = (audioFile: MobileFileType | null) => {
     hapticSelection?.();
     if (textInputRef && 'current' in textInputRef && textInputRef.current) {
       (textInputRef.current as TextInput).clear();
@@ -288,7 +317,11 @@ const BottomSheetContent = () => {
     //   isAWhatsAppCloudChannel(inbox) ||
     //   is360DialogWhatsAppChannel(inbox?.channelType);
 
-    AnalyticsHelper.track(CONVERSATION_EVENTS.SENT_MESSAGE);
+    if (isPrivate) {
+      AnalyticsHelper.track(CONVERSATION_EVENTS.SENT_PRIVATE_NOTE, { conversationId });
+    } else {
+      AnalyticsHelper.track(CONVERSATION_EVENTS.SENT_MESSAGE, { conversationId });
+    }
 
     const undefinedVariables = getAllUndefinedVariablesInMessage({
       message: messageContent,
@@ -378,20 +411,16 @@ const BottomSheetContent = () => {
   const shouldShowCannedResponses = messageContent?.charAt(0) === '/';
 
   return (
-    <AnimatedKeyboardStickyView style={[tailwind.style('bg-white'), animatedInputWrapperStyle]}>
-      {!canReply && inbox && conversation && (
-        <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
-          <ReplyWarning inbox={inbox} conversation={conversation} />
-        </Animated.View>
-      )}
+    <AnimatedKeyboardStickyView
+      style={[themedTailwind.style('bg-solid-1'), animatedInputWrapperStyle]}>
       {shouldShowCannedResponses && (
         <CannedResponses searchKey={messageContent} onSelect={onSelectCannedResponse} />
       )}
 
       <Animated.View
         layout={LinearTransition.springify().damping(38).stiffness(240)}
-        style={tailwind.style(
-          `pb-2 border-t-[1px] border-t-blackA-A3 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
+        style={themedTailwind.style(
+          `pb-2 border-t-[1px] border-t-slate-6 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
         )}>
         {quoteMessage && (
           <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
@@ -420,7 +449,9 @@ const BottomSheetContent = () => {
             {attachmentsLength === 0 && shouldShowFileUpload && (
               <AddCommandButton
                 onPress={handleShowAddMenuOption}
-                derivedAddMenuOptionStateValue={derivedAddMenuOptionStateValue}
+                derivedAddMenuOptionStateValue={
+                  derivedAddMenuOptionStateValue as unknown as import('react-native-reanimated').SharedValue<number>
+                }
               />
             )}
             <MessageTextInput
@@ -430,6 +461,17 @@ const BottomSheetContent = () => {
               agents={agents as Agent[]}
               messageContent={messageContent}
             />
+            <Pressable
+              onPress={handleTogglePrivateMode}
+              disabled={replyEditorMode !== REPLY_EDITOR_MODES.REPLY}
+              hitSlop={4}
+              style={tailwind.style('flex items-center justify-center h-10 w-10')}>
+              {isPrivate ? (
+                <Lock size={20} strokeWidth={2} color={colors.amber[9]} />
+              ) : (
+                <LockOpen size={20} strokeWidth={2} color={colors.slate[11]} />
+              )}
+            </Pressable>
             {(messageContent.length > 0 || attachmentsLength > 0) && (
               <SendMessageButton onPress={() => confirmOnSendReply(null)} />
             )}

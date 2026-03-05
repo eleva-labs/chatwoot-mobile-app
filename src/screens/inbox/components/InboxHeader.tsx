@@ -3,14 +3,14 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
-import { BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
+import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 
-import { Icon } from '@/components-next/common/icon';
+import { Icon } from '@infrastructure/ui/common/icon';
 import { DoubleCheckIcon, InboxFilterIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { InboxFilters } from './InboxFilters';
-import i18n from '@/i18n';
-import { useRefsContext } from '@/context';
+import i18n from '@infrastructure/i18n';
+import { useRefsContext } from '@infrastructure/context';
 
 type InboxHeaderProps = {
   markAllAsRead: () => void;
@@ -30,7 +30,7 @@ export const InboxHeader = (props: InboxHeaderProps) => {
   });
 
   return (
-    <Animated.View style={[tailwind.style('border-b-[1px] border-b-blackA-A3')]}>
+    <Animated.View style={[tailwind.style('border-b-[1px] border-b-slate-6')]}>
       <Animated.View
         style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-2 pb-[12px]')]}>
         <Animated.View style={tailwind.style('flex-1')}>
@@ -41,7 +41,7 @@ export const InboxHeader = (props: InboxHeaderProps) => {
         <Animated.View style={tailwind.style('flex-1')}>
           <Animated.Text
             style={tailwind.style(
-              'text-[17px] text-center leading-[17px] tracking-[0.32px] font-inter-medium-24 text-gray-950',
+              'text-[17px] text-center leading-[17px] tracking-[0.32px] font-inter-medium-24 text-slate-12',
             )}>
             {i18n.t('NOTIFICATION.INBOX')}
           </Animated.Text>

@@ -6,109 +6,54 @@ import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch } from '@/hooks';
-import { updateAttachments } from '@/store/conversation/sendMessageSlice';
-import { useRefsContext } from '@/context';
+import { updateAttachments } from '@application/store/conversation/sendMessageSlice';
+import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic, useScaleAnimation } from '@/utils';
-import { Icon } from '@/components-next/common';
-import { MAXIMUM_FILE_UPLOAD_SIZE } from '@/constants';
-import i18n from '@/i18n';
-import { showToast } from '@/utils/toastUtils';
-import { findFileSize } from '@/utils/fileUtils';
-import { getApiLevel } from 'react-native-device-info';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui/common';
+import { MAXIMUM_FILE_UPLOAD_SIZE } from '@domain/constants';
+import i18n from '@infrastructure/i18n';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import { findFileSize } from '@infrastructure/utils/fileUtils';
+import type { AppDispatch } from '@application/store';
 
-export const handleOpenPhotosLibrary = async dispatch => {
-  if (Platform.OS === 'ios') {
-    request(
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.PHOTO_LIBRARY
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-    ).then(async result => {
-      if (RESULTS.BLOCKED === result) {
-        Alert.alert(
-          'Permission Denied',
-          'The permission to access the photo library has been denied and cannot be requested again. Please enable it in your device settings if you wish to access photos from your library.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open Settings',
-              onPress: () => {
-                // Open app settings
-                Linking.openSettings();
-              },
-            },
-          ],
-          { cancelable: false },
-        );
-      }
-      if (result === RESULTS.GRANTED || result === RESULTS.LIMITED) {
-        const pickedAssets = await launchImageLibrary({
-          quality: 1,
-          selectionLimit: 4,
-          mediaType: 'mixed',
-          presentationStyle: 'formSheet',
-        });
-        if (pickedAssets.didCancel) {
-        } else if (pickedAssets.errorCode) {
-        } else {
-          if (pickedAssets.assets && pickedAssets.assets?.length > 0) {
-            validateFileAndSetAttachments(dispatch, pickedAssets.assets[0]);
-          }
-        }
-      }
-    });
+export const handleOpenPhotosLibrary = async (dispatch: AppDispatch) => {
+  const pickedAssets = await launchImageLibrary({
+    quality: 1,
+    selectionLimit: 4,
+    mediaType: 'mixed',
+    presentationStyle: 'formSheet',
+  });
+  if (pickedAssets.didCancel) {
+  } else if (pickedAssets.errorCode) {
+    Alert.alert(
+      'Permission Denied',
+      pickedAssets.errorMessage ||
+        'The permission to access the photo library has been denied and cannot be requested again. Please enable it in your device settings if you wish to access photos from your library.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Open Settings',
+          onPress: () => {
+            // Open app settings
+            Linking.openSettings();
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   } else {
-    const apiLevel = await getApiLevel();
-    const permission =
-      apiLevel >= 33
-        ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
-
-    request(permission).then(async result => {
-      if (RESULTS.BLOCKED === result) {
-        Alert.alert(
-          'Permission Denied',
-          'The permission to access the photo library has been denied and cannot be requested again. Please enable it in your device settings if you wish to access photos from your library.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open Settings',
-              onPress: () => {
-                // Open app settings
-                Linking.openSettings();
-              },
-            },
-          ],
-          { cancelable: false },
-        );
-      }
-      if (result === RESULTS.GRANTED) {
-        const pickedAssets = await launchImageLibrary({
-          quality: 1,
-          selectionLimit: 4,
-          mediaType: 'mixed',
-          presentationStyle: 'formSheet',
-        });
-        if (pickedAssets.didCancel) {
-        } else if (pickedAssets.errorCode) {
-        } else {
-          if (pickedAssets.assets && pickedAssets.assets?.length > 0) {
-            validateFileAndSetAttachments(dispatch, pickedAssets.assets[0]);
-          }
-        }
-      }
-    });
+    if (pickedAssets.assets && pickedAssets.assets?.length > 0) {
+      validateFileAndSetAttachments(dispatch, pickedAssets.assets[0]);
+    }
   }
 };
 
-const handleLaunchCamera = async dispatch => {
+const handleLaunchCamera = async (dispatch: AppDispatch) => {
   request(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA).then(
     async result => {
       if (RESULTS.BLOCKED === result) {
@@ -167,7 +112,7 @@ const mapObject = (originalObject: DocumentPickerResponse): Asset[] => {
   ];
 };
 
-const handleAttachFile = async dispatch => {
+const handleAttachFile = async (dispatch: AppDispatch) => {
   try {
     const result = await DocumentPicker.pick({
       type: [
@@ -202,30 +147,42 @@ const handleAttachFile = async dispatch => {
 const ADD_MENU_OPTIONS = [
   {
     icon: <PhotosIcon />,
-    title: 'Photos',
+    key: 'photos',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.PHOTOS'),
     handlePress: handleOpenPhotosLibrary,
   },
   {
     icon: <CameraIcon />,
-    title: 'Camera',
+    key: 'camera',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.CAMERA'),
     handlePress: handleLaunchCamera,
   },
   {
     icon: <AttachFileIcon />,
-    title: 'Attach File',
+    key: 'attach_file',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.ATTACH_FILE'),
     handlePress: handleAttachFile,
   },
   {
     icon: <MacrosIcon />,
-    title: 'Macros',
+    key: 'macros',
+    getTitle: () => i18n.t('CONVERSATION.ADD_MENU.MACROS'),
     handlePress: () => {},
   },
 ];
 
-export const validateFileAndSetAttachments = async (dispatch, attachment) => {
-  const { fileSize } = attachment;
-  if (findFileSize(fileSize) <= MAXIMUM_FILE_UPLOAD_SIZE) {
-    dispatch(updateAttachments([attachment]));
+export const validateFileAndSetAttachments = async (
+  dispatch: AppDispatch,
+  attachment: Asset | DocumentPickerResponse | Record<string, unknown>,
+) => {
+  const fileSize =
+    'fileSize' in attachment
+      ? (attachment.fileSize as number | undefined)
+      : 'size' in attachment
+        ? (attachment.size as number | undefined)
+        : 0;
+  if (findFileSize(fileSize ?? 0) <= MAXIMUM_FILE_UPLOAD_SIZE) {
+    dispatch(updateAttachments([attachment as Asset]));
   } else {
     showToast({ message: i18n.t('CONVERSATION.FILE_SIZE_LIMIT') });
   }
@@ -247,7 +204,7 @@ const MenuOption = (props: MenuOptionProps) => {
   const handlePress = () => {
     hapticSelection?.();
     menuOption?.handlePress(dispatch);
-    if (menuOption.title === 'Macros') {
+    if (menuOption.key === 'macros') {
       macrosListSheetRef.current?.present();
     }
   };
@@ -261,9 +218,9 @@ const MenuOption = (props: MenuOptionProps) => {
           </Animated.View>
           <Text
             style={tailwind.style(
-              'text-base font-inter-normal-20 leading-[18px] tracking-[0.24px] text-gray-950 pl-5',
+              'text-base font-inter-normal-20 leading-[18px] tracking-[0.24px] text-slate-12 pl-5',
             )}>
-            {menuOption.title}
+            {menuOption.getTitle()}
           </Text>
         </Animated.View>
       </Pressable>
@@ -283,7 +240,7 @@ export const CommandOptionsMenu = () => {
       exiting={SlideOutDown.springify().damping(38).stiffness(240)}
       style={tailwind.style('mx-1 pt-2 items-start', `h-[${containerHeight}px]`)}>
       {ADD_MENU_OPTIONS.map((menuOption, index) => {
-        return <MenuOption key={menuOption.title} {...{ menuOption, index }} />;
+        return <MenuOption key={menuOption.key} {...{ menuOption, index }} />;
       })}
     </Animated.View>
   );

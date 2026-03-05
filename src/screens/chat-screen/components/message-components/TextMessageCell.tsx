@@ -1,16 +1,17 @@
 import React from 'react';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import tailwind from 'twrnc';
+import { tailwind } from '@infrastructure/theme';
 
-import { Channel, Message } from '@/types';
-import { Avatar } from '@/components-next/common';
+import { Channel, Message } from '@domain/types';
+import { getAvatarSource } from '@infrastructure/utils';
+import { Avatar } from '@infrastructure/ui/common';
 
 import { ActivityTextCell } from './ActivityTextCell';
 import { BotTextCell } from './BotTextCell';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { MessageTextCell } from './MessageTextCell';
 import { PrivateTextCell } from './PrivateTextCell';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 
 export type TextMessageCellProps = {
   item: Message;
@@ -62,25 +63,21 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender && sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar
-              size={'md'}
-              src={sender?.thumbnail ? { uri: sender.thumbnail } : undefined}
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
           <React.Fragment>
             {isPrivate ? (
               <React.Fragment>
-                <PrivateTextCell text={content} timeStamp={createdAt} />
+                <PrivateTextCell text={content ?? ''} timeStamp={createdAt} />
               </React.Fragment>
             ) : (
               <React.Fragment>
                 {(isOutgoing && !isSentByBot) || isIncoming ? (
                   <MessageTextCell
                     {...{ isActivity, isIncoming, isOutgoing }}
-                    text={content}
+                    text={content ?? ''}
                     timeStamp={createdAt}
                     status={status}
                     isAvatarRendered={shouldRenderAvatar}
@@ -95,7 +92,7 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
                 ) : null}
                 {(isOutgoing && isSentByBot) || isTemplate ? (
                   <BotTextCell
-                    text={content}
+                    text={content ?? ''}
                     timeStamp={createdAt}
                     status={messageItem.status}
                     isAvatarRendered={shouldRenderAvatar}
@@ -106,22 +103,16 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
                     errorMessage={errorMessage}
                   />
                 ) : null}
-                {isActivity ? <ActivityTextCell text={content} timeStamp={createdAt} /> : null}
+                {isActivity ? (
+                  <ActivityTextCell text={content ?? ''} timeStamp={createdAt} />
+                ) : null}
               </React.Fragment>
             )}
           </React.Fragment>
         </MessageMenu>
         {shouldRenderAvatar && (isPrivate || isOutgoing || isTemplate) ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar
-              size={'md'}
-              src={
-                isTemplate || isSentByBot
-                  ? require('../../../../assets/local/bot-avatar.png')
-                  : { uri: sender?.thumbnail }
-              }
-              name={sender?.name || ''}
-            />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
       </Animated.View>

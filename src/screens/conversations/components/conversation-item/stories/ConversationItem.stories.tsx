@@ -9,11 +9,12 @@ import {
   conversationWithOutgoingMessage,
   conversationWithNonEnglishContact,
   conversationWithMoreLabels,
+  conversationWithAllFields,
   conversationWithMarkdownMessage,
   conversationWithNewLineMessage,
 } from './ConversationItemMockData';
 import { Text, ScrollView, View } from 'react-native';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 const meta: Meta<typeof ConversationItem> = {
   title: 'Conversation Item',
@@ -57,7 +58,7 @@ export const Basic: Story = {
 
 const Title = ({ title }: { title: string }) => (
   <View style={tailwind.style('flex items-center justify-center')}>
-    <Text style={tailwind.style('text-md font-medium italic text-gray-800')}>{title}</Text>
+    <Text style={tailwind.style('text-md font-medium italic text-slate-12')}>{title}</Text>
   </View>
 );
 
@@ -65,6 +66,20 @@ export const AllVariants: Story = {
   render: () => (
     <ScrollView
       contentContainerStyle={tailwind.style('flex flex-col justify-center items-center gap-2')}>
+      <Title title="Conversation with all fields" />
+      <ConversationItem
+        {...conversationWithAllFields}
+        isSelected={false}
+        unreadCount={2}
+        availabilityStatus="offline"
+        inboxId={1}
+        senderName="Floyd Alexander Milesmorrales"
+        assignee={{
+          id: 1,
+          name: 'John Doe',
+        }}
+        currentState="none"
+      />
       <Title title="Conversation with more labels" />
       <ConversationItem
         {...conversationWithMoreLabels}

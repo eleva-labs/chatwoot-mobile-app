@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/hooks';
-import { useChatWindowContext } from '@/context';
+import { useAppSelector, useAppDispatch, useThemedStyles } from '@/hooks';
+import { useChatWindowContext } from '@infrastructure/context';
 import { AppState, Platform } from 'react-native';
 import { KeyboardGestureArea } from 'react-native-keyboard-controller';
 import { flatMap } from 'lodash';
@@ -10,19 +10,19 @@ import {
   selectConversationById,
   selectIsAllMessagesFetched,
   selectIsLoadingMessages,
-} from '@/store/conversation/conversationSelectors';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { selectAttachments } from '@/store/conversation/sendMessageSlice';
+} from '@application/store/conversation/conversationSelectors';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { selectAttachments } from '@application/store/conversation/sendMessageSlice';
 import { Animated } from 'react-native';
-import { getGroupedMessages, isAnEmailChannel } from '@/utils';
+import { getGroupedMessages, isAnEmailChannel } from '@infrastructure/utils';
 import { MessagesList } from './MessagesList';
-import tailwind from 'twrnc';
-import { conversationParticipantActions } from '@/store/conversation-participant/conversationParticipantActions';
-import { MESSAGE_TYPES, SCREENS } from '@/constants';
-import { Message } from '@/types';
-import { selectInboxById } from '@/store/inbox/inboxSelectors';
-import { selectUserId } from '@/store/auth/authSelectors';
-import { getCurrentRouteName } from '@/utils/navigationUtils';
+import { conversationParticipantActions } from '@application/store/conversation-participant/conversationParticipantActions';
+import { MESSAGE_TYPES, SCREENS } from '@domain/constants';
+import { Message } from '@domain/types';
+import { selectInboxById } from '@application/store/inbox/inboxSelectors';
+import { selectUserId } from '@application/store/auth/authSelectors';
+import { getCurrentRouteName } from '@infrastructure/utils/navigationUtils';
+import { ReplyWarning } from '../reply-box/ReplyWarning';
 
 type DateSeparator = { date: string; type: 'date' };
 type MessageOrDate = Message | DateSeparator;
@@ -70,6 +70,7 @@ const PlatformSpecificKeyboardWrapperComponent =
   Platform.OS === 'android' ? Animated.View : KeyboardGestureArea;
 
 export const MessagesListContainer = () => {
+  const themedTailwind = useThemedStyles();
   const [appState, setAppState] = useState(AppState.currentState);
   const { conversationId } = useChatWindowContext();
   const dispatch = useAppDispatch();
@@ -91,6 +92,7 @@ export const MessagesListContainer = () => {
     if (conversation) {
       dispatch(conversationActions.markMessageRead({ conversationId }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const lastMessageId = useCallback(() => {
@@ -144,6 +146,7 @@ export const MessagesListContainer = () => {
   useEffect(() => {
     loadMessages({ loadingMessagesForFirstTime: true });
     dispatch(conversationParticipantActions.index({ conversationId }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const groupedMessages = getGroupedMessages(messages);
@@ -166,10 +169,15 @@ export const MessagesListContainer = () => {
   const isEmailInbox = isAnEmailChannel(inbox);
   const userId = useAppSelector(selectUserId);
 
+  const canReply = conversation?.canReply;
+
   return (
     <PlatformSpecificKeyboardWrapperComponent
-      style={tailwind.style('flex-1 bg-white')}
+      style={themedTailwind.style('flex-1 bg-solid-1')}
       interpolator="linear">
+      {!canReply && inbox && conversation && (
+        <ReplyWarning inbox={inbox} conversation={conversation} />
+      )}
       <MessagesList
         messages={messagesWithGrouping}
         isFlashListReady={isFlashListReady}

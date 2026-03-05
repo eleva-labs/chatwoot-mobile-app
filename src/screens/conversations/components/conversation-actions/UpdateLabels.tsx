@@ -1,16 +1,18 @@
 import React, { useCallback, useState } from 'react';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { SearchBar } from '@/components-next';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { SearchBar } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { filterLabels } from '@/store/label/labelSelectors';
-import { Label } from '@/types/common/Label';
-import { selectSelectedIds } from '@/store/conversation/conversationSelectedSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { LabelCell } from '@/components-next/label-section';
-import i18n from '@/i18n';
+import { filterLabels } from '@application/store/label/labelSelectors';
+import { Label } from '@domain/types/common/Label';
+import { selectSelectedIds } from '@application/store/conversation/conversationSelectedSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { LabelCell } from '@infrastructure/ui/label-section';
+import i18n from '@infrastructure/i18n';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
 
 type LabelStackProps = {
   labelList: Label[];
@@ -65,23 +67,26 @@ export const UpdateLabels = () => {
 
   const handleLabelPress = (_selectedLabel: string) => {
     setSelectedLabels(prevLabels => {
-      const updatedLabels = prevLabels.includes(_selectedLabel)
+      const isRemoving = prevLabels.includes(_selectedLabel);
+      const updatedLabels = isRemoving
         ? prevLabels.filter(item => item !== _selectedLabel)
         : [...prevLabels, _selectedLabel];
-
-      // If label is already selected, return current labels without changes
-      if (prevLabels.includes(_selectedLabel)) {
-        return prevLabels;
-      }
 
       const payload = {
         type: 'Conversation',
         ids: selectedIds,
-        labels: { add: [_selectedLabel] },
+        labels: isRemoving ? { remove: [_selectedLabel] } : { add: [_selectedLabel] },
       };
+
       dispatch(conversationActions.bulkAction(payload));
-      // actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
-      // dispatch(setCurrentState('none'));
+
+      AnalyticsHelper.track(LABEL_EVENTS.APPLY_LABEL, {
+        label: _selectedLabel,
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+        action: isRemoving ? 'remove' : 'add',
+      });
+
       return updatedLabels;
     });
   };

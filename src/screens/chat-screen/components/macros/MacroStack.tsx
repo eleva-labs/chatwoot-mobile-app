@@ -1,10 +1,10 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { Macro } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { Macro } from '@domain/types';
 import MacroItem from './MacroItem';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
 
 type MacroStackProps = {
   macrosList: Macro[];
@@ -22,7 +22,7 @@ const MacroStack = (props: MacroStackProps) => {
           isInsideBottomSheet ? 'py-1' : '',
           'flex-1 items-center justify-center',
         )}>
-        <Animated.Text style={tailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
+        <Animated.Text style={tailwind.style('pt-6 text-md  tracking-[0.32px] text-slate-12')}>
           {i18n.t('MACRO.NO_MACROS')}
         </Animated.Text>
       </Animated.View>

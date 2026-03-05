@@ -7,12 +7,13 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { FlashList } from '@shopify/flash-list';
-import { useAppKeyboardAnimation } from '@/utils';
-import { tailwind } from '@/theme';
-import { Message } from '@/types';
+import { useAppKeyboardAnimation } from '@infrastructure/utils';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { Message } from '@domain/types';
 import { MessageComponent } from '../message-item/Message';
 // import { MessageItemContainer } from '../message-item/MessageItemContainer';
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 
 export type FlashListRenderProps = {
   item: { date: string } | Message;
@@ -24,12 +25,13 @@ const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Message | {
 type DateSectionProps = { item: { date: string } };
 
 const DateSection = ({ item }: DateSectionProps) => {
+  const themedTailwind = useThemedStyles();
   return (
-    <Animated.View style={tailwind.style('flex flex-row justify-center items-center py-4')}>
-      <Animated.View style={tailwind.style('rounded-lg py-1 px-[7px] bg-blackA-A3')}>
+    <Animated.View style={themedTailwind.style('flex flex-row justify-center items-center py-4')}>
+      <Animated.View style={themedTailwind.style('rounded-lg py-1 px-[7px] bg-slate-3')}>
         <Animated.Text
-          style={tailwind.style(
-            'text-cxs font-inter-420-20 tracking-[0.32px] text-blackA-A11 leading-[15px]',
+          style={themedTailwind.style(
+            'text-cxs font-inter-420-20 tracking-[0.32px] text-slate-11 leading-[15px]',
           )}>
           {item.date}
         </Animated.Text>
@@ -74,6 +76,7 @@ export const MessagesList = ({
         currentUserId={currentUserId}
       />
     );
+    // TODO: Deprecate this after the new message item is ready
     // return <MessageItemContainer item={item} index={index} />;
   };
 

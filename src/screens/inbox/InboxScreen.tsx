@@ -9,25 +9,25 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
-import { TAB_BAR_HEIGHT } from '@/constants';
-import { InboxListStateProvider } from '@/context';
-import type { Notification } from '@/types/Notification';
-import { tailwind } from '@/theme';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { notificationActions } from '@/store/notification/notificationAction';
+import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { InboxListStateProvider, useTheme } from '@infrastructure/context';
+import type { Notification } from '@domain/types/Notification';
+import { tailwind } from '@infrastructure/theme';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { notificationActions } from '@application/store/notification/notificationAction';
 import {
   selectIsAllNotificationsFetched,
   selectIsLoadingNotifications,
   getFilteredNotifications,
-} from '@/store/notification/notificationSelectors';
+} from '@application/store/notification/notificationSelectors';
 import { InboxHeader, InboxItemContainer } from './components';
-import { useInboxListStateContext } from '@/context';
-import { resetNotifications } from '@/store/notification/notificationSlice';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
-import { selectSortOrder } from '@/store/notification/notificationFilterSlice';
+import { useInboxListStateContext } from '@infrastructure/context';
+import { resetNotifications } from '@application/store/notification/notificationSlice';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
+import { selectSortOrder } from '@application/store/notification/notificationFilterSlice';
 import { EmptyStateIcon } from '@/svg-icons';
-import { InboxSortTypes } from '@/store/notification/notificationTypes';
+import { InboxSortTypes } from '@application/store/notification/notificationTypes';
 
 const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Notification>);
 
@@ -71,7 +71,6 @@ const InboxList = () => {
 
   useEffect(() => {
     clearAndFetchNotifications(sortOrder);
-    // fetchConversations(filters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -148,7 +147,7 @@ const InboxList = () => {
         `pb-[${TAB_BAR_HEIGHT}px]`,
       )}>
       <EmptyStateIcon />
-      <Animated.Text style={tailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
+      <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-slate-12')}>
         {i18n.t('NOTIFICATION.EMPTY')}
       </Animated.Text>
     </Animated.ScrollView>
@@ -163,14 +162,17 @@ const InboxList = () => {
       onEndReached={handleOnEndReached}
       onEndReachedThreshold={0.5}
       ListFooterComponent={ListFooterComponent}
-      renderItem={handleRender} 
+      renderItem={handleRender}
       contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
     />
   );
 };
 
 const InboxScreen = () => {
+  useScreenAnalytics(SCREENS.INBOX);
   const dispatch = useAppDispatch();
+  const themedTailwind = useThemedStyles();
+  const { isDark } = useTheme();
 
   // Memoize the markAllAsRead callback
   const markAllAsRead = useCallback(async () => {
@@ -181,11 +183,11 @@ const InboxScreen = () => {
   }, [dispatch]);
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
-        barStyle={'dark-content'}
+        backgroundColor={themedTailwind.color('bg-solid-1')}
+        barStyle={isDark ? 'light-content' : 'dark-content'}
       />
       <InboxListStateProvider>
         <InboxHeader markAllAsRead={markAllAsRead} />

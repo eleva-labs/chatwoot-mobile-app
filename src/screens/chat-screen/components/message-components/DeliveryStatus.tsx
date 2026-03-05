@@ -1,16 +1,20 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { CheckCheck, Clock } from 'lucide-react-native';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
-import { tailwind } from '@/theme';
-import { DoubleCheckIcon, WarningIcon, MessagePendingIcon } from '@/svg-icons';
-import { Icon } from '@/components-next/common';
-import { MessageStatus, MessageType } from '@/types';
-import { Channel } from '@/types';
-import { INBOX_TYPES, MESSAGE_TYPES, MESSAGE_STATUS } from '@/constants';
+import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { WarningIcon } from '@/svg-icons';
+import { Icon } from '@infrastructure/ui/common';
+import { MessageStatus, MessageType } from '@domain/types';
+import { Channel } from '@domain/types';
+import { INBOX_TYPES, MESSAGE_TYPES, MESSAGE_STATUS } from '@domain/constants';
 import { ErrorInformation } from './ErrorInformation';
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
+
+const ICON_SIZE = 14;
 
 type DeliveryStatusProps = {
   channel?: Channel;
@@ -19,7 +23,6 @@ type DeliveryStatusProps = {
   status: MessageStatus;
   messageType: MessageType;
   deliveredColor?: string;
-  readColor?: string;
   sentColor?: string;
   errorMessage: string;
 };
@@ -36,6 +39,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
     errorMessage,
   } = props;
 
+  const { colors, semanticColors } = useThemeColors();
   const { deliveryStatusSheetRef } = useRefsContext();
 
   const isDelivered = status === MESSAGE_STATUS.DELIVERED;
@@ -51,6 +55,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   const isTemplate = messageType === MESSAGE_TYPES.TEMPLATE;
   const isASmsInbox = channel === INBOX_TYPES.SMS;
   const isAPIChannel = channel === INBOX_TYPES.API;
+  const isAnInstagramChannel = channel === INBOX_TYPES.INSTAGRAM;
   const isPending = status === MESSAGE_STATUS.PROGRESS;
   const isOutgoing = messageType === MESSAGE_TYPES.OUTGOING;
   const shouldShowStatusIndicator =
@@ -77,7 +82,8 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
       isATwilioChannel ||
       isAFacebookChannel ||
       isATelegramChannel ||
-      isASmsInbox
+      isASmsInbox ||
+      isAnInstagramChannel
     ) {
       return sourceId && isSent;
     }
@@ -93,7 +99,13 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
     if (!shouldShowStatusIndicator) {
       return false;
     }
-    if (isAWhatsappChannel || isATwilioChannel || isAFacebookChannel || isASmsInbox) {
+    if (
+      isAWhatsappChannel ||
+      isATwilioChannel ||
+      isAFacebookChannel ||
+      isASmsInbox ||
+      isAnInstagramChannel
+    ) {
       return sourceId && isDelivered;
     }
 
@@ -117,7 +129,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
       return isRead;
     }
 
-    if (isAWhatsappChannel || isATwilioChannel || isAFacebookChannel) {
+    if (isAWhatsappChannel || isATwilioChannel || isAFacebookChannel || isAnInstagramChannel) {
       return sourceId && isRead;
     }
 
@@ -125,16 +137,12 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   };
 
   if (isPending) {
+    const pendingColor = isOutgoing ? colors.slate[12] : semanticColors.textInverse;
     return (
       <Icon
-        icon={
-          <MessagePendingIcon
-            stroke={
-              isOutgoing ? tailwind.color('text-blackA-A12') : tailwind.color('text-whiteA-A12')
-            }
-          />
-        }
-        size={14}
+        icon={<Clock size={ICON_SIZE} color={pendingColor} strokeWidth={2} />}
+        size={ICON_SIZE}
+        color={null}
       />
     );
   }
@@ -142,7 +150,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   if (isFailed) {
     return (
       <Pressable onPress={() => deliveryStatusSheetRef.current?.present()}>
-        <Icon icon={<WarningIcon stroke={tailwind.color('text-whiteA-A11')} />} size={14} />
+        <Icon icon={<WarningIcon stroke={semanticColors.textInverse} />} size={14} />
         <BottomSheetModal
           ref={deliveryStatusSheetRef}
           backdropComponent={BottomSheetBackdrop}
@@ -165,31 +173,33 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   if (showReadIndicator()) {
     return (
       <Icon
-        icon={<DoubleCheckIcon renderSecondTick stroke={tailwind.color('text-blue-800')} />}
-        size={14}
+        icon={<CheckCheck size={ICON_SIZE} color={colors.blue[9]} strokeWidth={2} />}
+        size={ICON_SIZE}
+        color={null}
       />
     );
   }
 
   if (showDeliveredIndicator()) {
+    const deliveredIconColor = deliveredColor
+      ? tailwind.color(deliveredColor)
+      : semanticColors.textInverse;
     return (
       <Icon
-        icon={
-          <DoubleCheckIcon
-            renderSecondTick={true}
-            stroke={tailwind.color(deliveredColor || 'text-whiteA-A12')}
-          />
-        }
-        size={14}
+        icon={<CheckCheck size={ICON_SIZE} color={deliveredIconColor} strokeWidth={2} />}
+        size={ICON_SIZE}
+        color={null}
       />
     );
   }
 
   if (showSentIndicator()) {
+    const sentIconColor = sentColor ? tailwind.color(sentColor) : semanticColors.textInverse;
     return (
       <Icon
-        icon={<DoubleCheckIcon stroke={tailwind.color(sentColor || 'text-whiteA-A12')} />}
-        size={14}
+        icon={<TickIcon size={ICON_SIZE} color={sentIconColor} strokeWidth={2} />}
+        size={ICON_SIZE}
+        color={null}
       />
     );
   }

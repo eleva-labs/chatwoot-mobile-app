@@ -3,15 +3,14 @@ import { ImageURISource } from 'react-native';
 import { LinearTransition } from 'react-native-reanimated';
 import { isEqual } from 'lodash';
 
-import { Avatar, AvatarStatusType } from '@/components-next/common';
-import { AnimatedNativeView } from '@/components-next/native-components';
-import { tailwind } from '@/theme';
-import { AvailabilityStatus } from '@/types';
+import { Avatar, AvatarStatusType } from '@infrastructure/ui/common';
+import { AnimatedNativeView } from '@infrastructure/ui/native-components';
+import { AvailabilityStatus } from '@domain/types';
 
 type ConversationAvatarProps = {
   src: ImageURISource;
   name: string;
-  status: AvailabilityStatus; 
+  status: AvailabilityStatus;
 };
 
 const checkIfPropsAreSame = (prev: ConversationAvatarProps, next: ConversationAvatarProps) => {
@@ -19,14 +18,19 @@ const checkIfPropsAreSame = (prev: ConversationAvatarProps, next: ConversationAv
   return arePropsEqual;
 };
 
-// eslint-disable-next-line react/display-name
 export const ConversationAvatar = memo((props: ConversationAvatarProps) => {
   const { src, name, status } = props;
   return (
-    <AnimatedNativeView
-      style={tailwind.style('')}
-      layout={LinearTransition.springify().damping(28).stiffness(200)}>
-      <Avatar size="4xl" {...{ src, name, status: status as AvatarStatusType }} />
+    <AnimatedNativeView layout={LinearTransition.springify().damping(28).stiffness(200)}>
+      <Avatar
+        size="2xl"
+        src={src}
+        name={name}
+        status={status as AvatarStatusType}
+        parentsBackground="bg-solid-1"
+      />
     </AnimatedNativeView>
   );
 }, checkIfPropsAreSame);
+
+ConversationAvatar.displayName = 'ConversationAvatar';

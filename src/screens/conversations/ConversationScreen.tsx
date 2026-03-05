@@ -7,7 +7,11 @@ import Animated, {
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import {
+  BottomSheetModal,
+  useBottomSheetSpringConfigs,
+  useBottomSheetModal,
+} from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 
 import {
@@ -19,7 +23,9 @@ import {
   AssigneeTypeFilters,
 } from './components';
 
-import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@/components-next';
+import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+// AI assistant FAB disabled — not yet ready for production
+// import { FloatingAIAssistant } from '@/presentation';
 
 import { EmptyStateIcon } from '@/svg-icons';
 import {
@@ -27,38 +33,44 @@ import {
   TAB_BAR_HEIGHT,
   LAST_ACTIVE_TIMESTAMP_KEY,
   LAST_ACTIVE_TIMESTAMP_THRESHOLD,
-} from '@/constants';
+} from '@domain/constants';
 import {
   ConversationListStateProvider,
   useConversationListStateContext,
   useRefsContext,
-} from '@/context';
+} from '@infrastructure/context';
 
-import { tailwind } from '@/theme';
-import { Conversation } from '@/types';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { tailwind } from '@infrastructure/theme';
+import { Conversation } from '@domain/types';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { useTheme } from '@infrastructure/context';
 import {
   selectBottomSheetState,
   setBottomSheetState,
-} from '@/store/conversation/conversationHeaderSlice';
-import { resetActionState } from '@/store/conversation/conversationActionSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
+} from '@application/store/conversation/conversationHeaderSlice';
+import { resetActionState } from '@application/store/conversation/conversationActionSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 import {
   selectConversationsLoading,
   selectIsAllConversationsFetched,
   getFilteredConversations,
-} from '@/store/conversation/conversationSelectors';
-import { selectFilters, FilterState } from '@/store/conversation/conversationFilterSlice';
-import { ConversationPayload } from '@/store/conversation/conversationTypes';
-import { clearAllConversations } from '@/store/conversation/conversationSlice';
-import { selectUserId } from '@/store/auth/authSelectors';
-import { clearAllContacts } from '@/store/contact/contactSlice';
-import { clearAssignableAgents } from '@/store/assignable-agent/assignableAgentSlice';
+} from '@application/store/conversation/conversationSelectors';
+import {
+  selectFilters,
+  FilterState,
+} from '@application/store/conversation/conversationFilterSlice';
+import { ConversationPayload } from '@application/store/conversation/conversationTypes';
+import { clearAllConversations } from '@application/store/conversation/conversationSlice';
+import { selectUserId } from '@application/store/auth/authSelectors';
+import { clearAllContacts } from '@application/store/contact/contactSlice';
+import { clearAssignableAgents } from '@application/store/assignable-agent/assignableAgentSlice';
 
-import i18n from '@/i18n';
-import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
-import { getCurrentRouteName } from '@/utils/navigationUtils';
+import i18n from '@infrastructure/i18n';
+import ActionBottomSheet from '@application/navigation/tabs/ActionBottomSheet';
+import { getCurrentRouteName } from '@infrastructure/utils/navigationUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 // The screen list thats need to be checked for refreshing the conversations list
 const REFRESH_SCREEN_LIST = [SCREENS.CONVERSATION, SCREENS.INBOX, SCREENS.SETTINGS];
@@ -71,7 +83,9 @@ type FlashListRenderItemType = {
 };
 
 const ConversationList = () => {
+  const { dismissAll } = useBottomSheetModal();
   const dispatch = useAppDispatch();
+  const themedTailwind = useThemedStyles();
   const [appState, setAppState] = useState(AppState.currentState);
 
   // This is used to prevent the infinite scrolling before the list is ready
@@ -118,6 +132,7 @@ const ConversationList = () => {
   }, [filters]);
 
   useEffect(() => {
+    dismissAll();
     clearAndFetchConversations(filters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -147,6 +162,7 @@ const ConversationList = () => {
   const handleRefresh = useCallback(() => {
     setFlashListReady(false);
     setIsRefreshing(true);
+    AnalyticsHelper.track(CONVERSATION_EVENTS.REFRESH_CONVERSATIONS);
     clearAndFetchConversations(filters).finally(() => {
       setIsRefreshing(false);
     });
@@ -244,7 +260,7 @@ const ConversationList = () => {
         `pb-[${TAB_BAR_HEIGHT}px]`,
       )}>
       <EmptyStateIcon />
-      <Animated.Text style={tailwind.style('pt-6 text-md  tracking-[0.32px] text-gray-800')}>
+      <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-slate-12')}>
         {i18n.t('CONVERSATION.EMPTY')}
       </Animated.Text>
     </Animated.ScrollView>
@@ -268,17 +284,19 @@ const ConversationList = () => {
 };
 
 const ConversationScreen = () => {
+  useScreenAnalytics(SCREENS.CONVERSATION);
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
+  const { isDark } = useTheme();
+  const themedTailwind = useThemedStyles();
   const dispatch = useAppDispatch();
 
   const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
+    mass: 1.2,
+    stiffness: 300,
+    damping: 50,
   });
 
   const { filtersModalSheetRef } = useRefsContext();
-  // const { bottom } = useSafeAreaInsets();
 
   const handleOnDismiss = () => {
     /**
@@ -305,11 +323,11 @@ const ConversationScreen = () => {
   }, [currentBottomSheet]);
 
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
-        barStyle={'dark-content'}
+        backgroundColor={themedTailwind.color('bg-solid-1')}
+        barStyle={isDark ? 'light-content' : 'dark-content'}
       />
       <ConversationListStateProvider>
         <ConversationHeader />
@@ -322,6 +340,7 @@ const ConversationScreen = () => {
           )}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
+          backgroundStyle={themedTailwind.style('bg-solid-1')}
           animationConfigs={animationConfigs}
           enablePanDownToClose
           snapPoints={filterSnapPoints}
@@ -335,6 +354,8 @@ const ConversationScreen = () => {
         </BottomSheetModal>
         <ActionBottomSheet />
         <ActionTabs />
+        {/* AI assistant FAB disabled — not yet ready for production */}
+        {/* <FloatingAIAssistant /> */}
       </ConversationListStateProvider>
     </SafeAreaView>
   );

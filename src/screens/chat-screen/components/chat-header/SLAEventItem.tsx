@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, Animated } from 'react-native';
-import { tailwind } from '@/theme';
-import { SLAEvent } from '@/types/common/SLA';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { SLAEvent } from '@domain/types/common/SLA';
 import { format, fromUnixTime } from 'date-fns';
 
 interface SlaEventsProps {
@@ -10,14 +11,15 @@ interface SlaEventsProps {
 }
 
 export const SlaEvents = ({ label, items }: SlaEventsProps) => {
+  const themedTailwind = useThemedStyles();
   const formatDate = (timestamp: number) =>
     format(fromUnixTime(timestamp), 'MMM dd, yyyy, hh:mm a');
 
   return (
     <Animated.View style={tailwind.style('flex flex-row justify-between')}>
       <Text
-        style={tailwind.style(
-          'text-sm  text-gray-950 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
+        style={themedTailwind.style(
+          'text-sm  text-slate-12 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
         )}>
         {label}
       </Text>
@@ -25,8 +27,8 @@ export const SlaEvents = ({ label, items }: SlaEventsProps) => {
         {items.map(item => (
           <Text
             key={item.id}
-            style={tailwind.style(
-              'text-sm  text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+            style={themedTailwind.style(
+              'text-sm  text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
             )}>
             {formatDate(item.createdAt)}
           </Text>

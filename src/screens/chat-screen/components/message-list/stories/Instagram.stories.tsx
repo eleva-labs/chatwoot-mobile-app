@@ -5,9 +5,9 @@ import { KeyboardGestureArea, KeyboardProvider } from 'react-native-keyboard-con
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { Animated } from 'react-native';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { MessagesList } from '../MessagesList';
-import { ChatWindowProvider, RefsProvider } from '@/context';
+import { ChatWindowProvider, RefsProvider } from '@infrastructure/context';
 import { Provider } from 'react-redux';
 import { INSTAGRAM_MESSAGES } from './mock-data/instagram';
 import { getAllGroupedMessages } from './mock-data/helper';
@@ -32,7 +32,13 @@ const mockConversationSlice = createSlice({
   name: 'conversation',
   initialState: {
     ids: [29],
-    entities: { 29: { id: 29, status: 'open', messages: ALL_MESSAGES_MOCKDATA } },
+    entities: {
+      29: {
+        id: 29,
+        status: 'open',
+        messages: ALL_MESSAGES_MOCKDATA,
+      },
+    },
   },
   reducers: {},
 });
@@ -63,13 +69,15 @@ export const Instagram: Story = {
               <ChatWindowProvider conversationId={29}>
                 <ScrollView contentContainerStyle={tailwind.style('flex')}>
                   <PlatformSpecificKeyboardWrapperComponent
-                    style={tailwind.style('flex-1 bg-white border border-red-500')}
+                    style={tailwind.style('flex-1 bg-white')}
                     interpolator="linear">
                     <MessagesList
                       messages={ALL_MESSAGES_MOCKDATA}
                       isFlashListReady={false}
                       setFlashListReady={() => {}}
                       onEndReached={() => {}}
+                      isEmailInbox={false}
+                      currentUserId={1}
                     />
                   </PlatformSpecificKeyboardWrapperComponent>
                 </ScrollView>

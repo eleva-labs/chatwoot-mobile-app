@@ -1,0 +1,15 @@
+{
+  "loading": "Loading onboarding...",
+  "loadingError": "Failed to load onboarding",
+  "next": "Next",
+  "previous": "Previous",
+  "skip": "Skip",
+  "submit": "Submit",
+  "retry": "Retry",
+  "errorTitle": "Error",
+  "genericError": "Something went wrong. Please try again.",
+  "offlineIndicator": "No internet connection. Your answers will be saved and submitted when you come back online.",
+  "requiredField": "This field is required",
+  "invalidInput": "Invalid input",
+  "progressLabel": "Step {{current}} of {{total}}"
+}

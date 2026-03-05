@@ -3,20 +3,22 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { ConversationStatus, StatusCollection } from '@/types';
-import { getStatusTypeIcon, useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { ConversationStatus, StatusCollection } from '@domain/types';
+import { getStatusTypeIcon, useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, Icon } from '@infrastructure/ui';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import {
   selectSelectedConversation,
   selectSelectedIds,
-} from '@/store/conversation/conversationSelectedSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { setCurrentState } from '@/store/conversation/conversationHeaderSlice';
-import i18n from '@/i18n';
-import { StatusOptions } from '@/types';
+} from '@application/store/conversation/conversationSelectedSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { setCurrentState } from '@application/store/conversation/conversationHeaderSlice';
+import i18n from '@infrastructure/i18n';
+import { StatusOptions } from '@domain/types';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 type StatusCellProps = {
   value: StatusCollection;
   isLastItem: boolean;
@@ -32,6 +34,7 @@ const StatusList: StatusCollection[] = [
 
 const StatusCell = (props: StatusCellProps) => {
   const { value, isLastItem, onPress } = props;
+  const themedTailwind = useThemedStyles();
   return (
     <Pressable
       onPress={() => onPress(value.id)}
@@ -40,13 +43,13 @@ const StatusCell = (props: StatusCellProps) => {
         <Icon icon={value.icon} size={24} />
       </Animated.View>
       <Animated.View
-        style={tailwind.style(
+        style={themedTailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !isLastItem ? 'border-b-[1px] border-blackA-A3' : '',
+          !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
         )}>
         <Animated.Text
-          style={tailwind.style(
-            'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+          style={themedTailwind.style(
+            'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
           )}>
           {i18n.t(`CONVERSATION.ASSIGNEE.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
         </Animated.Text>
@@ -77,10 +80,16 @@ export const UpdateStatus = () => {
     if (isMultipleConversationsSelected) {
       const payload = { type: 'Conversation', ids: selectedIds, fields: { status } };
       dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        status,
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
       dispatch(setCurrentState('none'));
     } else {
       if (!selectedConversation?.id) return;
+      const previousStatus = selectedConversation?.status;
       dispatch(
         conversationActions.toggleConversationStatus({
           conversationId: selectedConversation?.id,
@@ -90,6 +99,16 @@ export const UpdateStatus = () => {
           },
         }),
       );
+      AnalyticsHelper.track(CONVERSATION_EVENTS.TOGGLE_STATUS, {
+        conversationId: selectedConversation?.id,
+        from: previousStatus,
+        to: status,
+      });
+      if (status === 'resolved') {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.RESOLVE_CONVERSATION_STATUS, {
+          conversationId: selectedConversation?.id,
+        });
+      }
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
     }
   };

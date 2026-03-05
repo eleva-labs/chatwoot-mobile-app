@@ -10,8 +10,8 @@ import {
 } from '@gorhom/bottom-sheet';
 import * as ContextMenu from 'zeego/context-menu';
 
-import { tailwind } from '@/theme';
-import { BottomSheetHeader, BottomSheetWrapper, Icon } from '@/components-next/common';
+import { tailwind } from '@infrastructure/theme';
+import { BottomSheetHeader, BottomSheetWrapper, Icon } from '@infrastructure/ui/common';
 
 export type MenuOption = {
   title: string;
@@ -58,7 +58,7 @@ const ContextMenuBottomSheetBackdrop = forwardRef<
   });
 
   const handleBackdropPress = () => {
-    // @ts-ignore
+    // @ts-expect-error Bottom sheet dismiss method typing issue
     ref?.current?.dismiss({ overshootClamping: true });
   };
 
@@ -96,7 +96,7 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
     (backdropProps: BottomSheetBackdropProps) => (
       <ContextMenuBottomSheetBackdrop
         {...backdropProps}
-        // @ts-ignore
+        // @ts-expect-error Backdrop component ref typing issue
         ref={contextMenuSheetRef}
       />
     ),
@@ -143,11 +143,11 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
                     <Animated.View
                       style={tailwind.style(
                         'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-                        index !== menuOptions.length - 1 ? 'border-b-[1px] border-blackA-A3' : '',
+                        index !== menuOptions.length - 1 ? 'border-b-[1px] border-slate-6' : '',
                       )}>
                       <Animated.Text
                         style={tailwind.style(
-                          'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+                          'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
                         )}>
                         {option.title}
                       </Animated.Text>

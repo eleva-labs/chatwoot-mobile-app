@@ -2,15 +2,15 @@ import React from 'react';
 import { Text } from 'react-native';
 import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
-import { Avatar, Icon } from '@/components-next/common';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar, Icon } from '@infrastructure/ui/common';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_STATUS, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@/constants';
+import { MESSAGE_STATUS, MESSAGE_TYPES, TEXT_MAX_WIDTH } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 import { MapIcon } from '@/svg-icons';
-import { openURL } from '@/utils/urlUtils';
+import { openURL } from '@infrastructure/utils/urlUtils';
 
 type LocationCellProps = {
   shouldRenderAvatar: boolean;
@@ -62,7 +62,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -71,9 +71,9 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
               tailwind.style(
                 'relative pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
                 `max-w-[${TEXT_MAX_WIDTH}px]`,
-                isIncoming ? 'bg-blue-700' : '',
-                isOutgoing ? 'bg-gray-100' : '',
-                isMessageFailed ? 'bg-ruby-400' : '',
+                isIncoming ? 'bg-brand' : '',
+                isOutgoing ? 'bg-slate-3' : '',
+                isMessageFailed ? 'bg-ruby-5' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -93,24 +93,22 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                     ? 'text-base tracking-[0.32px] leading-[22px] font-inter-normal-20 underline'
                     : '',
                   isIncoming ? 'text-white' : '',
-                  isOutgoing ? 'text-gray-950' : '',
+                  isOutgoing ? 'text-slate-12' : '',
                 )}>
                 See on map
               </Text>
             </Animated.View>
 
             <Animated.View
-              style={tailwind.style(
-                'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center justify-end',
-              )}>
+              style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
               <Text
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
                   isIncoming ? 'text-whiteA-A11' : '',
-                  isOutgoing ? 'text-gray-700' : '',
-                  isMessageFailed ? 'text-ruby-900' : '',
+                  isOutgoing ? 'text-slate-11' : '',
+                  isMessageFailed ? 'text-ruby-12' : '',
                 )}>
-                {unixTimestampToReadableTime(timeStamp)}
+                {messageTimestamp(timeStamp)}
               </Text>
               <DeliveryStatus
                 isPrivate={isPrivate}
@@ -119,15 +117,15 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
                 channel={channel}
                 sourceId={sourceId}
                 errorMessage={errorMessage || ''}
-                deliveredColor="text-gray-700"
-                sentColor="text-gray-700"
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
               />
             </Animated.View>
           </Animated.View>
         </MessageMenu>
         {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

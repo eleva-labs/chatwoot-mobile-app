@@ -9,8 +9,9 @@ import {
 } from '@gorhom/bottom-sheet';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
-import { BottomSheetHeader, BottomSheetWrapper } from '@/components-next';
-import { tailwind } from '@/theme';
+import { BottomSheetHeader, BottomSheetWrapper } from '@infrastructure/ui';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 export type DashboardList = {
   title: string;
@@ -30,18 +31,21 @@ const DropdownMenuTrigger = DropdownMenu.create<React.ComponentProps<typeof Drop
 );
 
 const DropdownMenuItem = DropdownMenu.create<React.ComponentProps<typeof DropdownMenu.Item>>(
-  props => (
-    <DropdownMenu.Item {...props}>
-      <View style={tailwind.style('flex flex-row items-center')}>
-        <DropdownMenu.ItemTitle
-          style={tailwind.style(
-            'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
-          {props.children}
-        </DropdownMenu.ItemTitle>
-      </View>
-    </DropdownMenu.Item>
-  ),
+  props => {
+    const themedTailwind = useThemedStyles();
+    return (
+      <DropdownMenu.Item {...props}>
+        <View style={tailwind.style('flex flex-row items-center')}>
+          <DropdownMenu.ItemTitle
+            style={themedTailwind.style(
+              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+            )}>
+            {props.children}
+          </DropdownMenu.ItemTitle>
+        </View>
+      </DropdownMenu.Item>
+    );
+  },
   'Item',
 );
 
@@ -59,7 +63,7 @@ const DropdownMenuBottomSheetBackdrop = forwardRef<
   });
 
   const handleBackdropPress = () => {
-    // @ts-ignore
+    // @ts-expect-error - BottomSheet ref dismiss method accepts additional options
     ref?.current?.dismiss({ overshootClamping: true });
   };
 
@@ -77,6 +81,7 @@ type ChatDropdownMenuProps = {
 
 export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>) => {
   const { children, dropdownMenuList } = props;
+  const themedTailwind = useThemedStyles();
 
   const contextMenuSheetRef = useRef<BottomSheetModal>(null);
   const openSheet = () => {
@@ -98,7 +103,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
     (backdropProps: BottomSheetBackdropProps) => (
       <DropdownMenuBottomSheetBackdrop
         {...backdropProps}
-        // @ts-ignore
+        // @ts-expect-error - Custom backdrop component ref forwarding not typed correctly
         ref={contextMenuSheetRef}
       />
     ),
@@ -119,6 +124,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
           )}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('mx-3 rounded-[26px] overflow-hidden')}
+          backgroundStyle={themedTailwind.style('bg-solid-1')}
           detached
           bottomInset={bottom === 0 ? 12 : bottom}
           animationConfigs={animationConfigs}
@@ -126,7 +132,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
           snapPoints={[dropdownMenuList.length * 44 + 4 + 37]}>
           <BottomSheetWrapper>
             <BottomSheetHeader headerText="Select action" />
-            <Animated.View style={tailwind.style('py-1 pl-3')}>
+            <Animated.View style={themedTailwind.style('py-1 pl-3')}>
               {dropdownMenuList?.map((option, index) => {
                 const handleOnOptionSelect = () => {
                   option.onSelect(option.url, option.title);
@@ -138,18 +144,18 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
                 return (
                   <Pressable
                     key={option.title + index}
-                    style={tailwind.style('flex flex-row items-center')}
+                    style={themedTailwind.style('flex flex-row items-center')}
                     onPress={handleOnOptionSelect}>
                     <Animated.View
-                      style={tailwind.style(
+                      style={themedTailwind.style(
                         'flex-1 flex-row justify-between py-[11px] pr-3',
                         index !== dropdownMenuList.length - 1
-                          ? 'border-b-[1px] border-blackA-A3'
+                          ? 'border-b-[1px] border-slate-6'
                           : '',
                       )}>
                       <Animated.Text
-                        style={tailwind.style(
-                          'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+                        style={themedTailwind.style(
+                          'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
                         )}>
                         {option.title}
                       </Animated.Text>

@@ -1,0 +1,192 @@
+import React, { memo, useMemo } from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { Screen } from '../../domain/entities/Screen';
+import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
+import { useScreenTransition } from '../hooks/useScreenTransition';
+import { TextInput } from './inputs/TextInput';
+import { SingleSelectChips } from './inputs/SingleSelectChips';
+import { MultiSelectChips } from './inputs/MultiSelectChips';
+import { DatePicker } from './inputs/DatePicker';
+import { Rating } from './inputs/Rating';
+import { SliderInput } from './inputs/Slider';
+import type { AnswerValue, Answers } from '../../domain/common';
+import { ConditionalLogicService } from '../../domain/services/ConditionalLogicService';
+
+const DEFAULT_INPUT_CONTAINER_STYLE =
+  'w-full px-4 py-3 rounded-lg border border-slate-7 bg-slate-2';
+
+interface QuestionRendererProps {
+  screen: Screen;
+  value: AnswerValue;
+  onChange: (value: AnswerValue) => void;
+  error?: string;
+  answers?: Answers; // All answers for conditional option filtering
+}
+
+/**
+ * Question Renderer Component
+ *
+ * Dynamically renders the appropriate input component based on question type.
+ * Memoized for performance optimization.
+ */
+function QuestionRendererComponent({
+  screen,
+  value,
+  onChange,
+  error,
+  answers = {},
+}: QuestionRendererProps) {
+  const themedStyles = useThemedStyles();
+  const { entering, exiting } = useScreenTransition('forward', screen.uiConfig);
+
+  // Filter options based on conditional_show logic
+  const visibleOptions = useMemo(() => {
+    if (!screen.options) return [];
+    return ConditionalLogicService.filterVisibleOptions(screen.options, answers);
+  }, [screen.options, answers]);
+
+  const renderInput = useMemo(() => {
+    switch (screen.type) {
+      case 'text':
+        return (
+          <TextInput
+            value={String(value || '')}
+            onChangeText={text => onChange(text)}
+            placeholder={screen.placeholder}
+            error={error}
+            required={screen.isRequired()}
+            multiline={screen.uiConfig?.multiline ?? false}
+            numberOfLines={screen.uiConfig?.rows ?? 1}
+            maxLength={screen.validation?.max_length}
+            showCharacterCount={screen.uiConfig?.show_character_count ?? false}
+            warningThreshold={screen.uiConfig?.character_count_warning_threshold ?? 0.9}
+          />
+        );
+
+      case 'single_select':
+        return (
+          <SingleSelectChips
+            options={visibleOptions}
+            value={(value as string | number) || null}
+            onChange={val => onChange(val)}
+            error={error}
+            allowCustomInput={visibleOptions.some(opt => opt.allow_custom_input)}
+            customInputPlaceholder={
+              visibleOptions.find(opt => opt.allow_custom_input)?.custom_input_placeholder
+            }
+            onCustomInput={customValue => {
+              // Find the "other" option and use its value
+              const otherOption = visibleOptions.find(opt => opt.allow_custom_input);
+              if (otherOption) {
+                onChange(customValue);
+              }
+            }}
+          />
+        );
+
+      case 'multi_select':
+        return (
+          <MultiSelectChips
+            options={visibleOptions}
+            value={(value as (string | number)[]) || []}
+            onChange={vals => onChange(vals as AnswerValue)}
+            error={error}
+            maxSelection={screen.validation?.max_selection}
+          />
+        );
+
+      case 'date':
+        return (
+          <DatePicker
+            value={value instanceof Date ? value : value ? new Date(String(value)) : null}
+            onChange={date => onChange(date)}
+            mode={screen.uiConfig?.mode || 'date'}
+            minDate={screen.uiConfig?.min_date ? new Date(screen.uiConfig.min_date) : undefined}
+            maxDate={screen.uiConfig?.max_date ? new Date(screen.uiConfig.max_date) : undefined}
+            displayFormat={screen.uiConfig?.display_format}
+            error={error}
+          />
+        );
+
+      case 'rating':
+        return (
+          <Rating
+            value={(value as number) || 0}
+            onChange={val => onChange(val)}
+            maxRating={screen.uiConfig?.max_rating || 5}
+            style={screen.uiConfig?.style || 'stars'}
+            size={screen.uiConfig?.size || 'medium'}
+            error={error}
+          />
+        );
+
+      case 'slider':
+        return (
+          <SliderInput
+            value={(value as number) || screen.uiConfig?.min || 0}
+            onChange={val => onChange(val)}
+            min={screen.uiConfig?.min}
+            max={screen.uiConfig?.max}
+            step={screen.uiConfig?.step}
+            showValue={screen.uiConfig?.show_value}
+            unit={screen.uiConfig?.unit}
+            error={error}
+          />
+        );
+
+      case 'file_upload':
+        // File upload will be implemented separately
+        return (
+          <View style={themedStyles.style(DEFAULT_INPUT_CONTAINER_STYLE)}>
+            <Text style={themedStyles.style('text-slate-10 text-center')}>
+              File upload not yet implemented
+            </Text>
+          </View>
+        );
+      default:
+        return (
+          <View style={themedStyles.style(DEFAULT_INPUT_CONTAINER_STYLE)}>
+            <Text style={themedStyles.style('text-slate-10 text-center')}>
+              Unknown question type: {screen.type}
+            </Text>
+          </View>
+        );
+    }
+  }, [screen, value, onChange, error, themedStyles, visibleOptions]);
+  return (
+    <Animated.View
+      key={screen.id.toString()}
+      entering={entering}
+      exiting={exiting}
+      style={themedStyles.style('flex-1')}>
+      <ScrollView
+        style={themedStyles.style('flex-1')}
+        contentContainerStyle={themedStyles.style('p-4')}>
+        <View style={themedStyles.style('mb-6')}>
+          <Text style={themedStyles.style('text-2xl font-semibold text-slate-12 mb-2')}>
+            {screen.title}
+          </Text>
+          {screen.description && (
+            <Text style={themedStyles.style('text-base text-slate-10')}>{screen.description}</Text>
+          )}
+          {screen.isRequired() && (
+            <Text style={themedStyles.style('text-sm text-slate-9 mt-1')}>* Required</Text>
+          )}
+        </View>
+
+        <View style={themedStyles.style('w-full')}>{renderInput}</View>
+      </ScrollView>
+    </Animated.View>
+  );
+}
+
+// Memoize component to prevent unnecessary re-renders
+export const QuestionRenderer = memo(QuestionRendererComponent, (prevProps, nextProps) => {
+  // Only re-render if these props change
+  return (
+    prevProps.screen.id.toString() === nextProps.screen.id.toString() &&
+    prevProps.value === nextProps.value &&
+    prevProps.error === nextProps.error
+  );
+});

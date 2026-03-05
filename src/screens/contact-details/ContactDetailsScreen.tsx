@@ -3,7 +3,7 @@ import { View, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import camelCase from 'camelcase';
 
-import { TAB_BAR_HEIGHT } from '@/constants';
+import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
 import {
   CallIcon,
   EmailIcon,
@@ -16,23 +16,23 @@ import {
   GithubIcon,
   LinkedinIcon,
 } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { AttributeListType, CustomAttribute, GenericListType } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { AttributeListType, CustomAttribute, GenericListType } from '@domain/types';
 
 import {
   ContactDetailsScreenHeader,
   ContactBasicActions,
   ContactMetaInformation,
 } from './components';
-import { AttributeList } from '@/components-next';
+import { AttributeList } from '@infrastructure/ui';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TabBarExcludedScreenParamList } from '@/navigation/tabs/AppTabs';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { contactLabelActions } from '@/store/contact/contactLabelActions';
-import { getContactCustomAttributes } from '@/store/custom-attribute/customAttributeSlice';
-import { selectContactById } from '@/store/contact/contactSelectors';
-import i18n from '@/i18n';
+import { TabBarExcludedScreenParamList } from '@application/navigation/tabs/AppTabs';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
+import { contactLabelActions } from '@application/store/contact/contactLabelActions';
+import { getContactCustomAttributes } from '@application/store/custom-attribute/customAttributeSlice';
+import { selectContactById } from '@application/store/contact/contactSelectors';
+import i18n from '@infrastructure/i18n';
 
 type ContactDetailsScreenProps = NativeStackScreenProps<
   TabBarExcludedScreenParamList,
@@ -115,6 +115,7 @@ const processContactAttributes = (
 };
 
 const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
+  useScreenAnalytics(SCREENS.DETAIL);
   const { conversationId } = props.route.params;
   const dispatch = useAppDispatch();
 
@@ -209,7 +210,7 @@ const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
   return (
     <View
       style={tailwind.style(
-        `flex-1 bg-white pt-6 ${Platform.OS === 'android' ? 'pt-12' : 'pt-6'}`,
+        `flex-1 bg-solid-1 pt-6 ${Platform.OS === 'android' ? 'pt-12' : 'pt-6'}`,
       )}>
       <ContactDetailsScreenHeader
         name={name || contactName || ''}

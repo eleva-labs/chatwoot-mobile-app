@@ -9,8 +9,8 @@ import {
   VideoFullscreenUpdateEvent,
 } from 'expo-av';
 import { Image } from 'expo-image';
-import { tailwind } from '@/theme';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import { Spinner } from '@infrastructure/ui/spinner';
 
 type VideoBubbleProps = {
   videoSrc: string;
@@ -92,7 +92,7 @@ export const VideoBubblePlayer = (props: VideoPlayerProps) => {
             onPress={handlePlayPress}
             style={tailwind.style('h-full w-full flex items-center justify-center')}>
             <Image
-              source={require('../../../../assets/local/PlayIcon.png')}
+              source={require('../../../../assets/local/PlayIcon.png')} // eslint-disable-line @typescript-eslint/no-require-imports
               style={tailwind.style('h-12 w-12 z-10')}
             />
           </Pressable>
@@ -134,7 +134,7 @@ export const VideoBubble = (props: VideoBubbleProps) => {
               style={tailwind.style(
                 'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
               )}>
-              {unixTimestampToReadableTime(timeStamp)}
+              {messageTimestamp(timeStamp)}
             </Text>
             <DeliveryStatus
               isPrivate={isPrivate}

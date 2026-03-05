@@ -5,13 +5,14 @@ import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 import RNFetchBlob from 'rn-fetch-blob';
 
 import { FileIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
-import { Avatar, Icon } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
+import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar, Icon } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 
 type FilePreviewProps = Pick<FileCellProps, 'fileSrc'> & {
@@ -22,7 +23,7 @@ type FilePreviewProps = Pick<FileCellProps, 'fileSrc'> & {
 
 export const FilePreview = (props: FilePreviewProps) => {
   const { fileSrc, isIncoming, isOutgoing, isComposed = false } = props;
-  let dirs = RNFetchBlob.fs.dirs;
+  const dirs = RNFetchBlob.fs.dirs;
 
   const [fileDownload, setFileDownload] = useState(false);
   const fileName = fileSrc.split('/')[fileSrc.split('/').length - 1];
@@ -32,7 +33,7 @@ export const FilePreview = (props: FilePreviewProps) => {
     try {
       FileViewer.open(localFilePath).catch(e => Alert.alert(e));
     } catch (e) {
-      Alert.alert('Not able to preview file' + e);
+      Alert.alert(i18n.t('FILES.PREVIEW_ERROR') + e);
     }
   };
 
@@ -53,7 +54,7 @@ export const FilePreview = (props: FilePreviewProps) => {
               setFileDownload(false);
             })
             .catch(() => {
-              Alert.alert('File load error');
+              Alert.alert(i18n.t('FILES.LOAD_ERROR'));
             });
         }
       });
@@ -67,7 +68,7 @@ export const FilePreview = (props: FilePreviewProps) => {
         <Animated.View style={tailwind.style('pr-1.5')}>
           <Spinner
             size={20}
-            stroke={isIncoming ? tailwind.color('text-white') : tailwind.color('bg-blue-800')}
+            stroke={isIncoming ? tailwind.color('text-white') : tailwind.color('bg-brand')}
           />
         </Animated.View>
       ) : (
@@ -76,7 +77,7 @@ export const FilePreview = (props: FilePreviewProps) => {
             size={24}
             icon={
               <FileIcon
-                fill={isIncoming ? tailwind.color('bg-white') : tailwind.color('text-blue-800')}
+                fill={isIncoming ? tailwind.color('bg-solid-1') : tailwind.color('text-brand')}
               />
             }
           />
@@ -94,7 +95,7 @@ export const FilePreview = (props: FilePreviewProps) => {
                   ? 'text-base tracking-[0.32px] leading-[22px] font-inter-normal-20'
                   : '',
                 isIncoming ? 'text-white' : '',
-                isOutgoing ? 'text-blue-800' : '',
+                isOutgoing ? 'text-brand' : '',
               ),
               style.androidTextOnlyStyle,
             ]}>
@@ -105,7 +106,7 @@ export const FilePreview = (props: FilePreviewProps) => {
               tailwind.style(
                 'border-b-[1px] absolute left-0 right-0 ios:bottom-[1px] android:bottom-0',
                 isIncoming ? 'border-white' : '',
-                isOutgoing ? 'border-blue-800' : '',
+                isOutgoing ? 'border-brand' : '',
               ),
             ]}
           />
@@ -159,9 +160,9 @@ export const FileCell = (props: FileCellProps) => {
         shouldRenderAvatar ? 'pb-2' : '',
       )}>
       <Animated.View style={tailwind.style('flex flex-row')}>
-        {sender?.thumbnail && sender?.name && isIncoming && shouldRenderAvatar ? (
+        {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -169,8 +170,8 @@ export const FileCell = (props: FileCellProps) => {
             style={[
               tailwind.style(
                 'flex flex-row items-center relative max-w-[300px] pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
-                isIncoming ? 'bg-blue-700' : '',
-                isOutgoing ? 'bg-gray-100' : '',
+                isIncoming ? 'bg-brand' : '',
+                isOutgoing ? 'bg-slate-3' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -182,14 +183,14 @@ export const FileCell = (props: FileCellProps) => {
             ]}>
             <FilePreview {...{ fileSrc, isIncoming, isOutgoing }} />
             <Animated.View
-              style={tailwind.style('h-[21px] pt-[5px] pb-0.5 flex flex-row items-center pl-1.5')}>
+              style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center pl-1.5')}>
               <Animated.Text
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
                   isIncoming ? 'text-whiteA-A11' : '',
-                  isOutgoing ? 'text-gray-700' : '',
+                  isOutgoing ? 'text-slate-11' : '',
                 )}>
-                {unixTimestampToReadableTime(timeStamp)}
+                {messageTimestamp(timeStamp)}
               </Animated.Text>
               <DeliveryStatus
                 isPrivate={isPrivate}
@@ -198,15 +199,15 @@ export const FileCell = (props: FileCellProps) => {
                 channel={channel}
                 sourceId={sourceId}
                 errorMessage={errorMessage || ''}
-                deliveredColor="text-gray-700"
-                sentColor="text-gray-700"
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
               />
             </Animated.View>
           </Animated.View>
         </MessageMenu>
-        {sender?.thumbnail && sender?.name && isOutgoing && shouldRenderAvatar ? (
+        {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

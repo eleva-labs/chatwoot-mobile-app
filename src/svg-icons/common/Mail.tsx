@@ -1,18 +1,22 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { Mail as LucideMail } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '../../types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  [key: string]: unknown;
+}
 
-export const MailIcon = ({ stroke = '#858585', strokeWidth = 1.5 }: IconProps) => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 25 24" fill="none">
-      <Path
-        d="M2.25 7L10.415 12.715C11.076 13.178 11.407 13.41 11.766 13.499C12.0838 13.5783 12.4162 13.5783 12.734 13.499C13.094 13.409 13.424 13.179 14.085 12.715L22.25 7M7.05 20H17.45C19.13 20 19.97 20 20.612 19.673C21.1765 19.3854 21.6354 18.9265 21.923 18.362C22.25 17.72 22.25 16.88 22.25 15.2V8.8C22.25 7.12 22.25 6.28 21.923 5.638C21.6354 5.07354 21.1765 4.61462 20.612 4.327C19.97 4 19.13 4 17.45 4H7.05C5.37 4 4.53 4 3.888 4.327C3.32354 4.61462 2.86462 5.07354 2.577 5.638C2.25 6.28 2.25 7.12 2.25 8.8V15.2C2.25 16.88 2.25 17.72 2.577 18.362C2.86462 18.9265 3.32354 19.3854 3.888 19.673C4.53 20 5.37 20 7.05 20Z"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * MailIcon - Proxies to Lucide Mail
+ *
+ * @migrated 2026-03-02 (Cycle 2 Batch 6)
+ * @lucide https://lucide.dev/icons/mail
+ */
+export const MailIcon = ({ color, size = 24, strokeWidth = 1.5, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.blue[9];
+  return <LucideMail color={iconColor} size={size} strokeWidth={strokeWidth} {...props} />;
 };

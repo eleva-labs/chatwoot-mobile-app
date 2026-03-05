@@ -2,14 +2,14 @@ import React, { useCallback, useMemo } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, VideoCall, VoiceNote } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Message } from '@/types';
-import { isMarkdown } from '@/utils';
-import { Icon } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Message } from '@domain/types';
+import { isMarkdown } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui';
 import { MarkdownBubble } from './MarkdownBubble';
-import { MESSAGE_VARIANTS, TEXT_MAX_WIDTH } from '@/constants';
+import { MESSAGE_VARIANTS, TEXT_MAX_WIDTH } from '@domain/constants';
 
 type ReplyMessageBubbleProps = {
   replyMessage: Message;
@@ -17,7 +17,7 @@ type ReplyMessageBubbleProps = {
 };
 
 const variantBaseMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'bg-white',
+  [MESSAGE_VARIANTS.AGENT]: 'bg-solid-1',
   [MESSAGE_VARIANTS.USER]: 'bg-blackA-A7',
 };
 
@@ -66,7 +66,7 @@ export const ReplyMessageBubble = (props: ReplyMessageBubbleProps) => {
         ),
       ]}>
       <Animated.View style={tailwind.style('flex flex-row')}>
-        <Animated.View style={tailwind.style('w-[3px] bg-gray-300 h-auto rounded-[4px]')} />
+        <Animated.View style={tailwind.style('w-[3px] bg-slate-5 h-auto rounded-[4px]')} />
         <Animated.View style={tailwind.style('pl-2.5')}>
           <Animated.Text
             style={tailwind.style(
@@ -79,7 +79,7 @@ export const ReplyMessageBubble = (props: ReplyMessageBubbleProps) => {
               {renderAttachmentSection()}
               <Animated.Text
                 style={tailwind.style(
-                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-gray-950 capitalize pl-1.5',
+                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-slate-12 capitalize pl-1.5',
                 )}>
                 {replyMessageItem?.attachments[0].fileType}
               </Animated.Text>
@@ -96,7 +96,7 @@ export const ReplyMessageBubble = (props: ReplyMessageBubbleProps) => {
               <Animated.Text
                 numberOfLines={1}
                 style={tailwind.style(
-                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-gray-950 capitalize',
+                  'text-[14px] font-inter-normal-20 leading-[19.6px] tracking-[0.16px] text-slate-12 capitalize',
                 )}>
                 {replyMessageItem?.content}
               </Animated.Text>

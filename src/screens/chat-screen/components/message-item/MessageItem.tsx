@@ -1,8 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { tailwind } from '@/theme';
-import { Channel, Message } from '@/types';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { Channel, Message } from '@domain/types';
 import { MenuOption } from '../message-menu';
 import {
   AudioCell,
@@ -13,9 +14,9 @@ import {
   VideoCell,
 } from '../message-components';
 import { TextMessageCell } from '../message-components';
-import { ATTACHMENT_TYPES } from '@/constants';
+import { ATTACHMENT_TYPES } from '@domain/constants';
 import { LocationCell } from '../message-components/LocationCell';
-import { CONTENT_TYPES } from '@/constants';
+import { CONTENT_TYPES } from '@domain/constants';
 
 type DateSectionProps = { item: { date: string } };
 
@@ -26,12 +27,13 @@ type MessageItemPresentationProps = {
 };
 
 const DateSection = ({ item }: DateSectionProps) => {
+  const themedTailwind = useThemedStyles();
   return (
     <Animated.View style={tailwind.style('flex flex-row justify-center items-center py-4')}>
-      <Animated.View style={tailwind.style('rounded-lg py-1 px-[7px] bg-blackA-A3')}>
+      <Animated.View style={themedTailwind.style('rounded-lg py-1 px-[7px] bg-slate-3')}>
         <Animated.Text
-          style={tailwind.style(
-            'text-cxs font-inter-420-20 tracking-[0.32px] text-blackA-A11 leading-[15px]',
+          style={themedTailwind.style(
+            'text-cxs font-inter-420-20 tracking-[0.32px] text-slate-11 leading-[15px]',
           )}>
           {item.date}
         </Animated.Text>

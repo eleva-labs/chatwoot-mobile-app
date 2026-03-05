@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { ScrollView, View, Text } from 'react-native';
 
 const meta: Meta<typeof ConversationHeaderPresenter> = {
@@ -46,7 +46,7 @@ export const Default: Story = {
 
 const Title = ({ title }: { title: string }) => (
   <View style={tailwind.style('flex items-center justify-center')}>
-    <Text style={tailwind.style('text-md font-medium italic text-gray-800')}>{title}</Text>
+    <Text style={tailwind.style('text-md font-medium italic text-slate-12')}>{title}</Text>
   </View>
 );
 

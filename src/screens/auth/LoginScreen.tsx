@@ -9,12 +9,12 @@ import {
 } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { EMAIL_REGEX } from '@/constants';
-import { EyeIcon, EyeSlash } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { resetAuth } from '@/store/auth/authSlice';
-import { authActions } from '@/store/auth/authActions';
+import { EMAIL_REGEX } from '@domain/constants';
+import { EyeIcon, EyeSlash, LockIcon } from '@/svg-icons';
+import { tailwind } from '@infrastructure/theme';
+import i18n from '@infrastructure/i18n';
+import { resetAuth } from '@application/store/auth/authSlice';
+import { authActions } from '@application/store/auth/authActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import {
@@ -23,15 +23,24 @@ import {
   LanguageList,
   Button,
   Icon,
-} from '@/components-next';
+  AuthButton,
+} from '@infrastructure/ui';
 import {
   selectInstallationUrl,
-  selectBaseUrl,
+  //selectBaseUrl,
   selectLocale,
-} from '@/store/settings/settingsSelectors';
-import { selectIsLoggingIn } from '@/store/auth/authSelectors';
-import { setLocale } from '@/store/settings/settingsSlice';
-import { useRefsContext } from '@/context/RefsContext';
+} from '@application/store/settings/settingsSelectors';
+import { selectIsLoggingIn, selectLoggedIn } from '@application/store/auth/authSelectors';
+import { loadAndClearPendingLink } from '@infrastructure/utils/dynamicLinkUtils';
+import { navigationRef } from '@infrastructure/utils/navigationUtils';
+import { setLocale } from '@application/store/settings/settingsSlice';
+import { BuildInfo } from '@infrastructure/ui/common';
+import { useRefsContext } from '@infrastructure/context/RefsContext';
+import { settingsActions } from '@application/store/settings/settingsActions';
+import appLogo from '@/assets/images/logo.png';
+import { useTheme } from '@infrastructure/context/ThemeContext';
+import { useThemedStyles } from '@/hooks';
+import { SsoUtils } from '@infrastructure/utils/ssoUtils';
 
 type FormData = {
   email: string;
@@ -41,6 +50,8 @@ type FormData = {
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
+  const { isDark } = useTheme();
+  const themedTailwind = useThemedStyles();
   const {
     control,
     handleSubmit,
@@ -62,9 +73,10 @@ const LoginScreen = () => {
 
   const dispatch = useAppDispatch();
   const isLoggingIn = useAppSelector(selectIsLoggingIn);
+  const isLoggedIn = useAppSelector(selectLoggedIn);
 
   const installationUrl = useAppSelector(selectInstallationUrl);
-  const baseUrl = useAppSelector(selectBaseUrl);
+  //const baseUrl = useAppSelector(selectBaseUrl);
   const activeLocale = useAppSelector(selectLocale);
 
   useEffect(() => {
@@ -77,54 +89,140 @@ const LoginScreen = () => {
   useEffect(() => {
     dispatch(resetAuth());
     if (!installationUrl) {
-      navigation.navigate('ConfigureURL' as never);
+      const envInstallationUrl = process.env.EXPO_PUBLIC_INSTALLATION_URL;
+      if (envInstallationUrl) {
+        // Try to auto-set from env to avoid forcing the user into the Configure URL screen
+        // If verification fails, we'll fall back to the Configure URL screen
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        dispatch(settingsActions.setInstallationUrl(envInstallationUrl));
+      } else {
+        navigation.navigate('ConfigureURL' as never);
+      }
     }
   }, [installationUrl, navigation, dispatch]);
 
+  // After login, if there is a pending deep link, navigate to it
+  useEffect(() => {
+    const maybeNavigatePending = async () => {
+      if (!isLoggedIn) return;
+      const context = await loadAndClearPendingLink();
+      if (context) {
+        (
+          navigationRef.current as unknown as {
+            navigate: (route: string, params?: Record<string, unknown>) => void;
+          }
+        )?.navigate('ChatScreen', {
+          conversationId: context.conversationId,
+          primaryActorId: context.primaryActorId,
+          primaryActorType: context.primaryActorType,
+          ref: context.ref,
+          isConversationOpenedExternally: true,
+        });
+      }
+    };
+    maybeNavigatePending();
+  }, [isLoggedIn]);
+
   const onSubmit = async (data: FormData) => {
     const { email, password } = data;
-    dispatch(authActions.login({ email, password }));
+    // Clear any existing auth state before login
+    dispatch(resetAuth());
+
+    try {
+      const result = await dispatch(authActions.login({ email, password })).unwrap();
+
+      // Check if MFA is required in the response
+      if ('mfa_required' in result && result.mfa_required) {
+        // Navigate directly to MFA screen with the token
+        navigation.navigate('MFAScreen' as never);
+      }
+      // If MFA not required, the auth state will be updated and
+      // the app will automatically navigate to the dashboard
+    } catch {
+      // Login error is handled by Redux and displayed in the UI
+    }
   };
+
+  // TODO: Change this condition based on EE check
+  // Show SSO login button only if installation URL contains app.chatwoot.com
+  const showSsoLogin = installationUrl.includes('app.chatwoot.com');
 
   const openResetPassword = () => {
     navigation.navigate('ResetPassword' as never);
   };
 
-  const openConfigInstallationURL = () => {
+  /* const openConfigInstallationURL = () => {
     navigation.navigate('ConfigureURL' as never);
-  };
+  }; */
 
   const onChangeLanguage = (locale: string) => {
     dispatch(setLocale(locale));
   };
 
+  const handleSsoLogin = async () => {
+    if (!installationUrl) {
+      return;
+    }
+
+    try {
+      const result = await SsoUtils.loginWithSSO(installationUrl);
+
+      if (result.type === 'success' && result.url) {
+        const ssoParams = SsoUtils.parseCallbackUrl(result.url);
+        await SsoUtils.handleSsoCallback(ssoParams, dispatch);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      // SSO login error handled silently
+    }
+  };
+
   return (
-    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+    <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
-        backgroundColor={tailwind.color('bg-white')}
-        barStyle={'dark-content'}
+        backgroundColor={tailwind.color('bg-solid-1')}
+        barStyle={isDark ? 'light-content' : 'dark-content'}
       />
-      <View style={tailwind.style('flex-1 bg-white')}>
+      <View style={tailwind.style('flex-1 bg-solid-1')}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={tailwind.style('px-6 pt-24')}>
-          <Image
-            source={require('@/assets/images/logo.png')}
-            style={tailwind.style('w-10 h-10')}
-            resizeMode="contain"
-          />
-          <View style={tailwind.style('pt-6 gap-4')}>
-            <Animated.Text style={tailwind.style('text-2xl text-gray-950 font-inter-semibold-20')}>
+          <View style={tailwind.style('items-center')}>
+            <Image source={appLogo} style={tailwind.style('w-36 h-36')} resizeMode="contain" />
+          </View>
+          {/* <View style={tailwind.style('pt-6 gap-4')}>
+            <Animated.Text style={tailwind.style('text-2xl text-slate-12 font-inter-semibold-20')}>
               {i18n.t('LOGIN.TITLE')}
             </Animated.Text>
             <Animated.Text
               style={tailwind.style(
-                'font-inter-normal-20 leading-[18px] tracking-[0.32px] text-gray-900',
+                'font-inter-normal-20 leading-[18px] tracking-[0.32px] text-slate-12',
               )}>
               {i18n.t('LOGIN.DESCRIPTION', { baseUrl })}
             </Animated.Text>
-          </View>
+          </View> */}
+
+          {showSsoLogin && (
+            <View>
+              <AuthButton
+                text={i18n.t('LOGIN.LOGIN_VIA_SSO')}
+                icon={<LockIcon />}
+                handlePress={handleSsoLogin}
+                disabled={isLoggingIn}
+                variant="outline"
+                style={tailwind.style('mt-8')}
+              />
+
+              <View style={tailwind.style('flex-row items-center my-6')}>
+                <View style={tailwind.style('flex-1 h-px bg-slate-5')} />
+                <Animated.Text style={tailwind.style('px-4 text-sm text-slate-10')}>
+                  OR
+                </Animated.Text>
+                <View style={tailwind.style('flex-1 h-px bg-slate-5')} />
+              </View>
+            </View>
+          )}
 
           <Controller
             control={control}
@@ -137,26 +235,26 @@ const LoginScreen = () => {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <View style={tailwind.style('pt-8 gap-2')}>
-                <Animated.Text style={tailwind.style('font-inter-420-20 text-gray-950')}>
+                <Animated.Text style={tailwind.style('font-inter-420-20 text-slate-12')}>
                   {i18n.t('LOGIN.EMAIL')}
                 </Animated.Text>
                 <TextInput
                   style={[
                     tailwind.style(
                       'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
-                      'py-2 px-3 rounded-xl text-gray-950 bg-blackA-A4',
+                      'py-2 px-3 rounded-xl text-slate-12 bg-slate-3',
                       'h-10',
                     ),
                   ]}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  placeholderTextColor={tailwind.color('text-gray-900')}
+                  placeholderTextColor={tailwind.color('text-slate-9')}
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
                 {errors.email && (
-                  <Animated.Text style={tailwind.style('font-inter-normal-20 text-ruby-900')}>
+                  <Animated.Text style={tailwind.style('font-inter-normal-20 text-ruby-11')}>
                     {errors.email.message}
                   </Animated.Text>
                 )}
@@ -176,7 +274,7 @@ const LoginScreen = () => {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <View style={tailwind.style('pt-8 gap-2')}>
-                <Animated.Text style={tailwind.style('font-inter-420-20  text-gray-950')}>
+                <Animated.Text style={tailwind.style('font-inter-420-20 text-slate-12')}>
                   {i18n.t('LOGIN.PASSWORD')}
                 </Animated.Text>
                 <View style={tailwind.style('relative')}>
@@ -184,24 +282,33 @@ const LoginScreen = () => {
                     style={[
                       tailwind.style(
                         'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
-                        'py-2 pl-3 pr-10 rounded-xl text-gray-950 bg-blackA-A4',
+                        'py-2 pl-3 pr-10 rounded-xl text-slate-12 bg-slate-3',
                         'h-10',
                       ),
                     ]}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    placeholderTextColor={tailwind.color('text-gray-500')}
+                    placeholderTextColor={tailwind.color('text-slate-9')}
                     secureTextEntry={!showPassword}
                   />
                   <Pressable
                     style={tailwind.style('absolute right-4 top-2.5')}
                     onPress={() => setShowPassword(!showPassword)}>
-                    <Icon size={20} icon={showPassword ? <EyeIcon /> : <EyeSlash />} />
+                    <Icon
+                      size={20}
+                      icon={
+                        showPassword ? (
+                          <EyeIcon stroke={tailwind.color('text-slate-11') ?? '#6B7280'} />
+                        ) : (
+                          <EyeSlash stroke={tailwind.color('text-slate-11') ?? '#6B7280'} />
+                        )
+                      }
+                    />
                   </Pressable>
                 </View>
                 {errors.password && (
-                  <Animated.Text style={tailwind.style('text-ruby-900')}>
+                  <Animated.Text style={tailwind.style('text-ruby-11')}>
                     {errors.password.message}
                   </Animated.Text>
                 )}
@@ -211,7 +318,7 @@ const LoginScreen = () => {
           />
 
           <Pressable style={tailwind.style('pt-1 mb-8')} onPress={openResetPassword}>
-            <Animated.Text style={tailwind.style('text-blue-800 font-inter-medium-24 text-right')}>
+            <Animated.Text style={tailwind.style('text-iris-11 font-inter-medium-24 text-right')}>
               {i18n.t('LOGIN.FORGOT_PASSWORD')}
             </Animated.Text>
           </Pressable>
@@ -221,31 +328,38 @@ const LoginScreen = () => {
             handlePress={handleSubmit(onSubmit)}
           />
 
-          <Pressable
+          {/* <Pressable
             style={tailwind.style('flex-row justify-center items-center mt-6')}
             onPress={openConfigInstallationURL}>
-            <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
+            <Animated.Text style={tailwind.style('text-sm text-slate-12')}>
               {i18n.t('LOGIN.CHANGE_URL')}
             </Animated.Text>
-          </Pressable>
+          </Pressable> */}
           <Pressable
             style={tailwind.style('flex-row justify-center items-center mt-4')}
             onPress={() => languagesModalSheetRef.current?.present()}>
-            <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
+            <Animated.Text style={tailwind.style('text-sm text-slate-12')}>
               {i18n.t('LOGIN.CHANGE_LANGUAGE')}
             </Animated.Text>
           </Pressable>
+
+          <Animated.View style={tailwind.style('items-center mt-6')}>
+            <BuildInfo />
+          </Animated.View>
         </Animated.ScrollView>
       </View>
       <BottomSheetModal
         ref={languagesModalSheetRef}
         backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
+        handleIndicatorStyle={themedTailwind.style(
+          'overflow-hidden bg-slate-8 w-8 h-1 rounded-[11px]',
+        )}
         detached
         enablePanDownToClose
         animationConfigs={animationConfigs}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
+        handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
+        style={themedTailwind.style('rounded-[26px] overflow-hidden')}
+        backgroundStyle={themedTailwind.style('bg-solid-1')}
         snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />

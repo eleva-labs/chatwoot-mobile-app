@@ -1,18 +1,20 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next/common';
-import { selectFilters, setFilters } from '@/store/conversation/conversationFilterSlice';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader, Icon } from '@infrastructure/ui/common';
+import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAllInboxes } from '@/store/inbox/inboxSelectors';
-import { getChannelIcon } from '@/utils';
-import { Channel } from '@/types';
-import i18n from '@/i18n';
+import { selectAllInboxes } from '@application/store/inbox/inboxSelectors';
+import { getChannelIcon } from '@infrastructure/utils';
+import { Channel } from '@domain/types';
+import i18n from '@infrastructure/i18n';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 type InboxCellProps = {
   value: { id: number; name: string; channelType: Channel; medium: string };
@@ -30,6 +32,11 @@ const InboxCell = (props: InboxCellProps) => {
   const handlePreferredAssigneeTypePress = () => {
     hapticSelection?.();
     dispatch(setFilters({ key: 'inbox_id', value: value.id.toString() }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'inbox_id',
+      filterValue: value.id.toString(),
+      inboxName: value.name,
+    });
     setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
   };
 
@@ -40,7 +47,7 @@ const InboxCell = (props: InboxCellProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !isLastItem ? 'border-b-[1px] border-blackA-A3' : '',
+          !isLastItem ? 'border-b-[1px] border-slate-6' : '',
         )}>
         <Animated.View style={tailwind.style('flex-row items-center')}>
           <Icon
@@ -51,12 +58,14 @@ const InboxCell = (props: InboxCellProps) => {
 
           <Animated.Text
             style={tailwind.style(
-              'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize ml-2',
+              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize ml-2',
             )}>
             {value.name}
           </Animated.Text>
         </Animated.View>
-        {filters.inbox_id === value.id.toString() ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {filters.inbox_id === value.id.toString() ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );
@@ -69,7 +78,12 @@ type InboxStackProps = {
 const InboxStack = (props: InboxStackProps) => {
   const { list } = props;
   return (
-    <Animated.ScrollView style={tailwind.style('pl-3 pb-4')}>
+    <Animated.ScrollView
+      style={tailwind.style('pl-3 pb-4')}
+      bounces={false}
+      showsVerticalScrollIndicator={true}
+      scrollEventThrottle={16}
+      nestedScrollEnabled={true}>
       {list.map((value, index) => (
         <InboxCell key={index} {...{ value, index, isLastItem: index === list.length - 1 }} />
       ))}
@@ -83,7 +97,7 @@ export const InboxFilters = () => {
     {
       id: 0,
       name: i18n.t('FILTER.ALL_INBOXES'),
-      channelType: 'Channel::All',
+      channelType: 'Channel::All' as Channel,
       avatarUrl: '',
       channelId: 0,
       phoneNumber: '',
@@ -94,12 +108,16 @@ export const InboxFilters = () => {
   ].map(inbox => ({
     id: inbox.id,
     name: inbox.name,
-    channelType: inbox.channelType,
+    channelType: inbox.channelType as Channel,
     medium: inbox.medium,
   }));
 
   return (
-    <Animated.ScrollView>
+    <Animated.ScrollView
+      bounces={false}
+      showsVerticalScrollIndicator={true}
+      scrollEventThrottle={16}
+      nestedScrollEnabled={true}>
       <BottomSheetHeader headerText={i18n.t('CONVERSATION.FILTERS.INBOX.TITLE')} />
       <InboxStack list={inboxList} />
     </Animated.ScrollView>

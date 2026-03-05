@@ -2,14 +2,21 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { useRefsContext } from '@/context';
-import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
-import i18n from '@/i18n';
-import { InboxSortTypes, InboxSortOptions } from '@/store/notification/notificationTypes';
-import { selectSortOrder, setFilters } from '@/store/notification/notificationFilterSlice';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
+
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
+import {
+  InboxSortTypes,
+  InboxSortOptions,
+} from '@application/store/notification/notificationTypes';
+import {
+  selectSortOrder,
+  setFilters,
+} from '@application/store/notification/notificationFilterSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 
 type SortByCellProps = {
@@ -38,15 +45,17 @@ const SortByCell = (props: SortByCellProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          index !== 1 ? 'border-b-[1px] border-blackA-A3' : '',
+          index !== 1 ? 'border-b-[1px] border-slate-6' : '',
         )}>
         <Animated.Text
           style={tailwind.style(
-            'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+            'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
           )}>
           {i18n.t(`NOTIFICATION.FILTERS.SORT_BY.OPTIONS.${value.toUpperCase()}`)}
         </Animated.Text>
-        {sortOrder === value ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {sortOrder === value ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );

@@ -1,20 +1,22 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { TickIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { AssigneeTypes } from '@/types';
-import { useHaptic } from '@/utils';
-import { BottomSheetHeader, Icon } from '@/components-next';
-import { selectFilters, setFilters } from '@/store/conversation/conversationFilterSlice';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { AssigneeTypes } from '@domain/types';
+import { useHaptic } from '@infrastructure/utils';
+import { BottomSheetHeader } from '@infrastructure/ui';
+import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import i18n from '@/i18n';
-import { AssigneeOptions } from '@/types';
+import i18n from '@infrastructure/i18n';
+import { AssigneeOptions } from '@domain/types';
 import { useSelector } from 'react-redux';
-import { selectUser } from '@/store/auth/authSelectors';
-import { getUserPermissions } from '@/utils/permissionUtils';
+import { selectUser } from '@application/store/auth/authSelectors';
+import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 type AssigneeTypeCellProps = {
   value: string;
@@ -33,6 +35,10 @@ const AssigneeTypeCell = (props: AssigneeTypeCellProps) => {
   const handlePreferredAssigneeTypePress = () => {
     hapticSelection?.();
     dispatch(setFilters({ key: 'assignee_type', value }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'assignee_type',
+      filterValue: value,
+    });
     setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
   };
 
@@ -43,15 +49,17 @@ const AssigneeTypeCell = (props: AssigneeTypeCellProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          index !== assigneeTypeList.length - 1 ? 'border-b-[1px] border-blackA-A3' : '',
+          index !== assigneeTypeList.length - 1 ? 'border-b-[1px] border-slate-6' : '',
         )}>
         <Animated.Text
           style={tailwind.style(
-            'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
+            'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
           )}>
           {i18n.t(`CONVERSATION.FILTERS.ASSIGNEE_TYPE.OPTIONS.${value.toUpperCase()}`)}
         </Animated.Text>
-        {filters.assignee_type === value ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {filters.assignee_type === value ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );
@@ -59,9 +67,9 @@ const AssigneeTypeCell = (props: AssigneeTypeCellProps) => {
 
 export const AssigneeTypeFilters = () => {
   const user = useSelector(selectUser);
-  const { account_id: activeAccountId } = user || {};
+  const { account_id: activeAccountId } = user || { account_id: null };
 
-  const userPermissions = getUserPermissions(user, activeAccountId);
+  const userPermissions = user ? getUserPermissions(user, activeAccountId) : [];
 
   // If userPermissions contains any values conversation_manage_permission,administrator, agent then keep all the assignee types
   // If conversation_manage is not available and conversation_unassigned_manage only is available, then return only unassigned and mine

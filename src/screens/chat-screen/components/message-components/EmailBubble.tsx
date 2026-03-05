@@ -2,12 +2,12 @@ import React from 'react';
 import { Animated } from 'react-native';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 import { EmailMeta } from './EmailMeta';
-import { Message } from '@/types';
+import { Message } from '@domain/types';
 import { MarkdownBubble } from './MarkdownBubble';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 
 type EmailBubbleProps = {
   item: Message;

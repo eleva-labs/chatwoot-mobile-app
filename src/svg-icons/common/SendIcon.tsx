@@ -1,16 +1,21 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { Send } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-export const SendIcon = () => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 16 16" fill="none">
-      <Path
-        d="M8 13.3334V2.66675M8 2.66675L4 6.66675M8 2.66675L12 6.66675"
-        stroke="white"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * SendIcon - Proxies to Lucide Send
+ *
+ * @migrated 2026-03-02 (Cycle 2 Phase 1+2)
+ * @lucide https://lucide.dev/icons/send
+ * @usage 3 files
+ */
+export const SendIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { semanticColors } = useThemeColors();
+  const iconColor = color || semanticColors.textInverse;
+  return <Send color={iconColor} size={size} {...props} />;
 };

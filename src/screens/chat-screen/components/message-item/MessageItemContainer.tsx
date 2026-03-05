@@ -1,18 +1,20 @@
 import React from 'react';
-import { Message } from '@/types';
+import { Trash } from '@/svg-icons/common/Trash';
+import { Message } from '@domain/types';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectConversationById } from '@/store/conversation/conversationSelectors';
-import { useChatWindowContext } from '@/context';
-// import { setQuoteMessage } from '@/store/conversation/sendMessageSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { useHaptic } from '@/utils';
-// import { inboxHasFeature, is360DialogWhatsAppChannel, useHaptic } from '@/utils';
-// import { INBOX_FEATURES } from '@/constants';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
+import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { useChatWindowContext } from '@infrastructure/context';
+// import { setQuoteMessage } from '@application/store/conversation/sendMessageSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { useHaptic } from '@infrastructure/utils';
+// import { inboxHasFeature, is360DialogWhatsAppChannel, useHaptic } from '@infrastructure/utils';
+// import { INBOX_FEATURES } from '@domain/constants';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { MESSAGE_TYPES } from '@/constants';
-import { CopyIcon, Trash } from '@/svg-icons';
+import { MESSAGE_TYPES } from '@domain/constants';
+import { CopyIcon } from '@/svg-icons';
+import { useThemeColors } from '@infrastructure/theme';
 import { MenuOption } from '../message-menu';
 import { MessageItem } from './MessageItem';
 
@@ -24,6 +26,7 @@ type MessageItemContainerProps = {
 export const MessageItemContainer = (props: MessageItemContainerProps) => {
   const dispatch = useAppDispatch();
   const { conversationId } = useChatWindowContext();
+  const { colors } = useThemeColors();
 
   const hapticSelection = useHaptic();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
@@ -90,7 +93,7 @@ export const MessageItemContainer = (props: MessageItemContainerProps) => {
     if (hasAttachments || hasText) {
       menuOptions.push({
         title: i18n.t('CONVERSATION.LONG_PRESS_ACTIONS.DELETE_MESSAGE'),
-        icon: <Trash />,
+        icon: <Trash size={20} color={colors.ruby[9]} />,
         handleOnPressMenuOption: () => handleDeleteMessage(message.id),
         destructive: true,
       });

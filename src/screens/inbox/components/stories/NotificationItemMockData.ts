@@ -1,4 +1,4 @@
-import { Channel, ContentType, MessageStatus, MessageType } from '@/types';
+import { Channel, ContentType, MessageStatus, MessageType } from '@domain/types';
 
 export const conversation = {
   senderName: 'Leo Das',

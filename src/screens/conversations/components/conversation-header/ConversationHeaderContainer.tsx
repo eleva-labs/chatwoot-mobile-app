@@ -6,27 +6,33 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { useConversationListStateContext } from '@/context';
-import { tailwind } from '@/theme';
-import { useHaptic } from '@/utils';
-import { getFilteredConversations } from '@/store/conversation/conversationSelectors';
-import { selectUserId } from '@/store/auth/authSelectors';
+import { useConversationListStateContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { useHaptic } from '@infrastructure/utils';
+import { getFilteredConversations } from '@application/store/conversation/conversationSelectors';
+import { useThemedStyles } from '@/hooks';
+import { selectUserId } from '@application/store/auth/authSelectors';
 import {
   resetFilters,
   selectFilters,
   defaultFilterState,
   FilterState,
-} from '@/store/conversation/conversationFilterSlice';
+} from '@application/store/conversation/conversationFilterSlice';
 import {
   clearSelection,
   selectAll,
   selectSelectedConversations,
-} from '@/store/conversation/conversationSelectedSlice';
-import { selectCurrentState, setCurrentState } from '@/store/conversation/conversationHeaderSlice';
+} from '@application/store/conversation/conversationSelectedSlice';
+import {
+  selectCurrentState,
+  setCurrentState,
+} from '@application/store/conversation/conversationHeaderSlice';
 import { ConversationFilterBar } from '../conversation-filters';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
 
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 const getFiltersAppliedCount = (defaultState: FilterState, updatedState: FilterState): number => {
   let count = 0;
@@ -41,6 +47,7 @@ const getFiltersAppliedCount = (defaultState: FilterState, updatedState: FilterS
 
 export const ConversationHeader = () => {
   const currentState = useAppSelector(selectCurrentState);
+  const themedTailwind = useThemedStyles();
 
   const filters = useAppSelector(selectFilters);
   const dispatch = useAppDispatch();
@@ -61,7 +68,7 @@ export const ConversationHeader = () => {
 
   const hapticSuccess = useHaptic('success');
 
-  const headerBorderColor = tailwind.color('text-blackA-A3') as string;
+  const headerBorderColor = tailwind.color('text-slate-6') as string;
 
   const headerOpenState = useDerivedValue(() =>
     currentState !== 'none' && currentState !== 'Select' ? withSpring(1) : withSpring(0),
@@ -117,10 +124,12 @@ export const ConversationHeader = () => {
   const handleClearFilter = () => {
     hapticSuccess?.();
     dispatch(resetFilters());
+    AnalyticsHelper.track(CONVERSATION_EVENTS.CLEAR_FILTERS);
   };
 
   return (
-    <Animated.View style={[tailwind.style('border-b-[1px]'), headerBorderAnimation]}>
+    <Animated.View
+      style={[themedTailwind.style('border-b-[1px] bg-solid-1'), headerBorderAnimation]}>
       <ConversationHeaderPresenter
         currentState={currentState}
         isSelectedAll={isSelectedAll}

@@ -2,19 +2,19 @@ import React, { useMemo } from 'react';
 import Animated from 'react-native-reanimated';
 
 import { FileErrorIcon } from '@/svg-icons';
-import { differenceInHours } from 'date-fns';
-import { tailwind } from '@/theme';
-import { Message } from '@/types';
-import { Icon, Spinner } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Message } from '@domain/types';
+import { Icon, Spinner } from '@infrastructure/ui';
 import { ReplyMessageBubble } from './ReplyMessageBubble';
 
 import { ImageBubbleContainer } from './ImageBubble';
 
 import { useAppSelector } from '@/hooks';
-import { useChatWindowContext } from '@/context';
-import { getMessagesByConversationId } from '@/store/conversation/conversationSelectors';
-import { ATTACHMENT_TYPES, MESSAGE_STATUS } from '@/constants';
-import i18n from '@/i18n';
+import { useChatWindowContext } from '@infrastructure/context';
+import { getMessagesByConversationId } from '@application/store/conversation/conversationSelectors';
+import { ATTACHMENT_TYPES, MESSAGE_STATUS } from '@domain/constants';
+import { isOlderThan24Hours } from '@infrastructure/utils';
+import i18n from '@infrastructure/i18n';
 import { MarkdownBubble } from './MarkdownBubble';
 import { FileBubblePreview } from './FileBubble';
 import { AudioBubble } from './AudioBubble';
@@ -26,22 +26,8 @@ type ComposedBubbleProps = {
   variant: string;
 };
 
-const isMessageCreatedAtLessThan24HoursOld = (messageTimestamp: number) => {
-  const currentTime = new Date();
-  const messageTime = new Date(messageTimestamp * 1000);
-  const hoursDifference = differenceInHours(currentTime, messageTime);
-
-  return hoursDifference > 24;
-};
-
 export const ComposedBubble = (props: ComposedBubbleProps) => {
-  const {
-    content,
-    private: isPrivate,
-    createdAt,
-    contentAttributes,
-    status,
-  } = props.item as Message;
+  const { content, createdAt, contentAttributes, status } = props.item as Message;
   const { conversationId } = useChatWindowContext();
 
   const messages = useAppSelector(state => getMessagesByConversationId(state, { conversationId }));
@@ -60,22 +46,19 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
   );
   const { imageType } = contentAttributes || {};
   const isAnInstagramStory = imageType === ATTACHMENT_TYPES.STORY_MENTION;
-  const isInstagramStoryExpired = isMessageCreatedAtLessThan24HoursOld(createdAt);
+  const isInstagramStoryExpired = isOlderThan24Hours(createdAt);
   const isMessageSending = status === MESSAGE_STATUS.PROGRESS;
 
   return (
-    <Animated.View style={tailwind.style('flex flex-row')}>
-      {isPrivate ? (
-        <Animated.View style={tailwind.style('w-[3px] bg-amber-700 h-auto rounded-[4px]')} />
-      ) : null}
-      <Animated.View style={tailwind.style(isPrivate ? 'pl-2.5' : '')}>
+    <Animated.View>
+      <Animated.View>
         {isReplyMessage && replyMessage ? (
           <ReplyMessageBubble replyMessage={replyMessage} variant={props.variant} />
         ) : null}
         {content && <MarkdownBubble messageContent={content} variant={props.variant} />}
         {isMessageSending && (
           <Animated.View style={tailwind.style('flex h-8 w-16 items-center justify-center')}>
-            <Spinner size={12} stroke={tailwind.color('text-gray-900')} />
+            <Spinner size={12} stroke={tailwind.color('text-slate-12')} />
           </Animated.View>
         )}
         {props.item.attachments &&
@@ -83,12 +66,13 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
             if (attachment.fileType === 'image') {
               return isAnInstagramStory && isInstagramStoryExpired ? (
                 <Animated.View
+                  key={attachment.fileType + index}
                   style={tailwind.style(
-                    'flex flex-row items-center justify-center py-8 bg-slate-100 gap-1',
+                    'flex flex-row items-center justify-center py-8 bg-slate-3 gap-1 rounded-lg',
                   )}>
-                  <Icon icon={<FileErrorIcon fill={tailwind.color('text-gray-900')} />} />
+                  <Icon icon={<FileErrorIcon fill={tailwind.color('text-slate-12')} />} />
                   <Animated.Text
-                    style={tailwind.style('text-cxs font-inter-420-20 text-gray-900 mt-[1px]')}>
+                    style={tailwind.style('text-cxs font-inter-420-20 text-slate-12 mt-[1px]')}>
                     {i18n.t('CONVERSATION.STORY_NOT_AVAILABLE')}
                   </Animated.Text>
                 </Animated.View>
@@ -96,14 +80,14 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
                 <Animated.View key={attachment.fileType + index} style={tailwind.style('my-2')}>
                   <ImageBubbleContainer
                     imageSrc={attachment.dataUrl}
-                    width={300 - 24 - (isPrivate ? 13 : 0)}
+                    width={300 - 24}
                     height={215}
                   />
                 </Animated.View>
               );
             }
 
-            if (attachment.fileType === 'file') {
+            if (attachment.fileType === ATTACHMENT_TYPES.FILE) {
               return (
                 <Animated.View
                   key={attachment.fileType + index}
@@ -116,7 +100,7 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
                 </Animated.View>
               );
             }
-            if (attachment.fileType === 'video') {
+            if (attachment.fileType === ATTACHMENT_TYPES.VIDEO) {
               return (
                 <Animated.View
                   key={attachment.fileType + index}
@@ -125,7 +109,16 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
                 </Animated.View>
               );
             }
-            if (attachment.fileType === 'audio') {
+            if (attachment.fileType === ATTACHMENT_TYPES.IG_REEL) {
+              return (
+                <Animated.View
+                  key={attachment.fileType + index}
+                  style={tailwind.style('flex flex-row items-center my-2')}>
+                  <VideoBubble videoSrc={attachment.dataUrl} />
+                </Animated.View>
+              );
+            }
+            if (attachment.fileType === ATTACHMENT_TYPES.AUDIO) {
               return (
                 <Animated.View
                   key={attachment.fileType + index}
@@ -135,7 +128,7 @@ export const ComposedBubble = (props: ComposedBubbleProps) => {
               );
             }
 
-            if (attachment.fileType === 'location') {
+            if (attachment.fileType === ATTACHMENT_TYPES.LOCATION) {
               return (
                 <Animated.View
                   key={attachment.fileType + index}

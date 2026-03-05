@@ -2,13 +2,13 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@/theme';
-import { INBOX_TYPES } from '@/constants';
-import { Inbox } from '@/types/Inbox';
-import { Conversation } from '@/types';
-import i18n from '@/i18n';
-import { REPLY_POLICY } from '@/constants/url';
-import { openURL } from '@/utils/urlUtils';
+import { tailwind } from '@infrastructure/theme';
+import { INBOX_TYPES } from '@domain/constants';
+import { Inbox } from '@domain/types/Inbox';
+import { Conversation } from '@domain/types';
+import i18n from '@infrastructure/i18n';
+import { REPLY_POLICY } from '@domain/constants/url';
+import { openURL } from '@infrastructure/utils/urlUtils';
 
 type ReplyWarningProps = {
   inbox: Inbox;
@@ -58,17 +58,19 @@ export const ReplyWarning = (props: ReplyWarningProps) => {
 
   return (
     <Pressable
-      style={tailwind.style('flex flex-row items-center px-4 py-3 max-h-[64px] bg-ruby-700 -z-10')}>
+      style={tailwind.style(
+        'flex flex-row items-center px-4 py-3 max-h-[64px] bg-warning-banner-bg rounded-lg mx-2 mt-2 -z-10',
+      )}>
       <Animated.View style={tailwind.style('flex-1')}>
         <Animated.Text
           style={tailwind.style(
-            'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-white',
+            'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-warning-banner-text',
           )}>
           {`${replyBannerMessage()} `}
           <Animated.Text
             onPress={() => openURL({ URL: replyWindowLink() })}
             style={tailwind.style(
-              'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-white underline',
+              'text-sm tracking-[0.32px] leading-[15px] font-inter-420-20 text-warning-banner-text underline',
             )}>
             {replyWindowLinkText()}
           </Animated.Text>

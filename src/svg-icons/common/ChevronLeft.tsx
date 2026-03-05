@@ -1,18 +1,20 @@
-import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { ChevronLeft as LucideChevronLeft } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '../../types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const ChevronLeft = ({ stroke = '#858585' }: IconProps): JSX.Element => {
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M16 20L7 11.5L16 3"
-        stroke={stroke}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
+/**
+ * ChevronLeft - Proxies to Lucide ChevronLeft icon
+ *
+ * @migrated 2026-03-01 (Cycle 2 - rollback to proxy pattern)
+ * @lucide https://lucide.dev/icons/chevron-left
+ */
+export const ChevronLeft = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[12];
+  return <LucideChevronLeft color={iconColor} size={size} {...props} />;
 };

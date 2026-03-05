@@ -10,13 +10,13 @@ import {
 } from 'expo-av';
 import { Image, ImageBackground } from 'expo-image';
 
-import { tailwind } from '@/theme';
-import { Channel, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
-import { Avatar } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 
 type VideoCellProps = {
@@ -109,7 +109,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
             onPress={handlePlayPress}
             style={tailwind.style('h-full w-full flex items-center justify-center')}>
             <Image
-              source={require('../../../../assets/local/PlayIcon.png')}
+              source={require('../../../../assets/local/PlayIcon.png')} // eslint-disable-line @typescript-eslint/no-require-imports
               style={tailwind.style('h-12 w-12 z-10')}
             />
           </Pressable>
@@ -151,7 +151,7 @@ export const VideoCell = (props: VideoCellProps) => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name || ''} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name || ''} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -176,7 +176,7 @@ export const VideoCell = (props: VideoCellProps) => {
               entering={FadeIn.duration(300).easing(Easing.ease)}
               exiting={FadeOut.duration(300).easing(Easing.ease)}>
               <ImageBackground
-                source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
+                source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')} // eslint-disable-line @typescript-eslint/no-require-imports
                 style={tailwind.style(
                   'absolute bottom-0 right-0 h-15 w-33 z-20 ',
                   shouldRenderAvatar
@@ -193,7 +193,7 @@ export const VideoCell = (props: VideoCellProps) => {
                     style={tailwind.style(
                       'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
                     )}>
-                    {unixTimestampToReadableTime(timeStamp)}
+                    {messageTimestamp(timeStamp)}
                   </Text>
                   <DeliveryStatus
                     isPrivate={isPrivate}
@@ -210,7 +210,7 @@ export const VideoCell = (props: VideoCellProps) => {
         </MessageMenu>
         {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

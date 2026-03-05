@@ -1,11 +1,11 @@
 import { Meta } from '@storybook/react';
 import { InboxItem } from '../InboxItem';
 import { ScrollView, View, Text } from 'react-native';
-import { tailwind } from '@/theme';
-import { NotificationType } from '@/types/Notification';
-import { CONVERSATION_PRIORITY } from '@/constants';
+import { tailwind } from '@infrastructure/theme';
+import { NotificationType } from '@domain/types/Notification';
+import { CONVERSATION_PRIORITY } from '@domain/constants';
 import { conversation } from './NotificationItemMockData';
-import { ConversationPriority } from '@/types/common';
+import { ConversationPriority } from '@domain/types/common';
 
 const meta: Meta<typeof InboxItem> = {
   title: 'Inbox Item',
@@ -54,7 +54,7 @@ const baseInboxItem = {
 
 const Title = ({ title }: { title: string }) => (
   <View style={tailwind.style('flex items-center justify-center')}>
-    <Text style={tailwind.style('text-md font-medium italic text-gray-800')}>{title}</Text>
+    <Text style={tailwind.style('text-md font-medium italic text-slate-12')}>{title}</Text>
   </View>
 );
 

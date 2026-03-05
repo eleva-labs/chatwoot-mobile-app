@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-import { openURL } from '@/utils/urlUtils';
+import { openURL } from '@infrastructure/utils/urlUtils';
 
-import { tailwind } from '@/theme';
-import { MESSAGE_VARIANTS } from '@/constants';
+import { MESSAGE_VARIANTS } from '@domain/constants';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 type MarkdownBubbleProps = {
   messageContent: string;
@@ -12,22 +12,23 @@ type MarkdownBubbleProps = {
 };
 
 const variantTextMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-gray-950',
-  [MESSAGE_VARIANTS.USER]: 'text-white',
-  [MESSAGE_VARIANTS.BOT]: 'text-gray-950',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-gray-950',
-  [MESSAGE_VARIANTS.ERROR]: 'text-white',
-  [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-950 font-inter-medium-24',
+  [MESSAGE_VARIANTS.AGENT]: 'text-slate-12',
+  [MESSAGE_VARIANTS.USER]: 'text-slate-12',
+  [MESSAGE_VARIANTS.BOT]: 'text-slate-12',
+  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-12',
+  [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
+  [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-12 font-inter-medium-24',
 };
 
 export const MarkdownBubble = (props: MarkdownBubbleProps) => {
   const { messageContent, variant } = props;
+  const themedTailwind = useThemedStyles();
   const handleURL = (url: string) => {
     openURL({ URL: url });
     return true;
   };
 
-  const textStyle = tailwind.style(variantTextMap[variant]);
+  const textStyle = themedTailwind.style(variantTextMap[variant]);
 
   const styles = StyleSheet.create({
     text: {

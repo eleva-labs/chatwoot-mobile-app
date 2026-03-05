@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { ImageSourcePropType, Text, View, ViewProps } from 'react-native';
 import { Image } from 'expo-image';
-import { AvailabilityStatus } from '@/types/common/AvailabilityStatus';
+import { AvailabilityStatus } from '@domain/types/common/AvailabilityStatus';
 
-import { tailwind } from '@/theme';
-import { cx, styleAdapter } from '@/utils';
-import { userStatusList } from '@/constants';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { cx, styleAdapter } from '@infrastructure/utils';
+import { userStatusList } from '@domain/constants';
 
 function getInitials(name: string) {
   if (!name) {
@@ -37,7 +38,7 @@ const AvatarStatus = ({
     <View
       style={[
         tailwind.style(
-          'absolute border-[1.5px] border-white bg-white rounded-full bottom-[2px] right-[2px]',
+          'absolute border-[1.5px] border-solid-1 bg-solid-1 rounded-full bottom-[2px] right-[2px]',
         ),
         { borderColor: tailwind.color(parentsBackground) },
       ]}>
@@ -84,6 +85,7 @@ export interface UserAvatarProps extends ViewProps {
 
 export const UserAvatar: React.FC<Partial<UserAvatarProps>> = props => {
   const { name, src, status, parentsBackground = 'text-white', style, ...boxProps } = props;
+  const themedTailwind = useThemedStyles();
 
   const isSourceAvailable = useMemo(() => (src ? true : false), [src]);
   const [imageAvailable, setImageAvailable] = useState(isSourceAvailable);
@@ -92,16 +94,23 @@ export const UserAvatar: React.FC<Partial<UserAvatarProps>> = props => {
   return (
     <View
       style={[
-        tailwind.style('relative items-center justify-center bg-gray-100 rounded-full h-24 w-24'),
+        themedTailwind.style(
+          'relative items-center justify-center bg-slate-3 rounded-full h-24 w-24',
+        ),
         styleAdapter(style),
       ]}
       {...boxProps}>
       {imageAvailable && src ? (
-        <AvatarImage src={src} handleFallback={loadFallback} />
+        <AvatarImage
+          src={typeof src === 'string' ? { uri: src } : src}
+          handleFallback={loadFallback}
+        />
       ) : name ? (
         <Text
           style={[
-            tailwind.style('text-center uppercase text-gray-800 font-inter-medium-24 text-3xl'),
+            themedTailwind.style(
+              'text-center uppercase text-slate-12 font-inter-medium-24 text-3xl',
+            ),
           ]}
           adjustsFontSizeToFit
           allowFontScaling={false}>

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { tailwind } from '@/theme';
-import { Icon } from '@/components-next';
+import { tailwind } from '@infrastructure/theme';
+import { Icon } from '@infrastructure/ui';
 import Animated from 'react-native-reanimated';
 import {
   NotificationMentionIcon,
@@ -9,7 +9,7 @@ import {
   NotificationAssignedIcon,
   NotificationSLAIcon,
 } from '@/svg-icons';
-import { NotificationType } from '@/types/Notification';
+import { NotificationType } from '@domain/types/Notification';
 
 type NotificationTypeProps = {
   type: NotificationType;

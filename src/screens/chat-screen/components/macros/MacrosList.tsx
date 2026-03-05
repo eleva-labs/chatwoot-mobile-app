@@ -3,13 +3,13 @@ import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-import { BottomSheetBackdrop } from '@/components-next';
-import i18n from '@/i18n';
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { Macro } from '@/types';
+import { BottomSheetBackdrop } from '@infrastructure/ui';
+import i18n from '@infrastructure/i18n';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { Macro } from '@domain/types';
 import { useAppSelector } from '@/hooks';
-import { selectAllMacros } from '@/store/macro/macroSelectors';
+import { selectAllMacros } from '@application/store/macro/macroSelectors';
 
 import MacroStack from './MacroStack';
 import MacroDetails from './MacroDetails';
@@ -54,7 +54,7 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
                 <View style={tailwind.style('px-4 pt-1 pb-4 items-center')}>
                   <Animated.Text
                     style={tailwind.style(
-                      'text-gray-700 font-inter-580-24 leading-[17px] tracking-[0.32px]',
+                      'text-slate-11 font-inter-580-24 leading-[17px] tracking-[0.32px]',
                     )}>
                     {i18n.t('MACRO.SELECT_MACRO')}
                   </Animated.Text>

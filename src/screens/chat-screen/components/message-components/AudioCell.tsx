@@ -7,16 +7,16 @@ import Svg, { Path, Rect } from 'react-native-svg';
 import {
   selectCurrentPlayingAudioSrc,
   setCurrentPlayingAudioSrc,
-} from '@/store/conversation/audioPlayerSlice';
+} from '@application/store/conversation/audioPlayerSlice';
 
-import { tailwind } from '@/theme';
-import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@/types';
-import { unixTimestampToReadableTime } from '@/utils';
-import { Avatar, Icon, Slider } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { tailwind } from '@infrastructure/theme';
+import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@domain/types';
+import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
+import { Avatar, Icon, Slider } from '@infrastructure/ui/common';
+import { Spinner } from '@infrastructure/ui/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_TYPES } from '@/constants';
+import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/hooks';
@@ -69,8 +69,8 @@ export const AudioPlayer = (props: AudioPlayerProps) => {
   const currentPosition = useSharedValue(0);
   const totalDuration = useSharedValue(0);
 
-  const audioPlayBackStatus = (data: any) => {
-    const playBackData = data.data as PlayBackType;
+  const audioPlayBackStatus = (args: { status: unknown; data?: PlayBackType }) => {
+    const playBackData = args.data;
     if (playBackData) {
       currentPosition.value = playBackData.currentPosition;
       totalDuration.value = playBackData.duration;
@@ -174,9 +174,9 @@ export const AudioPlayer = (props: AudioPlayerProps) => {
         )}
       </Pressable>
       <Slider
-        trackColor={isIncoming ? 'bg-whiteA-A9' : 'bg-gray-500'}
-        filledTrackColor={isIncoming ? 'bg-white' : 'bg-blue-700'}
-        knobStyle={isIncoming ? 'border-blue-300' : 'border-blue-700'}
+        trackColor={isIncoming ? 'bg-whiteA-A9' : 'bg-slate-9'}
+        filledTrackColor={isIncoming ? 'bg-solid-1' : 'bg-brand'}
+        knobStyle={isIncoming ? 'border-iris-7' : 'border-brand'}
         {...{ manualSeekTo, currentPosition, totalDuration, pauseAudio }}
       />
     </View>
@@ -214,7 +214,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
       <Animated.View style={tailwind.style('flex flex-row')}>
         {sender?.name && isIncoming && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end mr-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
         <MessageMenu menuOptions={menuOptions}>
@@ -222,8 +222,8 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
             style={[
               tailwind.style(
                 'relative flex flex-row items-center w-[300px] pl-3 pr-2.5 py-2 rounded-2xl overflow-hidden',
-                isIncoming ? 'bg-blue-700' : '',
-                isOutgoing ? 'bg-gray-100' : '',
+                isIncoming ? 'bg-slate-4' : '',
+                isOutgoing ? 'bg-solid-blue' : '',
                 shouldRenderAvatar
                   ? isOutgoing
                     ? 'rounded-br-none'
@@ -236,15 +236,15 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
             <AudioPlayer {...{ audioSrc, isIncoming, isOutgoing }} />
             <Animated.View
               style={tailwind.style(
-                'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center self-end pl-1.5',
+                'h-[21px] pt-2 pb-0.5 flex flex-row items-center self-end pl-1.5',
               )}>
               <Text
                 style={tailwind.style(
                   'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
-                  isIncoming ? 'text-whiteA-A11' : '',
-                  isOutgoing ? 'text-gray-700' : '',
+                  isIncoming ? 'text-slate-11' : '',
+                  isOutgoing ? 'text-slate-11' : '',
                 )}>
-                {unixTimestampToReadableTime(timeStamp)}
+                {messageTimestamp(timeStamp)}
               </Text>
               <DeliveryStatus
                 isPrivate={isPrivate}
@@ -253,15 +253,15 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
                 channel={channel}
                 sourceId={sourceId}
                 errorMessage={errorMessage || ''}
-                deliveredColor="text-gray-700"
-                sentColor="text-gray-700"
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
               />
             </Animated.View>
           </Animated.View>
         </MessageMenu>
         {sender?.name && isOutgoing && shouldRenderAvatar ? (
           <Animated.View style={tailwind.style('flex items-end justify-end ml-1')}>
-            <Avatar size={'md'} src={{ uri: sender?.thumbnail }} name={sender?.name} />
+            <Avatar size={'md'} src={getAvatarSource(sender)} name={sender?.name} />
           </Animated.View>
         ) : null}
       </Animated.View>

@@ -8,19 +8,21 @@ import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { isUndefined } from 'lodash';
 import * as Sentry from '@sentry/react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+import { Trash } from '@/svg-icons/common/Trash';
 
-import { TEXT_INPUT_CONTAINER_HEIGHT } from '@/constants';
-import { useChatWindowContext } from '@/context';
-import { SendIcon, Trash } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Icon } from '@/components-next';
+import { TEXT_INPUT_CONTAINER_HEIGHT } from '@domain/constants';
+import { useChatWindowContext } from '@infrastructure/context';
+import i18n from '@infrastructure/i18n';
+import { SendIcon } from '@/svg-icons';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { Icon } from '@infrastructure/ui';
 import { PauseIcon, PlayIcon } from '../message-components';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import {
   addNewCachePath,
   selectLocalRecordedAudioCacheFilePaths,
-} from '@/store/conversation/localRecordedAudioCacheSlice';
-import { convertAacToWav } from '@/utils/audioConverter';
+} from '@application/store/conversation/localRecordedAudioCacheSlice';
+import { convertAacToWav } from '@infrastructure/utils/audioConverter';
 
 const RecorderSegmentWidth = Dimensions.get('screen').width - 8 - 80 - 12;
 
@@ -59,16 +61,19 @@ const millisecondsToTimeString = (milliseconds: number | undefined) => {
   return `${minutesString}:${secondsString}`;
 };
 
+type MobileAudioFileType = { uri: string; fileName: string; type: string };
+
 export const AudioRecorder = ({
   onRecordingComplete,
   audioFormat,
 }: {
-  onRecordingComplete: (audioFile: File) => void;
+  onRecordingComplete: (audioFile: MobileAudioFileType | null) => void;
   audioFormat: 'audio/m4a' | 'audio/wav';
 }) => {
   const localRecordedAudioCacheFilePaths = useAppSelector(selectLocalRecordedAudioCacheFilePaths);
   const dispatch = useAppDispatch();
   const [isSending, setIsSending] = useState(false);
+  const { colors } = useThemeColors();
 
   const { setIsVoiceRecorderOpen } = useChatWindowContext();
 
@@ -100,21 +105,30 @@ export const AudioRecorder = ({
       const dirs = RNFetchBlob.fs.dirs;
       const path = Platform.select({
         ios: `audio-${localRecordedAudioCacheFilePaths.length}.m4a`,
-        android: `${dirs.CacheDir}/audio-${localRecordedAudioCacheFilePaths.length}.mp3`,
+        android: `${dirs.CacheDir}/audio-${localRecordedAudioCacheFilePaths.length}.aac`,
       });
 
       ARPlayer.startRecorder(path, {
         AVFormatIDKeyIOS: AVEncodingOption.aac,
         AVNumberOfChannelsKeyIOS: 2,
         AVSampleRateKeyIOS: 44100,
+        AudioSourceAndroid: 1, // MIC
+        OutputFormatAndroid: 6, // AAC_ADTS
+        AudioEncoderAndroid: 3, // AAC
+        AudioSamplingRateAndroid: 16000,
+        AudioEncodingBitRateAndroid: 128000,
+        AudioChannelsAndroid: 2,
       })
         .then((value: string) => {
           if (value) {
             setIsAudioRecording(true);
           }
         })
-        .catch(e => {
-          Alert.alert(e);
+        .catch(error => {
+          Alert.alert(
+            i18n.t('AUDIO.PREPARE_ERROR'),
+            error instanceof Error ? error.message : String(error),
+          );
           deleteRecorder();
         });
     };
@@ -144,9 +158,9 @@ export const AudioRecorder = ({
       return {
         uri: finalPath,
         originalPath: finalPath,
-        type: 'audio/mp3',
-        fileName: `audio-${localRecordedAudioCacheFilePaths.length}.mp3`,
-        name: `audio-${localRecordedAudioCacheFilePaths.length}.mp3`,
+        type: 'audio/aac',
+        fileName: `audio-${localRecordedAudioCacheFilePaths.length}.aac`,
+        name: `audio-${localRecordedAudioCacheFilePaths.length}.aac`,
         fileSize: stats.size,
       };
     }
@@ -154,8 +168,11 @@ export const AudioRecorder = ({
     const finalExtension = audioFormat === 'audio/wav' ? 'wav' : 'm4a';
 
     if (audioFormat === 'audio/wav') {
-      finalPath = await convertAacToWav(cleanPath);
-      finalPath = finalPath.replace('file://', '');
+      const conversionResult = await convertAacToWav(cleanPath);
+      if (conversionResult instanceof Error) {
+        throw conversionResult;
+      }
+      finalPath = conversionResult.replace('file://', '');
     }
 
     const audioFile = {
@@ -179,18 +196,18 @@ export const AudioRecorder = ({
           const audioFile = await createAudioFile(value);
           dispatch(addNewCachePath(audioFile.originalPath));
           setIsVoiceRecorderOpen(false);
-          onRecordingComplete(audioFile as unknown as File);
+          onRecordingComplete(audioFile as MobileAudioFileType);
         } catch (error) {
           Sentry.captureException(error);
           Alert.alert(
-            'Error preparing audio file',
+            i18n.t('AUDIO.PREPARE_ERROR'),
             error instanceof Error ? error.message : String(error),
           );
         }
       })
       .catch(e => {
         console.error('Recording error:', e);
-        Alert.alert('Recording Error', e.toString());
+        Alert.alert(i18n.t('AUDIO.RECORDING_ERROR'), e.toString());
       })
       .finally(() => {
         setIsSending(false);
@@ -218,11 +235,11 @@ export const AudioRecorder = ({
       <Pressable
         onPress={deleteRecorder}
         style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
-        <Icon icon={<Trash />} size={28} />
+        <Trash size={28} color={colors.ruby[9]} />
       </Pressable>
       <Animated.View
         style={tailwind.style(
-          'bg-blue-800 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
+          'bg-iris-9 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
           `w-[${RecorderSegmentWidth}px]`,
         )}>
         <Pressable onPress={toggleRecorder} hitSlop={12}>
@@ -248,9 +265,7 @@ export const AudioRecorder = ({
         onPress={sendRecordedMessage}
         style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
         <Animated.View
-          style={tailwind.style(
-            'flex items-center justify-center h-7 w-7 rounded-full bg-blue-800',
-          )}>
+          style={tailwind.style('flex items-center justify-center h-7 w-7 rounded-full bg-iris-9')}>
           <Icon icon={<SendIcon />} size={16} />
         </Animated.View>
       </Pressable>

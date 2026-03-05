@@ -1,42 +1,160 @@
 import { ExpoConfig, ConfigContext } from 'expo/config';
 
+// Helper functions are now defined inside the export function
+
 export default ({ config }: ConfigContext): ExpoConfig => {
+  // Check environment - EAS sets ENVIRONMENT in env, and build profile info is available
+  console.log('[app.config] ENVIRONMENT:', process.env.ENVIRONMENT);
+  console.log('[app.config] EAS_BUILD_PROFILE:', process.env.EAS_BUILD_PROFILE);
+
+  // Check if building for simulator (set SIMULATOR=1 to skip entitlements that require signing)
+  const isSimulator = process.env.SIMULATOR === '1' || process.env.SIMULATOR === 'true';
+  console.log('[app.config] isSimulator:', isSimulator);
+
+  const isProd =
+    process.env.ENVIRONMENT === 'prod' || process.env.EAS_BUILD_PROFILE === 'production';
+  console.log('[app.config] isProd:', isProd);
+  // Helper functions that depend on isProd
+  const getBundleIdentifier = () => {
+    const bundleId = isProd ? 'com.chatscommerce.app' : 'com.chatscommerce.app.dev';
+    console.log('[app.config] Android Bundle Identifier:', bundleId);
+    return bundleId;
+  };
+  const getAppName = () => (isProd ? 'Chatscommerce' : 'Chatscommerce Dev');
+  const getAppLinkDomains = () =>
+    isProd ? ['applinks:app.chatscommerce.com'] : ['applinks:dev.app.chatscommerce.com'];
+  const getAppIcon = () => (isProd ? './assets/icon.png' : './assets/icon-dev.png');
+  const getAdaptiveIcon = () =>
+    isProd ? './assets/adaptive-icon.png' : './assets/adaptive-icon-dev.png';
+  const getAppScheme = () => (isProd ? 'chatscommerce' : 'chatscommerce-dev');
+  const getHost = () => (isProd ? 'app.chatscommerce.com' : 'dev.app.chatscommerce.com');
+
+  // Google Services file resolution with priority:
+  // 1. EAS environment variables (for cloud builds)
+  // 2. Credentials directory (for both local dev and builds)
+  // 3. Native directories (for local dev after prebuild)
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const fs = require('fs');
+  const getAndroidGSF = () => {
+    // Priority 1: EAS Secret File environment variable
+    if (process.env.GOOGLE_SERVICES_JSON && fs.existsSync(process.env.GOOGLE_SERVICES_JSON)) {
+      return process.env.GOOGLE_SERVICES_JSON;
+    }
+
+    // Priority 2: Credentials directory (for both local dev and builds)
+    const credentialsFile = isProd
+      ? './credentials/android/google-services.json'
+      : './credentials/android/google-services-dev.json';
+    if (fs.existsSync(credentialsFile)) return credentialsFile;
+
+    // Priority 3: Copied to native directory (local dev after prebuild)
+    const nativeFile = './android/app/google-services.json';
+    if (fs.existsSync(nativeFile)) return nativeFile;
+
+    // Default fallback
+    return credentialsFile;
+  };
+
+  const getIosPlist = () => {
+    // Priority 1: EAS Secret File environment variable
+    if (
+      process.env.GOOGLE_SERVICE_INFO_PLIST &&
+      fs.existsSync(process.env.GOOGLE_SERVICE_INFO_PLIST)
+    ) {
+      return process.env.GOOGLE_SERVICE_INFO_PLIST;
+    }
+
+    // Priority 2: Credentials directory (for both local dev and builds)
+    const credentialsFile = isProd
+      ? './credentials/ios/GoogleService-Info.plist'
+      : './credentials/ios/GoogleService-Info-dev.plist';
+    if (fs.existsSync(credentialsFile)) return credentialsFile;
+
+    // Priority 3: Copied to native directory (local dev after prebuild)
+    const nativeFile = './ios/GoogleService-Info.plist';
+    if (fs.existsSync(nativeFile)) return nativeFile;
+
+    // Default fallback
+    return credentialsFile;
+  };
+
+  // Resolve the actual file paths
+  const resolvedAndroidGSF = getAndroidGSF();
+  const resolvedIosPlist = getIosPlist();
+
+  // Helpful logs in EAS build to confirm env injection and file resolution
+  // These will appear early in build logs
+  // eslint-disable-next-line no-console
+  console.log(
+    '[config] EAS environment:',
+    process.env.EAS_BUILD_PROFILE || process.env.ENVIRONMENT,
+  );
+  // eslint-disable-next-line no-console
+  console.log('[config] GOOGLE_SERVICES_JSON (env):', process.env.GOOGLE_SERVICES_JSON);
+  // eslint-disable-next-line no-console
+  console.log('[config] ANDROID googleServicesFile (resolved):', resolvedAndroidGSF);
+  // eslint-disable-next-line no-console
+  console.log('[config] GOOGLE_SERVICE_INFO_PLIST (env):', process.env.GOOGLE_SERVICE_INFO_PLIST);
+  // eslint-disable-next-line no-console
+  console.log('[config] IOS googleServicesFile (resolved):', resolvedIosPlist);
+
+  const APP_VERSION = '4.0.22';
+  const EAS_UPDATES_URL = 'https://u.expo.dev/c388de6e-16cf-4618-b94e-a45c450845dc';
+
   return {
-    name: 'Chatwoot',
-    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'chatwoot-mobile',
-    version: '4.0.19',
+    ...config,
+    name: getAppName(),
+    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'chatscommerce',
+    scheme: getAppScheme(),
+    updates: {
+      url: EAS_UPDATES_URL,
+      enabled: true,
+      checkAutomatically: 'ON_LOAD',
+      fallbackToCacheTimeout: 0,
+    },
+    runtimeVersion: APP_VERSION,
+    version: APP_VERSION,
     orientation: 'portrait',
-    icon: './assets/icon.png',
-    userInterfaceStyle: 'light',
+    icon: getAppIcon(),
+    userInterfaceStyle: 'automatic',
     newArchEnabled: false,
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#5d17eb',
       enableFullScreenImage_legacy: true,
     },
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.chatwoot.app',
+      bundleIdentifier: getBundleIdentifier(),
       infoPlist: {
         NSCameraUsageDescription:
-          'This app requires access to the camera to upload images and videos.',
+          'This app uses the camera to take photos and videos that you can attach to your customer conversations. For example, you can take a photo of a product or document to share with customers during support chats.',
         NSPhotoLibraryUsageDescription:
-          'This app requires access to the photo library to upload images.',
-        NSMicrophoneUsageDescription: 'This app requires access to the microphone to record audio.',
+          'This app accesses your photo library to select existing photos and videos that you can attach to customer conversations. For example, you can select product images, screenshots, or documents from your gallery to share with customers.',
+        NSMicrophoneUsageDescription:
+          'This app uses the microphone to record voice messages that you can send to customers during conversations. For example, you can record a quick audio explanation or voice note to provide more personal support.',
         NSAppleMusicUsageDescription:
           'This app does not use Apple Music, but a system API may require this permission.',
         UIBackgroundModes: ['fetch', 'remote-notification'],
         ITSAppUsesNonExemptEncryption: false,
       },
-      // Please use the relative path to the google-services.json file
-      googleServicesFile: process.env.EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE,
-      entitlements: { 'aps-environment': 'production' },
-      associatedDomains: ['applinks:app.chatwoot.com'],
+      // Prefer EAS Secret File env var; fallback to repo path for local builds
+      googleServicesFile: resolvedIosPlist,
+      // Only include entitlements that require code signing when NOT building for simulator
+      ...(isSimulator
+        ? {}
+        : {
+            entitlements: { 'aps-environment': 'production' },
+            associatedDomains: getAppLinkDomains(),
+          }),
     },
     android: {
-      adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#ffffff' },
-      package: 'com.chatwoot.app',
+      adaptiveIcon: {
+        foregroundImage: getAdaptiveIcon(),
+        backgroundColor: '#5d17eb',
+      },
+      package: getBundleIdentifier(),
       permissions: [
         'android.permission.CAMERA',
         'android.permission.READ_EXTERNAL_STORAGE',
@@ -44,8 +162,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         'android.permission.RECORD_AUDIO',
         'android.permission.READ_MEDIA_IMAGES',
       ],
-      // Please use the relative path to the google-services.json file
-      googleServicesFile: process.env.EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE,
+      // Prefer EAS Secret File env var; fallback to repo path for local builds
+      googleServicesFile: resolvedAndroidGSF,
       intentFilters: [
         {
           action: 'VIEW',
@@ -53,7 +171,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           data: [
             {
               scheme: 'https',
-              host: 'app.chatwoot.com',
+              host: getHost(),
               pathPrefix: '/app/accounts/',
               pathPattern: '/*/conversations/*',
             },
@@ -64,11 +182,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     extra: {
       eas: {
-        projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+        projectId: 'c388de6e-16cf-4618-b94e-a45c450845dc',
         storybookEnabled: process.env.EXPO_STORYBOOK_ENABLED,
       },
     },
-    owner: 'chatwoot',
+    owner: 'eleva-labs',
     plugins: [
       'expo-font',
       ['react-native-permissions', { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary'] }],
@@ -82,6 +200,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ],
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
+      // Note: @react-native-firebase/analytics doesn't have an Expo plugin - it's a JS-only module
+      // Firebase safety plugin - MUST be after @react-native-firebase/app to modify [FIRApp configure]
+      './plugins/with-firebase-safety',
+      'expo-notifications',
       [
         'expo-build-properties',
         {
@@ -89,14 +211,28 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           android: {
             minSdkVersion: 24,
             compileSdkVersion: 35,
-            targetSdkVersion: 34,
+            targetSdkVersion: 35,
             enableProguardInReleaseBuilds: true,
+            // Support for 16 KB memory page sizes
+            ndk: {
+              abiFilters: ['arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'],
+            },
           },
-          ios: { useFrameworks: 'static' },
+          ios: { useFrameworks: 'static', ccacheEnabled: true },
         },
       ],
-      './with-ffmpeg-pod.js',
+      './plugins/with-notifee-maven',
     ],
     androidNavigationBar: { backgroundColor: '#ffffff' },
+    // NOTE: expo-build-disk-cache requires Expo SDK 53+
+    // Enable this when upgrading to SDK 53:
+    // experiments: {
+    //   buildCacheProvider: {
+    //     plugin: 'expo-build-disk-cache',
+    //     options: {
+    //       cacheDir: 'node_modules/.expo-build-disk-cache',
+    //     },
+    //   },
+    // },
   };
 };

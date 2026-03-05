@@ -2,8 +2,9 @@
 import React, { memo } from 'react';
 import { ImageURISource } from 'react-native';
 
-import { NativeView } from '@/components-next/native-components';
-import { tailwind } from '@/theme';
+import { NativeView } from '@infrastructure/ui/native-components';
+import { tailwind } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
 import {
   Agent,
   AvailabilityStatus,
@@ -11,13 +12,13 @@ import {
   ConversationPriority,
   Label,
   Message,
-} from '@/types';
-import { Inbox } from '@/types/Inbox';
+} from '@domain/types';
+import { Inbox } from '@domain/types/Inbox';
 
 import { ConversationAvatar } from './ConversationAvatar';
 import { ConversationItemDetail } from './ConversationItemDetail';
 import { ConversationSelect } from './ConversationSelect';
-import { SLA } from '@/types/common/SLA';
+import { SLA } from '@domain/types/common/SLA';
 
 export type ConversationItemProps = {
   // Basic info
@@ -32,6 +33,7 @@ export type ConversationItemProps = {
   priority?: ConversationPriority | null;
   labels: string[];
   timestamp: number;
+  createdAt?: number;
   inbox: Inbox | null;
   lastMessage?: Message | null;
   inboxId: number;
@@ -46,7 +48,7 @@ export type ConversationItemProps = {
         waitingSince: number;
         status: string;
       }
-    | {};
+    | Record<string, never>;
 
   // Additional data
   additionalAttributes?: ConversationAdditionalAttributes;
@@ -57,6 +59,8 @@ export type ConversationItemProps = {
   allLabels: Label[];
 
   typingText?: string;
+  isAIEnabled?: boolean;
+  contactId?: number;
 };
 
 export const ConversationItem = memo(
@@ -72,6 +76,7 @@ export const ConversationItem = memo(
     priority = null,
     labels,
     timestamp,
+    createdAt,
     inbox,
     lastMessage,
     inboxId,
@@ -82,9 +87,13 @@ export const ConversationItem = memo(
     additionalAttributes,
     allLabels,
     typingText,
+    isAIEnabled = false,
+    contactId,
   }: ConversationItemProps) => {
+    const themedTailwind = useThemedStyles();
+
     return (
-      <NativeView style={tailwind.style('px-3 gap-3 flex-row justify-between')}>
+      <NativeView style={themedTailwind.style('px-3 gap-2 flex-row justify-between bg-solid-1')}>
         <NativeView style={tailwind.style('py-3 flex flex-row')}>
           <ConversationSelect {...{ isSelected, currentState }} />
           <ConversationAvatar
@@ -103,6 +112,7 @@ export const ConversationItem = memo(
             assignee,
             senderName,
             timestamp,
+            createdAt,
             inbox,
             lastMessage,
             inboxId,
@@ -113,6 +123,8 @@ export const ConversationItem = memo(
             currentState,
             allLabels,
             typingText,
+            isAIEnabled,
+            contactId,
           }}
         />
       </NativeView>

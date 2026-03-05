@@ -5,10 +5,10 @@ import { KeyboardGestureArea, KeyboardProvider } from 'react-native-keyboard-con
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { Animated } from 'react-native';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { MessagesList } from '../MessagesList';
 import { EMAIL_MESSAGES } from './mock-data/simpleEmail';
-import { ChatWindowProvider, RefsProvider } from '@/context';
+import { ChatWindowProvider, RefsProvider } from '@infrastructure/context';
 import { Provider } from 'react-redux';
 import { getAllGroupedMessages } from './mock-data/helper';
 const ALL_MESSAGES_MOCKDATA = getAllGroupedMessages(EMAIL_MESSAGES);
@@ -32,7 +32,12 @@ const mockConversationSlice = createSlice({
   initialState: {
     ids: [29],
     entities: {
-      29: { id: 29, status: 'open', channel: 'Channel::Email', messages: ALL_MESSAGES_MOCKDATA },
+      29: {
+        id: 29,
+        status: 'open',
+        channel: 'Channel::Email',
+        messages: ALL_MESSAGES_MOCKDATA,
+      },
     },
   },
   reducers: {},
@@ -71,6 +76,8 @@ export const EmailMessageList: Story = {
                       isFlashListReady={false}
                       setFlashListReady={() => {}}
                       onEndReached={() => {}}
+                      isEmailInbox={true}
+                      currentUserId={1}
                     />
                   </PlatformSpecificKeyboardWrapperComponent>
                 </ScrollView>

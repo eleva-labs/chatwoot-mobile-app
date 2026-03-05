@@ -2,28 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { useRefsContext } from '@/context';
-import { tailwind } from '@/theme';
-import { Agent } from '@/types';
-import { Avatar, Icon, SearchBar } from '@/components-next';
-import { SelfAssign, TickIcon } from '@/svg-icons';
+import { useRefsContext } from '@infrastructure/context';
+import { tailwind } from '@infrastructure/theme';
+import { Agent } from '@domain/types';
+import { Avatar, Icon, SearchBar } from '@infrastructure/ui';
+import { SelfAssign } from '@/svg-icons';
 
-import { assignableAgentActions } from '@/store/assignable-agent/assignableAgentActions';
+import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAssignableAgentsByInboxId } from '@/store/assignable-agent/assignableAgentSelectors';
+import { selectAssignableAgentsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
 import {
   selectSelectedIds,
   selectSelectedInboxes,
   selectSelectedConversation,
-} from '@/store/conversation/conversationSelectedSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { isAssignableAgentFetching } from '@/store/assignable-agent/assignableAgentSelectors';
-import { showToast } from '@/utils/toastUtils';
-import i18n from '@/i18n';
-import { CONVERSATION_EVENTS } from '@/constants/analyticsEvents';
-import AnalyticsHelper from '@/utils/analyticsUtils';
-import { selectUserId } from '@/store/auth/authSelectors';
+} from '@application/store/conversation/conversationSelectedSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { isAssignableAgentFetching } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { showToast } from '@infrastructure/utils/toastUtils';
+import i18n from '@infrastructure/i18n';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { selectUserId } from '@application/store/auth/authSelectors';
 
 type AssigneeCellProps = {
   agent: Agent;
@@ -41,17 +42,19 @@ const AssigneeCell = (props: AssigneeCellProps) => {
       <Animated.View
         style={tailwind.style(
           'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !lastItem ? 'border-b-[1px] border-blackA-A3' : '',
+          !lastItem ? 'border-b-[1px] border-slate-6' : '',
         )}>
         <Animated.Text
           style={[
             tailwind.style(
-              'text-base text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
             ),
           ]}>
           {agent.name}
         </Animated.Text>
-        {assigneeId === agent.id ? <Icon icon={<TickIcon />} size={20} /> : null}
+        {assigneeId === agent.id ? (
+          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );
@@ -104,16 +107,35 @@ export const UpdateAssignee = () => {
     if (isMultipleConversationsSelected) {
       const payload = { type: 'Conversation', ids: selectedIds, fields: { assignee_id: agent.id } };
       await dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
       actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
     } else {
       if (!selectedConversation?.id) return;
+      const isUnassigning = agent.id === assigneeId;
+      const isSelfAssigning = agent.id === userId;
       await dispatch(
         conversationActions.assignConversation({
           conversationId: selectedConversation?.id,
-          assigneeId: agent.id === assigneeId ? 0 : agent.id,
+          assigneeId: isUnassigning ? 0 : agent.id,
         }),
       );
-      AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED);
+      if (isUnassigning) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.UNASSIGN_CONVERSATION, {
+          conversationId: selectedConversation?.id,
+        });
+      } else if (isSelfAssigning) {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.SELF_ASSIGN_CONVERSATION, {
+          conversationId: selectedConversation?.id,
+        });
+      } else {
+        AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
+          conversationId: selectedConversation?.id,
+          assigneeId: agent.id,
+        });
+      }
       showToast({
         message: i18n.t('CONVERSATION.ASSIGN_CHANGE'),
       });
@@ -149,12 +171,12 @@ export const UpdateAssignee = () => {
                 </Animated.View>
                 <Animated.View
                   style={tailwind.style(
-                    'flex-1 ml-3 flex-row justify-between py-[11px] pr-3 border-b-[1px] border-blackA-A3',
+                    'flex-1 ml-3 flex-row justify-between py-[11px] pr-3 border-b-[1px] border-slate-6',
                   )}>
                   <Animated.Text
                     style={[
                       tailwind.style(
-                        'text-base text-blue-800 font-inter-420-20 leading-[21px] tracking-[0.16px]',
+                        'text-base text-iris-11 font-inter-420-20 leading-[21px] tracking-[0.16px]',
                       ),
                     ]}>
                     {i18n.t('CONVERSATION.SELF_ASSIGN')}

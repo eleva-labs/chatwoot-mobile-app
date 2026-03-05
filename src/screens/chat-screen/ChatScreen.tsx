@@ -9,30 +9,31 @@ import { ConversationActions } from './conversation-actions';
 
 import { ReplyBoxContainer } from './components';
 import { MessagesListContainer } from './components';
-import { ChatWindowProvider, useChatWindowContext, useRefsContext } from '@/context';
-import { TabBarExcludedScreenParamList } from '@/navigation/tabs/AppTabs';
-import { tailwind } from '@/theme';
+import { ChatWindowProvider, useChatWindowContext, useRefsContext } from '@infrastructure/context';
+import { TabBarExcludedScreenParamList } from '@application/navigation/tabs/AppTabs';
+import { tailwind } from '@infrastructure/theme';
 import {
   selectConversationById,
   selectConversationFetching,
   selectConversationError,
-} from '@/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+} from '@application/store/conversation/conversationSelectors';
+import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 
-import { notificationActions } from '@/store/notification/notificationAction';
-import { MarkAsReadPayload } from '@/store/notification/notificationTypes';
-import { PrimaryActorType } from '@/types/Notification';
-import { assignableAgentActions } from '@/store/assignable-agent/assignableAgentActions';
-import ActionBottomSheet from '@/navigation/tabs/ActionBottomSheet';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { TAB_BAR_HEIGHT } from '@/constants';
+import { notificationActions } from '@application/store/notification/notificationAction';
+import { MarkAsReadPayload } from '@application/store/notification/notificationTypes';
+import { PrimaryActorType } from '@domain/types/Notification';
+import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
+import ActionBottomSheet from '@application/navigation/tabs/ActionBottomSheet';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
 import { ErrorIcon } from '@/svg-icons';
-import { Button } from '@/components-next';
+import { Button } from '@infrastructure/ui';
 import { ActivityIndicator, Pressable } from 'react-native';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { MacrosList } from './components/macros/MacrosList';
-import { macroActions } from '@/store/macro/macroActions';
+import { macroActions } from '@application/store/macro/macroActions';
 import { LightBoxProvider } from '@alantoa/lightbox';
 
 export const ChatWindow = (props: ChatScreenProps) => {
@@ -92,8 +93,10 @@ const ChatScreenWrapper = (props: ChatScreenProps) => {
   );
 };
 const ChatScreen = (props: ChatScreenProps) => {
+  useScreenAnalytics(SCREENS.CHAT);
   const navigation = useNavigation();
-  const { conversationId, primaryActorId, primaryActorType } = props.route.params;
+  const themedTailwind = useThemedStyles();
+  const { conversationId, primaryActorId, primaryActorType, ref } = props.route.params;
   const dispatch = useAppDispatch();
 
   const conversationFetching = useAppSelector(state => selectConversationFetching(state));
@@ -113,6 +116,7 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   useEffect(() => {
     dispatch(macroActions.fetchMacros());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -127,6 +131,18 @@ const ChatScreen = (props: ChatScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Track if opened from external ref (e.g., whatsapp)
+  useEffect(() => {
+    if (ref) {
+      AnalyticsHelper.track('conversation_opened_from_link', {
+        source: ref,
+        conversationId,
+        hasMessageContext: !!primaryActorId,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleBackPress = () => {
     if (navigation.canGoBack()) {
       navigation.dispatch(StackActions.pop());
@@ -137,7 +153,7 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   if (conversation) {
     return (
-      <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+      <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
         <LightBoxProvider>
           <ChatWindowProvider conversationId={conversationId}>
             <ChatScreenWrapper {...props} />
@@ -151,7 +167,10 @@ const ChatScreen = (props: ChatScreenProps) => {
   if (conversationFetching) {
     return (
       <Animated.View
-        style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
+        style={themedTailwind.style(
+          'flex-1 items-center justify-center bg-solid-1',
+          `pb-[${TAB_BAR_HEIGHT}px]`,
+        )}>
         <ActivityIndicator />
       </Animated.View>
     );
@@ -159,23 +178,23 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   if (conversationError || !conversation) {
     return (
-      <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
+      <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-solid-1')}>
         <Animated.View
-          style={tailwind.style(
+          style={themedTailwind.style(
             'flex-1 items-center justify-center gap-8 px-4',
             `pb-[${TAB_BAR_HEIGHT}px]`,
           )}>
           <ErrorIcon />
           <Animated.View style={tailwind.style('flex items-center justify-center gap-4')}>
             <Animated.Text
-              style={tailwind.style(
-                'text-2xl font-inter-420-20 text-gray-950 font-inter-semibold-20',
+              style={themedTailwind.style(
+                'text-2xl font-inter-420-20 text-slate-12 font-inter-semibold-20',
               )}>
               {conversationError || i18n.t('CONVERSATION.NOT_FOUND.TITLE')}
             </Animated.Text>
             <Animated.Text
-              style={tailwind.style(
-                'font-inter-normal-20 font-base leading-[18px] tracking-[0.32px] text-gray-950 text-center',
+              style={themedTailwind.style(
+                'font-inter-normal-20 font-base leading-[18px] tracking-[0.32px] text-slate-12 text-center',
               )}>
               {i18n.t('CONVERSATION.NOT_FOUND.DESCRIPTION')}
             </Animated.Text>
@@ -189,7 +208,7 @@ const ChatScreen = (props: ChatScreenProps) => {
             <Pressable
               style={tailwind.style('flex-row justify-center items-center')}
               onPress={handleBackPress}>
-              <Animated.Text style={tailwind.style('text-base font-inter-medium-24 text-gray-900')}>
+              <Animated.Text style={tailwind.style('text-base font-inter-medium-24 text-slate-12')}>
                 {i18n.t('CONVERSATION.NOT_FOUND.BACK_TO_HOME')}
               </Animated.Text>
             </Pressable>

@@ -1,4 +1,4 @@
-export * from './AIAssisst';
+export * from './AIAssist';
 export * from './Photos';
 export * from './Player';
 export * from './PrivateNote';

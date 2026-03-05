@@ -1,12 +1,13 @@
 import React from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { Overflow } from '@/svg-icons/common/Overflow';
 
-import { AddParticipant, Overflow } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Avatar, Icon } from '@/components-next';
-import { Agent } from '@/types';
-import i18n from '@/i18n';
+import { AddParticipant } from '@/svg-icons';
+import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { Avatar, Icon } from '@infrastructure/ui';
+import { Agent } from '@domain/types';
+import i18n from '@infrastructure/i18n';
 
 type ListItemProps = {
   listItem: Agent;
@@ -19,17 +20,17 @@ const ListItem = (props: ListItemProps) => {
     <Pressable
       key={index}
       style={({ pressed }) => [
-        tailwind.style(pressed ? 'bg-gray-100' : '', index === 0 ? 'rounded-t-[13px]' : ''),
+        tailwind.style(pressed ? 'bg-slate-3' : '', index === 0 ? 'rounded-t-[13px]' : ''),
       ]}>
       <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
         <Animated.View>
           <Avatar src={{ uri: listItem.thumbnail || undefined }} size="lg" />
         </Animated.View>
         <Animated.View
-          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-blackA-A3')}>
+          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-gray-950',
+              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
             )}>
             {listItem.name}
           </Animated.Text>
@@ -40,19 +41,20 @@ const ListItem = (props: ListItemProps) => {
 };
 
 const ParticipantOverflowCell = ({ count }: { count: number }) => {
+  const { colors } = useThemeColors();
   return (
-    <Pressable style={({ pressed }) => [tailwind.style(pressed ? 'bg-gray-100' : '')]}>
+    <Pressable style={({ pressed }) => [tailwind.style(pressed ? 'bg-slate-3' : '')]}>
       <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
         <Animated.View>
-          <Icon icon={<Overflow stroke={tailwind.color('text-gray-600')} />} size={28} />
+          <Overflow size={28} color={colors.slate[10]} />
         </Animated.View>
         <Animated.View
-          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-blackA-A3')}>
+          style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-gray-950',
+              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
             )}>
-            {count} participants
+            {i18n.t('CONVERSATION_PARTICIPANTS.OVERFLOW_COUNT', { count })}
           </Animated.Text>
         </Animated.View>
       </Animated.View>
@@ -74,12 +76,17 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
       <Animated.View style={tailwind.style('pl-4 pb-3')}>
         <Animated.Text
           style={tailwind.style(
-            'text-sm font-inter-medium-24 tracking-[0.32px] leading-[16px] text-gray-700',
+            'text-sm font-inter-medium-24 tracking-[0.32px] leading-[16px] text-slate-11',
           )}>
           {i18n.t('CONVERSATION_PARTICIPANTS.TITLE')}
         </Animated.Text>
       </Animated.View>
-      <Animated.View style={[tailwind.style('rounded-[13px] mx-4 bg-white'), styles.listShadow]}>
+      <Animated.View
+        style={[
+          tailwind.style('rounded-[13px] mx-4 bg-solid-1'),
+          styles.listShadow,
+          Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
+        ]}>
         {conversationParticipants &&
           conversationParticipants.slice(0, 4).map((listItem, index) => {
             return <ListItem key={index} {...{ listItem, index }} />;
@@ -87,17 +94,15 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
         {overflowCount > 4 && <ParticipantOverflowCell count={overflowCount - 4} />}
         <Pressable
           onPress={onAddParticipant}
-          style={({ pressed }) => [
-            tailwind.style('rounded-b-[13px]', pressed ? 'bg-blue-100' : ''),
-          ]}>
+          style={({ pressed }) => [tailwind.style('rounded-b-[13px]', pressed ? 'bg-iris-3' : '')]}>
           <Animated.View style={tailwind.style('flex flex-row items-center ml-3')}>
             <Animated.View style={tailwind.style('p-0.5')}>
-              <Icon icon={<AddParticipant stroke={tailwind.color('text-blue-800')} />} size={24} />
+              <Icon icon={<AddParticipant stroke={tailwind.color('text-iris-11')} />} size={24} />
             </Animated.View>
             <Animated.View style={tailwind.style('flex-1 py-[11px] ml-2')}>
               <Animated.Text
                 style={tailwind.style(
-                  'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-blue-800',
+                  'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-iris-11',
                 )}>
                 {i18n.t('CONVERSATION_PARTICIPANTS.ADD_PARTICIPANT')}
               </Animated.Text>
@@ -113,7 +118,7 @@ const styles = StyleSheet.create({
   listShadow:
     Platform.select({
       ios: {
-        shadowColor: '#00000040',
+        shadowColor: 'rgba(0,0,0,0.25)',
         shadowOffset: { width: 0, height: 0.15 },
         shadowRadius: 2,
         shadowOpacity: 0.35,
@@ -121,7 +126,6 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 4,
-        backgroundColor: 'white',
       },
     }) || {}, // Add fallback empty object
 });

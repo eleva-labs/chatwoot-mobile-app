@@ -4,11 +4,24 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
+      "@/*": ["src/*"],
       "*": ["src/*"],
+      
+      // Domain layer (extraction-ready)
+      "@domain/*": ["src/domain/*"],
+      
+      // Infrastructure layer
+      "@infrastructure/*": ["src/infrastructure/*"],
+      
+      // Application layer
+      "@application/*": ["src/application/*"],
+      
+      // Presentation layer
+      "@screens/*": ["src/screens/*"],
+      "@presentation/*": ["src/presentation/*"]
     },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "**/*.ts",

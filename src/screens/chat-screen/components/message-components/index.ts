@@ -1,3 +1,4 @@
+// Deprecated components
 export * from './AudioCell';
 export * from './ComposedCell';
 export * from './FileCell';
@@ -21,3 +22,4 @@ export * from './LocationBubble';
 export * from './ImageBubble';
 export * from './VideoBubble';
 export * from './EmailBubble';
+export * from './UnsupportedBubble';

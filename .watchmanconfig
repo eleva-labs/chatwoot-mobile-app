@@ -1,0 +1,19 @@
+{
+  "ignore_dirs": [
+    ".git",
+    ".expo",
+    "ios/Pods",
+    "ios/build",
+    "ios/DerivedData",
+    "android/build",
+    "android/app/build",
+    ".gradle",
+    "build",
+    "dist",
+    "web-build",
+    "coverage",
+    ".pnpm-store",
+    "node_modules/.expo-build-disk-cache"
+  ],
+  "settle": 20
+}

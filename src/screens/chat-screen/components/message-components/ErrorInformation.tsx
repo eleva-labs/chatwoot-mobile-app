@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, Animated } from 'react-native';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 
 interface ErrorInformationProps {
   errorCode?: string;
@@ -12,14 +12,14 @@ export const ErrorInformation = ({ errorCode, errorMessage }: ErrorInformationPr
     {errorCode && (
       <Text
         style={tailwind.style(
-          'text-base  text-gray-950 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
+          'text-base  text-slate-12 font-inter-medium-24 leading-[21px] tracking-[0.16px]',
         )}>
         {errorCode}
       </Text>
     )}
     <Text
       style={tailwind.style(
-        'text-md text-gray-950 font-inter-420-20 leading-[21px] tracking-[0.16px] mt-2',
+        'text-md text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] mt-2',
       )}>
       {errorMessage}
     </Text>

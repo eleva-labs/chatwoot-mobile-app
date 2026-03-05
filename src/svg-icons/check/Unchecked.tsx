@@ -1,13 +1,21 @@
-import React from 'react';
-import { Circle, Svg } from 'react-native-svg';
+import { Circle } from 'lucide-react-native';
+import { useThemeColors } from '@infrastructure/theme';
 
-import { IconProps } from '../../types';
+interface IconProps {
+  size?: number;
+  color?: string;
+  [key: string]: unknown;
+}
 
-export const UncheckedIcon = (props: IconProps) => {
-  const { stroke = '#C7C7C7' } = props;
-  return (
-    <Svg width="100%" height="100%" viewBox="0 0 20 20" fill="none">
-      <Circle cx="10" cy="10" r="9" stroke={stroke} strokeWidth="2" />
-    </Svg>
-  );
+/**
+ * UncheckedIcon - Proxies to Lucide Circle
+ *
+ * @migrated 2026-03-02 (Cycle 2 Phase 1+2)
+ * @lucide https://lucide.dev/icons/circle
+ * @usage 3 files
+ */
+export const UncheckedIcon = ({ color, size = 24, ...props }: IconProps) => {
+  const { colors } = useThemeColors();
+  const iconColor = color || colors.slate[7];
+  return <Circle color={iconColor} size={size} {...props} />;
 };

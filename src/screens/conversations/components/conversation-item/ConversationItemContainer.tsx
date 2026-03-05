@@ -3,31 +3,36 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import Animated, { SharedValue } from 'react-native-reanimated';
 
-import { useRefsContext } from '@/context';
+import { useRefsContext } from '@infrastructure/context';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { Conversation } from '@/types';
+import { Conversation } from '@domain/types';
 import {
   toggleSelection,
   selectSelected,
   selectSingleConversation,
   clearSelection,
-} from '@/store/conversation/conversationSelectedSlice';
-import { selectCurrentState, setCurrentState } from '@/store/conversation/conversationHeaderSlice';
-import { setActionState } from '@/store/conversation/conversationActionSlice';
-import { selectInboxById } from '@/store/inbox/inboxSelectors';
-import { selectContactById } from '@/store/contact/contactSelectors';
-import { selectTypingUsersByConversationId } from '@/store/conversation/conversationTypingSlice';
-import { conversationActions } from '@/store/conversation/conversationActions';
-import { selectAllLabels } from '@/store/label/labelSelectors';
+} from '@application/store/conversation/conversationSelectedSlice';
+import {
+  selectCurrentState,
+  setCurrentState,
+} from '@application/store/conversation/conversationHeaderSlice';
+import { setActionState } from '@application/store/conversation/conversationActionSlice';
+import { selectInboxById } from '@application/store/inbox/inboxSelectors';
+import { selectContactById } from '@application/store/contact/contactSelectors';
+import { selectTypingUsersByConversationId } from '@application/store/conversation/conversationTypingSlice';
+import { conversationActions } from '@application/store/conversation/conversationActions';
+import { selectAllLabels } from '@application/store/label/labelSelectors';
 
-import { isContactTyping, getLastMessage, getTypingUsersText } from '@/utils';
-import { Icon, Swipeable } from '@/components-next/common';
+import { isContactTyping, getLastMessage, getTypingUsersText } from '@infrastructure/utils';
+import { Icon, Swipeable } from '@infrastructure/ui/common';
 
 import { ConversationItem } from './ConversationItem';
 import { MarkAsUnRead, StatusIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
+import { tailwind } from '@infrastructure/theme';
 import { MarkAsRead } from '@/svg-icons';
-import i18n from '@/i18n';
+import i18n from '@infrastructure/i18n';
+import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
+import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
 type ConversationItemContainerProps = {
   conversationItem: Conversation;
@@ -74,6 +79,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
     unreadCount,
     labels,
     timestamp,
+    createdAt,
     inboxId,
     lastNonActivityMessage,
     slaPolicyId,
@@ -101,14 +107,21 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
   const isSelected = useMemo(() => id in selected, [selected, id]);
   const isTyping = useMemo(() => isContactTyping(typingUsers, contactId), [typingUsers, contactId]);
   const typingText = useMemo(() => getTypingUsersText({ users: typingUsers }), [typingUsers]);
+  // Read AI status from conversation's custom_attributes (aligned with web logic)
+  const isAIEnabled = useMemo(
+    () => conversationItem.customAttributes?.aiEnabled === 'true',
+    [conversationItem.customAttributes],
+  );
 
   const lastMessage = getLastMessage(conversationItem);
 
   const markMessageReadOrUnread = useCallback(() => {
     if (unreadCount > 0) {
       dispatch(conversationActions.markMessageRead({ conversationId: id }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MARK_AS_READ, { conversationId: id });
     } else {
       dispatch(conversationActions.markMessagesUnread({ conversationId: id }));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.MARK_AS_UNREAD, { conversationId: id });
     }
   }, [dispatch, id, unreadCount]);
 
@@ -147,6 +160,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
     priority,
     labels,
     timestamp,
+    createdAt,
     inbox: inbox || null,
     lastNonActivityMessage,
     lastMessage,
@@ -162,6 +176,8 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
     additionalAttributes,
     allLabels,
     typingText: typingText as string | undefined,
+    isAIEnabled,
+    contactId,
   };
 
   return (
