@@ -295,7 +295,10 @@ export const SendMessageResponseSchema = z.object({
   inbox_id: z.number(),
   echo_id: z.string(),
   conversation_id: z.number(),
-  message_type: z.enum(['incoming', 'outgoing', 'activity', 'template']),
+  message_type: z.union([
+    z.enum(['incoming', 'outgoing', 'activity', 'template']),
+    z.number(), // API sometimes returns numeric codes (0=incoming, 1=outgoing, 2=activity, 3=template)
+  ]),
   content_type: z.string(),
   status: z.enum(['sent', 'delivered', 'read', 'failed', 'progress']),
   content_attributes: z.record(z.string(), z.unknown()).optional(),

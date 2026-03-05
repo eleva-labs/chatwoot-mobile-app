@@ -165,13 +165,13 @@ const MessageWrapper = ({
               ),
             ]}>
             {children}
-            {/* Timestamp row — only shown for last message of a group */}
-            {!shouldGroupWithPrevious && (
-              <Animated.View
-                style={themedTailwind.style(
-                  'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center',
-                  orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
-                )}>
+            {/* Timestamp + delivery status row — timestamp only on last message of a group, status always shown */}
+            <Animated.View
+              style={themedTailwind.style(
+                'pt-[5px] pb-0.5 flex flex-row items-center',
+                orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
+              )}>
+              {!shouldGroupWithPrevious && (
                 <Animated.Text
                   style={themedTailwind.style(
                     'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
@@ -179,14 +179,7 @@ const MessageWrapper = ({
                   )}>
                   {messageTimestamp(item.createdAt)}
                 </Animated.Text>
-              </Animated.View>
-            )}
-            {/* Delivery status — always shown on outgoing messages */}
-            <Animated.View
-              style={themedTailwind.style(
-                'h-[16px] pb-0.5 flex flex-row items-center',
-                orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
-              )}>
+              )}
               <DeliveryStatus
                 isPrivate={item.private}
                 status={item.status}
