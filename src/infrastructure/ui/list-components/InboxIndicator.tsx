@@ -1,9 +1,8 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { tailwind } from '@infrastructure/theme';
 import { NativeView } from '@infrastructure/ui/native-components';
-import { Icon } from '@infrastructure/ui/common/icon';
 import { getChannelIcon } from '@infrastructure/utils';
 import { Inbox } from '@domain/types/Inbox';
 import { ConversationAdditionalAttributes } from '@domain/types/Conversation';
@@ -35,9 +34,21 @@ export const InboxIndicator = ({
 
   return (
     <NativeView style={tailwind.style('flex-row items-center min-w-0')}>
-      <NativeView style={tailwind.style('justify-center items-center flex-shrink-0')}>
-        <Icon icon={getChannelIcon(channelType as Channel, medium, type)} size={config.icon} />
-      </NativeView>
+      <View
+        style={{
+          width: config.icon,
+          height: config.icon,
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+        {React.cloneElement(
+          getChannelIcon(channelType as Channel, medium, type) as React.ReactElement<{
+            size?: number;
+          }>,
+          { size: config.icon },
+        )}
+      </View>
       <Text
         numberOfLines={1}
         style={tailwind.style(`${config.text} font-inter-normal-20 text-slate-11 ml-0.5`)}>

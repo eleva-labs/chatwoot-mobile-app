@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  ApiFilledIcon,
   ChatwootIcon,
   WebsiteFilledIcon,
   MailFilledIcon,
@@ -72,6 +73,10 @@ export const getChannelIcon = (channelType: Channel, medium: string, additionalT
 
   if (channelType === InboxTypes.TWITTER) {
     return <XFilledIcon />;
+  }
+
+  if (channelType === InboxTypes.API) {
+    return <ApiFilledIcon />;
   }
 
   return <ChatwootIcon />;
