@@ -9,11 +9,13 @@ import type {
   Message,
   MessageType,
   MessageStatus,
+  MessageContentAttributes,
   ContentType,
   ImageMetadata,
 } from '@domain/types/Message';
 import type { Agent } from '@domain/types/Agent';
 import type { Contact } from '@domain/types/Contact';
+import type { Conversation } from '@domain/types/Conversation';
 import type { User } from '@domain/types/User';
 
 class MessageBuilder {
@@ -106,6 +108,18 @@ class MessageBuilder {
 
   withSenderType(senderType: string): this {
     this.message.senderType = senderType;
+    return this;
+  }
+
+  withContentAttributes(attrs: Partial<MessageContentAttributes> | null): this {
+    this.message.contentAttributes = attrs as MessageContentAttributes;
+    return this;
+  }
+
+  withConversationMeta(meta: { unreadCount?: number }): this {
+    // We only need a partial conversation object for this test purpose
+    // The slice code only accesses message.conversation?.unreadCount
+    this.message.conversation = { unreadCount: meta.unreadCount ?? 0 } as Conversation;
     return this;
   }
 
