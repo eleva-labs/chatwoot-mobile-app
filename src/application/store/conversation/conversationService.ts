@@ -29,6 +29,8 @@ import type {
   MarkMessageReadOrUnreadResponse,
   ToggleConversationStatusAPIResponse,
   TogglePriorityPayload,
+  ToggleAIPayload,
+  ToggleAIResponse,
 } from './conversationTypes';
 
 import {
@@ -352,5 +354,14 @@ export class ConversationService {
   static async togglePriority(payload: TogglePriorityPayload): Promise<void> {
     const { conversationId, priority } = payload;
     await apiService.post(`conversations/${conversationId}/toggle_priority`, { priority });
+  }
+
+  static async toggleAI(payload: ToggleAIPayload): Promise<ToggleAIResponse> {
+    const { conversationId, aiEnabled } = payload;
+    const response = await apiService.post<ToggleAIResponse>(
+      `conversations/${conversationId}/toggle_ai`,
+      { ai_enabled: aiEnabled },
+    );
+    return response.data;
   }
 }

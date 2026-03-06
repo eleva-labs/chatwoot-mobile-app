@@ -245,3 +245,12 @@ export interface TogglePriorityPayload {
   conversationId: number;
   priority: ConversationPriority;
 }
+
+export interface ToggleAIPayload {
+  conversationId: number;
+  aiEnabled: boolean;
+}
+
+export interface ToggleAIResponse {
+  ai_enabled: boolean;
+}
