@@ -17,7 +17,10 @@ import {
   setCurrentState,
 } from '@application/store/conversation/conversationHeaderSlice';
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
-import { selectInboxById } from '@application/store/inbox/inboxSelectors';
+import {
+  selectInboxById,
+  selectShouldShowInboxIndicatorInList,
+} from '@application/store/inbox/inboxSelectors';
 import { selectContactById } from '@application/store/contact/contactSelectors';
 import { selectTypingUsersByConversationId } from '@application/store/conversation/conversationTypingSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
@@ -102,6 +105,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
   const typingUsers = useAppSelector(selectTypingUsersByConversationId(id));
   const selected = useAppSelector(selectSelected);
   const currentState = useAppSelector(selectCurrentState);
+  const showInboxIndicator = useAppSelector(selectShouldShowInboxIndicatorInList);
 
   const { availabilityStatus, name: contactName, thumbnail: contactThumbnail } = contact || {};
   const isSelected = useMemo(() => id in selected, [selected, id]);
@@ -162,6 +166,7 @@ export const ConversationItemContainer = memo((props: ConversationItemContainerP
     timestamp,
     createdAt,
     inbox: inbox || null,
+    showInboxIndicator,
     lastNonActivityMessage,
     lastMessage,
     inboxId,

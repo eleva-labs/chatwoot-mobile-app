@@ -5,6 +5,7 @@ import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import { selectInboxById, selectHasMultipleInboxes } from '@application/store/inbox/inboxSelectors';
 import { contactActions } from '@application/store/contact/contactActions';
 import { CONVERSATION_STATUS } from '@domain/constants';
 import { ChatHeader } from './ChatHeader';
@@ -29,6 +30,10 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
   const dispatch = useAppDispatch();
   const { conversationId } = useChatWindowContext();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
+  const inbox = useAppSelector(state =>
+    conversation?.inboxId ? selectInboxById(state, conversation.inboxId) : undefined,
+  );
+  const hasMultipleInboxes = useAppSelector(selectHasMultipleInboxes);
 
   const currentUser = useAppSelector(selectUser);
   const dashboardApps = useAppSelector(selectAllDashboardApps);
@@ -177,6 +182,9 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
     <ChatHeader
       name={name}
       imageSrc={imageSrc}
+      inbox={inbox ?? null}
+      showInboxIndicator={hasMultipleInboxes}
+      additionalAttributes={conversation?.additionalAttributes}
       isResolved={isResolved}
       dashboardsList={dashboardsList}
       isSlaMissed={slaStatus?.isSlaMissed}

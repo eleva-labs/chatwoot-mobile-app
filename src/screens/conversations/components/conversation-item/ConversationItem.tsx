@@ -35,6 +35,7 @@ export type ConversationItemProps = {
   timestamp: number;
   createdAt?: number;
   inbox: Inbox | null;
+  showInboxIndicator?: boolean;
   lastMessage?: Message | null;
   inboxId: number;
   assignee: Agent | null;
@@ -78,6 +79,7 @@ export const ConversationItem = memo(
     timestamp,
     createdAt,
     inbox,
+    showInboxIndicator,
     lastMessage,
     inboxId,
     assignee,
@@ -114,6 +116,7 @@ export const ConversationItem = memo(
             timestamp,
             createdAt,
             inbox,
+            showInboxIndicator,
             lastMessage,
             inboxId,
             appliedSla,

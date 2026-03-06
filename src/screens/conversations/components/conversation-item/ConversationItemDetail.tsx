@@ -18,7 +18,7 @@ import { useThemedStyles } from '@infrastructure/hooks';
 import { PersonIcon } from '@/svg-icons';
 
 import { ConversationLastMessage } from './ConversationLastMessage';
-import { PriorityIndicator } from '@infrastructure/ui/list-components';
+import { PriorityIndicator, InboxIndicator } from '@infrastructure/ui/list-components';
 import { SLAIndicator } from './SLAIndicator';
 import { LabelIndicator } from './LabelIndicator';
 import { LastActivityTime } from './LastActivityTime';
@@ -38,6 +38,7 @@ type ConversationDetailSubCellProps = Pick<
   createdAt?: number;
   lastMessage?: Message | null;
   inbox: Inbox | null;
+  showInboxIndicator?: boolean;
   appliedSla: SLA | null;
   appliedSlaConversationDetails?:
     | {
@@ -86,8 +87,11 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
     createdAt,
     slaPolicyId,
     lastMessage,
+    inbox,
+    showInboxIndicator = false,
     appliedSla,
     appliedSlaConversationDetails,
+    additionalAttributes,
     allLabels,
     typingText,
     isAIEnabled,
@@ -103,6 +107,8 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
   const hasLabels = labels.length > 0;
 
   const hasSLA = !!slaPolicyId && shouldShowSLA;
+
+  const hasInboxIndicator = showInboxIndicator && !!inbox;
 
   const hasUnread = (unreadCount ?? 0) > 0;
 
@@ -171,10 +177,20 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
           <UnreadBadge count={unreadCount ?? 0} />
         </AnimatedNativeView>
       </AnimatedNativeView>
-      {/* Row 3: Labels + SLA (if any) */}
-      {(hasLabels || hasSLA) && (
+      {/* Row 3: Inbox indicator + SLA + Labels (if any) */}
+      {(hasInboxIndicator || hasLabels || hasSLA) && (
         <AnimatedNativeView style={tailwind.style('flex flex-row items-center mt-0.5')}>
           <AnimatedNativeView style={tailwind.style('flex flex-row flex-1 gap-1 items-center')}>
+            {hasInboxIndicator && (
+              <InboxIndicator
+                inbox={inbox!}
+                additionalAttributes={additionalAttributes}
+                size="sm"
+              />
+            )}
+            {hasInboxIndicator && (hasSLA || hasLabels) && (
+              <NativeView style={tailwind.style('w-[1px] h-3 bg-slate-5')} />
+            )}
             {hasSLA && (
               <SLAIndicator
                 slaPolicyId={slaPolicyId}
