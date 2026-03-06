@@ -33,6 +33,10 @@ const isAWhatsAppChannel = (channelType: Channel) => {
 };
 
 export const getChannelIcon = (channelType: Channel, medium: string, additionalType: string) => {
+  if (channelType === InboxTypes.INSTAGRAM) {
+    return <InstagramFilledIcon />;
+  }
+
   if (isFacebookChannel(channelType)) {
     if (additionalType === 'instagram_direct_message') {
       return <InstagramFilledIcon />;

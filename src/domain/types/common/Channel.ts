@@ -7,6 +7,7 @@ export type Channel =
   | 'Channel::Sms'
   | 'Channel::Line'
   | 'Channel::FacebookPage'
+  | 'Channel::Instagram'
   | 'Channel::Email'
   | 'Channel::Api'
   | 'Channel::All';
@@ -22,6 +23,7 @@ export type ChannelCollection = {
 export const InboxTypes = {
   WEB: 'Channel::WebWidget',
   FB: 'Channel::FacebookPage',
+  INSTAGRAM: 'Channel::Instagram',
   TWITTER: 'Channel::TwitterProfile',
   TWILIO: 'Channel::TwilioSms',
   WHATSAPP: 'Channel::Whatsapp',

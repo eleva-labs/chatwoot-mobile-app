@@ -106,7 +106,7 @@ export const ChatHeader = ({
 
         <Animated.View
           style={tailwind.style(
-            `flex flex-row flex-1 justify-end ${Platform.OS === 'ios' ? 'gap-4' : ''}`,
+            `flex flex-row justify-end ${Platform.OS === 'ios' ? 'gap-4' : ''}`,
           )}>
           <Animated.View style={tailwind.style('flex flex-row items-center gap-4')}>
             {hasSla && (

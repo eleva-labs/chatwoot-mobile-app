@@ -17,7 +17,7 @@ type InboxIndicatorProps = {
 };
 
 const sizeConfig: Record<InboxIndicatorSize, { icon: number; text: string }> = {
-  sm: { icon: 10, text: 'text-xxs' }, // 10px icon, 10px text — for list items
+  sm: { icon: 12, text: 'text-xs' }, // 12px icon, 12px text — for list items
   md: { icon: 12, text: 'text-xs' }, // 12px icon, 12px text — for chat header
 };
 
@@ -51,7 +51,7 @@ export const InboxIndicator = ({
       </View>
       <Text
         numberOfLines={1}
-        style={tailwind.style(`${config.text} font-inter-normal-20 text-slate-11 ml-0.5`)}>
+        style={tailwind.style(`${config.text} font-inter-normal-20 text-slate-11 ml-1`)}>
         {name}
       </Text>
     </NativeView>

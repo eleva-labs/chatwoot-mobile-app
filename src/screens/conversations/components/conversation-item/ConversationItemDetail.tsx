@@ -134,7 +134,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
             numberOfLines={1}
             style={themedTailwind.style(
               `text-sm ${hasUnread ? 'font-inter-semibold-20' : 'font-inter-medium-24'} text-slate-12 capitalize`,
-              `max-w-[${width - (assignee ? 300 : 250)}px]`,
+              `max-w-[${width - (assignee ? 225 : 188)}px]`,
             )}>
             {senderName}
           </Text>
