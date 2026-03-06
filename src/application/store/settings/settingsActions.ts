@@ -53,9 +53,7 @@ export const settingsActions = {
         // Support http:// for local development (e.g. http://localhost:3000)
         const isHttp = url.startsWith('http://');
         const protocol = isHttp ? 'http://' : URL_TYPE;
-        const wsProtocol = isHttp ? 'ws://' : 'wss://';
         const INSTALLATION_URL = `${protocol}${installationUrl}/`;
-        const WEB_SOCKET_URL = `${wsProtocol}${installationUrl}/cable`;
         const isValid = await SettingsService.verifyInstallationUrl(INSTALLATION_URL);
 
         if (!isValid) {
@@ -64,7 +62,6 @@ export const settingsActions = {
 
         return {
           installationUrl: INSTALLATION_URL,
-          webSocketUrl: WEB_SOCKET_URL,
           baseUrl: installationUrl,
         };
       } catch (error) {

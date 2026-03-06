@@ -47,12 +47,11 @@ const rootReducer = (state: ReturnType<typeof appReducer>, action: AnyAction) =>
     return { ...initialState, settings: state.settings };
   }
 
-  // Handle Redux Persist rehydration - check for environment mismatch
+  // Handle Redux Persist rehydration - check for environment mismatch.
   if (action.type === 'persist/REHYDRATE' && action.payload?.settings) {
     const persistedSettings = action.payload.settings;
     const envBaseUrl = process.env.EXPO_PUBLIC_BASE_URL;
     const envInstallationUrl = process.env.EXPO_PUBLIC_INSTALLATION_URL;
-    const currentEnvironment = process.env.ENVIRONMENT || process.env.EAS_BUILD_PROFILE;
 
     // Check if persisted URLs don't match current environment variables
     const urlMismatch =
@@ -60,28 +59,15 @@ const rootReducer = (state: ReturnType<typeof appReducer>, action: AnyAction) =>
       (envInstallationUrl && persistedSettings.installationUrl !== envInstallationUrl);
 
     if (urlMismatch) {
-      console.warn(
-        '[Store] Environment mismatch detected - Overriding persisted settings with environment variables:',
-        {
-          'Persisted baseUrl': persistedSettings.baseUrl,
-          'Environment baseUrl': envBaseUrl,
-          'Persisted installationUrl': persistedSettings.installationUrl,
-          'Environment installationUrl': envInstallationUrl,
-          'Current environment': currentEnvironment,
-          Action: 'Forcing environment variables to override persisted state',
-        },
-      );
-
-      // Override persisted settings with environment variables
+      const resolvedInstallationUrl = envInstallationUrl || persistedSettings.installationUrl;
       const updatedPayload = {
         ...action.payload,
         settings: {
           ...persistedSettings,
           baseUrl: envBaseUrl || persistedSettings.baseUrl,
-          installationUrl: envInstallationUrl || persistedSettings.installationUrl,
+          installationUrl: resolvedInstallationUrl,
         },
       };
-
       return appReducer(state, { ...action, payload: updatedPayload });
     }
   }

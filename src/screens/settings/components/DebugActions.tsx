@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Pressable, Text, Animated, View } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 
@@ -54,10 +54,6 @@ const DebugActionCell = ({ item, index, isLastItem }: DebugActionCellProps) => {
   const webSocketUrl = useAppSelector(selectWebSocketUrl);
   const version = useAppSelector(selectChatwootVersion);
   const pushToken = useAppSelector(selectPushToken);
-
-  useEffect(() => {
-    console.warn('installationUrl', installationUrl);
-  }, [installationUrl]);
 
   const hapticSelection = useHaptic();
 

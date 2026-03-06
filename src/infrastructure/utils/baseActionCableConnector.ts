@@ -1,5 +1,4 @@
 import { ActionCable, Cable } from '@kesha-antonov/react-native-action-cable';
-import type { MobileReconnectService } from './reconnectService';
 
 const channelName = 'RoomChannel';
 const PRESENCE_INTERVAL = 20000;
@@ -9,27 +8,37 @@ export interface ActionCableEvent<T = unknown> {
   data: T;
 }
 
+export interface ReconnectServiceInterface {
+  onReconnect(): Promise<void>;
+  onDisconnect(): void;
+}
+
 class BaseActionCableConnector {
   protected events: { [key: string]: (data: unknown) => void };
   protected accountId: number;
   protected cable: InstanceType<typeof Cable>;
   private consumer: ReturnType<typeof ActionCable.createConsumer>;
   private presenceInterval: ReturnType<typeof setInterval> | null = null;
-  private reconnectService: MobileReconnectService | null = null;
+  private reconnectService: ReconnectServiceInterface | null = null;
   private connected = false;
 
-  constructor(pubSubToken: string, webSocketUrl: string, accountId: number, userId: number) {
+  constructor(config: {
+    pubSubToken: string;
+    webSocketUrl: string;
+    accountId: number;
+    userId: number;
+  }) {
     this.cable = new Cable({});
-    this.consumer = ActionCable.createConsumer(webSocketUrl);
+    this.consumer = ActionCable.createConsumer(config.webSocketUrl);
 
     const channel = this.cable.setChannel(
       channelName,
       this.consumer.subscriptions.create(
         {
           channel: channelName,
-          pubsub_token: pubSubToken,
-          account_id: accountId,
-          user_id: userId,
+          pubsub_token: config.pubSubToken,
+          account_id: config.accountId,
+          user_id: config.userId,
         },
         {
           updatePresence(): void {
@@ -44,26 +53,20 @@ class BaseActionCableConnector {
     channel.on('disconnected', this.handleDisconnected);
 
     this.events = {};
-    this.accountId = accountId;
-
-    this.presenceInterval = setInterval(() => {
-      this.cable.channel(channelName).perform('update_presence');
-    }, PRESENCE_INTERVAL);
+    this.accountId = config.accountId;
+    // NOTE: No presence interval started here. It starts on 'connected' event.
   }
 
   get isConnected(): boolean {
     return this.connected;
   }
 
-  setReconnectService(service: MobileReconnectService): void {
+  setReconnectService(service: ReconnectServiceInterface): void {
     this.reconnectService = service;
   }
 
   disconnect(): void {
-    if (this.presenceInterval !== null) {
-      clearInterval(this.presenceInterval);
-      this.presenceInterval = null;
-    }
+    this.stopPresenceInterval();
     this.connected = false;
     this.consumer.disconnect();
   }
@@ -86,6 +89,7 @@ class BaseActionCableConnector {
   private handleConnected = (): void => {
     console.warn('Connected to ActionCable');
     this.connected = true;
+    this.startPresenceInterval();
     this.reconnectService?.onReconnect().catch((err: Error) => {
       console.warn('[ActionCable] ReconnectService.onReconnect failed:', err);
     });
@@ -94,8 +98,27 @@ class BaseActionCableConnector {
   private handleDisconnected = (): void => {
     console.warn('Disconnected from ActionCable');
     this.connected = false;
+    this.stopPresenceInterval();
     this.reconnectService?.onDisconnect();
   };
+
+  private startPresenceInterval(): void {
+    this.stopPresenceInterval();
+    this.presenceInterval = setInterval(() => {
+      try {
+        this.cable.channel(channelName).perform('update_presence');
+      } catch {
+        // Channel may be closed; disconnect handler will fire shortly
+      }
+    }, PRESENCE_INTERVAL);
+  }
+
+  private stopPresenceInterval(): void {
+    if (this.presenceInterval !== null) {
+      clearInterval(this.presenceInterval);
+      this.presenceInterval = null;
+    }
+  }
 }
 
 export default BaseActionCableConnector;

@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { AppState, AppStateStatus } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -11,11 +10,7 @@ import {
   selectLoggedIn,
   selectUser,
   selectCurrentUserAccount,
-  selectPubSubToken,
-  selectUserId,
-  selectCurrentUserAccountId,
 } from '@application/store/auth/authSelectors';
-import { selectWebSocketUrl } from '@application/store/settings/settingsSelectors';
 
 import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
@@ -36,7 +31,7 @@ import { selectChatwootVersion } from '@application/store/settings/settingsSelec
 import { checkServerSupport } from '@infrastructure/utils/serverUtils';
 import { inboxActions } from '@application/store/inbox/inboxActions';
 import { labelActions } from '@application/store/label/labelActions';
-import actionCableConnector from '@infrastructure/utils/actionCable';
+import { RealtimeGate } from '@application/store/realtime';
 import { setCurrentState } from '@application/store/conversation/conversationHeaderSlice';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { clearAllDeliveredNotifications } from '@infrastructure/utils/pushUtils';
@@ -88,10 +83,6 @@ const Tabs = () => {
   const chatwootVersion = useAppSelector(selectChatwootVersion);
   const currentAccount = useAppSelector(selectCurrentUserAccount);
   const currentAccountRole = currentAccount?.role;
-  const pubSubToken = useAppSelector(selectPubSubToken);
-  const userId = useAppSelector(selectUserId);
-  const accountId = useAppSelector(selectCurrentUserAccountId);
-  const webSocketUrl = useAppSelector(selectWebSocketUrl);
 
   // Initialize push notifications for foreground handling
   usePushNotifications(installationUrl);
@@ -134,49 +125,6 @@ const Tabs = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Keep a ref to the latest cable config so the AppState callback always uses fresh values
-  const cableConfigRef = useRef({ pubSubToken, webSocketUrl, accountId, userId });
-  useEffect(() => {
-    cableConfigRef.current = { pubSubToken, webSocketUrl, accountId, userId };
-  }, [pubSubToken, webSocketUrl, accountId, userId]);
-
-  const initActionCable = useCallback(() => {
-    if (pubSubToken && webSocketUrl && accountId && userId) {
-      actionCableConnector.init({ pubSubToken, webSocketUrl, accountId, userId });
-    }
-  }, [accountId, pubSubToken, userId, webSocketUrl]);
-
-  useEffect(() => {
-    initActionCable();
-
-    const handleAppStateChange = (nextAppState: AppStateStatus) => {
-      if (nextAppState === 'active') {
-        const {
-          pubSubToken: token,
-          webSocketUrl: wsUrl,
-          accountId: acctId,
-          userId: uid,
-        } = cableConfigRef.current;
-        // Re-init cable on foreground only if we have credentials and cable is not already connected
-        if (token && wsUrl && acctId && uid && !actionCableConnector.isConnected) {
-          actionCableConnector.init({
-            pubSubToken: token,
-            webSocketUrl: wsUrl,
-            accountId: acctId,
-            userId: uid,
-          });
-        }
-      }
-    };
-
-    const appStateSub = AppState.addEventListener('change', handleAppStateChange);
-
-    return () => {
-      appStateSub.remove();
-      actionCableConnector.disconnect();
-    };
-  }, [initActionCable]);
 
   useEffect(() => {
     dispatch(settingsActions.getChatwootVersion({ installationUrl: installationUrl }));
@@ -227,37 +175,40 @@ export const AppTabs = () => {
 
   if (isLoggedIn) {
     return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!onboardingCompleted ? (
+      <>
+        <RealtimeGate />
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {!onboardingCompleted ? (
+            <Stack.Screen
+              name="Onboarding"
+              component={OnboardingScreen}
+              options={{ gestureEnabled: false }}
+            />
+          ) : null}
+          <Stack.Screen name="Tab" component={Tabs} />
           <Stack.Screen
-            name="Onboarding"
-            component={OnboardingScreen}
-            options={{ gestureEnabled: false }}
+            options={{ animation: 'slide_from_right' }}
+            name="ChatScreen"
+            component={ChatScreen}
           />
-        ) : null}
-        <Stack.Screen name="Tab" component={Tabs} />
-        <Stack.Screen
-          options={{ animation: 'slide_from_right' }}
-          name="ChatScreen"
-          component={ChatScreen}
-        />
-        <Stack.Screen
-          options={{
-            presentation: 'formSheet',
-            animation: 'slide_from_bottom',
-          }}
-          name="ContactDetails"
-          component={ContactDetailsScreen}
-        />
-        <Stack.Screen
-          options={{
-            presentation: 'formSheet',
-            animation: 'slide_from_bottom',
-          }}
-          name="Dashboard"
-          component={DashboardScreen}
-        />
-      </Stack.Navigator>
+          <Stack.Screen
+            options={{
+              presentation: 'formSheet',
+              animation: 'slide_from_bottom',
+            }}
+            name="ContactDetails"
+            component={ContactDetailsScreen}
+          />
+          <Stack.Screen
+            options={{
+              presentation: 'formSheet',
+              animation: 'slide_from_bottom',
+            }}
+            name="Dashboard"
+            component={DashboardScreen}
+          />
+        </Stack.Navigator>
+      </>
     );
   } else {
     return <AuthStack />;
