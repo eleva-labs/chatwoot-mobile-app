@@ -120,6 +120,12 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
     <AnimatedNativeView
       layout={LinearTransition.springify().damping(28).stiffness(200)}
       style={themedTailwind.style('flex-1 py-3 border-b border-b-slate-3')}>
+      {/* Row 0: Inbox indicator */}
+      {hasInboxIndicator && (
+        <AnimatedNativeView style={tailwind.style('flex flex-row items-center')}>
+          <InboxIndicator inbox={inbox!} additionalAttributes={additionalAttributes} size="sm" />
+        </AnimatedNativeView>
+      )}
       {/* Row 1: Contact name + assignee | Timestamp */}
       <AnimatedNativeView style={tailwind.style('flex flex-row justify-between items-center')}>
         <AnimatedNativeView
@@ -177,20 +183,10 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
           <UnreadBadge count={unreadCount ?? 0} />
         </AnimatedNativeView>
       </AnimatedNativeView>
-      {/* Row 3: Inbox indicator + SLA + Labels (if any) */}
-      {(hasInboxIndicator || hasLabels || hasSLA) && (
+      {/* Row 3: SLA + Labels (if any) */}
+      {(hasLabels || hasSLA) && (
         <AnimatedNativeView style={tailwind.style('flex flex-row items-center mt-0.5')}>
           <AnimatedNativeView style={tailwind.style('flex flex-row flex-1 gap-1 items-center')}>
-            {hasInboxIndicator && (
-              <InboxIndicator
-                inbox={inbox!}
-                additionalAttributes={additionalAttributes}
-                size="sm"
-              />
-            )}
-            {hasInboxIndicator && (hasSLA || hasLabels) && (
-              <NativeView style={tailwind.style('w-[1px] h-3 bg-slate-5')} />
-            )}
             {hasSLA && (
               <SLAIndicator
                 slaPolicyId={slaPolicyId}

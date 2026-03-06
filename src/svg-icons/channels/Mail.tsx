@@ -1,4 +1,5 @@
-import { Mail } from 'lucide-react-native';
+import React from 'react';
+import { ClipPath, Defs, G, Path, Rect, Svg } from 'react-native-svg';
 import { useThemeColors } from '@infrastructure/theme';
 
 interface IconProps {
@@ -7,14 +8,26 @@ interface IconProps {
   [key: string]: unknown;
 }
 
-/**
- * MailFilledIcon - Proxies to Lucide Mail
- *
- * @migrated 2026-03-02 (Cycle 2 Batch 6)
- * @lucide https://lucide.dev/icons/mail
- */
 export const MailFilledIcon = ({ color, size = 24, ...props }: IconProps) => {
   const { colors } = useThemeColors();
-  const iconColor = color || colors.slate[8];
-  return <Mail color={iconColor} size={size} {...props} />;
+  const iconColor = color || colors.slate[11];
+  return (
+    <Svg width={size} height={size} viewBox="0 0 14 14" fill="none" {...props}>
+      <G clipPath="url(#mail-clip)">
+        <Path
+          d="M0 4.676q.058.03.116.063l.065.036c.105.06.204.128.304.196l.068.047.54.366.083.056q.421.284.847.562.598.393 1.19.793.673.454 1.352.9a57 57 0 0 1 1.1.738c.525.356 1.087.543 1.725.437.46-.096.845-.36 1.225-.621q.193-.134.387-.265l.081-.055q.418-.284.843-.56.597-.392 1.19-.793.669-.452 1.345-.896.38-.249.757-.501l.076-.05.358-.24.127-.086.059-.04c.132-.087.132-.087.162-.087l.007 2.49v.354l.006 1.92.001.545.002.703c.004.486-.045.832-.387 1.2-.262.242-.547.369-.907.369h-.409l-.403.001h-.434l-.85.001h-.692l-1.96.001H7.76l-1.715.001-2.75.002a262 262 0 0 1-1.664 0l-.142.001c-.422.003-.775-.061-1.098-.354l-.063-.07-.04-.04c-.17-.181-.292-.427-.291-.678V9.407l.001-1.933v-.06z"
+          fill={iconColor}
+        />
+        <Path
+          d="M1.278 1.743h.263l.549-.001h.434l1.542-.002H6.24q.858 0 1.715-.002a1231 1231 0 0 1 3.592-.002h.964c.422-.003.775.061 1.098.354l.063.07.04.04c.26.272.3.613.296.97-.013.348-.198.612-.44.85a2 2 0 0 1-.303.221l-.07.046-.15.097-.407.265-.084.055q-.421.276-.837.56-.63.425-1.265.842-.565.371-1.124.75a123 123 0 0 1-1.22.817c-.46.305-.85.525-1.419.433a1.6 1.6 0 0 1-.46-.213l-.056-.036q-.33-.211-.651-.433A98 98 0 0 0 4.21 6.55q-.634-.417-1.262-.843-.531-.358-1.065-.71l-.654-.43-.062-.041-.47-.312C.451 4.047.235 3.873.108 3.6l-.046-.097a1.37 1.37 0 0 1-.005-.94c.16-.352.434-.613.79-.76a1.5 1.5 0 0 1 .43-.061"
+          fill={iconColor}
+        />
+      </G>
+      <Defs>
+        <ClipPath id="mail-clip">
+          <Rect width="14" height="14" fill="white" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
 };
