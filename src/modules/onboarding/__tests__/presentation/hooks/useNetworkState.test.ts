@@ -702,7 +702,7 @@ describe('useNetworkState', () => {
 
       const firstReturn = result.current;
       // Trigger a re-render by rerendering the hook
-      rerender();
+      rerender(undefined);
       const secondReturn = result.current;
 
       // New object, but same values

@@ -26,8 +26,8 @@ const mockUseAppDispatch = jest.fn(() => mockDispatch);
 const mockUseAppSelector = jest.fn();
 
 jest.mock('@/hooks', () => ({
-  useAppDispatch: (...args: unknown[]) => mockUseAppDispatch(...args),
-  useAppSelector: (...args: unknown[]) => mockUseAppSelector(...args),
+  useAppDispatch: (...args: unknown[]) => mockUseAppDispatch(...(args as [])),
+  useAppSelector: (...args: unknown[]) => mockUseAppSelector(...(args as [])),
 }));
 
 jest.mock('@application/store/ai-chat', () => ({
@@ -474,7 +474,7 @@ describe('useAIChatSessions', () => {
       setupSelectorMocks({ activeSessionId: 'new-session-from-backend' });
 
       // Re-render to trigger the effect
-      rerender();
+      rerender(undefined);
 
       // isNewConversation should be cleared because activeSessionId became truthy
       await waitFor(() => {
