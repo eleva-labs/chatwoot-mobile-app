@@ -291,7 +291,7 @@ export const MessagesResponseSchema = z.object({
 
 export const SendMessageResponseSchema = z.object({
   id: z.number(),
-  content: z.string(),
+  content: z.string().nullable(),
   inbox_id: z.number(),
   echo_id: z.string(),
   conversation_id: z.number(),
