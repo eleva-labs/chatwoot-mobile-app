@@ -1,7 +1,7 @@
-diff --git a/lib/index.js b/lib/index.js
-index 581af582f326d2bf4bb12ddfcd7fd30cef7a2941..9d681f8f084c9e3fe52aeed80f80830b054d06df 100644
---- a/lib/index.js
-+++ b/lib/index.js
+diff --git a/node_modules/@react-native-firebase/analytics/lib/index.js b/node_modules/@react-native-firebase/analytics/lib/index.js
+index 581af58..9d681f8 100644
+--- a/node_modules/@react-native-firebase/analytics/lib/index.js
++++ b/node_modules/@react-native-firebase/analytics/lib/index.js
 @@ -25,15 +25,15 @@ import {
    isOneOf,
    isString,

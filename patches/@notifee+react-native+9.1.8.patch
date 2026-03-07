@@ -1,7 +1,7 @@
-diff --git a/android/build.gradle b/android/build.gradle
-index 7477b940575d22e68d1b5e6d0adc12e2f1113763..10e7805459e809d71d93609f3a4d5cfc053d0106 100644
---- a/android/build.gradle
-+++ b/android/build.gradle
+diff --git a/node_modules/@notifee/react-native/android/build.gradle b/node_modules/@notifee/react-native/android/build.gradle
+index 7477b94..10e7805 100644
+--- a/node_modules/@notifee/react-native/android/build.gradle
++++ b/node_modules/@notifee/react-native/android/build.gradle
 @@ -1,6 +1,9 @@
  import java.nio.file.Paths
  
