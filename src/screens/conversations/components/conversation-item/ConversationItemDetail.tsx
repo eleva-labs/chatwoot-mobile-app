@@ -2,7 +2,7 @@
 import React, { memo, useState } from 'react';
 import { Dimensions, Text } from 'react-native';
 import { LinearTransition } from 'react-native-reanimated';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { AnimatedNativeView, NativeView } from '@infrastructure/ui/native-components';
 import { AIStatusIcon } from '@infrastructure/ui';

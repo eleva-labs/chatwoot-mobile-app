@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { ImageURISource } from 'react-native';
 import { LinearTransition } from 'react-native-reanimated';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import { Avatar, AvatarStatusType } from '@infrastructure/ui/common';
 import { AnimatedNativeView } from '@infrastructure/ui/native-components';

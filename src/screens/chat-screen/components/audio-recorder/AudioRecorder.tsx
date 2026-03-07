@@ -5,7 +5,7 @@ import AudioRecorderPlayer, {
   AVEncodingOption,
 } from 'react-native-audio-recorder-player';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
-import { isUndefined } from 'lodash';
+import isUndefined from 'lodash/isUndefined';
 import * as Sentry from '@sentry/react-native';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import { Trash } from '@/svg-icons/common/Trash';

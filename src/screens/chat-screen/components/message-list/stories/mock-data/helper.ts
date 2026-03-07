@@ -1,7 +1,7 @@
 import camelcaseKeys from 'camelcase-keys';
 import { Message } from '@domain/types';
 import { getGroupedMessages } from '@infrastructure/utils';
-import { flatMap } from 'lodash';
+import flatMap from 'lodash/flatMap';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getAllGroupedMessages = (messages: any[]) => {

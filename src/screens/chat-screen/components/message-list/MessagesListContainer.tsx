@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch, useThemedStyles } from '@/hooks';
 import { useChatWindowContext } from '@infrastructure/context';
 import { AppState, Platform } from 'react-native';
 import { KeyboardGestureArea } from 'react-native-keyboard-controller';
-import { flatMap } from 'lodash';
+import flatMap from 'lodash/flatMap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   getMessagesByConversationId,
