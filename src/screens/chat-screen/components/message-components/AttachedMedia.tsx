@@ -8,7 +8,7 @@ import Animated, {
   SlideOutDown,
 } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
-import { ResizeMode, Video } from 'expo-av';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { Image } from 'expo-image';
 
 import { AttachFileIcon } from '@/svg-icons';
@@ -120,6 +120,10 @@ const AttachedVideo = (props: AttachedVideoProps) => {
     dispatch(deleteAttachment(index));
   };
 
+  const player = useVideoPlayer(item.uri ?? null, () => {
+    // Don't play — just use as thumbnail
+  });
+
   return (
     <Animated.View
       entering={SlideInDown.springify().damping(20).stiffness(120)}
@@ -132,10 +136,10 @@ const AttachedVideo = (props: AttachedVideoProps) => {
           index === attachmentsLength - 1 ? 'mr-4' : '',
         )}>
         {item.uri ? (
-          <Video
-            shouldPlay={false}
-            resizeMode={ResizeMode.COVER}
-            source={{ uri: item.uri }}
+          <VideoView
+            player={player}
+            contentFit="cover"
+            nativeControls={false}
             style={[tailwind.style('h-full w-full rounded-lg')]}
           />
         ) : null}

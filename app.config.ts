@@ -191,6 +191,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     owner: 'eleva-labs',
     plugins: [
       'expo-font',
+      'expo-video',
       ['react-native-permissions', { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary'] }],
       [
         '@sentry/react-native/expo',

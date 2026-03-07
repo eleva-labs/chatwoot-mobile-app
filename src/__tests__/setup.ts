@@ -106,6 +106,24 @@ jest.mock('expo-haptics', () => ({
   NotificationFeedbackType: { Success: 'success', Warning: 'warning', Error: 'error' },
 }));
 
+jest.mock('expo-video', () => ({
+  useVideoPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    pause: jest.fn(),
+    loop: false,
+    muted: false,
+    currentTime: 0,
+    duration: 0,
+    status: 'idle',
+    playing: false,
+  })),
+  VideoView: 'VideoView',
+}));
+
+jest.mock('expo', () => ({
+  useEvent: jest.fn((_player: unknown, _event: string, initial: unknown) => initial),
+}));
+
 jest.mock('@react-native-community/netinfo', () => ({
   fetch: jest.fn(() =>
     Promise.resolve({ isConnected: true, isInternetReachable: true, type: 'wifi' }),
