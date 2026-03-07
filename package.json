@@ -1,6 +1,6 @@
 {
   "name": "@chatwoot/mobile-app",
-  "version": "4.0.19",
+  "version": "4.0.22",
   "volta": {
     "node": "20.19.6",
     "pnpm": "9.0.0"

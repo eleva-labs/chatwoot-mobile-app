@@ -98,7 +98,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   // eslint-disable-next-line no-console
   console.log('[config] IOS googleServicesFile (resolved):', resolvedIosPlist);
 
-  const APP_VERSION = '4.0.22';
+  // Single source of truth: read version from package.json
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const APP_VERSION = require('./package.json').version;
   const EAS_UPDATES_URL = 'https://u.expo.dev/c388de6e-16cf-4618-b94e-a45c450845dc';
 
   return {
