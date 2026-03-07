@@ -99,13 +99,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
     if (!shouldShowStatusIndicator) {
       return false;
     }
-    if (
-      isAWhatsappChannel ||
-      isATwilioChannel ||
-      isAFacebookChannel ||
-      isASmsInbox ||
-      isAnInstagramChannel
-    ) {
+    if (isAWhatsappChannel || isATwilioChannel || isAFacebookChannel || isASmsInbox) {
       return sourceId && isDelivered;
     }
 

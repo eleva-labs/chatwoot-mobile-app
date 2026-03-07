@@ -165,12 +165,13 @@ const MessageWrapper = ({
               ),
             ]}>
             {children}
-            {!shouldGroupWithPrevious && (
-              <Animated.View
-                style={themedTailwind.style(
-                  'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center',
-                  orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
-                )}>
+            {/* Timestamp + delivery status row — timestamp only on last message of a group, status always shown */}
+            <Animated.View
+              style={themedTailwind.style(
+                'pt-[5px] pb-0.5 flex flex-row items-center',
+                orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
+              )}>
+              {!shouldGroupWithPrevious && (
                 <Animated.Text
                   style={themedTailwind.style(
                     'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
@@ -178,18 +179,18 @@ const MessageWrapper = ({
                   )}>
                   {messageTimestamp(item.createdAt)}
                 </Animated.Text>
-                <DeliveryStatus
-                  isPrivate={item.private}
-                  status={item.status}
-                  messageType={item.messageType}
-                  channel={channel}
-                  sourceId={item.sourceId}
-                  errorMessage={item.contentAttributes?.externalError || ''}
-                  deliveredColor="text-slate-11"
-                  sentColor="text-slate-11"
-                />
-              </Animated.View>
-            )}
+              )}
+              <DeliveryStatus
+                isPrivate={item.private}
+                status={item.status}
+                messageType={item.messageType}
+                channel={channel}
+                sourceId={item.sourceId}
+                errorMessage={item.contentAttributes?.externalError || ''}
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
+              />
+            </Animated.View>
           </Animated.View>
         </MessageMenu>
         {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (

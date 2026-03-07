@@ -11,6 +11,7 @@ const meta: Meta<typeof ChatHeader> = {
   args: {
     name: 'John Doe',
     imageSrc: { uri: 'https://i.pravatar.cc/300' },
+    inbox: null,
     isResolved: false,
     dashboardsList: [
       { title: 'Dashboard 1', onSelect: () => {} },
@@ -61,6 +62,7 @@ export const AllVariants: Story = {
         <ChatHeader
           name="John Doe"
           imageSrc={{ uri: 'https://i.pravatar.cc/300' }}
+          inbox={null}
           isResolved={false}
           dashboardsList={[
             { title: 'Dashboard 1', onSelect: () => {} },
@@ -77,6 +79,7 @@ export const AllVariants: Story = {
         <ChatHeader
           name="Jane Smith"
           imageSrc={{ uri: 'https://i.pravatar.cc/300' }}
+          inbox={null}
           isResolved={true}
           dashboardsList={[
             { title: 'Dashboard 1', onSelect: () => {} },
@@ -93,6 +96,7 @@ export const AllVariants: Story = {
         <ChatHeader
           name="This is a very long name that should be truncated properly in the UI"
           imageSrc={{ uri: 'https://i.pravatar.cc/300' }}
+          inbox={null}
           isResolved={false}
           dashboardsList={[
             { title: 'Dashboard 1', onSelect: () => {} },
@@ -109,6 +113,7 @@ export const AllVariants: Story = {
         <ChatHeader
           name="This is a very long name that should be truncated properly in the UI"
           imageSrc={{ uri: 'https://i.pravatar.cc/300' }}
+          inbox={null}
           isResolved={false}
           dashboardsList={[
             { title: 'Dashboard 1', onSelect: () => {} },
@@ -127,6 +132,7 @@ export const AllVariants: Story = {
         <ChatHeader
           name="This is a very long name that should be truncated properly in the UI"
           imageSrc={{ uri: 'https://i.pravatar.cc/300' }}
+          inbox={null}
           isResolved={false}
           dashboardsList={[
             { title: 'Dashboard 1', onSelect: () => {} },

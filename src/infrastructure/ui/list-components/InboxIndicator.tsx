@@ -1,0 +1,59 @@
+import React from 'react';
+import { Text, View } from 'react-native';
+
+import { tailwind } from '@infrastructure/theme';
+import { NativeView } from '@infrastructure/ui/native-components';
+import { getChannelIcon } from '@infrastructure/utils';
+import { Inbox } from '@domain/types/Inbox';
+import { ConversationAdditionalAttributes } from '@domain/types/Conversation';
+import { Channel } from '@domain/types';
+
+type InboxIndicatorSize = 'sm' | 'md';
+
+type InboxIndicatorProps = {
+  inbox: Inbox;
+  additionalAttributes?: ConversationAdditionalAttributes;
+  size?: InboxIndicatorSize;
+};
+
+const sizeConfig: Record<InboxIndicatorSize, { icon: number; text: string }> = {
+  sm: { icon: 12, text: 'text-xs' }, // 12px icon, 12px text — for list items
+  md: { icon: 12, text: 'text-xs' }, // 12px icon, 12px text — for chat header
+};
+
+export const InboxIndicator = ({
+  inbox,
+  additionalAttributes,
+  size = 'sm',
+}: InboxIndicatorProps) => {
+  const { channelType = '', medium = '', name = '' } = inbox;
+  const { type = '' } = additionalAttributes || {};
+  const config = sizeConfig[size];
+
+  if (!name) return null;
+
+  return (
+    <NativeView style={tailwind.style('flex-row items-center min-w-0')}>
+      <View
+        style={{
+          width: config.icon,
+          height: config.icon,
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+        {React.cloneElement(
+          getChannelIcon(channelType as Channel, medium, type) as React.ReactElement<{
+            size?: number;
+          }>,
+          { size: config.icon },
+        )}
+      </View>
+      <Text
+        numberOfLines={1}
+        style={tailwind.style(`${config.text} font-inter-normal-20 text-slate-11 ml-1`)}>
+        {name}
+      </Text>
+    </NativeView>
+  );
+};

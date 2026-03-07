@@ -6,6 +6,9 @@ import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 import { Overflow } from '@/svg-icons/common/Overflow';
 
 import { Avatar, Icon } from '@infrastructure/ui';
+import { InboxIndicator } from '@infrastructure/ui/list-components';
+import { Inbox } from '@domain/types/Inbox';
+import { ConversationAdditionalAttributes } from '@domain/types/Conversation';
 import { /* OpenIcon, ResolvedIcon, */ SLAIcon } from '@/svg-icons';
 import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
@@ -19,6 +22,9 @@ import { SlaEvents } from './SlaEvents';
 type ChatHeaderProps = {
   name: string;
   imageSrc: ImageSourcePropType;
+  inbox: Inbox | null;
+  showInboxIndicator?: boolean;
+  additionalAttributes?: ConversationAdditionalAttributes;
   isResolved: boolean;
   isSlaMissed?: boolean;
   hasSla?: boolean;
@@ -34,6 +40,9 @@ type ChatHeaderProps = {
 export const ChatHeader = ({
   name,
   imageSrc,
+  inbox,
+  showInboxIndicator = false,
+  additionalAttributes,
   isResolved,
   slaEvents,
   isSlaMissed,
@@ -76,7 +85,7 @@ export const ChatHeader = ({
             onPress={onContactDetailsPress}
             style={tailwind.style('flex flex-row items-center flex-1')}>
             <Avatar size="xl" src={imageSrc} name={name} />
-            <Animated.View style={tailwind.style('pl-2')}>
+            <Animated.View style={tailwind.style('pl-2 flex-1 min-w-0')}>
               <Animated.Text
                 numberOfLines={1}
                 style={themedTailwind.style(
@@ -84,13 +93,20 @@ export const ChatHeader = ({
                 )}>
                 {name}
               </Animated.Text>
+              {showInboxIndicator && inbox && (
+                <InboxIndicator
+                  inbox={inbox}
+                  additionalAttributes={additionalAttributes}
+                  size="md"
+                />
+              )}
             </Animated.View>
           </Pressable>
         </Animated.View>
 
         <Animated.View
           style={tailwind.style(
-            `flex flex-row flex-1 justify-end ${Platform.OS === 'ios' ? 'gap-4' : ''}`,
+            `flex flex-row justify-end ${Platform.OS === 'ios' ? 'gap-4' : ''}`,
           )}>
           <Animated.View style={tailwind.style('flex flex-row items-center gap-4')}>
             {hasSla && (

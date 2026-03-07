@@ -216,6 +216,17 @@ const conversationSlice = createSlice({
           return;
         }
         conversation.priority = priority;
+      })
+      .addCase(conversationActions.toggleAI.fulfilled, (state, action) => {
+        const { conversationId, aiEnabled } = action.payload;
+        const conversation = state.entities[conversationId];
+        if (!conversation) {
+          return;
+        }
+        conversation.customAttributes = {
+          ...conversation.customAttributes,
+          aiEnabled: String(aiEnabled),
+        };
       });
   },
 });

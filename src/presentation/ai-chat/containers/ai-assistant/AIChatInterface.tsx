@@ -13,6 +13,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Platform } from 'react-native';
+import Markdown from 'react-native-markdown-display';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import type { UIMessage } from 'ai';
@@ -28,7 +29,10 @@ import {
   useAIChatScroll,
 } from '@presentation/ai-chat/hooks/ai-assistant';
 import { useMessageBridge } from '@presentation/ai-chat/hooks/ai-assistant/useMessageBridge';
-import { AIChatProvider } from '@presentation/ai-chat/hooks/ai-assistant/useAIChatProvider';
+import {
+  AIChatProvider,
+  type MarkdownRendererComponent,
+} from '@presentation/ai-chat/hooks/ai-assistant/useAIChatProvider';
 import { validateAndNormalizeMessages } from '@presentation/ai-chat/utils/ai-assistant';
 import i18n from '@infrastructure/i18n';
 import { AIInputField } from '@presentation/ai-chat/components/ai-assistant/AIInputField';
@@ -273,7 +277,12 @@ export const AIChatInterface: React.FC<AIChatInterfaceProps> = React.memo(
     );
 
     return (
-      <AIChatProvider i18n={chatwootI18n}>
+      // Note: link handling (onLinkPress, linkify) is not forwarded through MarkdownRendererComponent.
+      // If AI responses contain URLs that need to be tappable, the consumer must wrap Markdown
+      // in a component that applies these props before registering it here.
+      <AIChatProvider
+        i18n={chatwootI18n}
+        registry={{ markdownRenderer: Markdown as unknown as MarkdownRendererComponent }}>
         <KeyboardAvoidingView
           style={tailwind.style('flex-1')}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

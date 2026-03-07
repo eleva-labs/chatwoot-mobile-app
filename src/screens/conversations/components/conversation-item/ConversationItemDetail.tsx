@@ -18,7 +18,7 @@ import { useThemedStyles } from '@infrastructure/hooks';
 import { PersonIcon } from '@/svg-icons';
 
 import { ConversationLastMessage } from './ConversationLastMessage';
-import { PriorityIndicator } from '@infrastructure/ui/list-components';
+import { PriorityIndicator, InboxIndicator } from '@infrastructure/ui/list-components';
 import { SLAIndicator } from './SLAIndicator';
 import { LabelIndicator } from './LabelIndicator';
 import { LastActivityTime } from './LastActivityTime';
@@ -38,6 +38,7 @@ type ConversationDetailSubCellProps = Pick<
   createdAt?: number;
   lastMessage?: Message | null;
   inbox: Inbox | null;
+  showInboxIndicator?: boolean;
   appliedSla: SLA | null;
   appliedSlaConversationDetails?:
     | {
@@ -86,8 +87,11 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
     createdAt,
     slaPolicyId,
     lastMessage,
+    inbox,
+    showInboxIndicator = false,
     appliedSla,
     appliedSlaConversationDetails,
+    additionalAttributes,
     allLabels,
     typingText,
     isAIEnabled,
@@ -104,6 +108,8 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
 
   const hasSLA = !!slaPolicyId && shouldShowSLA;
 
+  const hasInboxIndicator = showInboxIndicator && !!inbox;
+
   const hasUnread = (unreadCount ?? 0) > 0;
 
   if (!lastMessage) {
@@ -114,6 +120,12 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
     <AnimatedNativeView
       layout={LinearTransition.springify().damping(28).stiffness(200)}
       style={themedTailwind.style('flex-1 py-3 border-b border-b-slate-3')}>
+      {/* Row 0: Inbox indicator */}
+      {hasInboxIndicator && (
+        <AnimatedNativeView style={tailwind.style('flex flex-row items-center')}>
+          <InboxIndicator inbox={inbox!} additionalAttributes={additionalAttributes} size="sm" />
+        </AnimatedNativeView>
+      )}
       {/* Row 1: Contact name + assignee | Timestamp */}
       <AnimatedNativeView style={tailwind.style('flex flex-row justify-between items-center')}>
         <AnimatedNativeView
@@ -122,7 +134,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
             numberOfLines={1}
             style={themedTailwind.style(
               `text-sm ${hasUnread ? 'font-inter-semibold-20' : 'font-inter-medium-24'} text-slate-12 capitalize`,
-              `max-w-[${width - (assignee ? 300 : 250)}px]`,
+              `max-w-[${width - (assignee ? 225 : 188)}px]`,
             )}>
             {senderName}
           </Text>
@@ -171,7 +183,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
           <UnreadBadge count={unreadCount ?? 0} />
         </AnimatedNativeView>
       </AnimatedNativeView>
-      {/* Row 3: Labels + SLA (if any) */}
+      {/* Row 3: SLA + Labels (if any) */}
       {(hasLabels || hasSLA) && (
         <AnimatedNativeView style={tailwind.style('flex flex-row items-center mt-0.5')}>
           <AnimatedNativeView style={tailwind.style('flex flex-row flex-1 gap-1 items-center')}>

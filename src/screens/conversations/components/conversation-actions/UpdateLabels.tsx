@@ -75,7 +75,9 @@ export const UpdateLabels = () => {
       const payload = {
         type: 'Conversation',
         ids: selectedIds,
-        labels: isRemoving ? { remove: [_selectedLabel] } : { add: [_selectedLabel] },
+        labels: isRemoving
+          ? { add: [], remove: [_selectedLabel] }
+          : { add: [_selectedLabel], remove: [] },
       };
 
       dispatch(conversationActions.bulkAction(payload));

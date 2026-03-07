@@ -169,6 +169,7 @@ export interface BulkActionFields {
 
 export interface BulkActionLabels {
   add: string[];
+  remove: string[];
 }
 
 export interface AssigneePayload {
@@ -243,4 +244,13 @@ export interface TypingPayload {
 export interface TogglePriorityPayload {
   conversationId: number;
   priority: ConversationPriority;
+}
+
+export interface ToggleAIPayload {
+  conversationId: number;
+  aiEnabled: boolean;
+}
+
+export interface ToggleAIResponse {
+  ai_enabled: boolean;
 }

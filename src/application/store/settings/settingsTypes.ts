@@ -23,18 +23,7 @@ export interface NotificationSettingsPayload {
 
 export interface InstallationUrls {
   installationUrl: string;
-  webSocketUrl: string;
   baseUrl: string;
-}
-
-export interface SettingsState extends InstallationUrls {
-  uiFlags: {
-    isSettingUrl: boolean;
-    isUpdating: boolean;
-    isLocaleSet: boolean;
-  };
-  notificationSettings: NotificationSettings | null;
-  localeValue: string;
 }
 
 export interface PushPayload {

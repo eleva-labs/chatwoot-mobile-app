@@ -166,6 +166,18 @@ const ACTIVITY_PATTERNS: ActivityPattern[] = [
     extractParams: m => ({ issue_id: m[1], user_name: m[2] }),
   },
 
+  // --- AI Toggle ---
+  {
+    regex: /^(.+) enabled AI for this conversation$/,
+    key: 'CONVERSATION.ACTIVITY.AI.ENABLED',
+    extractParams: m => ({ user_name: m[1] }),
+  },
+  {
+    regex: /^(.+) disabled AI for this conversation$/,
+    key: 'CONVERSATION.ACTIVITY.AI.DISABLED',
+    extractParams: m => ({ user_name: m[1] }),
+  },
+
   // --- Mute ---
   {
     regex: /^(.+) has muted the conversation$/,

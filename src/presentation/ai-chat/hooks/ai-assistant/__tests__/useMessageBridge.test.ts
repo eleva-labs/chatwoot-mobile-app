@@ -126,7 +126,7 @@ describe('useMessageBridge', () => {
     expect(setMessages).toHaveBeenCalledTimes(1);
 
     // Re-render with identical props — fingerprint should prevent re-fire
-    rerender();
+    rerender(undefined);
 
     expect(setMessages).toHaveBeenCalledTimes(1);
   });
@@ -209,7 +209,7 @@ describe('useMessageBridge', () => {
     // Change to different messages (different IDs = different fingerprint)
     const messages2 = makeBackendMessages(2, 'second');
     currentOpts = defaultOptions({ setMessages, backendMessages: messages2 });
-    rerender();
+    rerender(undefined);
 
     expect(setMessages).toHaveBeenCalledTimes(2);
   });
@@ -222,7 +222,7 @@ describe('useMessageBridge', () => {
     const { result, rerender } = renderHook(() => useMessageBridge(opts));
 
     const firstRef = result.current.resetBridgeKey;
-    rerender();
+    rerender(undefined);
     const secondRef = result.current.resetBridgeKey;
 
     expect(firstRef).toBe(secondRef);
