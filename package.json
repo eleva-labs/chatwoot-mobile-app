@@ -10,6 +10,7 @@
   },
   "scripts": {
     "postinstall": "patch-package",
+    "eas-build-pre-install": "bash scripts/eas-build-pre-install.sh",
     "eas-build-post-install": "bash scripts/eas-build-post-install.sh",
     "start": "expo start --dev-client",
     "start:prod": "expo start --no-dev --minify",
