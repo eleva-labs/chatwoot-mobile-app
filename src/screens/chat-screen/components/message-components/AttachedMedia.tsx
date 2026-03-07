@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { Asset } from 'react-native-image-picker';
+import { PickedAsset } from '@domain/types';
 import Animated, {
   LinearTransition,
   SlideInDown,
@@ -55,7 +55,7 @@ const DeleteIcon = ({ color }: { color: string }) => {
 };
 
 type AttachedMediaProps = {
-  item: Asset;
+  item: PickedAsset;
   index: number;
 };
 
@@ -269,8 +269,7 @@ export const AttachedMedia = () => {
         showsHorizontalScrollIndicator={false}
         data={attachments}
         renderItem={handleRenderItem}
-        // @ts-expect-error - FlatList keyExtractor expects string but Asset.uri is string
-        keyExtractor={(item: Asset) => item.uri}
+        keyExtractor={(item: PickedAsset, index: number) => item.uri ?? `attachment-${index}`}
       />
     </Animated.View>
   ) : null;

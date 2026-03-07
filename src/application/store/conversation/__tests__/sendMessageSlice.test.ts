@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import type { Asset } from 'react-native-image-picker';
+import type { PickedAsset } from '@domain/types';
 import type { RootState } from '@application/store';
 import { aMessage } from '@/__tests__/helpers/builders';
 import reducer, {
@@ -21,7 +21,7 @@ type SendMessageState = ReturnType<typeof reducer>;
 const createMockRootState = (sendMessageState: SendMessageState) =>
   ({ sendMessage: sendMessageState }) as unknown as RootState;
 
-const mockAsset = (overrides: Partial<Asset> = {}): Asset => ({
+const mockAsset = (overrides: Partial<PickedAsset> = {}): PickedAsset => ({
   uri: 'file:///photo.jpg',
   fileName: 'photo.jpg',
   type: 'image/jpeg',
@@ -92,7 +92,7 @@ describe('sendMessageSlice', () => {
 
   describe('deleteAttachment', () => {
     it('removes attachment at given index', () => {
-      const assets: Asset[] = [
+      const assets: PickedAsset[] = [
         mockAsset({ fileName: 'a.jpg' }),
         mockAsset({ fileName: 'b.jpg' }),
         mockAsset({ fileName: 'c.jpg' }),
@@ -107,7 +107,7 @@ describe('sendMessageSlice', () => {
     });
 
     it('should remove first attachment when index is 0', () => {
-      const assets: Asset[] = [mockAsset({ fileName: 'a.jpg' }), mockAsset({ fileName: 'b.jpg' })];
+      const assets: PickedAsset[] = [mockAsset({ fileName: 'a.jpg' }), mockAsset({ fileName: 'b.jpg' })];
 
       let state = reducer(undefined, updateAttachments(assets));
       state = reducer(state, deleteAttachment(0));
@@ -117,7 +117,7 @@ describe('sendMessageSlice', () => {
     });
 
     it('should remove last attachment when index is last element', () => {
-      const assets: Asset[] = [mockAsset({ fileName: 'a.jpg' }), mockAsset({ fileName: 'b.jpg' })];
+      const assets: PickedAsset[] = [mockAsset({ fileName: 'a.jpg' }), mockAsset({ fileName: 'b.jpg' })];
 
       let state = reducer(undefined, updateAttachments(assets));
       state = reducer(state, deleteAttachment(1));

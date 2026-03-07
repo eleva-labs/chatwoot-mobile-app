@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Asset } from 'react-native-image-picker';
-import { Message } from '@domain/types';
+import { Message, PickedAsset } from '@domain/types';
 import { RootState } from '@application/store';
 
 interface SendMessageState {
   messageContent: string;
   isPrivateMessage: boolean;
-  attachments: Asset[];
+  attachments: PickedAsset[];
   quoteMessage: Message | null;
 }
 
@@ -27,7 +26,7 @@ const sendMessageSlice = createSlice({
     togglePrivateMessage: (state, action: PayloadAction<boolean>) => {
       state.isPrivateMessage = action.payload;
     },
-    updateAttachments: (state, action: PayloadAction<Asset[]>) => {
+    updateAttachments: (state, action: PayloadAction<PickedAsset[]>) => {
       state.attachments = [...state.attachments, ...action.payload];
     },
     deleteAttachment: (state, action: PayloadAction<number>) => {

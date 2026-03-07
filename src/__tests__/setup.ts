@@ -103,6 +103,14 @@ jest.mock('expo-clipboard', () => ({
   getStringAsync: jest.fn(() => Promise.resolve('')),
 }));
 
+jest.mock('expo-image-picker', () => ({
+  launchImageLibraryAsync: jest.fn(() => Promise.resolve({ canceled: true, assets: [] })),
+  launchCameraAsync: jest.fn(() => Promise.resolve({ canceled: true, assets: [] })),
+  requestCameraPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'granted' })),
+  UIImagePickerPresentationStyle: { FORM_SHEET: 'formSheet' },
+  MediaType: { Images: 'images', Videos: 'videos' },
+}));
+
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),

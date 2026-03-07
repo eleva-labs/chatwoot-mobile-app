@@ -1,8 +1,7 @@
 import React from 'react';
 import { Alert, Linking, Platform, Pressable, Text } from 'react-native';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
-import { Asset, launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import * as ImagePicker from 'expo-image-picker';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch } from '@/hooks';
@@ -17,20 +16,42 @@ import i18n from '@infrastructure/i18n';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import { findFileSize } from '@infrastructure/utils/fileUtils';
 import type { AppDispatch } from '@application/store';
+import type { PickedAsset } from '@domain/types';
+
+/**
+ * Maps an expo-image-picker asset to the PickedAsset shape used by the Redux store.
+ */
+const mapExpoAsset = (asset: ImagePicker.ImagePickerAsset): PickedAsset => ({
+  fileName: asset.fileName || `file-${Date.now()}`,
+  fileSize: asset.fileSize || 0,
+  type: asset.mimeType || asset.type || '',
+  uri: asset.uri,
+  duration: asset.duration != null ? asset.duration / 1000 : undefined,
+});
 
 export const handleOpenPhotosLibrary = async (dispatch: AppDispatch) => {
-  const pickedAssets = await launchImageLibrary({
+  const pickedAssets = await ImagePicker.launchImageLibraryAsync({
     quality: 1,
     selectionLimit: 4,
-    mediaType: 'mixed',
-    presentationStyle: 'formSheet',
+    mediaTypes: ['images', 'videos'],
+    allowsMultipleSelection: true,
+    presentationStyle: ImagePicker.UIImagePickerPresentationStyle.FORM_SHEET,
   });
-  if (pickedAssets.didCancel) {
-  } else if (pickedAssets.errorCode) {
+  if (pickedAssets.canceled) {
+    // User cancelled
+  } else if (pickedAssets.assets && pickedAssets.assets.length > 0) {
+    for (const asset of pickedAssets.assets) {
+      validateFileAndSetAttachments(dispatch, mapExpoAsset(asset));
+    }
+  }
+};
+
+const handleLaunchCamera = async (dispatch: AppDispatch) => {
+  const { status } = await ImagePicker.requestCameraPermissionsAsync();
+  if (status !== 'granted') {
     Alert.alert(
       'Permission Denied',
-      pickedAssets.errorMessage ||
-        'The permission to access the photo library has been denied and cannot be requested again. Please enable it in your device settings if you wish to access photos from your library.',
+      'The permission to access the camera has been denied and cannot be requested again. Please enable it in your device settings if you wish to use the camera feature.',
       [
         {
           text: 'Cancel',
@@ -39,69 +60,33 @@ export const handleOpenPhotosLibrary = async (dispatch: AppDispatch) => {
         {
           text: 'Open Settings',
           onPress: () => {
-            // Open app settings
             Linking.openSettings();
           },
         },
       ],
       { cancelable: false },
     );
-  } else {
-    if (pickedAssets.assets && pickedAssets.assets?.length > 0) {
-      validateFileAndSetAttachments(dispatch, pickedAssets.assets[0]);
-    }
+    return;
+  }
+  const imageResult = await ImagePicker.launchCameraAsync({
+    mediaTypes: ['images', 'videos'],
+    presentationStyle: ImagePicker.UIImagePickerPresentationStyle.FORM_SHEET,
+  });
+  if (!imageResult.canceled && imageResult.assets && imageResult.assets.length > 0) {
+    const asset = imageResult.assets[0];
+    validateFileAndSetAttachments(dispatch, mapExpoAsset(asset));
   }
 };
 
-const handleLaunchCamera = async (dispatch: AppDispatch) => {
-  request(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA).then(
-    async result => {
-      if (RESULTS.BLOCKED === result) {
-        Alert.alert(
-          'Permission Denied',
-          'The permission to access the camera has been denied and cannot be requested again. Please enable it in your device settings if you wish to use the camera feature.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open Settings',
-              onPress: () => {
-                // Open app settings
-                Linking.openSettings();
-              },
-            },
-          ],
-          { cancelable: false },
-        );
-      }
-      if (RESULTS.GRANTED === result) {
-        const imageResult = await launchCamera({
-          presentationStyle: 'formSheet',
-          mediaType: 'mixed',
-        });
-        if (imageResult.didCancel) {
-        } else if (imageResult.errorCode) {
-        } else {
-          if (imageResult.assets && imageResult.assets?.length > 0) {
-            validateFileAndSetAttachments(dispatch, imageResult.assets[0]);
-          }
-        }
-      }
-    },
-  );
-};
-
 /**
- * Doing this so that the our Store Object Attachments is of single type - Asset from Image Picker Library
+ * Doing this so that the our Store Object Attachments is of single type - PickedAsset
  * The function `mapObject` takes an object of type `DocumentPickerResponse` and returns an array of
- * `Asset` objects with properties `fileName`, `fileSize`, `type`, and `uri`.
+ * `PickedAsset` objects with properties `fileName`, `fileSize`, `type`, and `uri`.
  * @param {DocumentPickerResponse} originalObject - The originalObject parameter is of type
  * DocumentPickerResponse.
- * @returns The function `mapObject` is returning an array of `Asset` objects.
+ * @returns The function `mapObject` is returning an array of `PickedAsset` objects.
  */
-const mapObject = (originalObject: DocumentPickerResponse): Asset[] => {
+const mapObject = (originalObject: DocumentPickerResponse): PickedAsset[] => {
   return [
     {
       fileName: originalObject.name || '',
@@ -173,7 +158,7 @@ const ADD_MENU_OPTIONS = [
 
 export const validateFileAndSetAttachments = async (
   dispatch: AppDispatch,
-  attachment: Asset | DocumentPickerResponse | Record<string, unknown>,
+  attachment: PickedAsset | DocumentPickerResponse | Record<string, unknown>,
 ) => {
   const fileSize =
     'fileSize' in attachment
@@ -182,7 +167,7 @@ export const validateFileAndSetAttachments = async (
         ? (attachment.size as number | undefined)
         : 0;
   if (findFileSize(fileSize ?? 0) <= MAXIMUM_FILE_UPLOAD_SIZE) {
-    dispatch(updateAttachments([attachment as Asset]));
+    dispatch(updateAttachments([attachment as PickedAsset]));
   } else {
     showToast({ message: i18n.t('CONVERSATION.FILE_SIZE_LIMIT') });
   }

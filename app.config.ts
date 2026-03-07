@@ -192,7 +192,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     plugins: [
       'expo-font',
       'expo-video',
-      ['react-native-permissions', { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary'] }],
+      'expo-image-picker',
       [
         '@sentry/react-native/expo',
         {
