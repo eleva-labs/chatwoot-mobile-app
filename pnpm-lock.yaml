@@ -182,9 +182,6 @@ importers:
       react-native-audio-recorder-player:
         specifier: ^3.6.11
         version: 3.6.14(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
-      react-native-autoheight-webview:
-        specifier: ^1.6.5
-        version: 1.6.5(react-native-webview@13.16.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
       react-native-blob-util:
         specifier: ^0.24.7
         version: 0.24.7(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
@@ -197,9 +194,6 @@ importers:
       react-native-file-viewer:
         specifier: ^2.1.5
         version: 2.1.5(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))
-      react-native-fs:
-        specifier: ^2.20.0
-        version: 2.20.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))
       react-native-gesture-handler:
         specifier: ^2.20.2
         version: 2.20.2(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
@@ -2307,9 +2301,6 @@ packages:
     peerDependencies:
       '@babel/core': '*'
 
-  '@react-native/normalize-color@2.1.0':
-    resolution: {integrity: sha512-Z1jQI2NpdFJCVgpY+8Dq/Bt3d+YUi1928Q+/CZm/oh66fzM0RUl54vvuXlPJKybH4pdCZey1eDTPaLHkMPNgWA==}
-
   '@react-native/normalize-colors@0.76.8':
     resolution: {integrity: sha512-FRjRvs7RgsXjkbGSOjYSxhX5V70c0IzA/jy3HXeYpATMwD9fOR1DbveLW497QGsVdCa0vThbJUtR8rIzAfpHQA==}
 
@@ -3626,9 +3617,6 @@ packages:
   depd@2.0.0:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
     engines: {node: '>= 0.8'}
-
-  deprecated-react-native-prop-types@2.3.0:
-    resolution: {integrity: sha512-pWD0voFtNYxrVqvBMYf5gq3NA2GCpfodS1yNynTPc93AYA/KEMGeWDqqeUB6R2Z9ZofVhks2aeJXiuQqKNpesA==}
 
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
@@ -5988,13 +5976,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-autoheight-webview@1.6.5:
-    resolution: {integrity: sha512-EJhzpiG7jD5euMxyLcb0CNqxB7Scw4qfNGO7JIptPYXVP9mNxTtCuzOvewai+KctR0SUtD4hmspNNDYxE6KiOQ==}
-    peerDependencies:
-      react: '>= 16.8.0'
-      react-native: '>= 0.60.0'
-      react-native-webview: '>= 10.9.0'
-
   react-native-blob-util@0.24.7:
     resolution: {integrity: sha512-3vgn3hblfJh0+LIoqEhYRqCtwKh1xID2LtXHdTrUml3rYh4xj69eN+lvWU235AL0FRbX5uKrS1c4lIYexSgtWQ==}
     peerDependencies:
@@ -6024,15 +6005,6 @@ packages:
 
   react-native-fit-image@1.5.5:
     resolution: {integrity: sha512-Wl3Vq2DQzxgsWKuW4USfck9zS7YzhvLNPpkwUUCF90bL32e1a0zOVQ3WsJILJOwzmPdHfzZmWasiiAUNBkhNkg==}
-
-  react-native-fs@2.20.0:
-    resolution: {integrity: sha512-VkTBzs7fIDUiy/XajOSNk0XazFE9l+QlMAce7lGuebZcag5CnjszB+u4BdqzwaQOdcYb5wsJIsqq4kxInIRpJQ==}
-    peerDependencies:
-      react-native: '*'
-      react-native-windows: '*'
-    peerDependenciesMeta:
-      react-native-windows:
-        optional: true
 
   react-native-gesture-handler@2.20.2:
     resolution: {integrity: sha512-HqzFpFczV4qCnwKlvSAvpzEXisL+Z9fsR08YV5LfJDkzuArMhBu2sOoSPUF/K62PCoAb+ObGlTC83TKHfUd0vg==}
@@ -7052,9 +7024,6 @@ packages:
     resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  utf8@3.0.0:
-    resolution: {integrity: sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==}
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -9778,8 +9747,6 @@ snapshots:
       - '@babel/preset-env'
       - supports-color
 
-  '@react-native/normalize-color@2.1.0': {}
-
   '@react-native/normalize-colors@0.76.8': {}
 
   '@react-native/normalize-colors@0.76.9': {}
@@ -11336,12 +11303,6 @@ snapshots:
   delayed-stream@1.0.0: {}
 
   depd@2.0.0: {}
-
-  deprecated-react-native-prop-types@2.3.0:
-    dependencies:
-      '@react-native/normalize-color': 2.1.0
-      invariant: 2.2.4
-      prop-types: 15.8.1
 
   dequal@2.0.3: {}
 
@@ -14245,14 +14206,6 @@ snapshots:
       react: 18.3.1
       react-native: 0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)
 
-  react-native-autoheight-webview@1.6.5(react-native-webview@13.16.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1):
-    dependencies:
-      deprecated-react-native-prop-types: 2.3.0
-      prop-types: 15.8.1
-      react: 18.3.1
-      react-native: 0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)
-      react-native-webview: 13.16.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
-
   react-native-blob-util@0.24.7(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1):
     dependencies:
       base-64: 0.1.0
@@ -14277,12 +14230,6 @@ snapshots:
   react-native-fit-image@1.5.5:
     dependencies:
       prop-types: 15.8.1
-
-  react-native-fs@2.20.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)):
-    dependencies:
-      base-64: 0.1.0
-      react-native: 0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)
-      utf8: 3.0.0
 
   react-native-gesture-handler@2.20.2(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -15424,8 +15371,6 @@ snapshots:
   use-sync-external-store@1.5.0(react@18.3.1):
     dependencies:
       react: 18.3.1
-
-  utf8@3.0.0: {}
 
   util-deprecate@1.0.2: {}
 

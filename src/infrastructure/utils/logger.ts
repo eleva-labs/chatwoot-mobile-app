@@ -143,12 +143,15 @@ class Logger {
   async exportToFile(): Promise<string | null> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const RNFS = require('react-native-fs');
+      const FileSystem = require('expo-file-system');
       const logsString = this.getLogsAsString();
       const fileName = `chatwoot-logs-${Date.now()}.txt`;
-      const filePath = `${RNFS.CachesDirectoryPath}/${fileName}`;
+      // Note: cacheDirectory already has trailing slash
+      const filePath = `${FileSystem.cacheDirectory}${fileName}`;
 
-      await RNFS.writeFile(filePath, logsString, 'utf8');
+      await FileSystem.writeAsStringAsync(filePath, logsString, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
       console.log(`[Logger] Exported ${this.buffer.length} log entries to file: ${filePath}`);
       return filePath;
     } catch (error) {

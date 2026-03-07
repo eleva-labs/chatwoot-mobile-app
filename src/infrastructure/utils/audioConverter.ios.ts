@@ -1,4 +1,4 @@
-import RNFS from 'react-native-fs';
+import * as FileSystem from 'expo-file-system';
 import * as Sentry from '@sentry/react-native';
 
 /**
@@ -8,17 +8,15 @@ import * as Sentry from '@sentry/react-native';
  */
 export const convertOggToWav = async (oggUrl: string): Promise<string | Error> => {
   const fileName = `audio_${Date.now()}.ogg`;
-  const outputPath = `${RNFS.CachesDirectoryPath}/${fileName}`;
+  // Note: cacheDirectory already has trailing slash
+  const outputPath = `${FileSystem.cacheDirectory}${fileName}`;
 
   try {
     // Download the OGG file
-    const downloadResult = await RNFS.downloadFile({
-      fromUrl: oggUrl,
-      toFile: outputPath,
-    }).promise;
+    const downloadResult = await FileSystem.downloadAsync(oggUrl, outputPath);
 
-    if (downloadResult.statusCode !== 200) {
-      const error = new Error(`Download failed with status ${downloadResult.statusCode}`);
+    if (downloadResult.status !== 200) {
+      const error = new Error(`Download failed with status ${downloadResult.status}`);
       Sentry.captureException(error);
       return error;
     }
