@@ -19,7 +19,6 @@ jobs:
   submit_android:
     type: submit
     params:
-      platform: android
       profile: development
       build_id: ${{ needs.build_android.outputs.build_id }}
     needs:
@@ -28,7 +27,6 @@ jobs:
   submit_ios:
     type: submit
     params:
-      platform: ios
       profile: development
       build_id: ${{ needs.build_ios.outputs.build_id }}
     needs:
