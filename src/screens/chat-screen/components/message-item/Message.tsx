@@ -32,7 +32,7 @@ import {
   MESSAGE_TYPES,
 } from '@domain/constants';
 import i18n from '@infrastructure/i18n';
-import Clipboard from '@react-native-clipboard/clipboard';
+import * as Clipboard from 'expo-clipboard';
 import { CopyIcon } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { useThemedStyles } from '@/hooks';
@@ -246,7 +246,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
   const handleCopyMessage = (content: string) => {
     hapticSelection?.();
     if (content) {
-      Clipboard.setString(content);
+      Clipboard.setStringAsync(content);
       showToast({ message: i18n.t('CONVERSATION.COPY_MESSAGE') });
     }
   };

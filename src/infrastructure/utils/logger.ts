@@ -125,9 +125,9 @@ class Logger {
   async exportToClipboard(): Promise<void> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { Clipboard } = require('@react-native-clipboard/clipboard');
+      const Clipboard = require('expo-clipboard');
       const logsString = this.getLogsAsString();
-      await Clipboard.setString(logsString);
+      await Clipboard.setStringAsync(logsString);
       console.log(`[Logger] Exported ${this.buffer.length} log entries to clipboard`);
     } catch (error) {
       console.error('[Logger] Failed to export to clipboard:', error);

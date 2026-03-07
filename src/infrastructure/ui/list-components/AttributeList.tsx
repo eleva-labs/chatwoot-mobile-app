@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
-import Clipboard from '@react-native-clipboard/clipboard';
+import * as Clipboard from 'expo-clipboard';
 import * as Sentry from '@sentry/react-native';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
 
@@ -23,7 +23,7 @@ const AttributeItem = (props: AttributeItemProps) => {
   const handlePress = () => {
     if (formattedValue) {
       try {
-        Clipboard.setString(formattedValue);
+        Clipboard.setStringAsync(formattedValue);
         showToast({ message: `${listItem.title} copied to clipboard` });
       } catch (error) {
         Sentry.captureException(error);
