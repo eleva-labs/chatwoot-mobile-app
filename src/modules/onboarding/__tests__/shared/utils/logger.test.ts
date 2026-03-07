@@ -129,11 +129,16 @@ describe('Logger', () => {
       );
     });
 
-    it('should not log when disabled', () => {
+    it('should still log when disabled (always-on for crash reporting)', () => {
       logger.setEnabled(false);
+      jest.clearAllMocks();
       logger.warn('Warning message');
 
-      expect(mockConsoleWarn).not.toHaveBeenCalled();
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Onboarding:WARN]'),
+        expect.any(String),
+        'Warning message',
+      );
     });
 
     it('should include additional arguments', () => {
@@ -163,11 +168,16 @@ describe('Logger', () => {
       );
     });
 
-    it('should not log when disabled', () => {
+    it('should still log when disabled (always-on for crash reporting)', () => {
       logger.setEnabled(false);
+      jest.clearAllMocks();
       logger.error('Error message');
 
-      expect(mockConsoleError).not.toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith(
+        expect.stringContaining('[Onboarding:ERROR]'),
+        expect.any(String),
+        'Error message',
+      );
     });
 
     it('should include additional arguments', () => {

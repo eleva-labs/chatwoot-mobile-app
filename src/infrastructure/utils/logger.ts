@@ -40,7 +40,9 @@ class Logger {
    * Log with automatic buffer storage
    */
   log(message: string, ...args: unknown[]): void {
-    console.log(message, ...args);
+    if (this.enabled) {
+      console.log(message, ...args);
+    }
     this.addToBuffer('log', message, args.length > 0 ? args : undefined);
   }
 
@@ -64,17 +66,19 @@ class Logger {
    * Debug with automatic buffer storage
    */
   debug(message: string, ...args: unknown[]): void {
-    if (__DEV__) {
+    if (this.enabled) {
       console.debug(message, ...args);
-      this.addToBuffer('debug', message, args.length > 0 ? args : undefined);
     }
+    this.addToBuffer('debug', message, args.length > 0 ? args : undefined);
   }
 
   /**
    * Info with automatic buffer storage
    */
   info(message: string, ...args: unknown[]): void {
-    console.info(message, ...args);
+    if (this.enabled) {
+      console.info(message, ...args);
+    }
     this.addToBuffer('info', message, args.length > 0 ? args : undefined);
   }
 
@@ -109,7 +113,9 @@ class Logger {
    */
   clear(): void {
     this.buffer = [];
-    console.log('[Logger] Buffer cleared');
+    if (this.enabled) {
+      console.log('[Logger] Buffer cleared');
+    }
   }
 
   /**
@@ -128,11 +134,15 @@ class Logger {
       const Clipboard = require('expo-clipboard');
       const logsString = this.getLogsAsString();
       await Clipboard.setStringAsync(logsString);
-      console.log(`[Logger] Exported ${this.buffer.length} log entries to clipboard`);
+      if (this.enabled) {
+        console.log(`[Logger] Exported ${this.buffer.length} log entries to clipboard`);
+      }
     } catch (error) {
       console.error('[Logger] Failed to export to clipboard:', error);
-      // Fallback: log the export string
-      console.log('[Logger] Logs export:', this.getLogsAsString());
+      if (this.enabled) {
+        // Fallback: log the export string
+        console.log('[Logger] Logs export:', this.getLogsAsString());
+      }
     }
   }
 
@@ -152,12 +162,16 @@ class Logger {
       await FileSystem.writeAsStringAsync(filePath, logsString, {
         encoding: FileSystem.EncodingType.UTF8,
       });
-      console.log(`[Logger] Exported ${this.buffer.length} log entries to file: ${filePath}`);
+      if (this.enabled) {
+        console.log(`[Logger] Exported ${this.buffer.length} log entries to file: ${filePath}`);
+      }
       return filePath;
     } catch (error) {
       console.error('[Logger] Failed to export to file:', error);
-      // Fallback: log the export string
-      console.log('[Logger] Logs export (fallback):', this.getLogsAsString());
+      if (this.enabled) {
+        // Fallback: log the export string
+        console.log('[Logger] Logs export (fallback):', this.getLogsAsString());
+      }
       return null;
     }
   }
@@ -197,9 +211,9 @@ export const error = logger.error.bind(logger);
 export const debug = logger.debug.bind(logger);
 export const info = logger.info.bind(logger);
 
-// Expose logger globally for easy access from console/debugger
+// Expose logger globally for easy access from console/debugger (dev only)
 /* eslint-disable @typescript-eslint/no-explicit-any */
-if (typeof global !== 'undefined') {
+if (__DEV__ && typeof global !== 'undefined') {
   (global as any).__logger = logger;
   (global as any).__getLogs = () => logger.getLogs();
   (global as any).__getLogsString = () => logger.getLogsAsString();
