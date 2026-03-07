@@ -32,7 +32,6 @@ module.exports = {
     '!src/svg-icons/**',
     '!src/assets/**',
     '!src/**/index.ts',
-    '!src/ReactotronConfig.ts',
   ],
   coverageThreshold: {
     global: {

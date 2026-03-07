@@ -87,8 +87,7 @@
       "env": {
         "ENVIRONMENT": "prod",
         "SENTRY_ORG": "eleva-labs",
-        "SENTRY_PROJECT": "chatscommerce",
-        "EXPO_DEBUG": "1"
+        "SENTRY_PROJECT": "chatscommerce"
       },
       "environment": "production",
       "channel": "production",

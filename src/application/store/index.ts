@@ -14,12 +14,6 @@ import { appReducer } from '@application/store/reducers';
 import { setStore } from './storeAccessor';
 import { contactListenerMiddleware } from './contact/contactListener';
 
-// Disable this in testing environment
-// Reactotron disabled - uncomment and install reactotron-react-native to enable
-const shouldLoadDebugger = false; // __DEV__ && !process.env.JEST_WORKER_ID;
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const reactotronInstance = null; // shouldLoadDebugger ? require('../../ReactotronConfig').default : null;
-
 const CURRENT_VERSION = 2;
 
 const persistConfig = {
@@ -81,11 +75,6 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  enhancers: getDefaultEnhancers =>
-    shouldLoadDebugger
-      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getDefaultEnhancers().concat((reactotronInstance as any).createEnhancer())
-      : getDefaultEnhancers(),
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
