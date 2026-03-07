@@ -2,6 +2,7 @@ name: Create production builds
 
 on:
   workflow_dispatch:
+    inputs: {}
 
 jobs:
   build_android:
