@@ -642,7 +642,7 @@ export class MockOnboardingRepository implements IOnboardingRepository {
           );
         }
 
-        console.log(`No flow found for locale ${localeStr}, falling back to English`);
+        if (__DEV__) console.log(`No flow found for locale ${localeStr}, falling back to English`);
         const flow = OnboardingFlowMapper.toDomain(fallbackFlow);
         return Result.ok(flow);
       }
@@ -662,7 +662,7 @@ export class MockOnboardingRepository implements IOnboardingRepository {
       await this.delay(this.MOCK_DELAY_MS);
 
       // Mock successful submission
-      console.log('[MockOnboardingRepository] Submitting answers:', {
+      if (__DEV__) console.log('[MockOnboardingRepository] Submitting answers:', {
         flowId,
         answers,
       });
@@ -683,7 +683,7 @@ export class MockOnboardingRepository implements IOnboardingRepository {
       await this.delay(this.MOCK_DELAY_MS / 2);
 
       // Mock validation - always return valid for now
-      console.log('[MockOnboardingRepository] Validating field:', {
+      if (__DEV__) console.log('[MockOnboardingRepository] Validating field:', {
         fieldId,
         value,
       });
