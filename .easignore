@@ -12,7 +12,7 @@
 *.jks
 *.mobileprovision
 service-account-key.json
-z
+
 # Ignore local environment files
 .env*.local
 dev.env
