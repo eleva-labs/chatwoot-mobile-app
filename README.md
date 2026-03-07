@@ -99,28 +99,16 @@ For comprehensive onboarding, development workflows, troubleshooting, and best p
 
 ## Build Performance
 
-This project includes optimizations for faster builds:
-
-| Feature | Impact | Command to Verify |
-|---------|--------|-------------------|
-| ccache | 40-50% faster clean builds | `ccache -s` |
-| expo-build-disk-cache | Near-instant cached rebuilds | `ls node_modules/.expo-build-disk-cache` |
-| EAS Build caching | 30-40% faster cloud builds | Check EAS dashboard |
+| Feature | Impact | How |
+|---------|--------|-----|
+| ccache | 40-50% faster native builds | Auto-enabled via `expo-build-properties` plugin |
+| EAS Build caching | 30-40% faster cloud builds | Automatic on EAS |
 
 **Build Commands:**
 ```bash
 task generate        # Clean rebuild (use after SDK changes)
 task generate-soft   # Incremental (use for config changes)
 task generate-fast   # Skip pod install (fastest for testing)
-```
-
-**If builds are slow:**
-```bash
-# Verify ccache is working
-ccache -s
-
-# Clear caches if needed
-task clean-all-caches
 ```
 
 ## Prerequisites
@@ -237,7 +225,7 @@ See [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) for details.
 | Expo SDK        | 52.0.48  |
 | TypeScript      | 5.1.3    |
 | Hermes Engine   | 0.76.9   |
-| Firebase SDK    | 12.4.0   |
+| Firebase SDK    | 23.5.0   |
 | CocoaPods       | 1.16.2   |
 | Min iOS         | 13.0     |
 | Min Android API | 24       |
@@ -246,10 +234,12 @@ See [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) for details.
 
 ```
 ├── src/                    # Source code
-│   ├── components/         # Reusable components
-│   ├── screens/            # Screen components
-│   ├── services/           # API and services
-│   └── infrastructure/     # Core infrastructure
+│   ├── domain/             # Pure business logic (entities, types, constants)
+│   ├── infrastructure/     # Framework adapters (UI, utils, theme, i18n)
+│   ├── application/        # App orchestration (Redux store, navigation)
+│   ├── screens/            # Feature screens
+│   ├── presentation/       # AI chat feature (extraction boundary)
+│   └── app.tsx             # Root component
 ├── credentials/            # Firebase credentials (gitignored)
 ├── scripts/                # Build and setup scripts
 ├── docs/                   # Documentation
