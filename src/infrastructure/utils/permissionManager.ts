@@ -6,14 +6,14 @@ import {
   AuthorizationStatus,
   requestPermission,
 } from '@react-native-firebase/messaging';
-import { getApiLevel } from 'react-native-device-info';
+
 import i18n from '@infrastructure/i18n';
 
 export const requestNotificationPermissions = async (): Promise<boolean> => {
   try {
     if (Platform.OS === 'android') {
       // Android 13+ requires explicit permission
-      const apiLevel = await getApiLevel();
+      const apiLevel = Number(Platform.Version);
 
       if (apiLevel > 32) {
         const granted = await PermissionsAndroid.request(

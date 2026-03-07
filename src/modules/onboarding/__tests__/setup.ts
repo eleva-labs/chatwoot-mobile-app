@@ -9,24 +9,29 @@
 import 'reflect-metadata';
 import { resultMatchers } from './helpers/testHelpers';
 
-// Mock i18n-js before any other imports
-jest.mock('i18n-js', () => ({
-  __esModule: true,
-  default: {
+// Mock i18n-js before any other imports (v4 API)
+jest.mock('i18n-js', () => {
+  const translations: Record<string, string> = {
+    'onboarding.retry': 'Retry',
+    'onboarding.errorTitle': 'Error',
+    'onboarding.genericError': 'An error occurred',
+    'onboarding.offlineIndicator':
+      'No internet connection. Your answers will be saved and submitted when you come back online.',
+  };
+  const mockInstance = {
     translations: {},
-    t: (key: string) => {
-      // Return the key as fallback, or a simple translation map
-      const translations: Record<string, string> = {
-        'onboarding.retry': 'Retry',
-        'onboarding.errorTitle': 'Error',
-        'onboarding.genericError': 'An error occurred',
-        'onboarding.offlineIndicator':
-          'No internet connection. Your answers will be saved and submitted when you come back online.',
-      };
-      return translations[key] || key;
-    },
-  },
-}));
+    locale: 'en',
+    defaultLocale: 'en',
+    enableFallback: true,
+    t: (key: string) => translations[key] || key,
+    store: jest.fn(),
+  };
+  return {
+    __esModule: true,
+    I18n: jest.fn(() => mockInstance),
+    default: mockInstance,
+  };
+});
 
 // Extend Jest matchers with custom Result matchers
 expect.extend(resultMatchers);

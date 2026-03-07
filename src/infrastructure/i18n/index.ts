@@ -1,4 +1,4 @@
-import i18n from 'i18n-js';
+import { I18n } from 'i18n-js';
 
 import af from './af.json';
 import ar from './ar.json';
@@ -33,9 +33,7 @@ import uk from './uk.json';
 import vi from './vi.json';
 import zh from './zh.json';
 
-i18n.locale = 'en';
-i18n.fallbacks = true;
-i18n.translations = {
+const i18n = new I18n({
   af,
   ar,
   ca,
@@ -68,6 +66,10 @@ i18n.translations = {
   uk,
   vi,
   zh,
-};
+});
+
+i18n.locale = 'en';
+i18n.enableFallback = true;
+i18n.defaultLocale = 'en';
 
 export default i18n;

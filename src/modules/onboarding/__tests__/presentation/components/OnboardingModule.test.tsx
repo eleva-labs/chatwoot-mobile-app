@@ -363,8 +363,8 @@ describe('OnboardingModule', () => {
 
       const { getByText } = render(<OnboardingModule />);
 
-      // The offline indicator text is: "No internet connection. Your answers will be saved and submitted when you come back online."
-      expect(getByText(/no internet connection/i)).toBeTruthy();
+      // The i18n mock returns the key as-is
+      expect(getByText(/onboarding\.offlineIndicator/)).toBeTruthy();
     });
 
     it('should not show offline indicator when online', () => {

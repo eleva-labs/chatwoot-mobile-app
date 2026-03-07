@@ -28,14 +28,19 @@ jest.mock('expo-notifications', () => ({
 jest.mock('expo', () => ({
   isRunningInExpoGo: jest.fn(() => false),
 }));
-jest.mock('react-native-device-info', () => ({
-  getSystemName: jest.fn(() => 'iOS'),
-  getModel: jest.fn(() => 'iPhone'),
-  getSystemVersion: jest.fn(() => '17.0'),
-  getUniqueId: jest.fn(() => Promise.resolve('mock-device-id')),
-  getVersion: jest.fn(() => '1.0.0'),
-  getBuildNumber: jest.fn(() => '1'),
-  getBundleId: jest.fn(() => 'com.test.app'),
+jest.mock('expo-device', () => ({
+  osName: 'iOS',
+  modelName: 'iPhone',
+  manufacturer: 'Apple',
+  brand: 'Apple',
+  modelId: 'iPhone15,2',
+}));
+jest.mock('expo-application', () => ({
+  nativeBuildVersion: '1',
+  nativeApplicationVersion: '1.0.0',
+  applicationName: 'TestApp',
+  getIosIdForVendorAsync: jest.fn(() => Promise.resolve('mock-device-id')),
+  getAndroidId: jest.fn(() => 'mock-android-id'),
 }));
 jest.mock('@infrastructure/utils/firebaseUtils', () => ({
   waitForFirebaseInit: jest.fn(() => Promise.resolve()),
