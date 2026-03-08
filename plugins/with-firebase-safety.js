@@ -29,7 +29,7 @@
  * @see https://github.com/invertase/react-native-firebase/blob/main/packages/app/plugin/src/ios/appDelegate.ts
  */
 
-const { withAppDelegate, withDangerousMod } = require('expo/config-plugins');
+const { withAppDelegate, withDangerousMod, withAndroidManifest } = require('expo/config-plugins');
 const fs = require('fs');
 const path = require('path');
 
@@ -288,12 +288,98 @@ const withFirebaseNonModularHeadersFix = config => {
   ]);
 };
 
+// ---------------------------------------------------------------------------
+// Android: Disable Firebase Perf/Analytics collection with placeholder creds
+// ---------------------------------------------------------------------------
+
 /**
- * Combined plugin: chains both modifications.
+ * Checks if the Android google-services.json has placeholder credentials.
+ * If so, disables Firebase Performance and Analytics collection at the
+ * manifest level to prevent native crashes before JS code runs.
+ */
+const withFirebaseAndroidSafety = config => {
+  return withAndroidManifest(config, config => {
+    const manifest = config.modResults;
+    const application = manifest.manifest.application?.[0];
+    if (!application) return config;
+
+    // Check if google-services.json has placeholder credentials
+    const projectRoot = config.modRequest.projectRoot;
+    const googleServicesPath = path.join(projectRoot, 'android', 'app', 'google-services.json');
+    let isPlaceholder = false;
+
+    if (fs.existsSync(googleServicesPath)) {
+      try {
+        const googleServices = JSON.parse(fs.readFileSync(googleServicesPath, 'utf8'));
+        const projectId = googleServices.project_info?.project_id || '';
+        const projectNumber = googleServices.project_info?.project_number || '';
+        const apiKey = googleServices.client?.[0]?.api_key?.[0]?.current_key || '';
+
+        isPlaceholder =
+          projectId.includes('placeholder') ||
+          projectNumber === '000000000000' ||
+          apiKey.includes('placeholder');
+      } catch {
+        isPlaceholder = true;
+      }
+    } else {
+      isPlaceholder = true;
+    }
+
+    if (isPlaceholder) {
+      console.log(
+        '  [with-firebase-safety] Placeholder Android credentials detected – disabling Firebase Perf & Analytics collection',
+      );
+
+      // Ensure meta-data array exists
+      if (!application['meta-data']) {
+        application['meta-data'] = [];
+      }
+
+      // Add firebase_performance_collection_deactivated
+      const perfMeta = application['meta-data'].find(
+        m => m.$?.['android:name'] === 'firebase_performance_collection_deactivated',
+      );
+      if (!perfMeta) {
+        application['meta-data'].push({
+          $: {
+            'android:name': 'firebase_performance_collection_deactivated',
+            'android:value': 'true',
+            'tools:replace': 'android:value',
+          },
+        });
+      }
+
+      // Add firebase_analytics_collection_deactivated
+      const analyticsMeta = application['meta-data'].find(
+        m => m.$?.['android:name'] === 'firebase_analytics_collection_deactivated',
+      );
+      if (!analyticsMeta) {
+        application['meta-data'].push({
+          $: {
+            'android:name': 'firebase_analytics_collection_deactivated',
+            'android:value': 'true',
+            'tools:replace': 'android:value',
+          },
+        });
+      }
+    } else {
+      console.log(
+        '  [with-firebase-safety] Real Android credentials detected – Firebase collection enabled',
+      );
+    }
+
+    return config;
+  });
+};
+
+/**
+ * Combined plugin: chains all modifications (iOS + Android).
  */
 const withFirebaseSafety = config => {
   config = withFirebaseAppDelegateSafety(config);
   config = withFirebaseNonModularHeadersFix(config);
+  config = withFirebaseAndroidSafety(config);
   return config;
 };
 

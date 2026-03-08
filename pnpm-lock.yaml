@@ -65,6 +65,9 @@ importers:
       '@react-native-firebase/perf':
         specifier: ^23.8.6
         version: 23.8.6(@react-native-firebase/app@23.8.6(@react-native-async-storage/async-storage@2.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)))(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))
+      '@react-native-menu/menu':
+        specifier: ^2.0.0
+        version: 2.0.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       '@react-navigation/bottom-tabs':
         specifier: ^6.6.1
         version: 6.6.1(@react-navigation/native@6.1.18(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native-safe-area-context@5.6.2(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native-screens@4.23.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
@@ -262,7 +265,7 @@ importers:
         version: 1.8.1(react@19.2.0)
       zeego:
         specifier: ^3.0.6
-        version: 3.0.6(@react-native-menu/menu@1.2.4(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react-native-ios-context-menu@3.2.1(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+        version: 3.0.6(@react-native-menu/menu@2.0.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react-native-ios-context-menu@3.2.1(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       zod:
         specifier: ^4.1.13
         version: 4.1.13
@@ -2094,8 +2097,8 @@ packages:
       expo:
         optional: true
 
-  '@react-native-menu/menu@1.2.4':
-    resolution: {integrity: sha512-63NU9NHd/KcBa7lhhV69xQmY3ORUxjMRmlzTY/qrY56GHnuKX+16dvUpKAuRSPK5kebBuRw5X4MFe2L9JHUlWA==}
+  '@react-native-menu/menu@2.0.0':
+    resolution: {integrity: sha512-hb8Mirw6aKPGONhgo52IiNpwHtISVrgCT3rMdFX1qS7eOFNzOcQh8d2UDnaH5zVpxN+QuvWtaaiRMGFpIjzdtA==}
     peerDependencies:
       react: 19.2.0
       react-native: '*'
@@ -8716,7 +8719,7 @@ snapshots:
     optionalDependencies:
       expo: 55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
 
-  '@react-native-menu/menu@1.2.4(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
+  '@react-native-menu/menu@2.0.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
     dependencies:
       react: 19.2.0
       react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
@@ -14137,11 +14140,11 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zeego@3.0.6(@react-native-menu/menu@1.2.4(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react-native-ios-context-menu@3.2.1(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0):
+  zeego@3.0.6(@react-native-menu/menu@2.0.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react-native-ios-context-menu@3.2.1(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0):
     dependencies:
       '@radix-ui/react-context-menu': 2.2.12(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@radix-ui/react-dropdown-menu': 2.1.12(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@react-native-menu/menu': 1.2.4(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
+      '@react-native-menu/menu': 2.0.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       react: 19.2.0
       react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
       react-native-ios-context-menu: 3.2.1(react-native-ios-utilities@5.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)

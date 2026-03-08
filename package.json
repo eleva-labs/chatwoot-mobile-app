@@ -54,6 +54,7 @@
     "@react-native-firebase/app": "^23.8.6",
     "@react-native-firebase/messaging": "^23.8.6",
     "@react-native-firebase/perf": "^23.8.6",
+    "@react-native-menu/menu": "^2.0.0",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.10.1",
