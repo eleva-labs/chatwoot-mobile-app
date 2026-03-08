@@ -44,28 +44,28 @@ export const EmailMeta = (props: EmailMetaProps) => {
       {toEmail.length > 0 && (
         <Animated.Text
           style={tailwind.style('text-md text-slate-12 font-inter-normal-20 tracking-[0.32px]')}>
-          {i18n.t('CONVERSATION.EMAIL_HEADER.TO')}: {toEmail.join(', ')}
+          {`${i18n.t('CONVERSATION.EMAIL_HEADER.TO')}: ${toEmail.join(', ')}`}
         </Animated.Text>
       )}
 
       {ccEmail.length > 0 && (
         <Animated.Text
           style={tailwind.style(' text-md text-slate-12 font-inter-normal-20 tracking-[0.32px]')}>
-          {i18n.t('CONVERSATION.EMAIL_HEADER.CC')}: {ccEmail.join(', ')}
+          {`${i18n.t('CONVERSATION.EMAIL_HEADER.CC')}: ${ccEmail.join(', ')}`}
         </Animated.Text>
       )}
 
       {bccEmail.length > 0 && (
         <Animated.Text
           style={tailwind.style(' text-md text-slate-12 font-inter-normal-20 tracking-[0.32px]')}>
-          {i18n.t('CONVERSATION.EMAIL_HEADER.BCC')}: {bccEmail}
+          {`${i18n.t('CONVERSATION.EMAIL_HEADER.BCC')}: ${bccEmail}`}
         </Animated.Text>
       )}
 
       {subject && (
         <Animated.Text
           style={tailwind.style('text-md text-slate-12 font-inter-normal-20 tracking-[0.32px]')}>
-          {i18n.t('CONVERSATION.EMAIL_HEADER.SUBJECT')}: {subject}
+          {`${i18n.t('CONVERSATION.EMAIL_HEADER.SUBJECT')}: ${subject}`}
         </Animated.Text>
       )}
       <Animated.View style={tailwind.style('h-[1px] my-2 bg-slate-5')} />

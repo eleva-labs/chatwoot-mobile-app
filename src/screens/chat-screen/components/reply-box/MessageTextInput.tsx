@@ -1,11 +1,5 @@
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import {
-  NativeSyntheticEvent,
-  Platform,
-  TextInputFocusEventData,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import React, { useCallback, useEffect, useMemo, type ReactNode } from 'react';
+import { Platform, StyleSheet, ScrollView } from 'react-native';
 import Animated, { LayoutAnimationConfig, LinearTransition } from 'react-native-reanimated';
 
 import { useChatWindowContext } from '@infrastructure/context';
@@ -92,7 +86,7 @@ export const MessageTextInput = ({
   };
 
   const handleOnFocus = useCallback(
-    (_args: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    () => {
       setAddMenuOptionSheetState(false);
       setIsTextInputFocused(true);
     },
@@ -115,7 +109,7 @@ export const MessageTextInput = ({
   }, [quoteMessage]);
 
   const handleOnBlur = useCallback(
-    (_args: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    () => {
       // shouldHandleKeyboardEvents.value = false;
       setIsTextInputFocused(false);
       onBlur();
@@ -124,10 +118,12 @@ export const MessageTextInput = ({
     [],
   );
 
-  const renderSuggestions: (suggestions: Agent[]) => FC<MentionSuggestionsProps> =
+  const renderSuggestions: (
+    suggestions: Agent[],
+  ) => (props: MentionSuggestionsProps) => ReactNode =
     suggestions =>
     // eslint-disable-next-line react/display-name
-    ({ keyword, onSuggestionPress }) => {
+    ({ keyword, onSuggestionPress }: MentionSuggestionsProps) => {
       if (keyword == null || !isPrivateMessage) {
         return null;
       }

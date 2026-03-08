@@ -1,4 +1,4 @@
-import React, { forwardRef, PropsWithChildren, useCallback, useRef } from 'react';
+import React, { forwardRef, PropsWithChildren, useCallback, useRef, type JSX } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -51,7 +51,7 @@ const DropdownMenuItem = DropdownMenu.create<React.ComponentProps<typeof Dropdow
 
 // eslint-disable-next-line react/display-name
 const DropdownMenuBottomSheetBackdrop = forwardRef<
-  React.RefObject<BottomSheetModal>,
+  React.RefObject<BottomSheetModal | null>,
   BottomSheetBackdropProps
 >((props, ref) => {
   const { animatedIndex, style } = props;

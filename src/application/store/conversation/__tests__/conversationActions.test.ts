@@ -39,7 +39,8 @@ jest.mock('@infrastructure/utils/conversationUtils', () => ({
 }));
 
 // ─── Store Factory ───────────────────────────────────────────────
-const createStore = (preloadedState?: Record<string, unknown>) =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createStore = (preloadedState?: any) =>
   configureStore({
     reducer: { conversations: conversationReducer },
     ...(preloadedState && { preloadedState }),
@@ -106,7 +107,7 @@ describe('conversationActions', () => {
     const fetchPayload = {
       page: 1,
       status: 'open' as const,
-      assigneeType: 'mine' as const,
+      assigneeType: 'me' as const,
       sortBy: 'latest' as const,
     };
 
@@ -202,7 +203,8 @@ describe('conversationActions', () => {
 
       mockCreatePendingMessage.mockReturnValue(pendingMsg);
       mockBuildCreatePayload.mockReturnValue(builtPayload);
-      mockService.sendMessage.mockResolvedValue(apiResponse);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockService.sendMessage.mockResolvedValue(apiResponse as any);
 
       // Create store with conversation that has conversationId=1
       const conversation = aConversation().withId(1).withMessages([]).build();
@@ -242,7 +244,8 @@ describe('conversationActions', () => {
       const builtPayload = { content: 'Hello world', private: false, echo_id: 'temp-uuid-123' };
       mockCreatePendingMessage.mockReturnValue(pendingMsg);
       mockBuildCreatePayload.mockReturnValue(builtPayload);
-      mockService.sendMessage.mockResolvedValue(makeApiResponse());
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockService.sendMessage.mockResolvedValue(makeApiResponse() as any);
 
       const store = createStore();
       await store.dispatch(conversationActions.sendMessage(sendPayload));
@@ -255,7 +258,8 @@ describe('conversationActions', () => {
     it('should result in a failed message in the store when API returns error response', async () => {
       const pendingMsg = makePendingMessage(sendPayload);
       mockCreatePendingMessage.mockReturnValue(pendingMsg);
-      mockBuildCreatePayload.mockReturnValue({});
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockBuildCreatePayload.mockReturnValue({} as any);
 
       const errorData = { success: false, errors: ['Message too long'] };
       const axiosError = { response: { data: errorData } };
@@ -293,7 +297,8 @@ describe('conversationActions', () => {
     it('should result in a failed message and throw when error has no response (network error)', async () => {
       const pendingMsg = makePendingMessage(sendPayload);
       mockCreatePendingMessage.mockReturnValue(pendingMsg);
-      mockBuildCreatePayload.mockReturnValue({});
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockBuildCreatePayload.mockReturnValue({} as any);
 
       const networkError = new Error('Network Error');
       mockService.sendMessage.mockRejectedValue(networkError);

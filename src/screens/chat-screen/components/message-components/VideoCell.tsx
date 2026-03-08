@@ -84,7 +84,7 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
         player={player}
         contentFit={Platform.OS === 'android' ? 'contain' : 'cover'}
         nativeControls={false}
-        allowsFullscreen={true}
+        fullscreenOptions={{ enable: true }}
         onFullscreenExit={handleFullscreenExit}
       />
       {videoLoading ? (
