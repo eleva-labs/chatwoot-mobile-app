@@ -83,7 +83,7 @@ export const OnboardingScreen: React.FC = () => {
           analyticsCallbacks.onFlowSkipped(event as unknown as Record<string, unknown>);
         },
         onError: event => {
-          console.error('[Onboarding] Error:', event);
+          if (__DEV__) console.warn('[Onboarding] Error:', event);
           analyticsCallbacks.onError(event as unknown as Record<string, unknown>);
         },
       }}

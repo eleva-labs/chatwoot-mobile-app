@@ -30,6 +30,7 @@
  */
 
 const { withAppDelegate, withDangerousMod, withAndroidManifest } = require('expo/config-plugins');
+const { ensureToolsAvailable } = require('@expo/config-plugins/build/android/Manifest');
 const fs = require('fs');
 const path = require('path');
 
@@ -302,6 +303,9 @@ const withFirebaseAndroidSafety = config => {
     const manifest = config.modResults;
     const application = manifest.manifest.application?.[0];
     if (!application) return config;
+
+    // Ensure xmlns:tools is declared on <manifest> for tools:replace attributes
+    ensureToolsAvailable(manifest.manifest);
 
     // Check if google-services.json has placeholder credentials
     const projectRoot = config.modRequest.projectRoot;

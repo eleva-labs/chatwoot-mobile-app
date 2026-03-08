@@ -39,7 +39,7 @@ export interface OnboardingContainerOptions {
 export function configureOnboardingContainer(
   options: OnboardingContainerOptions = {},
 ): typeof container {
-  const useMock = options.useMock === true; // Default: false (use AxiosOnboardingRepository)
+  const useMock = options.useMock === true || !process.env.EXPO_PUBLIC_S3_BASE_URL; // Fallback to mock when S3 URL is not configured
   const enableOfflineQueue = options.enableOfflineQueue !== false; // Default: true
 
   // Register repositories
