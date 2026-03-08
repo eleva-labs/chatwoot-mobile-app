@@ -100,7 +100,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
     opacity: cursorOpacity.value,
   }));
 
-  // Workaround for react-native-markdown-display Yoga height under-reporting:
+  // Workaround for @ronradtke/react-native-markdown-display Yoga height under-reporting:
   // The library's body View under-measures its height when paragraphs use
   // flex-row + flex-wrap. We measure the actual rendered height via onLayout
   // and set minHeight on the outer container to prevent clipping.

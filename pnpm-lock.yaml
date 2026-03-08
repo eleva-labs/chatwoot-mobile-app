@@ -41,9 +41,6 @@ importers:
       '@react-native-async-storage/async-storage':
         specifier: ^2.2.0
         version: 2.2.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))
-      '@react-native-community/blur':
-        specifier: ^4.4.1
-        version: 4.4.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       '@react-native-community/datetimepicker':
         specifier: ^8.6.0
         version: 8.6.0(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
@@ -77,6 +74,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.5.1
         version: 2.9.1(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.0)(redux@5.0.1))(react@19.2.0)
+      '@ronradtke/react-native-markdown-display':
+        specifier: ^8.1.0
+        version: 8.1.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       '@sentry/react-native':
         specifier: ^7.11.0
         version: 7.11.0(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
@@ -110,6 +110,9 @@ importers:
       expo-auth-session:
         specifier: ~55.0.7
         version: 55.0.7(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      expo-blur:
+        specifier: ^55.0.8
+        version: 55.0.8(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       expo-build-properties:
         specifier: ~55.0.9
         version: 55.0.9(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))
@@ -186,7 +189,7 @@ importers:
         specifier: ~0.83.2
         version: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
       react-native-audio-recorder-player:
-        specifier: ^3.6.11
+        specifier: ^3.6.14
         version: 3.6.14(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       react-native-blob-util:
         specifier: ^0.24.7
@@ -209,9 +212,6 @@ importers:
       react-native-keyboard-controller:
         specifier: ^1.20.7
         version: 1.20.7(react-native-reanimated@4.2.1(react-native-worklets@0.7.2(@babel/core@7.28.4)(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-      react-native-markdown-display:
-        specifier: ^7.0.2
-        version: 7.0.2(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       react-native-pager-view:
         specifier: ^8.0.0
         version: 8.0.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
@@ -2004,12 +2004,6 @@ packages:
     peerDependencies:
       react-native: ^0.0.0-0 || >=0.65 <1.0
 
-  '@react-native-community/blur@4.4.1':
-    resolution: {integrity: sha512-XBSsRiYxE/MOEln2ayunShfJtWztHwUxLFcSL20o+HNNRnuUDv+GXkF6FmM2zE8ZUfrnhQ/zeTqvnuDPGw6O8A==}
-    peerDependencies:
-      react: 19.2.0
-      react-native: '*'
-
   '@react-native-community/datetimepicker@8.6.0':
     resolution: {integrity: sha512-yxPSqNfxgpGaqHQIpatqe6ykeBdU/1pdsk/G3x01mY2bpTflLpmVTLqFSJYd3MiZzxNZcMs/j1dQakUczSjcYA==}
     peerDependencies:
@@ -2187,6 +2181,12 @@ packages:
         optional: true
       react-redux:
         optional: true
+
+  '@ronradtke/react-native-markdown-display@8.1.0':
+    resolution: {integrity: sha512-pAtefWI76vpkxsEgIFivyq1q6ej8rDyR7oVM/cWAxUydyBej9LOvULjLAeFuFLbYAelHTNoYXmGxQOlFLBa0+w==}
+    peerDependencies:
+      react: 19.2.0
+      react-native: '>=0.50.4'
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
@@ -3398,8 +3398,9 @@ packages:
     resolution: {integrity: sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==}
     engines: {node: '>= 0.8'}
 
-  entities@2.0.3:
-    resolution: {integrity: sha512-MyoZ0jgnLvB2X3Lg5HqpFmn1kybDiIfEQmKzTb5apr51Rb+T3KdmMiqa70T+bhGnyv7bQ6WMj2QMHpGMmlrUYQ==}
+  entities@3.0.1:
+    resolution: {integrity: sha512-WiyBqoomrwMdFG1e0kqvASYfnlb0lp8M5o5Fw2OFq1hNZxxcNk8Ik0Xm7LxzBhuidnZB/UtBqVCgUz3kBOP51Q==}
+    engines: {node: '>=0.12'}
 
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
@@ -3655,6 +3656,13 @@ packages:
   expo-auth-session@55.0.7:
     resolution: {integrity: sha512-SWFudyF7K6924cSgPFrtK637aXj6HSs+DO6cP0q5xfwlcLaekkcoOHIrhpy8qaUIpxf7w01Dsk5fwu5RLse4eg==}
     peerDependencies:
+      react: 19.2.0
+      react-native: '*'
+
+  expo-blur@55.0.8:
+    resolution: {integrity: sha512-hmYhQiYFMTpHNzFaCF63jTABgnsozB5+wSEV8rCNBfNEHTdRVNFPkF+TZpbIqJpkhHfGLsKptRmR/wyZmAqREA==}
+    peerDependencies:
+      expo: '*'
       react: 19.2.0
       react-native: '*'
 
@@ -4736,8 +4744,8 @@ packages:
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
-  linkify-it@2.2.0:
-    resolution: {integrity: sha512-GnAl/knGn+i1U/wjBz3akz2stz+HrHLsxMwHQGofCDfPvlf+gDKN58UtfmUquTY4/MXeE2x7k19KQmeoZi94Iw==}
+  linkify-it@4.0.1:
+    resolution: {integrity: sha512-C7bfi1UZmoj8+PQx22XyeXCuBlokoyWQL5pWSP+EI6nzRylyThouddufc2c1NDIcP9k5agmN9fLpA7VNJfIiqw==}
 
   lint-staged@16.3.0:
     resolution: {integrity: sha512-YVHHy/p6U4/No9Af+35JLh3umJ9dPQnGTvNCbfO/T5fC60us0jFnc+vw33cqveI+kqxIFJQakcMVTO2KM+653A==}
@@ -4832,8 +4840,8 @@ packages:
   map-or-similar@1.5.0:
     resolution: {integrity: sha512-0aF7ZmVon1igznGI4VS30yugpduQW3y3GkcgGJOp7d8x8QrizhigUxjI/m2UojsXXto+jLAH3KSz+xOJTiORjg==}
 
-  markdown-it@10.0.0:
-    resolution: {integrity: sha512-YWOP1j7UbDNz+TumYP1kpwnP0aEa711cJjrAQrzd0UXlbJfc5aAq0F/PZHjiioqDC1NKgvIMX+o+9Bk7yuM2dg==}
+  markdown-it@13.0.2:
+    resolution: {integrity: sha512-FtwnEuuK+2yVU7goGn/MJ0WBZMM9ZPgU9spqlFs7/A/pDIUNSOQZhUgOqYCficIuR2QaFnrt8LHqBWsbTAoI5w==}
     hasBin: true
 
   marked@4.3.0:
@@ -5486,12 +5494,6 @@ packages:
       react: 19.2.0
       react-native: '*'
       react-native-reanimated: '>=3.0.0'
-
-  react-native-markdown-display@7.0.2:
-    resolution: {integrity: sha512-Mn4wotMvMfLAwbX/huMLt202W5DsdpMO/kblk+6eUs55S57VVNni1gzZCh5qpznYLjIQELNh50VIozEfY6fvaQ==}
-    peerDependencies:
-      react: 19.2.0
-      react-native: '>=0.50.4'
 
   react-native-modal-datetime-picker@18.0.0:
     resolution: {integrity: sha512-0jdvhhraZQlRACwr7pM6vmZ2kxgzJ4CpnmV6J3TVA6MrXMXK6Zo/upRBKkRp0+fTOiKuNblzesA2U59rYo6SGA==}
@@ -8585,11 +8587,6 @@ snapshots:
       merge-options: 3.0.4
       react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
 
-  '@react-native-community/blur@4.4.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      react: 19.2.0
-      react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
-
   '@react-native-community/datetimepicker@8.6.0(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
     dependencies:
       invariant: 2.2.4
@@ -8824,6 +8821,15 @@ snapshots:
     optionalDependencies:
       react: 19.2.0
       react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.0)(redux@5.0.1)
+
+  '@ronradtke/react-native-markdown-display@8.1.0(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      css-to-react-native: 3.2.0
+      markdown-it: 13.0.2
+      prop-types: 15.8.1
+      react: 19.2.0
+      react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
+      react-native-fit-image: 1.5.5
 
   '@rtsao/scc@1.1.0': {}
 
@@ -10227,7 +10233,7 @@ snapshots:
 
   encodeurl@2.0.0: {}
 
-  entities@2.0.3: {}
+  entities@3.0.1: {}
 
   entities@4.5.0: {}
 
@@ -10700,6 +10706,12 @@ snapshots:
       - expo
       - supports-color
       - typescript
+
+  expo-blur@55.0.8(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0):
+    dependencies:
+      expo: 55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      react: 19.2.0
+      react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
 
   expo-build-properties@55.0.9(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)):
     dependencies:
@@ -12029,7 +12041,7 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
-  linkify-it@2.2.0:
+  linkify-it@4.0.1:
     dependencies:
       uc.micro: 1.0.6
 
@@ -12127,11 +12139,11 @@ snapshots:
 
   map-or-similar@1.5.0: {}
 
-  markdown-it@10.0.0:
+  markdown-it@13.0.2:
     dependencies:
-      argparse: 1.0.10
-      entities: 2.0.3
-      linkify-it: 2.2.0
+      argparse: 2.0.1
+      entities: 3.0.1
+      linkify-it: 4.0.1
       mdurl: 1.0.1
       uc.micro: 1.0.6
 
@@ -12863,15 +12875,6 @@ snapshots:
       react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
       react-native-is-edge-to-edge: 1.2.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       react-native-reanimated: 4.2.1(react-native-worklets@0.7.2(@babel/core@7.28.4)(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
-
-  react-native-markdown-display@7.0.2(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0):
-    dependencies:
-      css-to-react-native: 3.2.0
-      markdown-it: 10.0.0
-      prop-types: 15.8.1
-      react: 19.2.0
-      react-native: 0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)
-      react-native-fit-image: 1.5.5
 
   react-native-modal-datetime-picker@18.0.0(@react-native-community/datetimepicker@8.6.0(expo@55.0.5(@babel/core@7.28.4)(@expo/dom-webview@55.0.3)(react-dom@19.2.0(react@19.2.0))(react-native-webview@13.16.1(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0))(react-native@0.83.2(@babel/core@7.28.4)(@types/react@19.2.14)(react@19.2.0)):
     dependencies:

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import Markdown, { MarkdownIt } from 'react-native-markdown-display';
+import Markdown, { MarkdownIt } from '@ronradtke/react-native-markdown-display';
 import { openURL } from '@infrastructure/utils/urlUtils';
 
 import { MESSAGE_VARIANTS } from '@domain/constants';

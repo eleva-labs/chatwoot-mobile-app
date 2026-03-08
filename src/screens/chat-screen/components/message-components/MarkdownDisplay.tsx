@@ -1,6 +1,6 @@
 import React from 'react';
 import { Linking, StyleSheet } from 'react-native';
-import Markdown, { MarkdownIt } from 'react-native-markdown-display';
+import Markdown, { MarkdownIt } from '@ronradtke/react-native-markdown-display';
 
 import { useThemedStyles } from '@infrastructure/hooks';
 
