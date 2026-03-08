@@ -1,0 +1,53 @@
+name: Submit
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        options:
+          - staging
+          - production
+        required: true
+        description: 'Submit profile'
+      platform:
+        type: choice
+        options:
+          - all
+          - ios
+          - android
+        required: true
+        description: 'Platform'
+
+jobs:
+  get_ios_build:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'ios' }}
+    type: get-build
+    params:
+      platform: ios
+      profile: ${{ inputs.profile }}
+      distribution: store
+
+  get_android_build:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'android' }}
+    type: get-build
+    params:
+      platform: android
+      profile: ${{ inputs.profile }}
+      distribution: store
+
+  submit_ios:
+    needs: [get_ios_build]
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'ios' }}
+    type: submit
+    params:
+      build_id: ${{ needs.get_ios_build.outputs.build_id }}
+      profile: ${{ inputs.profile }}
+
+  submit_android:
+    needs: [get_android_build]
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'android' }}
+    type: submit
+    params:
+      build_id: ${{ needs.get_android_build.outputs.build_id }}
+      profile: ${{ inputs.profile }}
