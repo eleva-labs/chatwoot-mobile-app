@@ -175,7 +175,8 @@
   "expo": {
     "install": {
       "exclude": [
-        "@kesha-antonov/react-native-action-cable"
+        "@kesha-antonov/react-native-action-cable",
+        "@react-native-community/netinfo"
       ]
     },
     "doctor": {

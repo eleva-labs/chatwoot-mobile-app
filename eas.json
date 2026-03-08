@@ -8,8 +8,7 @@
       "cache": {
         "disabled": false,
         "key": "sdk55-v1",
-        "cacheDefaultPaths": true,
-        "customPaths": ["./ios/Podfile.lock"]
+        "cacheDefaultPaths": true
       }
     },
     "development:simulator": {
