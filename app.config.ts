@@ -220,7 +220,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
               abiFilters: ['arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'],
             },
           },
-          ios: { useFrameworks: 'static', ccacheEnabled: true },
+          ios: {
+            useFrameworks: 'static',
+            ccacheEnabled: true,
+            deploymentTarget: '16.0',
+          },
         },
       ],
     ],

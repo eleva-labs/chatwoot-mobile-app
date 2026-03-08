@@ -1,9 +1,18 @@
 /**
  * Expo Config Plugin: Firebase Safety Check
  *
- * This plugin modifies the iOS AppDelegate to check for placeholder Firebase credentials
- * before initializing Firebase. If placeholder credentials are detected, Firebase
- * initialization is skipped to prevent app crashes during local development.
+ * This plugin does two things:
+ *
+ * 1. **AppDelegate Safety Check**: Modifies the iOS AppDelegate to check for placeholder
+ *    Firebase credentials before initializing Firebase. If placeholder credentials are
+ *    detected, Firebase initialization is skipped to prevent app crashes during local
+ *    development.
+ *
+ * 2. **Non-Modular Header Fix**: Injects a Podfile post_install modification to set
+ *    CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES for Firebase and RNFB
+ *    pods. This is required when using `useFrameworks: 'static'` because Firebase's
+ *    native modules import React Native headers that aren't modular, causing build
+ *    errors: "include of non-modular header inside framework module 'RNFBApp'"
  *
  * IMPORTANT: This plugin MUST be listed AFTER @react-native-firebase/app in the plugins
  * array because it modifies the FirebaseApp.configure() / [FIRApp configure] call that
@@ -20,7 +29,9 @@
  * @see https://github.com/invertase/react-native-firebase/blob/main/packages/app/plugin/src/ios/appDelegate.ts
  */
 
-const { withAppDelegate } = require('expo/config-plugins');
+const { withAppDelegate, withDangerousMod } = require('expo/config-plugins');
+const fs = require('fs');
+const path = require('path');
 
 // Marker comment to ensure idempotency - if this exists, we've already modified the file
 const IDEMPOTENCY_MARKER = '// @firebase-safety-check';
@@ -160,9 +171,79 @@ function modifyObjcAppDelegate(contents) {
 }
 
 // ---------------------------------------------------------------------------
+// Podfile modification: allow non-modular includes for Firebase pods
+// ---------------------------------------------------------------------------
+
+const PODFILE_IDEMPOTENCY_MARKER = '# @firebase-non-modular-headers-fix';
+
+/**
+ * Ruby code to inject into the Podfile's post_install block.
+ * Sets CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES for
+ * Firebase and RNFB pods to fix build errors when using static frameworks.
+ */
+const NON_MODULAR_HEADERS_FIX = `
+    ${PODFILE_IDEMPOTENCY_MARKER}
+    # Fix: Firebase/RNFB build errors when using static frameworks (useFrameworks: 'static')
+    #
+    # Problem: RNFB pods import React Native headers (RCTConvert, RCTBridgeModule, etc.) which
+    # aren't properly modular. This causes two classes of errors:
+    #   1. "include of non-modular header inside framework module 'RNFBApp'"
+    #   2. "declaration of 'X' must be imported from module 'RNFBApp.Y' before it is required"
+    #   3. "unknown type name 'RCT_EXTERN'" (macro expansion failures)
+    #
+    # Fix: Allow non-modular includes globally AND disable Clang modules for RNFB pods
+    # so they compile as plain ObjC without module boundary enforcement.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      end
+
+      # RNFB pods need modules disabled entirely because they import React Native
+      # headers that don't work with Clang's strict module import ordering
+      if target.name.start_with?("RNFB")
+        target.build_configurations.each do |config|
+          config.build_settings['CLANG_ENABLE_MODULES'] = 'NO'
+        end
+      end
+    end`;
+
+/**
+ * Modifies the Podfile to add the non-modular headers fix inside the
+ * existing post_install block.
+ */
+function modifyPodfile(podfileContents) {
+  if (podfileContents.includes(PODFILE_IDEMPOTENCY_MARKER)) {
+    console.log('  [with-firebase-safety] Podfile already has non-modular headers fix, skipping');
+    return podfileContents;
+  }
+
+  // Find the post_install block and inject our code right after the opening
+  // The Expo-generated Podfile uses: post_install do |installer|
+  const postInstallPattern = /(post_install\s+do\s+\|installer\|)/;
+
+  if (!postInstallPattern.test(podfileContents)) {
+    console.warn(
+      '  [with-firebase-safety] Could not find post_install block in Podfile, skipping non-modular headers fix',
+    );
+    return podfileContents;
+  }
+
+  const modified = podfileContents.replace(postInstallPattern, `$1${NON_MODULAR_HEADERS_FIX}`);
+
+  console.log(
+    '  [with-firebase-safety] Added CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES fix to Podfile',
+  );
+  return modified;
+}
+
+// ---------------------------------------------------------------------------
 // Main plugin
 // ---------------------------------------------------------------------------
-const withFirebaseSafety = config => {
+
+/**
+ * Applies the AppDelegate Firebase safety check modification.
+ */
+const withFirebaseAppDelegateSafety = config => {
   return withAppDelegate(config, config => {
     const language = config.modResults.language;
 
@@ -178,6 +259,42 @@ const withFirebaseSafety = config => {
 
     return config;
   });
+};
+
+/**
+ * Applies the Podfile non-modular headers fix using withDangerousMod
+ * (required because there's no typed Expo mod for Podfile content).
+ */
+const withFirebaseNonModularHeadersFix = config => {
+  return withDangerousMod(config, [
+    'ios',
+    config => {
+      const podfilePath = path.join(config.modRequest.platformProjectRoot, 'Podfile');
+
+      if (!fs.existsSync(podfilePath)) {
+        console.warn('  [with-firebase-safety] Podfile not found at', podfilePath);
+        return config;
+      }
+
+      const podfileContents = fs.readFileSync(podfilePath, 'utf8');
+      const modified = modifyPodfile(podfileContents);
+
+      if (modified !== podfileContents) {
+        fs.writeFileSync(podfilePath, modified, 'utf8');
+      }
+
+      return config;
+    },
+  ]);
+};
+
+/**
+ * Combined plugin: chains both modifications.
+ */
+const withFirebaseSafety = config => {
+  config = withFirebaseAppDelegateSafety(config);
+  config = withFirebaseNonModularHeadersFix(config);
+  return config;
 };
 
 module.exports = withFirebaseSafety;
