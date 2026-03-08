@@ -6,7 +6,10 @@
  * initialization is skipped to prevent app crashes during local development.
  *
  * IMPORTANT: This plugin MUST be listed AFTER @react-native-firebase/app in the plugins
- * array because it modifies the [FIRApp configure] call that the Firebase plugin adds.
+ * array because it modifies the FirebaseApp.configure() / [FIRApp configure] call that
+ * the Firebase plugin adds.
+ *
+ * Supports both Swift (SDK 55+) and Objective-C AppDelegates.
  *
  * Placeholder credentials are detected by checking for:
  * - API_KEY containing "placeholder"
@@ -22,11 +25,43 @@ const { withAppDelegate } = require('expo/config-plugins');
 // Marker comment to ensure idempotency - if this exists, we've already modified the file
 const IDEMPOTENCY_MARKER = '// @firebase-safety-check';
 
-/**
- * Code to inject that checks for placeholder credentials
- * Replaces the simple [FIRApp configure] call with a conditional version
- */
-const FIREBASE_SAFETY_CHECK_CODE = `${IDEMPOTENCY_MARKER}
+// ---------------------------------------------------------------------------
+// Swift AppDelegate replacement
+// ---------------------------------------------------------------------------
+const SWIFT_FIREBASE_SAFETY_CHECK = `${IDEMPOTENCY_MARKER}
+    // Firebase Safety Check – skip initialization with placeholder credentials
+    // This allows developers to build and run the app without real Firebase credentials
+    var shouldInitializeFirebase = true
+    if let plistPath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+       let plistDict = NSDictionary(contentsOfFile: plistPath) as? [String: Any] {
+      let apiKey = plistDict["API_KEY"] as? String ?? ""
+      let gcmSenderId = plistDict["GCM_SENDER_ID"] as? String ?? ""
+      let projectId = plistDict["PROJECT_ID"] as? String ?? ""
+
+      let isPlaceholder =
+        apiKey.localizedCaseInsensitiveContains("placeholder") ||
+        gcmSenderId == "000000000000" ||
+        projectId.localizedCaseInsensitiveContains("placeholder")
+
+      if isPlaceholder {
+        print("[Firebase] Placeholder credentials detected – skipping Firebase initialization")
+        print("[Firebase] Push notifications will NOT work until real credentials are added")
+        print("[Firebase] See: credentials/README.md for setup instructions")
+        shouldInitializeFirebase = false
+      }
+    } else {
+      print("[Firebase] GoogleService-Info.plist not found – skipping Firebase initialization")
+      shouldInitializeFirebase = false
+    }
+
+    if shouldInitializeFirebase {
+      FirebaseApp.configure()
+    }`;
+
+// ---------------------------------------------------------------------------
+// Objective-C AppDelegate replacement (kept for backward compatibility)
+// ---------------------------------------------------------------------------
+const OBJC_FIREBASE_SAFETY_CHECK = `${IDEMPOTENCY_MARKER}
   // Firebase Safety Check - Skip initialization with placeholder credentials
   // This allows developers to build and run the app without real Firebase credentials
   BOOL shouldInitializeFirebase = YES;
@@ -64,49 +99,83 @@ const FIREBASE_SAFETY_CHECK_CODE = `${IDEMPOTENCY_MARKER}
     [FIRApp configure];
   }`;
 
+// ---------------------------------------------------------------------------
+// Modification functions
+// ---------------------------------------------------------------------------
+
 /**
- * Modifies the AppDelegate to add Firebase safety check
- * @param {string} contents - The AppDelegate file contents
- * @returns {string} - Modified contents
+ * Modifies a Swift AppDelegate to add Firebase safety check.
+ * Replaces `FirebaseApp.configure()` with a conditional version.
  */
-function modifyAppDelegate(contents) {
-  // Check for idempotency - don't modify if we've already added our code
+function modifySwiftAppDelegate(contents) {
   if (contents.includes(IDEMPOTENCY_MARKER)) {
-    console.log('  [with-firebase-safety] Already modified, skipping');
+    console.log('  [with-firebase-safety] Already modified (Swift), skipping');
     return contents;
   }
 
-  // Pattern to find [FIRApp configure] call added by @react-native-firebase/app
-  const firebaseConfigurePattern = /\[FIRApp configure\];/;
+  const pattern = /FirebaseApp\.configure\(\)/;
 
-  if (!firebaseConfigurePattern.test(contents)) {
-    console.warn('  [with-firebase-safety] Could not find [FIRApp configure] in AppDelegate');
-    console.warn('  [with-firebase-safety] Make sure this plugin is listed AFTER @react-native-firebase/app');
+  if (!pattern.test(contents)) {
+    console.warn(
+      '  [with-firebase-safety] Could not find FirebaseApp.configure() in Swift AppDelegate',
+    );
+    console.warn(
+      '  [with-firebase-safety] Make sure this plugin is listed AFTER @react-native-firebase/app',
+    );
     return contents;
   }
 
-  // Replace [FIRApp configure]; with our safety-checked version
-  const modifiedContents = contents.replace(
-    firebaseConfigurePattern,
-    FIREBASE_SAFETY_CHECK_CODE
+  const modified = contents.replace(pattern, SWIFT_FIREBASE_SAFETY_CHECK);
+  console.log(
+    '  [with-firebase-safety] Added Firebase placeholder credential check to Swift AppDelegate',
   );
-
-  console.log('  [with-firebase-safety] Added Firebase placeholder credential check to AppDelegate');
-
-  return modifiedContents;
+  return modified;
 }
 
 /**
- * Main plugin function
- * Uses withAppDelegate mod to modify the iOS AppDelegate file
+ * Modifies an Objective-C AppDelegate to add Firebase safety check.
+ * Replaces `[FIRApp configure];` with a conditional version.
  */
-const withFirebaseSafety = (config) => {
-  return withAppDelegate(config, (config) => {
-    if (config.modResults.language === 'objcpp' || config.modResults.language === 'objc') {
-      config.modResults.contents = modifyAppDelegate(config.modResults.contents);
+function modifyObjcAppDelegate(contents) {
+  if (contents.includes(IDEMPOTENCY_MARKER)) {
+    console.log('  [with-firebase-safety] Already modified (ObjC), skipping');
+    return contents;
+  }
+
+  const pattern = /\[FIRApp configure\];/;
+
+  if (!pattern.test(contents)) {
+    console.warn('  [with-firebase-safety] Could not find [FIRApp configure] in ObjC AppDelegate');
+    console.warn(
+      '  [with-firebase-safety] Make sure this plugin is listed AFTER @react-native-firebase/app',
+    );
+    return contents;
+  }
+
+  const modified = contents.replace(pattern, OBJC_FIREBASE_SAFETY_CHECK);
+  console.log(
+    '  [with-firebase-safety] Added Firebase placeholder credential check to ObjC AppDelegate',
+  );
+  return modified;
+}
+
+// ---------------------------------------------------------------------------
+// Main plugin
+// ---------------------------------------------------------------------------
+const withFirebaseSafety = config => {
+  return withAppDelegate(config, config => {
+    const language = config.modResults.language;
+
+    if (language === 'swift') {
+      config.modResults.contents = modifySwiftAppDelegate(config.modResults.contents);
+    } else if (language === 'objcpp' || language === 'objc') {
+      config.modResults.contents = modifyObjcAppDelegate(config.modResults.contents);
     } else {
-      console.warn('  [with-firebase-safety] AppDelegate is not Objective-C/C++, skipping modification');
+      console.warn(
+        `  [with-firebase-safety] Unsupported AppDelegate language "${language}", skipping modification`,
+      );
     }
+
     return config;
   });
 };
