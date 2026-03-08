@@ -81,7 +81,7 @@
         "key": "sdk55-staging-v1"
       },
       "env": {
-        "ENVIRONMENT": "dev",
+        "ENVIRONMENT": "prod",
         "SENTRY_ORG": "eleva-labs",
         "SENTRY_PROJECT": "chatscommerce"
       },
