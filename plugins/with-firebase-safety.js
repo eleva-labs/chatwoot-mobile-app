@@ -305,7 +305,7 @@ const withFirebaseAndroidSafety = config => {
     if (!application) return config;
 
     // Ensure xmlns:tools is declared on <manifest> for tools:replace attributes
-    ensureToolsAvailable(manifest.manifest);
+    ensureToolsAvailable(manifest);
 
     // Check if google-services.json has placeholder credentials
     const projectRoot = config.modRequest.projectRoot;
