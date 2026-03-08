@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
-import Markdown, { MarkdownIt } from 'react-native-markdown-display';
+import Markdown, { MarkdownIt } from '@ronradtke/react-native-markdown-display';
 import Animated from 'react-native-reanimated';
 import { Image } from 'expo-image';
 import { CloseIcon } from '@/svg-icons/common/CloseIcon';

@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { BlurView, BlurViewProps } from '@react-native-community/blur';
+import { BlurView, BlurViewProps } from 'expo-blur';
 
 import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { useRefsContext } from '@infrastructure/context';
@@ -69,7 +69,7 @@ const ActionStatusIcon = ({ stroke }: { stroke: string }) => (
 );
 
 const ActionTabBarBackground = (props: ActionTabBarBackgroundProps) => {
-  const { children, blurAmount, blurType, style } = props;
+  const { children, intensity, tint, style } = props;
 
   const currentState = useAppSelector(selectCurrentState);
 
@@ -90,7 +90,7 @@ const ActionTabBarBackground = (props: ActionTabBarBackgroundProps) => {
   });
 
   return Platform.OS === 'ios' ? (
-    <AnimatedBlurView {...{ blurAmount, blurType }} style={[style, animatedTabBarStyle]}>
+    <AnimatedBlurView {...{ intensity, tint }} style={[style, animatedTabBarStyle]}>
       {children}
     </AnimatedBlurView>
   ) : (
@@ -179,8 +179,8 @@ export const ActionTabs = () => {
 
   return (
     <ActionTabBarBackground
-      blurAmount={25}
-      blurType="light"
+      intensity={25}
+      tint="light"
       style={Platform.select({
         ios: [
           tailwind.style(

@@ -49,7 +49,7 @@ export interface AIChatRegistries {
   parts: ComponentRegistry<PartComponent>;
   /** Registry for tool-specific renderers (by toolName) */
   tools: ComponentRegistry<PartComponent>;
-  /** Default markdown renderer component (injection point for react-native-markdown-display or any alternative) */
+  /** Default markdown renderer component (injection point for @ronradtke/react-native-markdown-display or any alternative) */
   markdownRenderer: MarkdownRendererComponent | null;
 }
 
@@ -81,7 +81,7 @@ export interface AIChatProviderProps {
   registry?: {
     parts?: Record<string, PartComponent>;
     tools?: Record<string, PartComponent>;
-    /** Pass the Markdown component from react-native-markdown-display (or any alternative) */
+    /** Pass the Markdown component from @ronradtke/react-native-markdown-display (or any alternative) */
     markdownRenderer?: MarkdownRendererComponent;
   };
   children: React.ReactNode;

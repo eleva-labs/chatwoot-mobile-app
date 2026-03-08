@@ -1,5 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { configureStore, ThunkAction, Action, Middleware, AnyAction } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  ThunkAction,
+  ThunkDispatch,
+  Action,
+  Middleware,
+  AnyAction,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
@@ -100,7 +108,10 @@ setStore(store);
 
 export const persistor = persistStore(store);
 
-export type AppDispatch = typeof store.dispatch;
+// Explicitly type AppDispatch using ThunkDispatch instead of `typeof store.dispatch`.
+// With redux-persist wrapping the reducer, TypeScript can't infer the correct dispatch type
+// from the store (it resolves to `never`). This manual typing restores full dispatch support.
+export type AppDispatch = ThunkDispatch<RootState, unknown, UnknownAction>;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,

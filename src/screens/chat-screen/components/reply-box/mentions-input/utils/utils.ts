@@ -418,7 +418,7 @@ const parseValue = (
 
     const regex = isMentionPartType(partType) ? mentionRegEx : partType.pattern;
 
-    const matches: RegexMatchResult[] = Array.from((value ?? '').matchAll(regex));
+    const matches = Array.from((value ?? '').matchAll(regex)) as unknown as RegexMatchResult[];
 
     // In case when we didn't get any matches continue parsing value with rest part types
     if (matches.length === 0) {

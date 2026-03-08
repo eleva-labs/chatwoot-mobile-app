@@ -119,7 +119,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     orientation: 'portrait',
     icon: getAppIcon(),
     userInterfaceStyle: 'automatic',
-    newArchEnabled: false,
+    buildCacheProvider: {
+      plugin: 'expo-build-disk-cache',
+      options: {
+        cacheDir: 'node_modules/.expo-build-disk-cache',
+      },
+    },
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
@@ -213,28 +218,21 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           // React Native 0.76+ requires minSdkVersion 24
           android: {
             minSdkVersion: 24,
-            compileSdkVersion: 35,
-            targetSdkVersion: 35,
+            compileSdkVersion: 36,
+            targetSdkVersion: 36,
             enableProguardInReleaseBuilds: true,
             // Support for 16 KB memory page sizes
             ndk: {
               abiFilters: ['arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'],
             },
           },
-          ios: { useFrameworks: 'static', ccacheEnabled: true },
+          ios: {
+            useFrameworks: 'static',
+            ccacheEnabled: true,
+            deploymentTarget: '16.0',
+          },
         },
       ],
     ],
-    androidNavigationBar: { backgroundColor: '#ffffff' },
-    // NOTE: expo-build-disk-cache requires Expo SDK 53+
-    // Enable this when upgrading to SDK 53:
-    // experiments: {
-    //   buildCacheProvider: {
-    //     plugin: 'expo-build-disk-cache',
-    //     options: {
-    //       cacheDir: 'node_modules/.expo-build-disk-cache',
-    //     },
-    //   },
-    // },
   };
 };

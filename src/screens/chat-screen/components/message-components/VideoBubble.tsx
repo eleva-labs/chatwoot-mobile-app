@@ -73,7 +73,7 @@ export const VideoBubblePlayer = (props: VideoPlayerProps) => {
         player={player}
         contentFit={Platform.OS === 'android' ? 'contain' : 'cover'}
         nativeControls={isFullscreen}
-        allowsFullscreen={true}
+        fullscreenOptions={{ enable: true }}
         onFullscreenEnter={handleFullscreenEnter}
         onFullscreenExit={handleFullscreenExit}
       />

@@ -6,7 +6,7 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import { useAppKeyboardAnimation } from '@infrastructure/utils';
 import { tailwind } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
@@ -44,7 +44,7 @@ type MessagesListPresentationProps = {
   messages: (Message | { date: string })[];
   isFlashListReady: boolean;
   setFlashListReady: (ready: boolean) => void;
-  onEndReached: () => void;
+  onStartReached: () => void;
   isEmailInbox: boolean;
   currentUserId: number;
 };
@@ -53,15 +53,15 @@ export const MessagesList = ({
   messages,
   isFlashListReady,
   setFlashListReady,
-  onEndReached,
+  onStartReached,
   isEmailInbox,
   currentUserId,
 }: MessagesListPresentationProps) => {
   const { progress, height } = useAppKeyboardAnimation();
   const { messageListRef } = useRefsContext();
-  const typedMessageListRef = messageListRef as React.RefObject<
-    FlashList<Message | { date: string }>
-  >;
+  const typedMessageListRef = messageListRef as React.RefObject<FlashListRef<
+    Message | { date: string }
+  > | null>;
 
   const handleRender = ({ item, index }: { item: Message | { date: string }; index: number }) => {
     if ('date' in item) {
@@ -101,12 +101,15 @@ export const MessagesList = ({
           }
         }}
         ref={typedMessageListRef}
-        inverted
-        estimatedItemSize={100}
+        maintainVisibleContentPosition={{
+          startRenderingFromBottom: true,
+          autoscrollToBottomThreshold: 0.1,
+          animateAutoScrollToBottom: true,
+        }}
         showsVerticalScrollIndicator={false}
         renderItem={handleRender}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.1}
+        onStartReached={onStartReached}
+        onStartReachedThreshold={0.2}
         data={messages}
         contentContainerStyle={tailwind.style('px-3')}
         keyboardShouldPersistTaps="handled"

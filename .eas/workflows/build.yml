@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        options:
+          - staging
+          - production
+          - preview
+        required: true
+        description: 'Build profile'
+      platform:
+        type: choice
+        options:
+          - all
+          - ios
+          - android
+        required: true
+        description: 'Platform'
+
+jobs:
+  build_ios:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'ios' }}
+    type: build
+    params:
+      platform: ios
+      profile: ${{ inputs.profile }}
+
+  build_android:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'android' }}
+    type: build
+    params:
+      platform: android
+      profile: ${{ inputs.profile }}

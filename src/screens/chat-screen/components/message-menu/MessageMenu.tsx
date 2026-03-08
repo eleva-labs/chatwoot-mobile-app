@@ -1,4 +1,4 @@
-import React, { forwardRef, PropsWithChildren, useCallback, useRef } from 'react';
+import React, { forwardRef, PropsWithChildren, useCallback, useRef, type JSX } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { interpolate, runOnJS, useAnimatedStyle } from 'react-native-reanimated';
@@ -46,7 +46,7 @@ const ContextMenuItem = ContextMenu.create<React.ComponentProps<typeof ContextMe
 
 // eslint-disable-next-line react/display-name
 const ContextMenuBottomSheetBackdrop = forwardRef<
-  React.RefObject<BottomSheetModal>,
+  React.RefObject<BottomSheetModal | null>,
   BottomSheetBackdropProps
 >((props, ref) => {
   const { animatedIndex, style } = props;

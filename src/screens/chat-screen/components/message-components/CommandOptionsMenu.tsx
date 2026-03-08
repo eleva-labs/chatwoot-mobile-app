@@ -1,6 +1,12 @@
 import React from 'react';
 import { Alert, Linking, Platform, Pressable, Text } from 'react-native';
-import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
+import {
+  pick,
+  types,
+  isErrorWithCode,
+  errorCodes,
+  type DocumentPickerResponse,
+} from '@react-native-documents/picker';
 import * as ImagePicker from 'expo-image-picker';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -99,21 +105,21 @@ const mapObject = (originalObject: DocumentPickerResponse): PickedAsset[] => {
 
 const handleAttachFile = async (dispatch: AppDispatch) => {
   try {
-    const result = await DocumentPicker.pick({
+    const result = await pick({
       type: [
-        DocumentPicker.types.allFiles,
-        DocumentPicker.types.images,
-        DocumentPicker.types.plainText,
-        DocumentPicker.types.audio,
-        DocumentPicker.types.pdf,
-        DocumentPicker.types.zip,
-        DocumentPicker.types.csv,
-        DocumentPicker.types.doc,
-        DocumentPicker.types.docx,
-        DocumentPicker.types.ppt,
-        DocumentPicker.types.pptx,
-        DocumentPicker.types.xls,
-        DocumentPicker.types.xlsx,
+        types.allFiles,
+        types.images,
+        types.plainText,
+        types.audio,
+        types.pdf,
+        types.zip,
+        ...[types.csv].flat(),
+        types.doc,
+        types.docx,
+        types.ppt,
+        types.pptx,
+        types.xls,
+        types.xlsx,
       ], // You can specify the file types you want to allow
       presentationStyle: 'formSheet',
     });
@@ -121,7 +127,7 @@ const handleAttachFile = async (dispatch: AppDispatch) => {
     const file = mapObject(result[0])[0];
     validateFileAndSetAttachments(dispatch, file);
   } catch (err) {
-    if (DocumentPicker.isCancel(err)) {
+    if (isErrorWithCode(err) && err.code === errorCodes.OPERATION_CANCELED) {
       // User cancelled the picker
     } else {
       throw err;

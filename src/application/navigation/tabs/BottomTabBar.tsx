@@ -6,7 +6,7 @@ import Animated, {
   useDerivedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { BlurView, BlurViewProps } from '@react-native-community/blur';
+import { BlurView, BlurViewProps } from 'expo-blur';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import { selectCurrentState } from '@application/store/conversation/conversationHeaderSlice';
@@ -68,7 +68,7 @@ const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
 type TabBarBackgroundProps = BlurViewProps & PropsWithChildren;
 
 const TabBarBackground = (props: TabBarBackgroundProps) => {
-  const { children, style, blurAmount, blurType } = props;
+  const { children, style, intensity, tint } = props;
 
   const currentState = useAppSelector(selectCurrentState);
 
@@ -91,7 +91,7 @@ const TabBarBackground = (props: TabBarBackgroundProps) => {
   });
 
   return Platform.OS === 'ios' ? (
-    <AnimatedBlurView {...{ blurAmount, blurType }} style={[style, animatedTabBarStyle]}>
+    <AnimatedBlurView {...{ intensity, tint }} style={[style, animatedTabBarStyle]}>
       {children}
     </AnimatedBlurView>
   ) : (
@@ -171,8 +171,8 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
 
   return (
     <TabBarBackground
-      blurAmount={25}
-      blurType={isDark ? 'dark' : 'light'}
+      intensity={25}
+      tint={isDark ? 'dark' : 'light'}
       style={Platform.select({
         ios: [
           themedTailwind.style(
