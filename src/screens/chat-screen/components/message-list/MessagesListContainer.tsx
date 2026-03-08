@@ -136,7 +136,9 @@ export const MessagesListContainer = () => {
     };
   }, [appState, conversationId, dispatch]);
 
-  const onEndReached = () => {
+  // With FlashList v2 (non-inverted, chronological order), loading older messages
+  // happens when the user scrolls to the TOP (start), not end.
+  const onStartReached = () => {
     const shouldFetchMoreMessages = !isAllMessagesFetched && !isLoadingMessages && isFlashListReady;
     if (shouldFetchMoreMessages) {
       loadMessages({ loadingMessagesForFirstTime: false });
@@ -151,10 +153,15 @@ export const MessagesListContainer = () => {
 
   const groupedMessages = getGroupedMessages(messages);
 
-  const allMessages = flatMap(groupedMessages, section => [
+  // FlashList v2 removed the `inverted` prop. We now use a chronological (oldest-first)
+  // data order with `maintainVisibleContentPosition.startRenderingFromBottom` instead.
+  // The selector returns newest-first, and getGroupedMessages preserves that order,
+  // so we reverse the flat list to get chronological order for the non-inverted FlashList.
+  const allMessagesNewestFirst = flatMap(groupedMessages, section => [
     ...section.data,
     { date: section.date },
   ]);
+  const allMessages = [...allMessagesNewestFirst].reverse();
 
   const messagesWithGrouping = allMessages.map((message, index) => {
     return {
@@ -182,7 +189,7 @@ export const MessagesListContainer = () => {
         messages={messagesWithGrouping}
         isFlashListReady={isFlashListReady}
         setFlashListReady={setFlashListReady}
-        onEndReached={onEndReached}
+        onStartReached={onStartReached}
         isEmailInbox={isEmailInbox}
         currentUserId={userId as number}
       />
