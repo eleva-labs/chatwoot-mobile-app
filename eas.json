@@ -75,6 +75,19 @@
         "buildType": "apk"
       }
     },
+    "staging": {
+      "extends": "production",
+      "cache": {
+        "key": "sdk55-staging-v1"
+      },
+      "env": {
+        "ENVIRONMENT": "dev",
+        "SENTRY_ORG": "eleva-labs",
+        "SENTRY_PROJECT": "chatscommerce"
+      },
+      "environment": "development",
+      "channel": "staging"
+    },
     "production": {
       "extends": "base",
       "autoIncrement": true,
@@ -100,6 +113,16 @@
   },
   "submit": {
     "development": {
+      "android": {
+        "serviceAccountKeyPath": "./credentials/android/service-account-key.json",
+        "track": "internal"
+      },
+      "ios": {
+        "ascAppId": "6749920971",
+        "appleTeamId": "TGB3VRK9LR"
+      }
+    },
+    "staging": {
       "android": {
         "serviceAccountKeyPath": "./credentials/android/service-account-key.json",
         "track": "internal"
