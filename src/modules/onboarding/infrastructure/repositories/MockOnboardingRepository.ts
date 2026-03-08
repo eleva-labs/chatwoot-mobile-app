@@ -662,10 +662,11 @@ export class MockOnboardingRepository implements IOnboardingRepository {
       await this.delay(this.MOCK_DELAY_MS);
 
       // Mock successful submission
-      if (__DEV__) console.log('[MockOnboardingRepository] Submitting answers:', {
-        flowId,
-        answers,
-      });
+      if (__DEV__)
+        console.log('[MockOnboardingRepository] Submitting answers:', {
+          flowId,
+          answers,
+        });
 
       // In a real implementation, this would send data to the server
       return Result.ok(undefined);
@@ -683,10 +684,11 @@ export class MockOnboardingRepository implements IOnboardingRepository {
       await this.delay(this.MOCK_DELAY_MS / 2);
 
       // Mock validation - always return valid for now
-      if (__DEV__) console.log('[MockOnboardingRepository] Validating field:', {
-        fieldId,
-        value,
-      });
+      if (__DEV__)
+        console.log('[MockOnboardingRepository] Validating field:', {
+          fieldId,
+          value,
+        });
 
       return Result.ok({ valid: true });
     } catch (error) {

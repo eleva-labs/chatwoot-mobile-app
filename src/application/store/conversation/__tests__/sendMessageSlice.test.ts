@@ -107,7 +107,10 @@ describe('sendMessageSlice', () => {
     });
 
     it('should remove first attachment when index is 0', () => {
-      const assets: PickedAsset[] = [mockAsset({ fileName: 'a.jpg' }), mockAsset({ fileName: 'b.jpg' })];
+      const assets: PickedAsset[] = [
+        mockAsset({ fileName: 'a.jpg' }),
+        mockAsset({ fileName: 'b.jpg' }),
+      ];
 
       let state = reducer(undefined, updateAttachments(assets));
       state = reducer(state, deleteAttachment(0));
@@ -117,7 +120,10 @@ describe('sendMessageSlice', () => {
     });
 
     it('should remove last attachment when index is last element', () => {
-      const assets: PickedAsset[] = [mockAsset({ fileName: 'a.jpg' }), mockAsset({ fileName: 'b.jpg' })];
+      const assets: PickedAsset[] = [
+        mockAsset({ fileName: 'a.jpg' }),
+        mockAsset({ fileName: 'b.jpg' }),
+      ];
 
       let state = reducer(undefined, updateAttachments(assets));
       state = reducer(state, deleteAttachment(1));

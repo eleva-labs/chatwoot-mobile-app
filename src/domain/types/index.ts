@@ -2,7 +2,7 @@ import { PathProps } from 'react-native-svg';
 
 import { AllStatusTypes, AssigneeTypes, SortTypes } from './common';
 
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 export * from './Agent';
 export * from './AgentBot';

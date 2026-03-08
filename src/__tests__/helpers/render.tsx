@@ -31,7 +31,7 @@ export function createTestStore(preloadedState?: PreloadedState) {
 }
 
 export function renderWithProviders(
-  ui: React.ReactElement<any>,
+  ui: React.ReactElement<unknown>,
   {
     preloadedState,
     store = createTestStore(preloadedState),

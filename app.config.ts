@@ -119,6 +119,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     orientation: 'portrait',
     icon: getAppIcon(),
     userInterfaceStyle: 'automatic',
+    buildCacheProvider: {
+      plugin: 'expo-build-disk-cache',
+      options: {
+        cacheDir: 'node_modules/.expo-build-disk-cache',
+      },
+    },
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',

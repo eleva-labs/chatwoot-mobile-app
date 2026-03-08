@@ -109,7 +109,7 @@ jest.mock('@infrastructure/utils/navigationUtils', () => ({
 
 function createWrapper(store: ReturnType<typeof createTestStore>) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
-    return React.createElement(Provider, { store, children });
+    return <Provider store={store}>{children}</Provider>;
   };
 }
 
