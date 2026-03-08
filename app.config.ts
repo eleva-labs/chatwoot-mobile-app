@@ -210,7 +210,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         'expo-build-properties',
         {
-          // https://github.com/invertase/notifee/issues/808#issuecomment-2175934609
+          // React Native 0.76+ requires minSdkVersion 24
           android: {
             minSdkVersion: 24,
             compileSdkVersion: 35,
@@ -224,7 +224,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           ios: { useFrameworks: 'static', ccacheEnabled: true },
         },
       ],
-      './plugins/with-notifee-maven',
     ],
     androidNavigationBar: { backgroundColor: '#ffffff' },
     // NOTE: expo-build-disk-cache requires Expo SDK 53+

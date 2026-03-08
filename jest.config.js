@@ -10,7 +10,7 @@ module.exports = {
     '^@presentation/(.*)$': '<rootDir>/src/presentation/$1',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|@reduxjs|immer|@shopify|@ai-sdk|ai|expo-video)',
+    'node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation|@reduxjs|immer|@shopify|@ai-sdk|ai|expo(-[a-z-]+)?)',
   ],
   testPathIgnorePatterns: [
     '/node_modules/',

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useCallback, useRef, useEffect } from 'react';
-import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
 import { getApps } from '@react-native-firebase/app';
 import { getApp } from '@react-native-firebase/app';
 import {
@@ -63,10 +63,8 @@ const initializeFirebaseMessaging = () => {
       const notification = findNotificationFromFCM({ message: remoteMessage });
       const camelCaseNotification = transformNotification(notification);
 
-      // Update badge count for iOS
-      if (Platform.OS === 'ios') {
-        updateBadgeCount({ count: 1 }); // You might want to track actual count
-      }
+      // Update badge count (cross-platform via expo-notifications)
+      updateBadgeCount({ count: 1 });
 
       // TODO: Process camelCaseNotification data for background tasks
       console.warn('Processed notification:', camelCaseNotification.id);

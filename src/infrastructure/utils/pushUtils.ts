@@ -1,24 +1,14 @@
-import { Platform } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { NOTIFICATION_TYPES } from '@domain/constants';
 import { Notification } from '@domain/types/Notification';
 
-let notifee: typeof import('@notifee/react-native').default | undefined;
-
-if (Platform.OS === 'ios') {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  notifee = require('@notifee/react-native')
-    .default as typeof import('@notifee/react-native').default;
-}
-
 export const clearAllDeliveredNotifications = async () => {
-  if (Platform.OS === 'ios' && notifee) {
-    await notifee.cancelAllNotifications();
-  }
+  await Notifications.dismissAllNotificationsAsync();
 };
 
 export const updateBadgeCount = async ({ count = 0 }) => {
-  if (Platform.OS === 'ios' && count >= 0 && notifee) {
-    await notifee.setBadgeCount(count);
+  if (count >= 0) {
+    await Notifications.setBadgeCountAsync(count);
   }
 };
 

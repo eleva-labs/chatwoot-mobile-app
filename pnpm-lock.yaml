@@ -35,9 +35,6 @@ importers:
       '@nandorojo/galeria':
         specifier: ^1.2.0
         version: 1.2.0(expo@52.0.48(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(graphql@16.8.1)(react-native-webview@13.16.1(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
-      '@notifee/react-native':
-        specifier: ^9.1.8
-        version: 9.1.8(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))
       '@react-native-async-storage/async-storage':
         specifier: ^1.23.1
         version: 1.24.0(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))
@@ -1826,11 +1823,6 @@ packages:
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
-
-  '@notifee/react-native@9.1.8':
-    resolution: {integrity: sha512-Az/dueoPerJsbbjRxu8a558wKY+gONUrfoy3Hs++5OqbeMsR0dYe6P+4oN6twrLFyzAhEA1tEoZRvQTFDRmvQg==}
-    peerDependencies:
-      react-native: '*'
 
   '@npmcli/fs@3.1.1':
     resolution: {integrity: sha512-q9CRWjpHCMIh5sVyefoD1cA7PkvILqCZsnSOEUUivORLjxCO/Irmue2DprETiNgEqktDBZaM1Bi+jrarx1XdCg==}
@@ -9252,10 +9244,6 @@ snapshots:
       fastq: 1.19.1
 
   '@nolyfill/is-core-module@1.0.39': {}
-
-  '@notifee/react-native@9.1.8(react-native@0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1))':
-    dependencies:
-      react-native: 0.76.9(@babel/core@7.28.4)(@babel/preset-env@7.27.1(@babel/core@7.28.4))(@types/react@18.3.26)(react@18.3.1)
 
   '@npmcli/fs@3.1.1':
     dependencies:
