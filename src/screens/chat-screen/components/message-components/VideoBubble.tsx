@@ -19,6 +19,7 @@ export const VideoBubblePlayer = (props: VideoPlayerProps) => {
   const { videoSrc, playerEnabled = true } = props;
   const viewRef = React.useRef<InstanceType<typeof VideoView>>(null);
   const [playVideo, setPlayVideo] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const player = useVideoPlayer(videoSrc, player => {
     player.loop = false;
@@ -52,11 +53,16 @@ export const VideoBubblePlayer = (props: VideoPlayerProps) => {
     }
   }, [isPlaying, status, player]);
 
+  const handleFullscreenEnter = () => {
+    setIsFullscreen(true);
+  };
+
   const handleFullscreenExit = () => {
     player.pause();
     player.currentTime = 0;
     player.muted = true;
     setPlayVideo(false);
+    setIsFullscreen(false);
   };
 
   return (
@@ -66,8 +72,9 @@ export const VideoBubblePlayer = (props: VideoPlayerProps) => {
         style={tailwind.style('w-full ios:h-full aspect-video')}
         player={player}
         contentFit={Platform.OS === 'android' ? 'contain' : 'cover'}
-        nativeControls={false}
+        nativeControls={isFullscreen}
         fullscreenOptions={{ enable: true }}
+        onFullscreenEnter={handleFullscreenEnter}
         onFullscreenExit={handleFullscreenExit}
       />
       {videoLoading ? (
