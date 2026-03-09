@@ -1,13 +1,8 @@
 import React from 'react';
 
-import Animated, {
-  interpolate,
-  LinearTransition,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
-import { useAppKeyboardAnimation } from '@infrastructure/utils';
+
 import { tailwind } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { Message } from '@domain/types';
@@ -57,7 +52,6 @@ export const MessagesList = ({
   isEmailInbox,
   currentUserId,
 }: MessagesListPresentationProps) => {
-  const { progress, height } = useAppKeyboardAnimation();
   const { messageListRef } = useRefsContext();
   const typedMessageListRef = messageListRef as React.RefObject<FlashListRef<
     Message | { date: string }
@@ -80,19 +74,10 @@ export const MessagesList = ({
     // return <MessageItemContainer item={item} index={index} />;
   };
 
-  const animatedFlashlistStyle = useAnimatedStyle(() => {
-    return {
-      marginBottom: withSpring(interpolate(progress.value, [0, 1], [0, height.value]), {
-        stiffness: 240,
-        damping: 38,
-      }),
-    };
-  });
-
   return (
     <Animated.View
       layout={LinearTransition.springify().damping(38).stiffness(240)}
-      style={[tailwind.style('flex-1 min-h-10'), animatedFlashlistStyle]}>
+      style={tailwind.style('flex-1 min-h-10')}>
       <AnimatedFlashlist
         layout={LinearTransition.springify().damping(38).stiffness(240)}
         onScroll={() => {
@@ -103,7 +88,7 @@ export const MessagesList = ({
         ref={typedMessageListRef}
         maintainVisibleContentPosition={{
           startRenderingFromBottom: true,
-          autoscrollToBottomThreshold: 0.1,
+          autoscrollToBottomThreshold: 0.5,
           animateAutoScrollToBottom: true,
         }}
         showsVerticalScrollIndicator={false}

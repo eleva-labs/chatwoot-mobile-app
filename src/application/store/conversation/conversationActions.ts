@@ -31,7 +31,6 @@ import { AxiosError } from 'axios';
 import { MESSAGE_STATUS } from '@domain/constants';
 import { buildCreatePayload, createPendingMessage } from '@infrastructure/utils/messageUtils';
 import { transformMessage } from '@infrastructure/utils/camelCaseKeys';
-import { Platform } from 'react-native';
 
 export const conversationActions = {
   fetchConversations: createAsyncThunk<ConversationListResponse, ConversationPayload>(
@@ -92,12 +91,7 @@ export const conversationActions = {
         });
         const payload = buildCreatePayload(pendingMessage);
         const { file } = sendMessagePayload;
-        const contentType =
-          Platform.OS === 'ios' && file
-            ? file.type
-            : Platform.OS === 'android' && file
-              ? 'multipart/form-data'
-              : 'application/json';
+        const contentType = file ? 'multipart/form-data' : 'application/json';
 
         const response = await ConversationService.sendMessage(conversationId, payload, {
           headers: {
