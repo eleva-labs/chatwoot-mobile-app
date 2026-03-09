@@ -1,13 +1,6 @@
-import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
+import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
+import { File } from 'expo-file-system';
 import type { PickedAsset } from '@domain/types';
-
-const HEIC_MIME_TYPES = new Set([
-  'image/heic',
-  'image/heif',
-  'image/heic-sequence',
-  'image/heif-sequence',
-]);
 
 /** MIME types that should skip processing entirely (already optimal or would lose data) */
 const PASSTHROUGH_MIME_TYPES = new Set(['image/gif', 'image/jpeg', 'image/jpg']);
@@ -21,6 +14,8 @@ const IMAGE_COMPRESS_QUALITY = 0.8;
  * - Preserves PNG alpha channel (PNG → PNG)
  * - Passes through GIF (preserves animation) and JPEG (avoids lossy re-encode)
  * - Non-image assets (video, audio, documents) are returned unchanged
+ *
+ * Uses the SDK 55 context-based ImageManipulator API and new File class.
  */
 export const processImageForUpload = async (asset: PickedAsset): Promise<PickedAsset> => {
   const mimeType = asset.type?.toLowerCase() ?? '';
@@ -40,22 +35,27 @@ export const processImageForUpload = async (asset: PickedAsset): Promise<PickedA
   }
 
   try {
-    const isHeic = HEIC_MIME_TYPES.has(mimeType);
     const isPng = mimeType === 'image/png';
 
     // HEIC → JPEG, PNG → PNG (preserve alpha), others (WebP, BMP, TIFF) → JPEG
     const outputFormat = isPng ? SaveFormat.PNG : SaveFormat.JPEG;
 
-    const result = await manipulateAsync(asset.uri, [], {
-      compress: IMAGE_COMPRESS_QUALITY,
+    // SDK 55 context API: manipulate → renderAsync → saveAsync
+    // rotate(0) forces iOS to normalize EXIF orientation into pixel data,
+    // preventing rotated output when converting HEIC → JPEG.
+    const context = ImageManipulator.manipulate(asset.uri).rotate(0);
+    const imageRef = await context.renderAsync();
+    const result = await imageRef.saveAsync({
       format: outputFormat,
+      // compress is only meaningful for JPEG; PNG is always lossless
+      ...(outputFormat === SaveFormat.JPEG && { compress: IMAGE_COMPRESS_QUALITY }),
     });
 
-    // Get actual file size after manipulation (manipulateAsync doesn't return it)
+    // Get actual file size using the new File class (SDK 55 — getInfoAsync is deprecated)
     let fileSize: number | undefined;
-    const fileInfo = await FileSystem.getInfoAsync(result.uri);
-    if (fileInfo.exists && 'size' in fileInfo) {
-      fileSize = fileInfo.size;
+    const file = new File(result.uri);
+    if (file.exists) {
+      fileSize = file.size;
     }
 
     const outputMimeType = isPng ? 'image/png' : 'image/jpeg';
@@ -64,7 +64,7 @@ export const processImageForUpload = async (asset: PickedAsset): Promise<PickedA
     // PNG keeps its original extension since format doesn't change
     const formatChanged = !isPng && mimeType !== 'image/jpeg' && mimeType !== 'image/jpg';
     const updatedFileName = formatChanged
-      ? replaceExtension(asset.fileName, isPng ? '.png' : '.jpg')
+      ? replaceExtension(asset.fileName, '.jpg')
       : asset.fileName;
 
     return {
@@ -83,9 +83,12 @@ export const processImageForUpload = async (asset: PickedAsset): Promise<PickedA
 
 /**
  * Replaces the file extension while preserving the base name.
- * Returns the original value when fileName is absent.
+ * Returns the original value when fileName is absent or empty.
  */
-const replaceExtension = (fileName: string | undefined, newExt: string): string | undefined => {
+export const replaceExtension = (
+  fileName: string | undefined,
+  newExt: string,
+): string | undefined => {
   if (!fileName) return fileName;
   const dotIndex = fileName.lastIndexOf('.');
   const baseName = dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
