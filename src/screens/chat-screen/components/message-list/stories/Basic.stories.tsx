@@ -1,9 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ScrollView } from 'react-native';
-import { Platform } from 'react-native';
+import { ScrollView, Platform, Animated } from 'react-native';
 import { KeyboardGestureArea, KeyboardProvider } from 'react-native-keyboard-controller';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { Animated } from 'react-native';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { tailwind } from '@infrastructure/theme';
 import { MessagesList } from '../MessagesList';
@@ -77,7 +75,7 @@ export const Basic: Story = {
                       messages={ALL_MESSAGES_MOCKDATA}
                       isFlashListReady={false}
                       setFlashListReady={() => {}}
-                      onStartReached={() => {}}
+                      onEndReached={() => {}}
                     />
                   </PlatformSpecificKeyboardWrapperComponent>
                 </ScrollView>

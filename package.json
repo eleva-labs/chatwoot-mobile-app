@@ -61,7 +61,7 @@
     "@reduxjs/toolkit": "^2.5.1",
     "@ronradtke/react-native-markdown-display": "^8.1.0",
     "@sentry/react-native": "^7.11.0",
-    "@shopify/flash-list": "^2.0.2",
+    "@shopify/flash-list": "^2.3.0",
     "ai": "5.0.93",
     "axios": "^1.13.6",
     "camelcase": "^8.0.0",

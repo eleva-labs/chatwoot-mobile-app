@@ -1,6 +1,7 @@
 import React from 'react';
 
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import { View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
 
 import { tailwind } from '@infrastructure/theme';
@@ -14,8 +15,6 @@ export type FlashListRenderProps = {
   item: { date: string } | Message;
   index: number;
 };
-
-const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Message | { date: string }>);
 
 type DateSectionProps = { item: { date: string } };
 
@@ -39,7 +38,7 @@ type MessagesListPresentationProps = {
   messages: (Message | { date: string })[];
   isFlashListReady: boolean;
   setFlashListReady: (ready: boolean) => void;
-  onStartReached: () => void;
+  onEndReached: () => void;
   isEmailInbox: boolean;
   currentUserId: number;
 };
@@ -48,7 +47,7 @@ export const MessagesList = ({
   messages,
   isFlashListReady,
   setFlashListReady,
-  onStartReached,
+  onEndReached,
   isEmailInbox,
   currentUserId,
 }: MessagesListPresentationProps) => {
@@ -75,27 +74,21 @@ export const MessagesList = ({
   };
 
   return (
-    <Animated.View
-      layout={LinearTransition.springify().damping(38).stiffness(240)}
-      style={tailwind.style('flex-1 min-h-10')}>
-      <AnimatedFlashlist
-        layout={LinearTransition.springify().damping(38).stiffness(240)}
+    <View style={tailwind.style('flex-1 min-h-10')}>
+      <FlashList
+        ref={typedMessageListRef}
+        inverted
+        data={messages}
+        renderItem={handleRender}
+        estimatedItemSize={80}
         onScroll={() => {
           if (!isFlashListReady) {
             setFlashListReady(true);
           }
         }}
-        ref={typedMessageListRef}
-        maintainVisibleContentPosition={{
-          startRenderingFromBottom: true,
-          autoscrollToBottomThreshold: 0.5,
-          animateAutoScrollToBottom: true,
-        }}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.2}
         showsVerticalScrollIndicator={false}
-        renderItem={handleRender}
-        onStartReached={onStartReached}
-        onStartReachedThreshold={0.2}
-        data={messages}
         contentContainerStyle={tailwind.style('px-3')}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item: { date: string } | Message) => {
@@ -105,6 +98,6 @@ export const MessagesList = ({
           return item.id.toString();
         }}
       />
-    </Animated.View>
+    </View>
   );
 };

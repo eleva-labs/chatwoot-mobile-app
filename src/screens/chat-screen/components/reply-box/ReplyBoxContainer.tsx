@@ -373,7 +373,7 @@ const BottomSheetContent = () => {
     });
 
     requestAnimationFrame(() => {
-      messageListRef?.current?.scrollToEnd({ animated: true });
+      messageListRef?.current?.scrollToOffset({ offset: 0, animated: true });
     });
   };
 
