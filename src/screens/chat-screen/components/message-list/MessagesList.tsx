@@ -15,8 +15,6 @@ export type FlashListRenderProps = {
   index: number;
 };
 
-const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Message | { date: string }>);
-
 type DateSectionProps = { item: { date: string } };
 
 const DateSection = ({ item }: DateSectionProps) => {
@@ -78,14 +76,19 @@ export const MessagesList = ({
     <Animated.View
       layout={LinearTransition.springify().damping(38).stiffness(240)}
       style={tailwind.style('flex-1 min-h-10')}>
-      <AnimatedFlashlist
-        layout={LinearTransition.springify().damping(38).stiffness(240)}
+      <FlashList
+        ref={typedMessageListRef}
+        overrideProps={{ initialDrawBatchSize: 10 }}
+        drawDistance={500}
+        getItemType={item => {
+          if ('date' in item) return 'date';
+          return 'message';
+        }}
         onScroll={() => {
           if (!isFlashListReady) {
             setFlashListReady(true);
           }
         }}
-        ref={typedMessageListRef}
         maintainVisibleContentPosition={{
           startRenderingFromBottom: true,
           autoscrollToBottomThreshold: 0.5,
