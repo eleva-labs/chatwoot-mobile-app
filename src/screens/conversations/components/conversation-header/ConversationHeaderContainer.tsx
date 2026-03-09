@@ -10,7 +10,7 @@ import { useConversationListStateContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic } from '@infrastructure/utils';
 import { getFilteredConversations } from '@application/store/conversation/conversationSelectors';
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles, useAppDispatch, useAppSelector } from '@/hooks';
 import { selectUserId } from '@application/store/auth/authSelectors';
 import {
   resetFilters,
@@ -30,7 +30,6 @@ import {
 import { ConversationFilterBar } from '../conversation-filters';
 import { ConversationHeaderPresenter } from './ConversationHeaderPresenter';
 
-import { useAppDispatch, useAppSelector } from '@/hooks';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
@@ -71,7 +70,9 @@ export const ConversationHeader = () => {
   const headerBorderColor = tailwind.color('text-slate-6') as string;
 
   const headerOpenState = useDerivedValue(() =>
-    currentState !== 'none' && currentState !== 'Select' ? withSpring(1) : withSpring(0),
+    currentState !== 'none' && currentState !== 'Select'
+      ? withSpring(1, { damping: 28, stiffness: 200 })
+      : withSpring(0, { damping: 28, stiffness: 200 }),
   );
 
   // This creates a subtle visual effect where the border fades away when the header is in an active state (Search/Filter) and reappears when returning to the default state.

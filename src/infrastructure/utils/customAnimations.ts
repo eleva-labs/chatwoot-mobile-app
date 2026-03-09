@@ -3,10 +3,10 @@ import { withSpring } from 'react-native-reanimated';
 export const photoIconExitAnimation = () => {
   'worklet';
   const animations = {
-    opacity: withSpring(0, { damping: 20, stiffness: 180 }),
+    opacity: withSpring(0, { damping: 28, stiffness: 200 }),
     transform: [
-      { translateX: withSpring(-10, { damping: 20, stiffness: 180 }) },
-      { scale: withSpring(0.9, { damping: 20, stiffness: 180 }) },
+      { translateX: withSpring(-10, { damping: 28, stiffness: 200 }) },
+      { scale: withSpring(0.9, { damping: 28, stiffness: 200 }) },
     ],
   };
   const initialValues = {
@@ -22,10 +22,10 @@ export const photoIconExitAnimation = () => {
 export const photoIconEnterAnimation = () => {
   'worklet';
   const animations = {
-    opacity: withSpring(1, { damping: 20, stiffness: 180 }),
+    opacity: withSpring(1, { damping: 28, stiffness: 200 }),
     transform: [
-      { translateX: withSpring(0, { damping: 20, stiffness: 180 }) },
-      { scale: withSpring(1, { damping: 20, stiffness: 180 }) },
+      { translateX: withSpring(0, { damping: 28, stiffness: 200 }) },
+      { scale: withSpring(1, { damping: 28, stiffness: 200 }) },
     ],
   };
   const initialValues = {
@@ -41,8 +41,8 @@ export const photoIconEnterAnimation = () => {
 export const voiceNoteIconExitAnimation = () => {
   'worklet';
   const animations = {
-    opacity: withSpring(0, { damping: 20, stiffness: 180 }),
-    transform: [{ scale: withSpring(0.9, { damping: 20, stiffness: 180 }) }],
+    opacity: withSpring(0, { damping: 28, stiffness: 200 }),
+    transform: [{ scale: withSpring(0.9, { damping: 28, stiffness: 200 }) }],
   };
   const initialValues = {
     opacity: 1,
@@ -57,8 +57,8 @@ export const voiceNoteIconExitAnimation = () => {
 export const voiceNoteIconEnterAnimation = () => {
   'worklet';
   const animations = {
-    opacity: withSpring(1, { damping: 20, stiffness: 180 }),
-    transform: [{ scale: withSpring(1, { damping: 20, stiffness: 180 }) }],
+    opacity: withSpring(1, { damping: 28, stiffness: 200 }),
+    transform: [{ scale: withSpring(1, { damping: 28, stiffness: 200 }) }],
   };
   const initialValues = {
     opacity: 0,
@@ -73,8 +73,8 @@ export const voiceNoteIconEnterAnimation = () => {
 export const sendIconExitAnimation = () => {
   'worklet';
   const animations = {
-    opacity: withSpring(0, { damping: 20, stiffness: 180 }),
-    transform: [{ scale: withSpring(0.9, { damping: 20, stiffness: 180 }) }],
+    opacity: withSpring(0, { damping: 28, stiffness: 200 }),
+    transform: [{ scale: withSpring(0.9, { damping: 28, stiffness: 200 }) }],
   };
   const initialValues = {
     opacity: 1,
@@ -89,8 +89,8 @@ export const sendIconExitAnimation = () => {
 export const sendIconEnterAnimation = () => {
   'worklet';
   const animations = {
-    opacity: withSpring(1, { damping: 20, stiffness: 180 }),
-    transform: [{ scale: withSpring(1, { damping: 20, stiffness: 180 }) }],
+    opacity: withSpring(1, { damping: 28, stiffness: 200 }),
+    transform: [{ scale: withSpring(1, { damping: 28, stiffness: 200 }) }],
   };
   const initialValues = {
     opacity: 0,

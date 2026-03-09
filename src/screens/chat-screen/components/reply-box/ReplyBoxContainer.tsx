@@ -74,8 +74,8 @@ import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
 
 const SHEET_APPEAR_SPRING_CONFIG = {
-  damping: 20,
-  stiffness: 120,
+  damping: 28,
+  stiffness: 200,
 };
 
 // TODO: Implement this

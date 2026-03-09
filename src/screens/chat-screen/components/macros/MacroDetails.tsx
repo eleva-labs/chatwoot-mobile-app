@@ -79,7 +79,7 @@ const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
   }, []);
 
   return (
-    <Animated.View entering={FadeIn.duration(300).springify()} style={tailwind.style('flex-1')}>
+    <Animated.View entering={FadeIn.duration(300)} style={tailwind.style('flex-1')}>
       <View style={tailwind.style('flex-row items-center p-4')}>
         <Pressable onPress={onBack} style={tailwind.style('flex-1 flex-row items-center')}>
           <View style={tailwind.style('mr-1')}>

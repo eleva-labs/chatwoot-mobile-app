@@ -18,8 +18,8 @@ import { tailwind } from '@infrastructure/theme';
 
 const DefaultSpringConfig: WithSpringConfig = {
   mass: 1,
-  damping: 18,
-  stiffness: 280,
+  damping: 28,
+  stiffness: 200,
 };
 
 type SliderProps = {
@@ -99,7 +99,9 @@ export const Slider = (props: SliderProps) => {
           translateX: translationX.value,
         },
       ],
-      borderWidth: sliderActive.value ? withSpring(2) : withSpring(0),
+      borderWidth: sliderActive.value
+        ? withSpring(2, { damping: 28, stiffness: 200 })
+        : withSpring(0, { damping: 28, stiffness: 200 }),
     }),
     [],
   );

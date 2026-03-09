@@ -32,7 +32,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
 
   return (
     <Animated.View
-      layout={LinearTransition.springify().damping(20).stiffness(120)}
+      layout={LinearTransition.springify().damping(28).stiffness(200)}
       style={[
         style('px-4 py-2 border-t', inputTokens.containerBackground, inputTokens.containerBorder),
       ]}>

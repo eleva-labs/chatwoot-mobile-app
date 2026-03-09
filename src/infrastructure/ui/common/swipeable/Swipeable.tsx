@@ -29,7 +29,7 @@ const DRAG_TOSS = 0.05;
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const rowCloseSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
-const overSwipedSpringConfig = { damping: 20, stiffness: 180 };
+const overSwipedSpringConfig = { damping: 28, stiffness: 200 };
 
 export type SwipeableProps = {
   /**

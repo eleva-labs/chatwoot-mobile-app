@@ -25,7 +25,7 @@ const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-const tabExitSpringConfig = { damping: 20, stiffness: 360, mass: 1 };
+const tabExitSpringConfig = { damping: 28, stiffness: 360, mass: 1 };
 const tabEnterSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
 
 type ActionTabBarBackgroundProps = BlurViewProps & PropsWithChildren;

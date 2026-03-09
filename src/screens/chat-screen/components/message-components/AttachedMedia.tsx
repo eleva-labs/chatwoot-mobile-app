@@ -74,11 +74,11 @@ const AttachedImage = (props: AttachedImageProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={SlideInDown.springify().damping(38).stiffness(240)}
+      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={LinearTransition.springify().damping(28).stiffness(200)}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -126,11 +126,11 @@ const AttachedVideo = (props: AttachedVideoProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={SlideInDown.springify().damping(38).stiffness(240)}
+      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={LinearTransition.springify().damping(28).stiffness(200)}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -166,7 +166,6 @@ const AttachedVideo = (props: AttachedVideoProps) => {
             tailwind.style('rounded-lg'),
             { transform: [{ rotateY: '180deg' }] },
           ]}
-          // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
           source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
         />
         <Animated.View
@@ -201,11 +200,11 @@ const AttachedFile = (props: AttachedFileProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={SlideInDown.springify().damping(38).stiffness(240)}
+      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={LinearTransition.springify().damping(28).stiffness(200)}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg items-center justify-center',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -261,9 +260,9 @@ export const AttachedMedia = () => {
   return attachments.length > 0 ? (
     <Animated.View style={tailwind.style('py-4')}>
       <Animated.FlatList
-        itemLayoutAnimation={LinearTransition.springify().damping(25).stiffness(200)}
-        entering={SlideInUp}
-        exiting={SlideOutDown}
+        itemLayoutAnimation={LinearTransition.springify().damping(28).stiffness(200)}
+        entering={SlideInUp.springify().damping(38).stiffness(240)}
+        exiting={SlideOutDown.springify().damping(38).stiffness(240)}
         style={tailwind.style('px-4 pr-12')}
         horizontal
         showsHorizontalScrollIndicator={false}

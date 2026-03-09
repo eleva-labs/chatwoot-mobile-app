@@ -93,9 +93,9 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
 
   useEffect(() => {
     if (conversationAction.actionStatus === status) {
-      actionActive.value = withSpring(1);
+      actionActive.value = withSpring(1, { damping: 28, stiffness: 200 });
     } else {
-      actionActive.value = withSpring(0);
+      actionActive.value = withSpring(0, { damping: 28, stiffness: 200 });
     }
   }, [
     actionActive,
