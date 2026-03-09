@@ -9,12 +9,17 @@ const HEIC_MIME_TYPES = new Set([
   'image/heif-sequence',
 ]);
 
+/** MIME types that should skip processing entirely (already optimal or would lose data) */
+const PASSTHROUGH_MIME_TYPES = new Set(['image/gif', 'image/jpeg', 'image/jpg']);
+
 const IMAGE_COMPRESS_QUALITY = 0.8;
 
 /**
  * Processes an image asset for upload:
  * - Converts HEIC/HEIF images to JPEG (required by WHAPI / WhatsApp)
- * - Compresses all images to reduce upload size
+ * - Converts other non-standard formats (WebP, BMP, TIFF) to JPEG
+ * - Preserves PNG alpha channel (PNG → PNG)
+ * - Passes through GIF (preserves animation) and JPEG (avoids lossy re-encode)
  * - Non-image assets (video, audio, documents) are returned unchanged
  */
 export const processImageForUpload = async (asset: PickedAsset): Promise<PickedAsset> => {
@@ -29,11 +34,16 @@ export const processImageForUpload = async (asset: PickedAsset): Promise<PickedA
     return asset;
   }
 
+  // GIF: skip to preserve animation; JPEG: skip to avoid lossy re-encoding
+  if (PASSTHROUGH_MIME_TYPES.has(mimeType)) {
+    return asset;
+  }
+
   try {
     const isHeic = HEIC_MIME_TYPES.has(mimeType);
     const isPng = mimeType === 'image/png';
 
-    // HEIC → JPEG (unsupported everywhere), PNG → PNG (preserve alpha), others → JPEG
+    // HEIC → JPEG, PNG → PNG (preserve alpha), others (WebP, BMP, TIFF) → JPEG
     const outputFormat = isPng ? SaveFormat.PNG : SaveFormat.JPEG;
 
     const result = await manipulateAsync(asset.uri, [], {
@@ -49,8 +59,13 @@ export const processImageForUpload = async (asset: PickedAsset): Promise<PickedA
     }
 
     const outputMimeType = isPng ? 'image/png' : 'image/jpeg';
-    // Only change extension for HEIC→JPEG conversions; PNG keeps its extension
-    const updatedFileName = isHeic ? replaceExtension(asset.fileName, '.jpg') : asset.fileName;
+
+    // Update extension when format changes (HEIC→.jpg, WebP→.jpg, BMP→.jpg, etc.)
+    // PNG keeps its original extension since format doesn't change
+    const formatChanged = !isPng && mimeType !== 'image/jpeg' && mimeType !== 'image/jpg';
+    const updatedFileName = formatChanged
+      ? replaceExtension(asset.fileName, isPng ? '.png' : '.jpg')
+      : asset.fileName;
 
     return {
       ...asset,
@@ -60,7 +75,8 @@ export const processImageForUpload = async (asset: PickedAsset): Promise<PickedA
       fileSize,
     };
   } catch (error) {
-    console.warn('Image conversion failed, using original asset:', error);
+    const name = asset.fileName ?? 'unknown';
+    console.warn(`Image conversion failed for "${name}" (${mimeType}), using original:`, error);
     return asset;
   }
 };
