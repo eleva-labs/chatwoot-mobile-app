@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { forwardRef, useCallback } from 'react';
-import { Dimensions, Platform, Pressable, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
@@ -10,7 +9,6 @@ import Animated, {
   LinearTransition,
   runOnJS,
   SharedValue,
-  SlideInDown,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
@@ -470,14 +468,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
       </AnimatedPressable>
       <GestureDetector gesture={cellGestures}>
         <AnimatedNativeView
-          entering={
-            Platform.OS === 'ios'
-              ? SlideInDown.delay(index * 20)
-                  .springify()
-                  .damping(20)
-                  .stiffness(120)
-              : FadeIn
-          }
+          entering={FadeIn.duration(200)}
           layout={LinearTransition.springify().damping(28).stiffness(200)}
           style={[tailwind.style('flex-1 z-10', `w-[${WIDTH}px]`), overlayStyle, tappedCellStyle]}>
           {children}

@@ -38,12 +38,12 @@ import {
   ConversationListStateProvider,
   useConversationListStateContext,
   useRefsContext,
+  useTheme,
 } from '@infrastructure/context';
 
 import { tailwind } from '@infrastructure/theme';
 import { Conversation } from '@domain/types';
 import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
-import { useTheme } from '@infrastructure/context';
 import {
   selectBottomSheetState,
   setBottomSheetState,
@@ -267,7 +267,7 @@ const ConversationList = () => {
   ) : (
     <AnimatedFlashList
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      layout={LinearTransition.springify().damping(18).stiffness(120)}
+      layout={LinearTransition.springify().damping(28).stiffness(200)}
       showsVerticalScrollIndicator={false}
       data={allConversations}
       estimatedItemSize={91}
@@ -275,7 +275,6 @@ const ConversationList = () => {
       onEndReached={handleOnEndReached}
       onEndReachedThreshold={0.5}
       ListFooterComponent={ListFooterComponent}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       renderItem={handleRender}
       contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}

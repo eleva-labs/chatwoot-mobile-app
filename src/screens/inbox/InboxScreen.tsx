@@ -10,7 +10,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
 import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
-import { InboxListStateProvider, useTheme } from '@infrastructure/context';
+import {
+  InboxListStateProvider,
+  useTheme,
+  useInboxListStateContext,
+} from '@infrastructure/context';
 import type { Notification } from '@domain/types/Notification';
 import { tailwind } from '@infrastructure/theme';
 import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
@@ -21,7 +25,6 @@ import {
   getFilteredNotifications,
 } from '@application/store/notification/notificationSelectors';
 import { InboxHeader, InboxItemContainer } from './components';
-import { useInboxListStateContext } from '@infrastructure/context';
 import { resetNotifications } from '@application/store/notification/notificationSlice';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
@@ -154,7 +157,7 @@ const InboxList = () => {
   ) : (
     <AnimatedFlashlist
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      layout={LinearTransition.springify().damping(18).stiffness(120)}
+      layout={LinearTransition.springify().damping(28).stiffness(200)}
       showsVerticalScrollIndicator={false}
       data={notifications}
       onScroll={scrollHandler}

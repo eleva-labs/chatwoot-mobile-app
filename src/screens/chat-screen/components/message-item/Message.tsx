@@ -129,19 +129,19 @@ const MessageWrapper = ({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(350)}
+      entering={FadeIn.duration(150)}
       style={[
         themedTailwind.style(
           'my-[1px]',
           flexOrientationClass(),
-          shouldGroupWithPrevious && orientation === ORIENTATION.LEFT ? 'ml-7' : '',
-          shouldGroupWithPrevious && orientation === ORIENTATION.RIGHT ? 'pr-7' : '',
+          shouldGroupWithNext && orientation === ORIENTATION.LEFT ? 'ml-7' : '',
+          shouldGroupWithNext && orientation === ORIENTATION.RIGHT ? 'pr-7' : '',
           !shouldGroupWithPrevious && !shouldGroupWithNext ? 'mb-2' : 'mb-1',
           item.private ? 'my-1' : '',
         ),
       ]}>
       <Animated.View style={themedTailwind.style('flex flex-row')}>
-        {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.LEFT ? (
+        {!shouldGroupWithNext && shouldShowAvatar && orientation === ORIENTATION.LEFT ? (
           <Animated.View style={themedTailwind.style('flex items-end justify-end mr-1')}>
             <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
           </Animated.View>
@@ -192,7 +192,7 @@ const MessageWrapper = ({
             </Animated.View>
           </Animated.View>
         </MessageMenu>
-        {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (
+        {!shouldGroupWithNext && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (
           <Animated.View style={themedTailwind.style('flex items-end justify-end ml-1')}>
             <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
           </Animated.View>
