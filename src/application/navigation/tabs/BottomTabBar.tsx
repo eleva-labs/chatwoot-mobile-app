@@ -9,6 +9,7 @@ import Animated, {
 import { BlurView, BlurViewProps } from 'expo-blur';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { selectCurrentState } from '@application/store/conversation/conversationHeaderSlice';
 
 import {
@@ -136,6 +137,7 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
   const tabBarHeight = useTabBarHeight();
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
+  const { bottom } = useSafeAreaInsets();
 
   // Memoize press handlers using useCallback
   const createPressHandler = React.useCallback(
@@ -176,13 +178,13 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
       style={Platform.select({
         ios: [
           themedTailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-8 bg-solid-1',
+            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-[${Math.max(bottom, 32)}px] bg-solid-1`,
             `h-[${tabBarHeight}px]`,
           ),
         ],
         android: [
           themedTailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] py-[11px] bg-solid-1',
+            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-[${Math.max(bottom, 11)}px] bg-solid-1`,
             `h-[${tabBarHeight}px]`,
           ),
         ],

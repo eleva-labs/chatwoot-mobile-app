@@ -2,7 +2,7 @@ import React from 'react';
 import { Trash } from '@/svg-icons/common/Trash';
 import { Channel, Message } from '@domain/types';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { useChatWindowContext } from '@infrastructure/context';
 import { conversationActions } from '@application/store/conversation/conversationActions';
@@ -35,7 +35,6 @@ import i18n from '@infrastructure/i18n';
 import * as Clipboard from 'expo-clipboard';
 import { CopyIcon } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { useThemedStyles } from '@/hooks';
 import { useThemeColors } from '@infrastructure/theme';
 import { Dimensions, View } from 'react-native';
 import { Avatar } from '@infrastructure/ui';
@@ -171,7 +170,7 @@ const MessageWrapper = ({
                 'pt-[5px] pb-0.5 flex flex-row items-center',
                 orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
               )}>
-              {!shouldGroupWithPrevious && (
+              {!shouldGroupWithNext && (
                 <Animated.Text
                   style={themedTailwind.style(
                     'text-xs font-inter-420-20 tracking-[0.32px] pr-1',

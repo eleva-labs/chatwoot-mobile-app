@@ -78,7 +78,7 @@
     "staging": {
       "extends": "production",
       "cache": {
-        "key": "sdk55-staging-v1"
+        "key": "sdk55-staging-v2"
       },
       "env": {
         "ENVIRONMENT": "prod",
