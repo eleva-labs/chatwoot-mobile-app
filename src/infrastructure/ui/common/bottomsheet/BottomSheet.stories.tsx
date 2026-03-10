@@ -5,8 +5,8 @@ import {
   BottomSheetModal,
   BottomSheetScrollView,
   BottomSheetModalProvider,
-  useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { BottomSheetHeader } from './BottomSheetHeader';
 import { BottomSheetBackdrop } from './BottomSheetBackdrop';
@@ -33,12 +33,6 @@ export default {
 } satisfies Meta<typeof BottomSheetModal>;
 
 export const LanguageSelectorSheet = () => {
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const { languagesModalSheetRef } = useRefsContext();
 
   const handleOpenPress = () => {
@@ -55,7 +49,7 @@ export const LanguageSelectorSheet = () => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         detached
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('overflow-hidden')}
         snapPoints={['70%']}>

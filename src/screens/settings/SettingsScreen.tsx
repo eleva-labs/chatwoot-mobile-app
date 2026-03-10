@@ -144,12 +144,6 @@ const SettingsScreen = () => {
   const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const openSheet = () => {
     hapticSelection?.();
     userAvailabilityStatusSheetRef.current?.present();
@@ -366,7 +360,7 @@ const SettingsScreen = () => {
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
@@ -388,7 +382,7 @@ const SettingsScreen = () => {
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -405,7 +399,7 @@ const SettingsScreen = () => {
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -422,7 +416,7 @@ const SettingsScreen = () => {
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -441,7 +435,7 @@ const SettingsScreen = () => {
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}

@@ -1,10 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { View, Text } from 'react-native';
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetBackdrop,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { AISessionList } from './AISessionList';
 import type { AIChatSession } from '@application/store/ai-chat/aiChatTypes';
@@ -27,12 +24,6 @@ export const AIChatSessionPanel: React.FC<AIChatSessionPanelProps> = React.memo(
     const sessionTokens = tokens.session;
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['40%', '75%'], []);
-
-    const animationConfigs = useBottomSheetSpringConfigs({
-      mass: 1,
-      stiffness: 420,
-      damping: 80,
-    });
 
     const renderBackdrop = useCallback(
       (props: BottomSheetBackdropProps) => (
@@ -61,7 +52,7 @@ export const AIChatSessionPanel: React.FC<AIChatSessionPanelProps> = React.memo(
         snapPoints={snapPoints}
         enablePanDownToClose
         onChange={handleSheetChange}
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         backdropComponent={renderBackdrop}
         backgroundStyle={style(sessionTokens.background)}
         handleIndicatorStyle={style('bg-slate-6 w-10')}>

@@ -58,12 +58,6 @@ export const ChatHeader = ({
   const { colors } = useThemeColors();
   const { slaEventsSheetRef } = useRefsContext();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const toggleSlaEventsSheet = () => {
     if (slaEvents?.length) {
       Keyboard.dismiss();
@@ -143,7 +137,7 @@ export const ChatHeader = ({
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         snapPoints={['36%']}>

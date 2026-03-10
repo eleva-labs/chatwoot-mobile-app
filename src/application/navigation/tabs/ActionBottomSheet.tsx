@@ -23,12 +23,6 @@ const ActionBottomSheet = () => {
   const currentActionState = useAppSelector(selectCurrentActionState);
   const themedTailwind = useThemedStyles();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const { actionsModalSheetRef } = useRefsContext();
 
   const actionSnapPoints = useMemo(() => {
@@ -60,7 +54,7 @@ const ActionBottomSheet = () => {
       handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
       style={tailwind.style('rounded-[26px] overflow-hidden')}
       backgroundStyle={themedTailwind.style('bg-solid-1')}
-      animationConfigs={animationConfigs}
+      animationConfigs={spring.sheet}
       enablePanDownToClose
       snapPoints={actionSnapPoints}
       onDismiss={handleOnDismiss}>

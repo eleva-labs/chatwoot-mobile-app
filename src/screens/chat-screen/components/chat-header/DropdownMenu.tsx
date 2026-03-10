@@ -90,12 +90,6 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
 
   const { bottom } = useSafeAreaInsets();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const renderBackDrop = useCallback(
     (backdropProps: BottomSheetBackdropProps) => (
       <DropdownMenuBottomSheetBackdrop
@@ -124,7 +118,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
           backgroundStyle={themedTailwind.style('bg-solid-1')}
           detached
           bottomInset={bottom === 0 ? 12 : bottom}
-          animationConfigs={animationConfigs}
+          animationConfigs={spring.sheet}
           enablePanDownToClose
           snapPoints={[dropdownMenuList.length * 44 + 4 + 37]}>
           <BottomSheetWrapper>

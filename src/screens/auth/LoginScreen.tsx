@@ -61,12 +61,6 @@ const LoginScreen = () => {
 
   const { languagesModalSheetRef } = useRefsContext();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const dispatch = useAppDispatch();
   const isLoggingIn = useAppSelector(selectIsLoggingIn);
   const isLoggedIn = useAppSelector(selectLoggedIn);
@@ -352,7 +346,7 @@ const LoginScreen = () => {
         )}
         detached
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
         style={themedTailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}

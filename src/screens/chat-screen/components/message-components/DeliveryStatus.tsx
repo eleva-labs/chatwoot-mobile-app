@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable } from 'react-native';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import { CheckCheck, Clock } from 'lucide-react-native';
 import { TickIcon } from '@/svg-icons/common/TickIcon';
 
@@ -60,12 +61,6 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   const shouldShowStatusIndicator =
     (messageType === MESSAGE_TYPES.OUTGOING || isTemplate) && !isPrivate;
   const isALineChannel = channel === INBOX_TYPES.LINE;
-
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
 
   const showSentIndicator = () => {
     if (!shouldShowStatusIndicator) {
@@ -151,7 +146,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
             'overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]',
           )}
           enablePanDownToClose
-          animationConfigs={animationConfigs}
+          animationConfigs={spring.sheet}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
           snapPoints={['15']}>

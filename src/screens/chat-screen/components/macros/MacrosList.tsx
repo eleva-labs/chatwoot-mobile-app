@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop } from '@infrastructure/ui';
 import i18n from '@infrastructure/i18n';
@@ -38,12 +35,6 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
 
   const { macrosListSheetRef } = useRefsContext();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   return (
     <Animated.View>
       <BottomSheetModal
@@ -55,7 +46,7 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
         enablePanDownToClose
         snapPoints={['75%']}
         enableDynamicSizing={false}
-        animationConfigs={animationConfigs}>
+        animationConfigs={spring.sheet}>
         <MacroProvider conversationId={conversationId} onClose={onClose}>
           <Animated.View style={tailwind.style('flex-1')}>
             {selectedMacro ? (

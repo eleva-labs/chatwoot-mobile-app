@@ -40,11 +40,6 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
   const themedTailwind = useThemedStyles();
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
   const { updateParticipantSheetRef, actionsModalSheetRef } = useRefsContext();
   const { conversationId } = useChatWindowContext();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
@@ -190,7 +185,7 @@ export const ConversationActions = () => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         enablePanDownToClose
         snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />

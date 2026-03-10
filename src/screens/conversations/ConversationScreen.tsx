@@ -286,12 +286,6 @@ const ConversationScreen = () => {
   const themedTailwind = useThemedStyles();
   const dispatch = useAppDispatch();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const { filtersModalSheetRef } = useRefsContext();
 
   const handleOnDismiss = () => {
@@ -337,7 +331,7 @@ const ConversationScreen = () => {
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
           backgroundStyle={themedTailwind.style('bg-solid-1')}
-          animationConfigs={animationConfigs}
+          animationConfigs={spring.sheet}
           enablePanDownToClose
           snapPoints={filterSnapPoints}
           onDismiss={handleOnDismiss}>

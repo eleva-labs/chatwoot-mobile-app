@@ -7,8 +7,8 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
-  useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { UpdateAssignee } from '../UpdateAssignee';
 import { BottomSheetBackdrop } from '@infrastructure/ui/common/bottomsheet/BottomSheetBackdrop';
@@ -60,12 +60,6 @@ const mockStore = configureStore({
 });
 
 const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 80,
-  });
-
   const { filtersModalSheetRef } = useRefsContext();
 
   useEffect(() => {
@@ -86,7 +80,7 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
               )}
               detached
               enablePanDownToClose
-              animationConfigs={animationConfigs}
+              animationConfigs={spring.sheet}
               handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
               style={tailwind.style('overflow-hidden')}
               snapPoints={['50%']}>
