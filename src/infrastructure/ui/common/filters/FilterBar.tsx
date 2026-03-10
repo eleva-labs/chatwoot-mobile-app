@@ -1,6 +1,6 @@
 import React from 'react';
 import Animated, { withTiming } from 'react-native-reanimated';
-import { softLayout } from '@infrastructure/animation';
+import { softLayout, timing } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { FilterButton } from './FilterButton';
 import i18n from '@infrastructure/i18n';
@@ -23,7 +23,7 @@ export const FilterBar = ({ allFilters, selectedFilters, onFilterPress }: Filter
   const exiting = () => {
     'worklet';
     const animations = {
-      opacity: withTiming(0, { duration: 250 }),
+      opacity: withTiming(0, timing.standard),
     };
     const initialValues = {
       opacity: 1,

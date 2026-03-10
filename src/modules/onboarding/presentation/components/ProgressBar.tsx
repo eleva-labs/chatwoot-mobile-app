@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { timing } from '@infrastructure/animation';
 import { useThemedStyles } from '@infrastructure/hooks/useThemedStyles';
 
 interface ProgressBarProps {
@@ -28,7 +29,7 @@ export function ProgressBar({
 
   useEffect(() => {
     if (animated) {
-      width.value = withTiming(clampedProgress, { duration: 300 });
+      width.value = withTiming(clampedProgress, timing.content);
     } else {
       width.value = clampedProgress;
     }

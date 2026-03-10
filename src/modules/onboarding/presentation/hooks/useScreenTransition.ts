@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { SlideInRight, SlideOutLeft, SlideInLeft, SlideOutRight } from 'react-native-reanimated';
-import { contentFadeInLinear, fastFadeOut } from '@infrastructure/animation';
+import { contentFadeInLinear, fastFadeOut, timing } from '@infrastructure/animation';
 import type { UIConfig } from '../../domain/common';
 
 type AnimationType = 'slide' | 'fade' | 'none';
@@ -27,13 +27,13 @@ export function useScreenTransition(
       case 'slide':
         if (direction === 'forward') {
           return {
-            entering: SlideInRight.duration(300),
-            exiting: SlideOutLeft.duration(200),
+            entering: SlideInRight.duration(timing.content.duration),
+            exiting: SlideOutLeft.duration(timing.fast.duration),
           };
         } else {
           return {
-            entering: SlideInLeft.duration(300),
-            exiting: SlideOutRight.duration(200),
+            entering: SlideInLeft.duration(timing.content.duration),
+            exiting: SlideOutRight.duration(timing.fast.duration),
           };
         }
 

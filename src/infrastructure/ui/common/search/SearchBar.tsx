@@ -4,6 +4,7 @@ import Animated, { withTiming } from 'react-native-reanimated';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 import { SearchIcon } from '@/svg-icons';
+import { timing } from '@infrastructure/animation';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { RenderPropType } from '@domain/types';
 import { Spinner } from '@infrastructure/ui/spinner';
@@ -23,7 +24,7 @@ export const SearchBar = (props: SearchBarProps) => {
   const exiting = () => {
     'worklet';
     const animations = {
-      opacity: withTiming(0, { duration: 250 }),
+      opacity: withTiming(0, timing.standard),
     };
     const initialValues = {
       opacity: 1,
