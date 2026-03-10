@@ -1,7 +1,8 @@
 import React from 'react';
 import { Trash } from '@/svg-icons/common/Trash';
 import { Channel, Message } from '@domain/types';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { quickFadeIn } from '@infrastructure/animation';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { useChatWindowContext } from '@infrastructure/context';
@@ -129,7 +130,7 @@ const MessageWrapper = ({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(150)}
+      entering={quickFadeIn()}
       style={[
         themedTailwind.style(
           'my-[1px]',

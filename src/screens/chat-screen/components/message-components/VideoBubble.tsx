@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Platform, Pressable } from 'react-native';
-import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { contentFadeIn, contentFadeOut } from '@infrastructure/animation';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEvent } from 'expo';
 import { Image } from 'expo-image';
@@ -84,14 +85,14 @@ export const VideoBubblePlayer = (props: VideoPlayerProps) => {
       ) : null}
       {!playVideo && playerEnabled ? (
         <Animated.View
-          entering={FadeIn.duration(300).easing(Easing.ease)}
-          exiting={FadeOut.duration(300).easing(Easing.ease)}
+          entering={contentFadeIn()}
+          exiting={contentFadeOut()}
           style={tailwind.style('absolute inset-0 flex items-center justify-center')}>
           <Pressable
             onPress={handlePlayPress}
             style={tailwind.style('h-full w-full flex items-center justify-center')}>
             <Image
-              source={require('../../../../assets/local/PlayIcon.png')} // eslint-disable-line @typescript-eslint/no-require-imports
+              source={require('../../../../assets/local/PlayIcon.png')}
               style={tailwind.style('h-12 w-12 z-10')}
             />
           </Pressable>

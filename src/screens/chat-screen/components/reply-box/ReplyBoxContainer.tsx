@@ -1,13 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  useDerivedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated, { useDerivedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lock, LockOpen } from 'lucide-react-native';
 
@@ -69,7 +63,7 @@ import {
 } from '@infrastructure/utils/messageVariableUtils';
 import { ReplyEmailHead } from './ReplyEmailHead';
 import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
-import { spring, snappyLayout } from '@infrastructure/animation';
+import { spring, snappyLayout, standardFadeIn, instantFadeOut } from '@infrastructure/animation';
 import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
 
@@ -437,7 +431,7 @@ const BottomSheetContent = () => {
           `pb-2 border-t-[1px] border-t-slate-6 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
         )}>
         {quoteMessage && (
-          <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
+          <Animated.View entering={standardFadeIn()} exiting={instantFadeOut()}>
             <QuoteReply />s
           </Animated.View>
         )}

@@ -3,7 +3,6 @@ import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
-  FadeIn,
   interpolate,
   interpolateColor,
   runOnJS,
@@ -15,7 +14,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { spring, softLayout } from '@infrastructure/animation';
+import { spring, softLayout, fastFadeIn } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic } from '@infrastructure/utils';
 import { AnimatedNativeView } from '@infrastructure/ui/native-components';
@@ -461,7 +460,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
       </AnimatedPressable>
       <GestureDetector gesture={cellGestures}>
         <AnimatedNativeView
-          entering={FadeIn.duration(200)}
+          entering={fastFadeIn()}
           layout={softLayout()}
           style={[tailwind.style('flex-1 z-10', `w-[${WIDTH}px]`), overlayStyle, tappedCellStyle]}>
           {children}
