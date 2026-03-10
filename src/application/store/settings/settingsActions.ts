@@ -19,6 +19,7 @@ import { URL_TYPE } from '@domain/constants/url';
 import { checkValidUrl, extractDomain, handleApiError } from './settingsUtils';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import { requestNotificationPermissions } from '@infrastructure/utils/permissionManager';
+import { isFirebaseInitialized } from '@infrastructure/utils/firebaseUtils';
 
 const createSettingsThunk = <TResponse, TPayload>(
   type: string,
@@ -85,6 +86,10 @@ export const settingsActions = {
     'settings/saveDeviceDetails',
     async (_, { rejectWithValue }) => {
       try {
+        if (!isFirebaseInitialized()) {
+          console.warn('[Firebase] Not initialized — skipping saveDeviceDetails');
+          return rejectWithValue('Firebase not initialized');
+        }
         const messaging = getMessaging(getApp());
         const permissionEnabled = await hasPermission(messaging);
         const deviceId =

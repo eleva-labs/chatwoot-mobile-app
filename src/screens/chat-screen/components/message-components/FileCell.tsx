@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet } from 'react-native';
 import FileViewer from 'react-native-file-viewer';
-import Animated, { Easing, FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { contentFadeIn } from '@infrastructure/animation';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 
 import { FileIcon } from '@/svg-icons';
@@ -150,7 +151,7 @@ export const FileCell = (props: FileCellProps) => {
 
   return (
     <Animated.View
-      entering={FadeIn.duration(300).easing(Easing.ease)}
+      entering={contentFadeIn()}
       style={tailwind.style(
         'w-full my-[1px]',
         isIncoming && 'items-start',

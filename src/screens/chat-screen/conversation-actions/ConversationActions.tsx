@@ -3,7 +3,8 @@ import React from 'react';
 import { Alert, Dimensions, Platform, Share } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop, Button } from '@infrastructure/ui';
 import {
@@ -17,13 +18,12 @@ import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationStatus } from '@domain/types';
 import i18n from '@infrastructure/i18n';
-import { useChatWindowContext } from '@infrastructure/context';
+import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
-import { useRefsContext } from '@infrastructure/context';
 import { selectSingleConversation } from '@application/store/conversation/conversationSelectedSlice';
 // import { teamActions } from '@application/store/team/teamActions';
 // import { selectAllTeams } from '@application/store/team/teamSelectors';
@@ -40,11 +40,6 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
   const themedTailwind = useThemedStyles();
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
   const { updateParticipantSheetRef, actionsModalSheetRef } = useRefsContext();
   const { conversationId } = useChatWindowContext();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
@@ -190,7 +185,7 @@ export const ConversationActions = () => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         enablePanDownToClose
         snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />

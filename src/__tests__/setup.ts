@@ -4,7 +4,7 @@
  * This file configures the test environment with global mocks,
  * console suppression, and test utilities for ALL test suites.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports, @typescript-eslint/no-unused-vars, @typescript-eslint/no-namespace */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import 'reflect-metadata';
 
@@ -64,6 +64,25 @@ jest.mock('@react-navigation/native', () => ({
 
 // ─── Native Module Mocks ────────────────────────────────────────
 jest.mock('react-native-reanimated', () => {
+  // Chainable builder mock — each method returns a new object (fresh instance per call)
+  const createAnimationBuilder = () => {
+    const makeChainable = (): Record<string, any> => {
+      const builder: Record<string, any> = {};
+      const chainable = (..._args: any[]) => makeChainable();
+      builder.springify = chainable;
+      builder.damping = chainable;
+      builder.stiffness = chainable;
+      builder.mass = chainable;
+      builder.duration = chainable;
+      builder.easing = chainable;
+      builder.delay = chainable;
+      builder.withInitialValues = chainable;
+      builder.build = chainable;
+      return builder;
+    };
+    return makeChainable();
+  };
+
   return {
     default: {
       View: 'Animated.View',
@@ -87,7 +106,20 @@ jest.mock('react-native-reanimated', () => {
       in: jest.fn(),
       out: jest.fn(),
       inOut: jest.fn(),
+      bezier: jest.fn(() => ({ factory: jest.fn() })),
     },
+    // Layout animation builders
+    LinearTransition: createAnimationBuilder(),
+    SlideInDown: createAnimationBuilder(),
+    SlideInUp: createAnimationBuilder(),
+    SlideOutDown: createAnimationBuilder(),
+    SlideOutUp: createAnimationBuilder(),
+    SlideInRight: createAnimationBuilder(),
+    SlideInLeft: createAnimationBuilder(),
+    SlideOutRight: createAnimationBuilder(),
+    SlideOutLeft: createAnimationBuilder(),
+    FadeIn: createAnimationBuilder(),
+    FadeOut: createAnimationBuilder(),
   };
 });
 
@@ -140,6 +172,36 @@ jest.mock('@react-native-documents/picker', () => ({
   isErrorWithCode: jest.fn(() => false),
   errorCodes: { OPERATION_CANCELED: 'OPERATION_CANCELED' },
 }));
+
+jest.mock('expo-image-manipulator', () => ({
+  ImageManipulator: {
+    manipulate: jest.fn(() => ({
+      rotate: jest.fn().mockReturnThis(),
+      renderAsync: jest.fn(() =>
+        Promise.resolve({
+          width: 100,
+          height: 100,
+          saveAsync: jest.fn(() =>
+            Promise.resolve({ uri: 'file://converted.jpg', width: 100, height: 100 }),
+          ),
+        }),
+      ),
+    })),
+  },
+  SaveFormat: { JPEG: 'jpeg', PNG: 'png', WEBP: 'webp' },
+}));
+
+jest.mock('expo-file-system', () => {
+  class MockFile {
+    uri: string;
+    exists = true;
+    size = 1024;
+    constructor(uri: string) {
+      this.uri = uri;
+    }
+  }
+  return { File: MockFile, Directory: jest.fn(), Paths: { cache: '', document: '' } };
+});
 
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),

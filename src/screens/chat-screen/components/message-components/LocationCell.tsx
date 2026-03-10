@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
-import Animated, { Easing, FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { contentFadeIn } from '@infrastructure/animation';
 
 import { tailwind } from '@infrastructure/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
@@ -50,7 +51,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
 
   return (
     <Animated.View
-      entering={FadeIn.duration(300).easing(Easing.ease)}
+      entering={contentFadeIn()}
       style={tailwind.style(
         'w-full my-[1px]',
         isIncoming && 'items-start',

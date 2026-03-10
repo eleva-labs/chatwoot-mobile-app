@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop } from '@infrastructure/ui';
 import i18n from '@infrastructure/i18n';
@@ -44,7 +45,8 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
         style={tailwind.style('rounded-t-[26px] overflow-hidden')}
         enablePanDownToClose
         snapPoints={['75%']}
-        enableDynamicSizing={false}>
+        enableDynamicSizing={false}
+        animationConfigs={spring.sheet}>
         <MacroProvider conversationId={conversationId} onClose={onClose}>
           <Animated.View style={tailwind.style('flex-1')}>
             {selectedMacro ? (

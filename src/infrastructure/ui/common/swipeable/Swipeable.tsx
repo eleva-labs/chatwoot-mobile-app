@@ -1,16 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { forwardRef, useCallback } from 'react';
-import { Dimensions, Platform, Pressable, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
-  FadeIn,
   interpolate,
   interpolateColor,
-  LinearTransition,
   runOnJS,
   SharedValue,
-  SlideInDown,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
@@ -18,6 +14,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
+import { spring, softLayout, fastFadeIn } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic } from '@infrastructure/utils';
 import { AnimatedNativeView } from '@infrastructure/ui/native-components';
@@ -29,9 +26,6 @@ const FRICTION = 10;
 const DRAG_TOSS = 0.05;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const rowCloseSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
-const overSwipedSpringConfig = { damping: 20, stiffness: 180 };
 
 export type SwipeableProps = {
   /**
@@ -164,7 +158,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
 
   const closeRow = () => {
     'worklet';
-    animStatePos.value = withSpring(0, rowCloseSpringConfig);
+    animStatePos.value = withSpring(0, spring.swipeClose);
     startX.value = 0;
   };
 
@@ -200,12 +194,12 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
     .minDuration(250)
     .maxDistance(20)
     .onStart(() => handleLongPress && runOnJS(handleLongPress)())
-    .onFinalize(() => (isTapped.value = withSpring(0, { damping: 25, stiffness: 120 })));
+    .onFinalize(() => (isTapped.value = withSpring(0, spring.tapFeedback)));
 
   const tapGesture = Gesture.Tap()
-    .onBegin(() => (isTapped.value = withSpring(1, { damping: 25, stiffness: 120 })))
+    .onBegin(() => (isTapped.value = withSpring(1, spring.tapFeedback)))
     .onEnd(() => runOnJS(handlePress)())
-    .onFinalize(() => (isTapped.value = withSpring(0, { damping: 25, stiffness: 120 })));
+    .onFinalize(() => (isTapped.value = withSpring(0, spring.tapFeedback)));
 
   const panGesture = Gesture.Pan()
     .maxPointers(noOfPointers)
@@ -214,7 +208,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
       dragOverSwiped.value = false;
     })
     .onStart(() => {
-      isTapped.value = withSpring(0, { damping: 25, stiffness: 120 });
+      isTapped.value = withSpring(0, spring.tapFeedback);
       startX.value = animStatePos.value;
       isGestureActive.value = true;
       openedRowIndex.value = index;
@@ -238,7 +232,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         // We might have to trigger the overswipe action when it is swiped in higher speed
         // Setting a variable to know that its going to an over swiped case
         dragOverSwiped.value = true;
-        overSwipedState.value = withSpring(1, overSwipedSpringConfig);
+        overSwipedState.value = withSpring(1, spring.soft);
         // Calculate a higher spring config for the rubber band effect
         const distanceBeyondMax = Math.abs(clampedVal) - maxTranslation;
         const springFactor = distanceBeyondMax * FRICTION;
@@ -247,7 +241,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         stiffnessValue += springFactor;
       } else {
         if (dragOverSwiped.value) {
-          overSwipedState.value = withSpring(0, overSwipedSpringConfig, finished => {
+          overSwipedState.value = withSpring(0, spring.soft, finished => {
             if (finished) {
               dragOverSwiped.value = false;
             }
@@ -286,7 +280,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         }
         animStatePos.value = withSpring(
           0,
-          { ...rowCloseSpringConfig, velocity: evt.velocityX / 15 },
+          { ...spring.swipeClose, velocity: evt.velocityX / 15 },
           finished => {
             if (finished) {
               isGestureActive.value = false;
@@ -306,7 +300,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         }
         animStatePos.value = withSpring(
           0,
-          { ...rowCloseSpringConfig, velocity: evt.velocityX / 15 },
+          { ...spring.swipeClose, velocity: evt.velocityX / 15 },
           finished => {
             if (finished) {
               isGestureActive.value = false;
@@ -328,7 +322,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         }
         animStatePos.value = withSpring(
           0,
-          { ...rowCloseSpringConfig, velocity: evt.velocityX / 15 },
+          { ...spring.swipeClose, velocity: evt.velocityX / 15 },
           finished => {
             if (finished) {
               isGestureActive.value = false;
@@ -358,15 +352,11 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
           return diff < prevDiff ? cur : acc;
         }, Infinity);
 
-        animStatePos.value = withSpring(
-          closestSnapPoint,
-          { damping: 30, stiffness: 360, mass: 1 },
-          finished => {
-            if (finished) {
-              isGestureActive.value = false;
-            }
-          },
-        );
+        animStatePos.value = withSpring(closestSnapPoint, spring.swipeClose, finished => {
+          if (finished) {
+            isGestureActive.value = false;
+          }
+        });
       }
     });
 
@@ -470,15 +460,8 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
       </AnimatedPressable>
       <GestureDetector gesture={cellGestures}>
         <AnimatedNativeView
-          entering={
-            Platform.OS === 'ios'
-              ? SlideInDown.delay(index * 20)
-                  .springify()
-                  .damping(20)
-                  .stiffness(120)
-              : FadeIn
-          }
-          layout={LinearTransition.springify().damping(28).stiffness(200)}
+          entering={fastFadeIn()}
+          layout={softLayout()}
           style={[tailwind.style('flex-1 z-10', `w-[${WIDTH}px]`), overlayStyle, tappedCellStyle]}>
           {children}
         </AnimatedNativeView>

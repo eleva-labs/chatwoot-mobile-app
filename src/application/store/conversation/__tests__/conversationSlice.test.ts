@@ -211,7 +211,7 @@ describe('conversationSlice', () => {
       expect(state).toEqual(initialState);
     });
 
-    it('should append message when same ID exists but findPendingMessageIndex returns -1', () => {
+    it('should update in-place when same numeric ID exists but findPendingMessageIndex returns -1', () => {
       const existingMessage = aMessage()
         .withId(10)
         .withConversationId(1)
@@ -228,8 +228,33 @@ describe('conversationSlice', () => {
 
       const state = reducer(initialState, addOrUpdateMessage(duplicateMessage));
 
-      // When findPendingMessageIndex returns -1, the message is appended (even if same ID)
+      // Numeric ID dedup should prevent a duplicate; the existing message is updated in-place
+      expect(state.entities[1]?.messages).toHaveLength(1);
+      expect(state.entities[1]?.messages[0].status).toBe('delivered');
+    });
+
+    it('should push message when ID is a string (pending message)', () => {
+      const existingMessage = aMessage()
+        .withId(10)
+        .withConversationId(1)
+        .withStatus('sent')
+        .build();
+      const conversation = aConversation().withId(1).withMessages([existingMessage]).build();
+      const initialState = stateWithConversation(conversation);
+      // Pending messages have string IDs (echoIds) — they should still be pushed normally
+      const pendingMessage = {
+        ...aMessage().withConversationId(1).withStatus('progress').build(),
+        id: 'temp-uuid-456' as unknown as number,
+        echoId: 'temp-uuid-456',
+      };
+      mockFindPendingMessageIndex.mockReturnValue(-1);
+
+      const state = reducer(initialState, addOrUpdateMessage(pendingMessage));
+
+      // String ID should bypass the numeric dedup guard and push normally
       expect(state.entities[1]?.messages).toHaveLength(2);
+      expect(state.entities[1]?.messages[0]).toEqual(existingMessage);
+      expect(state.entities[1]?.messages[1].id).toBe('temp-uuid-456');
     });
   });
 

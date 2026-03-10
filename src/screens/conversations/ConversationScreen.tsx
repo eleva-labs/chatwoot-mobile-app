@@ -1,17 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, AppState, RefreshControl, StatusBar } from 'react-native';
-import Animated, {
-  LinearTransition,
-  runOnJS,
-  SharedValue,
-  useAnimatedScrollHandler,
-} from 'react-native-reanimated';
+import Animated, { runOnJS, SharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  BottomSheetModal,
-  useBottomSheetSpringConfigs,
-  useBottomSheetModal,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring, softLayout } from '@infrastructure/animation';
 import { FlashList } from '@shopify/flash-list';
 
 import {
@@ -38,12 +30,12 @@ import {
   ConversationListStateProvider,
   useConversationListStateContext,
   useRefsContext,
+  useTheme,
 } from '@infrastructure/context';
 
 import { tailwind } from '@infrastructure/theme';
 import { Conversation } from '@domain/types';
 import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
-import { useTheme } from '@infrastructure/context';
 import {
   selectBottomSheetState,
   setBottomSheetState,
@@ -267,7 +259,7 @@ const ConversationList = () => {
   ) : (
     <AnimatedFlashList
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      layout={LinearTransition.springify().damping(18).stiffness(120)}
+      layout={softLayout()}
       showsVerticalScrollIndicator={false}
       data={allConversations}
       estimatedItemSize={91}
@@ -275,7 +267,6 @@ const ConversationList = () => {
       onEndReached={handleOnEndReached}
       onEndReachedThreshold={0.5}
       ListFooterComponent={ListFooterComponent}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       renderItem={handleRender}
       contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
@@ -289,12 +280,6 @@ const ConversationScreen = () => {
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const dispatch = useAppDispatch();
-
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1.2,
-    stiffness: 300,
-    damping: 50,
-  });
 
   const { filtersModalSheetRef } = useRefsContext();
 
@@ -341,7 +326,7 @@ const ConversationScreen = () => {
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
           backgroundStyle={themedTailwind.style('bg-solid-1')}
-          animationConfigs={animationConfigs}
+          animationConfigs={spring.sheet}
           enablePanDownToClose
           snapPoints={filterSnapPoints}
           onDismiss={handleOnDismiss}>

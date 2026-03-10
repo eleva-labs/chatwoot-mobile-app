@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import type { UIMessage } from 'ai';
+import { timing } from '@infrastructure/animation';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 // Use domain type guards instead of hardcoded strings
 import { isTextPart, type MessagePart } from '@domain/types/ai-chat/parts';
@@ -82,15 +83,15 @@ export const AIThoughtsView: React.FC<AIThoughtsViewProps> = ({ message, timesta
   // This reduces re-renders caused by text content growing
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
-      maxHeight: withTiming(isExpanded ? 320 : 0, { duration: 300 }),
-      opacity: withTiming(isExpanded ? 1 : 0, { duration: 300 }),
+      maxHeight: withTiming(isExpanded ? 320 : 0, timing.content),
+      opacity: withTiming(isExpanded ? 1 : 0, timing.content),
     };
   });
 
   // Animated style for chevron
   const chevronAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ rotate: withTiming(isExpanded ? '180deg' : '0deg', { duration: 300 }) }],
+      transform: [{ rotate: withTiming(isExpanded ? '180deg' : '0deg', timing.content) }],
     };
   });
 

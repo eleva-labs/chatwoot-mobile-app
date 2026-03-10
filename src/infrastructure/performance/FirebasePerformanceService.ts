@@ -3,6 +3,7 @@ import perf from '@react-native-firebase/perf';
 import type { IPerformanceService, IPerformanceTrace } from '@/domain/interfaces/services/shared';
 import { normalizeEventName } from '@infrastructure/utils/normalizeEventName';
 import { FirebasePerformanceTraceAdapter } from './adapters';
+import { isFirebaseInitialized } from '@infrastructure/utils/firebaseUtils';
 
 const SCREEN_TRACE_PREFIX = 'screen_';
 
@@ -15,6 +16,10 @@ export class FirebasePerformanceService implements IPerformanceService {
 
   setCollectionEnabled(enabled: boolean): void {
     this.collectionEnabled = enabled;
+    if (!isFirebaseInitialized()) {
+      console.warn('[Firebase] Not initialized — skipping setPerformanceCollectionEnabled');
+      return;
+    }
     perf()
       .setPerformanceCollectionEnabled(enabled)
       .catch(() => {
@@ -27,6 +32,11 @@ export class FirebasePerformanceService implements IPerformanceService {
 
     const normalizedName = normalizeEventName(traceName);
     if (!normalizedName) return null;
+
+    if (!isFirebaseInitialized()) {
+      console.warn('[Firebase] Not initialized — skipping startTrace');
+      return null;
+    }
 
     try {
       const firebaseTrace = await perf().startTrace(normalizedName);

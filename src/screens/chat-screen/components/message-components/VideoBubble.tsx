@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Platform, Pressable } from 'react-native';
-import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { contentFadeIn, contentFadeOut } from '@infrastructure/animation';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEvent } from 'expo';
 import { Image } from 'expo-image';
@@ -84,14 +85,14 @@ export const VideoBubblePlayer = (props: VideoPlayerProps) => {
       ) : null}
       {!playVideo && playerEnabled ? (
         <Animated.View
-          entering={FadeIn.duration(300).easing(Easing.ease)}
-          exiting={FadeOut.duration(300).easing(Easing.ease)}
+          entering={contentFadeIn()}
+          exiting={contentFadeOut()}
           style={tailwind.style('absolute inset-0 flex items-center justify-center')}>
           <Pressable
             onPress={handlePlayPress}
             style={tailwind.style('h-full w-full flex items-center justify-center')}>
             <Image
-              source={require('../../../../assets/local/PlayIcon.png')} // eslint-disable-line @typescript-eslint/no-require-imports
+              source={require('../../../../assets/local/PlayIcon.png')}
               style={tailwind.style('h-12 w-12 z-10')}
             />
           </Pressable>
@@ -111,41 +112,6 @@ export const VideoBubble = (props: VideoBubbleProps) => {
           videoSrc,
         }}
       />
-      {/* TODO: Fix this */}
-      {/* <Animated.View
-        pointerEvents={'none'}
-        entering={FadeIn.duration(300).easing(Easing.ease)}
-        exiting={FadeOut.duration(300).easing(Easing.ease)}>
-        <ImageBackground
-          source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
-          style={tailwind.style(
-            'absolute bottom-0 right-0 h-15 w-33 z-20 ',
-            shouldRenderAvatar
-              ? isOutgoing
-                ? 'rounded-br-none'
-                : isIncoming
-                  ? 'rounded-bl-none'
-                  : ''
-              : '',
-          )}>
-          <Animated.View style={tailwind.style('flex flex-row absolute right-3 bottom-[5px]')}>
-            <Text
-              style={tailwind.style(
-                'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
-              )}>
-              {messageTimestamp(timeStamp)}
-            </Text>
-            <DeliveryStatus
-              isPrivate={isPrivate}
-              status={status}
-              messageType={messageType}
-              channel={channel}
-              errorMessage={errorMessage || ''}
-              sourceId={sourceId}
-            />
-          </Animated.View>
-        </ImageBackground>
-      </Animated.View> */}
     </React.Fragment>
   );
 };

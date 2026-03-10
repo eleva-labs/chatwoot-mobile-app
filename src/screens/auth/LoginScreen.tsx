@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EMAIL_REGEX } from '@domain/constants';
@@ -15,7 +12,7 @@ import { tailwind } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { resetAuth } from '@application/store/auth/authSlice';
 import { authActions } from '@application/store/auth/authActions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 
 import {
   BottomSheetBackdrop,
@@ -39,7 +36,6 @@ import { useRefsContext } from '@infrastructure/context/RefsContext';
 import { settingsActions } from '@application/store/settings/settingsActions';
 import appLogo from '@/assets/images/logo.png';
 import { useTheme } from '@infrastructure/context/ThemeContext';
-import { useThemedStyles } from '@/hooks';
 import { SsoUtils } from '@infrastructure/utils/ssoUtils';
 
 type FormData = {
@@ -65,12 +61,6 @@ const LoginScreen = () => {
 
   const { languagesModalSheetRef } = useRefsContext();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
-
   const dispatch = useAppDispatch();
   const isLoggingIn = useAppSelector(selectIsLoggingIn);
   const isLoggedIn = useAppSelector(selectLoggedIn);
@@ -93,7 +83,7 @@ const LoginScreen = () => {
       if (envInstallationUrl) {
         // Try to auto-set from env to avoid forcing the user into the Configure URL screen
         // If verification fails, we'll fall back to the Configure URL screen
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
         dispatch(settingsActions.setInstallationUrl(envInstallationUrl));
       } else {
         navigation.navigate('ConfigureURL' as never);
@@ -356,7 +346,7 @@ const LoginScreen = () => {
         )}
         detached
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
         style={themedTailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}

@@ -8,14 +8,15 @@ import {
   type DocumentPickerResponse,
 } from '@react-native-documents/picker';
 import * as ImagePicker from 'expo-image-picker';
-import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch } from '@/hooks';
 import { updateAttachments } from '@application/store/conversation/sendMessageSlice';
 import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';
+import { snappySlideInDown, snappySlideOutDown } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
-import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
+import { useHaptic, useScaleAnimation, processImageForUpload } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
 import { MAXIMUM_FILE_UPLOAD_SIZE } from '@domain/constants';
 import i18n from '@infrastructure/i18n';
@@ -47,7 +48,9 @@ export const handleOpenPhotosLibrary = async (dispatch: AppDispatch) => {
     // User cancelled
   } else if (pickedAssets.assets && pickedAssets.assets.length > 0) {
     for (const asset of pickedAssets.assets) {
-      validateFileAndSetAttachments(dispatch, mapExpoAsset(asset));
+      const mapped = mapExpoAsset(asset);
+      const processed = await processImageForUpload(mapped);
+      validateFileAndSetAttachments(dispatch, processed);
     }
   }
 };
@@ -80,7 +83,9 @@ const handleLaunchCamera = async (dispatch: AppDispatch) => {
   });
   if (!imageResult.canceled && imageResult.assets && imageResult.assets.length > 0) {
     const asset = imageResult.assets[0];
-    validateFileAndSetAttachments(dispatch, mapExpoAsset(asset));
+    const mapped = mapExpoAsset(asset);
+    const processed = await processImageForUpload(mapped);
+    validateFileAndSetAttachments(dispatch, processed);
   }
 };
 
@@ -125,7 +130,8 @@ const handleAttachFile = async (dispatch: AppDispatch) => {
     });
     // TODO: Support multiple files
     const file = mapObject(result[0])[0];
-    validateFileAndSetAttachments(dispatch, file);
+    const processed = await processImageForUpload(file);
+    validateFileAndSetAttachments(dispatch, processed);
   } catch (err) {
     if (isErrorWithCode(err) && err.code === errorCodes.OPERATION_CANCELED) {
       // User cancelled the picker
@@ -227,8 +233,8 @@ export const CommandOptionsMenu = () => {
     : 175 + (bottom === 0 ? 16 : bottom);
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(38).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('mx-1 pt-2 items-start', `h-[${containerHeight}px]`)}>
       {ADD_MENU_OPTIONS.map((menuOption, index) => {
         return <MenuOption key={menuOption.key} {...{ menuOption, index }} />;

@@ -25,7 +25,7 @@ export const NoNetworkBar = () => {
       duration: animationConstants.DURATION,
       toValue: animationConstants.TO_VALUE,
       useNativeDriver: true,
-      easing: Easing.bounce,
+      easing: Easing.out(Easing.cubic),
     }).start();
   }, [animation, animationConstants]);
 

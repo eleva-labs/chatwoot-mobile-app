@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { View, TextInput, Pressable } from 'react-native';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { Mic, Send } from 'lucide-react-native';
+import { softLayout } from '@infrastructure/animation';
 import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import type { AIInputFieldProps } from '@presentation/ai-chat/containers/ai-assistant/types';
@@ -32,7 +33,7 @@ export const AIInputField: React.FC<AIInputFieldProps> = ({ onSend, isLoading, o
 
   return (
     <Animated.View
-      layout={LinearTransition.springify().damping(20).stiffness(120)}
+      layout={softLayout()}
       style={[
         style('px-4 py-2 border-t', inputTokens.containerBackground, inputTokens.containerBorder),
       ]}>

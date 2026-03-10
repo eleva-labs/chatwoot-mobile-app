@@ -86,7 +86,19 @@ const conversationSlice = createSlice({
       }
       // If the message is not present in the conversation, add it
       else {
-        conversation.messages.push(message as Message);
+        // Guard against duplicate numeric IDs (e.g., WebSocket message.created
+        // arriving after the API response already added the message)
+        const numericId = (message as Message).id;
+        if (typeof numericId === 'number') {
+          const existingIndex = conversation.messages.findIndex(m => m.id === numericId);
+          if (existingIndex !== -1) {
+            conversation.messages[existingIndex] = message as Message;
+          } else {
+            conversation.messages.push(message as Message);
+          }
+        } else {
+          conversation.messages.push(message as Message);
+        }
       }
       conversation.timestamp = message.createdAt;
       conversation.unreadCount = (message as Message).conversation?.unreadCount || 0;

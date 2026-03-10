@@ -294,6 +294,26 @@ describe('conversationActions', () => {
       expect(lastMessage.status).toBe(MESSAGE_STATUS.FAILED);
     });
 
+    it('should use multipart/form-data Content-Type when file is present in payload', async () => {
+      const filePayload = makeSendMessagePayload({
+        file: { uri: 'file://photo.jpg', fileName: 'photo.jpg', type: 'image/jpeg' },
+      });
+      const pendingMsg = makePendingMessage(filePayload);
+      const builtPayload = { content: 'Hello world', private: false, echo_id: 'temp-uuid-123' };
+      mockCreatePendingMessage.mockReturnValue(pendingMsg);
+      mockBuildCreatePayload.mockReturnValue(builtPayload);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mockService.sendMessage.mockResolvedValue(makeApiResponse() as any);
+
+      const store = createStore();
+      await store.dispatch(conversationActions.sendMessage(filePayload));
+
+      // Content-Type should be 'multipart/form-data', NOT the file's MIME type ('image/jpeg')
+      expect(mockService.sendMessage).toHaveBeenCalledWith(1, builtPayload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    });
+
     it('should result in a failed message and throw when error has no response (network error)', async () => {
       const pendingMsg = makePendingMessage(sendPayload);
       mockCreatePendingMessage.mockReturnValue(pendingMsg);

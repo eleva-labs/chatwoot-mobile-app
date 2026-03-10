@@ -9,7 +9,9 @@ import Animated, {
 import { BlurView, BlurViewProps } from 'expo-blur';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { selectCurrentState } from '@application/store/conversation/conversationHeaderSlice';
+import { spring } from '@infrastructure/animation';
 
 import {
   ConversationIconFilled,
@@ -28,20 +30,17 @@ import { useTheme } from '@infrastructure/context';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-const tabExitSpringConfig = { damping: 20, stiffness: 360, mass: 1 };
-const tabEnterSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
-
 type TabBarIconsProps = {
   focused: boolean;
   route: RouteProp<TabParamList, keyof TabParamList>;
 };
 
 const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
-  const { semanticColors } = useThemeColors();
+  const { colors, semanticColors } = useThemeColors();
 
-  // Focused: Use primary brand color (iris-9 purple in both modes)
-  // Unfocused: Use muted text color (slate-10)
-  const iconColor = focused ? semanticColors.primary : semanticColors.textMuted;
+  // Active: iris-11 provides high-contrast brand tint in both light/dark modes
+  // Inactive: textSecondary (slate-11) provides readable contrast, matching web sidebar
+  const iconColor = focused ? colors.iris[11] : semanticColors.textSecondary;
 
   switch (route.name) {
     case 'Conversations':
@@ -75,9 +74,7 @@ const TabBarBackground = (props: TabBarBackgroundProps) => {
   const tabBarHeight = useTabBarHeight();
 
   const derivedAnimatedState = useDerivedValue(() =>
-    currentState === 'Select'
-      ? withSpring(1, tabExitSpringConfig)
-      : withSpring(0, tabEnterSpringConfig),
+    currentState === 'Select' ? withSpring(1, spring.tabExit) : withSpring(0, spring.tabEnter),
   );
 
   const animatedTabBarStyle = useAnimatedStyle(() => {
@@ -136,6 +133,7 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
   const tabBarHeight = useTabBarHeight();
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
+  const { bottom } = useSafeAreaInsets();
 
   // Memoize press handlers using useCallback
   const createPressHandler = React.useCallback(
@@ -176,13 +174,13 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
       style={Platform.select({
         ios: [
           themedTailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-8 bg-solid-1',
+            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-[${Math.max(bottom, 32)}px] bg-solid-1`,
             `h-[${tabBarHeight}px]`,
           ),
         ],
         android: [
           themedTailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] py-[11px] bg-solid-1',
+            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-[${Math.max(bottom, 11)}px] bg-solid-1`,
             `h-[${tabBarHeight}px]`,
           ),
         ],

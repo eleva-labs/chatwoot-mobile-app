@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Text } from 'react-native';
-import Animated, { Easing, FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { contentFadeIn } from '@infrastructure/animation';
 import { Image, ImageBackground } from 'expo-image';
 import { CircleOff } from 'lucide-react-native';
 import { tailwind } from '@infrastructure/theme';
@@ -52,7 +53,7 @@ export const ImageCell = (props: ImageCellProps) => {
 
   return (
     <Animated.View
-      entering={FadeIn.duration(300).easing(Easing.ease)}
+      entering={contentFadeIn()}
       style={tailwind.style(
         'w-full my-[1px]',
         isIncoming && 'items-start',
@@ -118,7 +119,7 @@ export const ImageCell = (props: ImageCellProps) => {
                   />
                   <Animated.View pointerEvents={'none'}>
                     <ImageBackground
-                      source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')} // eslint-disable-line @typescript-eslint/no-require-imports
+                      source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
                       style={tailwind.style(
                         'absolute bottom-0 right-0 h-15 w-33 z-10',
                         shouldRenderAvatar

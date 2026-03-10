@@ -1,14 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LinearTransition,
-  useDerivedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated, { useDerivedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lock, LockOpen } from 'lucide-react-native';
 
@@ -24,6 +17,7 @@ import {
   isAWebWidgetInbox,
   isAPIInbox,
   isAnInstagramChannel,
+  getTypingUsersText,
 } from '@infrastructure/utils';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@domain/constants';
@@ -42,7 +36,10 @@ import {
   selectUserName,
   selectUserThumbnail,
 } from '@application/store/auth/authSelectors';
-import { selectConversationById } from '@application/store/conversation/conversationSelectors';
+import {
+  selectConversationById,
+  getLastEmailInSelectedChat,
+} from '@application/store/conversation/conversationSelectors';
 import { selectInboxById } from '@application/store/inbox/inboxSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
@@ -55,7 +52,6 @@ import { AttachedMedia } from '../message-components/AttachedMedia';
 import { CommandOptionsMenu } from '../message-components/CommandOptionsMenu';
 import { SendMessagePayload } from '@application/store/conversation/conversationTypes';
 import { TypingIndicator } from './TypingIndicator';
-import { getTypingUsersText } from '@infrastructure/utils';
 import { selectTypingUsersByConversationId } from '@application/store/conversation/conversationTypingSlice';
 import { Agent, CannedResponse, Conversation } from '@domain/types';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
@@ -66,15 +62,10 @@ import {
   getAllUndefinedVariablesInMessage,
 } from '@infrastructure/utils/messageVariableUtils';
 import { ReplyEmailHead } from './ReplyEmailHead';
-import { getLastEmailInSelectedChat } from '@application/store/conversation/conversationSelectors';
 import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { spring, snappyLayout, standardFadeIn, instantFadeOut } from '@infrastructure/animation';
 import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
-
-const SHEET_APPEAR_SPRING_CONFIG = {
-  damping: 20,
-  stiffness: 120,
-};
 
 // TODO: Implement this
 // const globalConfig = {
@@ -89,6 +80,7 @@ const BottomSheetContent = () => {
   const dispatch = useAppDispatch();
   const { bottom } = useSafeAreaInsets();
   const { messageListRef } = useRefsContext();
+  const isSendingRef = useRef(false);
 
   // Selectors
   const userId = useAppSelector(selectUserId);
@@ -191,9 +183,7 @@ const BottomSheetContent = () => {
   }, [inbox, canReply, dispatch]);
 
   const derivedAddMenuOptionStateValue = useDerivedValue(() => {
-    return isAddMenuOptionSheetOpen
-      ? withSpring(1, SHEET_APPEAR_SPRING_CONFIG)
-      : withSpring(0, SHEET_APPEAR_SPRING_CONFIG);
+    return isAddMenuOptionSheetOpen ? withSpring(1, spring.soft) : withSpring(0, spring.soft);
   });
 
   const animatedInputWrapperStyle = useAnimatedStyle(
@@ -281,9 +271,16 @@ const BottomSheetContent = () => {
       //   }
       // });
       // TODO: Add support for multiple files later
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      messagePayload.file = attachedFiles[0];
+      const asset = attachedFiles[0];
+      if (!asset.uri) {
+        console.warn('ReplyBoxContainer: Attachment missing URI, skipping file attach');
+      } else {
+        messagePayload.file = {
+          uri: asset.uri,
+          fileName: asset.fileName ?? `file_${Date.now()}`,
+          type: asset.type ?? 'application/octet-stream',
+        };
+      }
     }
 
     // TODO: Implement this
@@ -346,14 +343,25 @@ const BottomSheetContent = () => {
   };
 
   const sendMessage = (messagePayload: SendMessagePayload) => {
-    dispatch(conversationActions.sendMessage(messagePayload));
+    if (isSendingRef.current) return;
+    isSendingRef.current = true;
+
+    // Reset UI state BEFORE dispatching to close the race window
+    // where the user can tap send again with the same attachment data
     dispatch(resetSentMessage());
     setSelectedCannedResponse(null);
     dispatch(setMessageContent(''));
     setCCEmails('');
     setBCCEmails('');
     setToEmails('');
-    messageListRef?.current?.scrollToOffset({ offset: 0, animated: true });
+
+    dispatch(conversationActions.sendMessage(messagePayload)).finally(() => {
+      isSendingRef.current = false;
+    });
+
+    requestAnimationFrame(() => {
+      messageListRef?.current?.scrollToOffset({ offset: 0, animated: true });
+    });
   };
 
   const shouldShowFileUpload =
@@ -418,12 +426,12 @@ const BottomSheetContent = () => {
       )}
 
       <Animated.View
-        layout={LinearTransition.springify().damping(38).stiffness(240)}
+        layout={snappyLayout()}
         style={themedTailwind.style(
           `pb-2 border-t-[1px] border-t-slate-6 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
         )}>
         {quoteMessage && (
-          <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(10)}>
+          <Animated.View entering={standardFadeIn()} exiting={instantFadeOut()}>
             <QuoteReply />s
           </Animated.View>
         )}

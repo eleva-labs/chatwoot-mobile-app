@@ -1,16 +1,17 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { PickedAsset } from '@domain/types';
-import Animated, {
-  LinearTransition,
-  SlideInDown,
-  SlideInUp,
-  SlideOutDown,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Image } from 'expo-image';
 
+import {
+  softLayout,
+  snappySlideInDown,
+  snappySlideInUp,
+  snappySlideOutDown,
+} from '@infrastructure/animation';
 import { AttachFileIcon } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useScaleAnimation } from '@infrastructure/utils';
@@ -74,11 +75,11 @@ const AttachedImage = (props: AttachedImageProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -126,11 +127,11 @@ const AttachedVideo = (props: AttachedVideoProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -166,7 +167,6 @@ const AttachedVideo = (props: AttachedVideoProps) => {
             tailwind.style('rounded-lg'),
             { transform: [{ rotateY: '180deg' }] },
           ]}
-          // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
           source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
         />
         <Animated.View
@@ -201,11 +201,11 @@ const AttachedFile = (props: AttachedFileProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg items-center justify-center',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -261,9 +261,9 @@ export const AttachedMedia = () => {
   return attachments.length > 0 ? (
     <Animated.View style={tailwind.style('py-4')}>
       <Animated.FlatList
-        itemLayoutAnimation={LinearTransition.springify().damping(25).stiffness(200)}
-        entering={SlideInUp}
-        exiting={SlideOutDown}
+        itemLayoutAnimation={softLayout()}
+        entering={snappySlideInUp()}
+        exiting={snappySlideOutDown()}
         style={tailwind.style('px-4 pr-12')}
         horizontal
         showsHorizontalScrollIndicator={false}

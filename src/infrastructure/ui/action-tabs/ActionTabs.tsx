@@ -13,6 +13,7 @@ import { BlurView, BlurViewProps } from 'expo-blur';
 import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { spring } from '@infrastructure/animation';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { Icon } from '../common';
 import { useAppDispatch, useAppSelector } from '@/hooks';
@@ -24,9 +25,6 @@ const ACTION_TAB_HEIGHT = 58;
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-
-const tabExitSpringConfig = { damping: 20, stiffness: 360, mass: 1 };
-const tabEnterSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
 
 type ActionTabBarBackgroundProps = BlurViewProps & PropsWithChildren;
 
@@ -74,9 +72,7 @@ const ActionTabBarBackground = (props: ActionTabBarBackgroundProps) => {
   const currentState = useAppSelector(selectCurrentState);
 
   const derivedAnimatedState = useDerivedValue(() =>
-    currentState === 'Select'
-      ? withSpring(0, tabEnterSpringConfig)
-      : withSpring(1, tabExitSpringConfig),
+    currentState === 'Select' ? withSpring(0, spring.tabEnter) : withSpring(1, spring.tabExit),
   );
 
   const animatedTabBarStyle = useAnimatedStyle(() => {

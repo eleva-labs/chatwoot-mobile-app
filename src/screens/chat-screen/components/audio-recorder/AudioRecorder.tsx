@@ -4,12 +4,13 @@ import AudioRecorderPlayer, {
   RecordBackType,
   AVEncodingOption,
 } from 'react-native-audio-recorder-player';
-import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import isUndefined from 'lodash/isUndefined';
 import * as Sentry from '@sentry/react-native';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import { Trash } from '@/svg-icons/common/Trash';
 
+import { snappySlideInDown, snappySlideOutDown } from '@infrastructure/animation';
 import { TEXT_INPUT_CONTAINER_HEIGHT } from '@domain/constants';
 import { useChatWindowContext } from '@infrastructure/context';
 import i18n from '@infrastructure/i18n';
@@ -226,8 +227,8 @@ export const AudioRecorder = ({
 
   return (
     <Animated.View
-      exiting={SlideOutDown.damping(24).stiffness(180)}
-      entering={SlideInDown.damping(24).stiffness(180)}
+      exiting={snappySlideOutDown()}
+      entering={snappySlideInDown()}
       style={tailwind.style(
         'px-1 flex flex-row items-center overflow-hidden',
         `max-h-[${TEXT_INPUT_CONTAINER_HEIGHT}px]`,

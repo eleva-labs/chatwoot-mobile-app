@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { memo, useState } from 'react';
 import { Dimensions, Text } from 'react-native';
-import { LinearTransition } from 'react-native-reanimated';
+import { softLayout } from '@infrastructure/animation';
 import isEqual from 'lodash/isEqual';
 
 import { AnimatedNativeView, NativeView } from '@infrastructure/ui/native-components';
@@ -118,7 +118,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
 
   return (
     <AnimatedNativeView
-      layout={LinearTransition.springify().damping(28).stiffness(200)}
+      layout={softLayout()}
       style={themedTailwind.style('flex-1 py-3 border-b border-b-slate-3')}>
       {/* Row 0: Inbox indicator */}
       {hasInboxIndicator && (
