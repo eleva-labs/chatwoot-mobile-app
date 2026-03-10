@@ -226,8 +226,8 @@ export const AudioRecorder = ({
 
   return (
     <Animated.View
-      exiting={SlideOutDown.damping(24).stiffness(180)}
-      entering={SlideInDown.damping(24).stiffness(180)}
+      exiting={SlideOutDown.damping(80).stiffness(180)}
+      entering={SlideInDown.damping(80).stiffness(180)}
       style={tailwind.style(
         'px-1 flex flex-row items-center overflow-hidden',
         `max-h-[${TEXT_INPUT_CONTAINER_HEIGHT}px]`,

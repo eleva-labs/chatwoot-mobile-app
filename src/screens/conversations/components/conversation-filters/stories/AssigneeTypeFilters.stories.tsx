@@ -7,8 +7,8 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
+  useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
-import { useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
 import { AssigneeTypeFilters } from '../AssigneeTypeFilters';
 import { defaultFilterState } from '@application/store/conversation/conversationFilterSlice';
@@ -43,7 +43,7 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const { filtersModalSheetRef } = useRefsContext();

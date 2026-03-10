@@ -96,7 +96,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const renderBackDrop = useCallback(

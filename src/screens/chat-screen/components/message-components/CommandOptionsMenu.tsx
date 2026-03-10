@@ -232,8 +232,8 @@ export const CommandOptionsMenu = () => {
     : 175 + (bottom === 0 ? 16 : bottom);
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(38).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
+      entering={SlideInDown.springify().damping(80).stiffness(240)}
+      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
       style={tailwind.style('mx-1 pt-2 items-start', `h-[${containerHeight}px]`)}>
       {ADD_MENU_OPTIONS.map((menuOption, index) => {
         return <MenuOption key={menuOption.key} {...{ menuOption, index }} />;

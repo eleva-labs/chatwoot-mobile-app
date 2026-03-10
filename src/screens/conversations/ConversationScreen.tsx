@@ -290,9 +290,9 @@ const ConversationScreen = () => {
   const dispatch = useAppDispatch();
 
   const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1.2,
-    stiffness: 300,
-    damping: 50,
+    mass: 1,
+    stiffness: 420,
+    damping: 80,
   });
 
   const { filtersModalSheetRef } = useRefsContext();

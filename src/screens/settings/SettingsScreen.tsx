@@ -15,14 +15,14 @@ import * as Device from 'expo-device';
 import ChatWootWidget from '@chatwoot/react-native-widget';
 import { useSelector } from 'react-redux';
 import * as Application from 'expo-application';
-import { Account, AvailabilityStatus } from '@domain/types';
+import { Account, AvailabilityStatus, GenericListType } from '@domain/types';
 import { clearAllConversations } from '@application/store/conversation/conversationSlice';
 import { resetNotifications } from '@application/store/notification/notificationSlice';
 import { clearAllContacts } from '@application/store/contact/contactSlice';
 
 import i18n from '@infrastructure/i18n';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles, useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 import {
   BottomSheetBackdrop,
@@ -41,7 +41,6 @@ import { BuildInfo } from '@infrastructure/ui/common';
 import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
 import { useRefsContext, useTheme } from '@infrastructure/context';
 import { NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
-import { GenericListType } from '@domain/types';
 
 import { useHaptic } from '@infrastructure/utils';
 import { SettingsHeader } from './SettingsHeader';
@@ -65,7 +64,6 @@ import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';
 import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
-import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 const appName = Application.applicationName;
 const appVersion = Application.nativeApplicationVersion;
@@ -152,7 +150,7 @@ const SettingsScreen = () => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const openSheet = () => {

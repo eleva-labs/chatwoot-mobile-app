@@ -17,13 +17,12 @@ import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationStatus } from '@domain/types';
 import i18n from '@infrastructure/i18n';
-import { useChatWindowContext } from '@infrastructure/context';
+import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
-import { useRefsContext } from '@infrastructure/context';
 import { selectSingleConversation } from '@application/store/conversation/conversationSelectedSlice';
 // import { teamActions } from '@application/store/team/teamActions';
 // import { selectAllTeams } from '@application/store/team/teamSelectors';
@@ -43,7 +42,7 @@ export const ConversationActions = () => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
   const { updateParticipantSheetRef, actionsModalSheetRef } = useRefsContext();
   const { conversationId } = useChatWindowContext();

@@ -5,8 +5,8 @@ import {
   BottomSheetModal,
   BottomSheetScrollView,
   BottomSheetModalProvider,
+  useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
-import { useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
 import { BottomSheetHeader } from './BottomSheetHeader';
 import { BottomSheetBackdrop } from './BottomSheetBackdrop';
@@ -36,7 +36,7 @@ export const LanguageSelectorSheet = () => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const { languagesModalSheetRef } = useRefsContext();

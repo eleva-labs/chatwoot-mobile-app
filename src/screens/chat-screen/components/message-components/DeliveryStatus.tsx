@@ -8,8 +8,7 @@ import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { WarningIcon } from '@/svg-icons';
 import { Icon } from '@infrastructure/ui/common';
-import { MessageStatus, MessageType } from '@domain/types';
-import { Channel } from '@domain/types';
+import { MessageStatus, MessageType, Channel } from '@domain/types';
 import { INBOX_TYPES, MESSAGE_TYPES, MESSAGE_STATUS } from '@domain/constants';
 import { ErrorInformation } from './ErrorInformation';
 import { useRefsContext } from '@infrastructure/context';
@@ -65,7 +64,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const showSentIndicator = () => {

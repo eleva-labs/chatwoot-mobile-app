@@ -60,7 +60,7 @@ export const ChatHeader = ({
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const toggleSlaEventsSheet = () => {

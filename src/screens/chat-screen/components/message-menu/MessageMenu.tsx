@@ -85,7 +85,7 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const handleOnDismiss = () => {

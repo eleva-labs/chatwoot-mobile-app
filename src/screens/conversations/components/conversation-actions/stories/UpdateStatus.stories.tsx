@@ -7,8 +7,8 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
+  useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
-import { useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 
 import { UpdateStatus } from '../UpdateStatus';
 import { BottomSheetBackdrop } from '@infrastructure/ui/common/bottomsheet/BottomSheetBackdrop';
@@ -46,7 +46,7 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const { filtersModalSheetRef } = useRefsContext();

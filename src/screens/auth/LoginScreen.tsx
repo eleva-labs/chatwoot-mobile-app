@@ -15,7 +15,7 @@ import { tailwind } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { resetAuth } from '@application/store/auth/authSlice';
 import { authActions } from '@application/store/auth/authActions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 
 import {
   BottomSheetBackdrop,
@@ -39,7 +39,6 @@ import { useRefsContext } from '@infrastructure/context/RefsContext';
 import { settingsActions } from '@application/store/settings/settingsActions';
 import appLogo from '@/assets/images/logo.png';
 import { useTheme } from '@infrastructure/context/ThemeContext';
-import { useThemedStyles } from '@/hooks';
 import { SsoUtils } from '@infrastructure/utils/ssoUtils';
 
 type FormData = {
@@ -68,7 +67,7 @@ const LoginScreen = () => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const dispatch = useAppDispatch();
@@ -93,7 +92,7 @@ const LoginScreen = () => {
       if (envInstallationUrl) {
         // Try to auto-set from env to avoid forcing the user into the Configure URL screen
         // If verification fails, we'll fall back to the Configure URL screen
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
         dispatch(settingsActions.setInstallationUrl(envInstallationUrl));
       } else {
         navigation.navigate('ConfigureURL' as never);

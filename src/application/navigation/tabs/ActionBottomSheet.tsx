@@ -2,14 +2,13 @@ import React, { useMemo } from 'react';
 import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
 import { tailwind } from '@infrastructure/theme';
 import { BottomSheetBackdrop } from '@infrastructure/ui';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import {
   resetActionState,
   selectCurrentActionState,
 } from '@application/store/conversation/conversationActionSlice';
 
 import { useRefsContext } from '@infrastructure/context';
-import { useThemedStyles } from '@/hooks';
 import {
   UpdateAssignee,
   UpdateStatus,
@@ -26,7 +25,7 @@ const ActionBottomSheet = () => {
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
     stiffness: 420,
-    damping: 30,
+    damping: 80,
   });
 
   const { actionsModalSheetRef } = useRefsContext();

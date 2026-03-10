@@ -74,8 +74,8 @@ const AttachedImage = (props: AttachedImageProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(38).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
+      entering={SlideInDown.springify().damping(80).stiffness(240)}
+      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={LinearTransition.springify().damping(28).stiffness(200)}
@@ -126,8 +126,8 @@ const AttachedVideo = (props: AttachedVideoProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(38).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
+      entering={SlideInDown.springify().damping(80).stiffness(240)}
+      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={LinearTransition.springify().damping(28).stiffness(200)}
@@ -200,8 +200,8 @@ const AttachedFile = (props: AttachedFileProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(38).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(38).stiffness(240)}
+      entering={SlideInDown.springify().damping(80).stiffness(240)}
+      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={LinearTransition.springify().damping(28).stiffness(200)}
@@ -261,8 +261,8 @@ export const AttachedMedia = () => {
     <Animated.View style={tailwind.style('py-4')}>
       <Animated.FlatList
         itemLayoutAnimation={LinearTransition.springify().damping(28).stiffness(200)}
-        entering={SlideInUp.springify().damping(38).stiffness(240)}
-        exiting={SlideOutDown.springify().damping(38).stiffness(240)}
+        entering={SlideInUp.springify().damping(80).stiffness(240)}
+        exiting={SlideOutDown.springify().damping(80).stiffness(240)}
         style={tailwind.style('px-4 pr-12')}
         horizontal
         showsHorizontalScrollIndicator={false}
