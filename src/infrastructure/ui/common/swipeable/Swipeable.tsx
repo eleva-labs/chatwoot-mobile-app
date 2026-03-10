@@ -28,8 +28,6 @@ const DRAG_TOSS = 0.05;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const rowCloseSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
-
 export type SwipeableProps = {
   /**
    * The content inside the Swipeable component.
@@ -161,7 +159,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
 
   const closeRow = () => {
     'worklet';
-    animStatePos.value = withSpring(0, rowCloseSpringConfig);
+    animStatePos.value = withSpring(0, spring.swipeClose);
     startX.value = 0;
   };
 
@@ -197,12 +195,12 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
     .minDuration(250)
     .maxDistance(20)
     .onStart(() => handleLongPress && runOnJS(handleLongPress)())
-    .onFinalize(() => (isTapped.value = withSpring(0, { damping: 25, stiffness: 120 })));
+    .onFinalize(() => (isTapped.value = withSpring(0, spring.tapFeedback)));
 
   const tapGesture = Gesture.Tap()
-    .onBegin(() => (isTapped.value = withSpring(1, { damping: 25, stiffness: 120 })))
+    .onBegin(() => (isTapped.value = withSpring(1, spring.tapFeedback)))
     .onEnd(() => runOnJS(handlePress)())
-    .onFinalize(() => (isTapped.value = withSpring(0, { damping: 25, stiffness: 120 })));
+    .onFinalize(() => (isTapped.value = withSpring(0, spring.tapFeedback)));
 
   const panGesture = Gesture.Pan()
     .maxPointers(noOfPointers)
@@ -211,7 +209,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
       dragOverSwiped.value = false;
     })
     .onStart(() => {
-      isTapped.value = withSpring(0, { damping: 25, stiffness: 120 });
+      isTapped.value = withSpring(0, spring.tapFeedback);
       startX.value = animStatePos.value;
       isGestureActive.value = true;
       openedRowIndex.value = index;
@@ -283,7 +281,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         }
         animStatePos.value = withSpring(
           0,
-          { ...rowCloseSpringConfig, velocity: evt.velocityX / 15 },
+          { ...spring.swipeClose, velocity: evt.velocityX / 15 },
           finished => {
             if (finished) {
               isGestureActive.value = false;
@@ -303,7 +301,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         }
         animStatePos.value = withSpring(
           0,
-          { ...rowCloseSpringConfig, velocity: evt.velocityX / 15 },
+          { ...spring.swipeClose, velocity: evt.velocityX / 15 },
           finished => {
             if (finished) {
               isGestureActive.value = false;
@@ -325,7 +323,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         }
         animStatePos.value = withSpring(
           0,
-          { ...rowCloseSpringConfig, velocity: evt.velocityX / 15 },
+          { ...spring.swipeClose, velocity: evt.velocityX / 15 },
           finished => {
             if (finished) {
               isGestureActive.value = false;
@@ -355,15 +353,11 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
           return diff < prevDiff ? cur : acc;
         }, Infinity);
 
-        animStatePos.value = withSpring(
-          closestSnapPoint,
-          { damping: 30, stiffness: 360, mass: 1 },
-          finished => {
-            if (finished) {
-              isGestureActive.value = false;
-            }
-          },
-        );
+        animStatePos.value = withSpring(closestSnapPoint, spring.swipeClose, finished => {
+          if (finished) {
+            isGestureActive.value = false;
+          }
+        });
       }
     });
 

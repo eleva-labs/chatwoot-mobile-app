@@ -11,6 +11,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { selectCurrentState } from '@application/store/conversation/conversationHeaderSlice';
+import { spring } from '@infrastructure/animation';
 
 import {
   ConversationIconFilled,
@@ -28,9 +29,6 @@ import { useAppSelector, useThemedStyles } from '@/hooks';
 import { useTheme } from '@infrastructure/context';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-
-const tabExitSpringConfig = { damping: 28, stiffness: 360, mass: 1 };
-const tabEnterSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
 
 type TabBarIconsProps = {
   focused: boolean;
@@ -76,9 +74,7 @@ const TabBarBackground = (props: TabBarBackgroundProps) => {
   const tabBarHeight = useTabBarHeight();
 
   const derivedAnimatedState = useDerivedValue(() =>
-    currentState === 'Select'
-      ? withSpring(1, tabExitSpringConfig)
-      : withSpring(0, tabEnterSpringConfig),
+    currentState === 'Select' ? withSpring(1, spring.tabExit) : withSpring(0, spring.tabEnter),
   );
 
   const animatedTabBarStyle = useAnimatedStyle(() => {
