@@ -11,16 +11,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  WithSpringConfig,
 } from 'react-native-reanimated';
 
 import { tailwind } from '@infrastructure/theme';
-
-const DefaultSpringConfig: WithSpringConfig = {
-  mass: 1,
-  damping: 28,
-  stiffness: 200,
-};
+import { spring } from '@infrastructure/animation';
 
 type SliderProps = {
   currentPosition: SharedValue<number>;
@@ -56,10 +50,7 @@ export const Slider = (props: SliderProps) => {
     (next, _prev) => {
       translationX.value = withSpring(
         interpolate(next, [0, totalDuration.value], [0, sliderMaxWidth.value - 16]),
-        {
-          damping: 24,
-          stiffness: 200,
-        },
+        { ...spring.soft, damping: 24 },
       );
     },
     [],
@@ -68,7 +59,7 @@ export const Slider = (props: SliderProps) => {
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       runOnJS(pauseAudio)();
-      sliderActive.value = withSpring(1, DefaultSpringConfig);
+      sliderActive.value = withSpring(1, spring.soft);
       context.value = { x: translationX.value };
     })
     .onUpdate(event => {
@@ -87,7 +78,7 @@ export const Slider = (props: SliderProps) => {
       );
       runOnJS(manualSeekTo)(seekToValue);
     })
-    .onFinalize(() => (sliderActive.value = withSpring(0, DefaultSpringConfig)));
+    .onFinalize(() => (sliderActive.value = withSpring(0, spring.soft)));
 
   const handleLayout = (e: LayoutChangeEvent) =>
     (sliderMaxWidth.value = e.nativeEvent.layout.width);
@@ -99,9 +90,7 @@ export const Slider = (props: SliderProps) => {
           translateX: translationX.value,
         },
       ],
-      borderWidth: sliderActive.value
-        ? withSpring(2, { damping: 28, stiffness: 200 })
-        : withSpring(0, { damping: 28, stiffness: 200 }),
+      borderWidth: sliderActive.value ? withSpring(2, spring.soft) : withSpring(0, spring.soft),
     }),
     [],
   );

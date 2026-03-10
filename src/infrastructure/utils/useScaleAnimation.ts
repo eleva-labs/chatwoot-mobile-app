@@ -8,6 +8,8 @@ import {
   WithTimingConfig,
 } from 'react-native-reanimated';
 
+import { spring, PRESS_SCALE_VALUE } from '@infrastructure/animation';
+
 type AnimationValue = {
   /**
    * The scale value to which the component should resize onPressIn
@@ -36,17 +38,10 @@ type TimingAnimation = AnimationValue & {
 
 type AnimationTypes = SpringAnimation | TimingAnimation;
 
-const DefaultSpringConfig: WithSpringConfig = {
-  mass: 1,
-  damping: 28,
-  stiffness: 200,
-  overshootClamping: true,
-};
-
 const DefaultAnimationType: AnimationTypes = {
   type: 'spring',
-  config: DefaultSpringConfig,
-  value: 0.96,
+  config: spring.pressScale,
+  value: PRESS_SCALE_VALUE,
 };
 
 export const useScaleAnimation = (scaleAnimationConfig: AnimationTypes = DefaultAnimationType) => {

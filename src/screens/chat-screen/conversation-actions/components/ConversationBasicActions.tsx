@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
+import { spring } from '@infrastructure/animation';
 import { Icon } from '@infrastructure/ui';
 import { OpenIcon, ResolvedFilledIcon, PendingFilledIcon, SnoozedFilledIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
@@ -93,9 +94,9 @@ const ConversationActionOption = (props: ConversationActionOptionProps) => {
 
   useEffect(() => {
     if (conversationAction.actionStatus === status) {
-      actionActive.value = withSpring(1, { damping: 28, stiffness: 200 });
+      actionActive.value = withSpring(1, spring.soft);
     } else {
-      actionActive.value = withSpring(0, { damping: 28, stiffness: 200 });
+      actionActive.value = withSpring(0, spring.soft);
     }
   }, [
     actionActive,

@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
+import { spring } from '@infrastructure/animation';
 import { useConversationListStateContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic } from '@infrastructure/utils';
@@ -71,8 +72,8 @@ export const ConversationHeader = () => {
 
   const headerOpenState = useDerivedValue(() =>
     currentState !== 'none' && currentState !== 'Select'
-      ? withSpring(1, { damping: 28, stiffness: 200 })
-      : withSpring(0, { damping: 28, stiffness: 200 }),
+      ? withSpring(1, spring.soft)
+      : withSpring(0, spring.soft),
   );
 
   // This creates a subtle visual effect where the border fades away when the header is in an active state (Search/Filter) and reappears when returning to the default state.

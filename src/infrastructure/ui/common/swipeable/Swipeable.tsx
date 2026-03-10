@@ -16,6 +16,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
+import { spring } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic } from '@infrastructure/utils';
 import { AnimatedNativeView } from '@infrastructure/ui/native-components';
@@ -29,7 +30,6 @@ const DRAG_TOSS = 0.05;
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const rowCloseSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
-const overSwipedSpringConfig = { damping: 28, stiffness: 200 };
 
 export type SwipeableProps = {
   /**
@@ -236,7 +236,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         // We might have to trigger the overswipe action when it is swiped in higher speed
         // Setting a variable to know that its going to an over swiped case
         dragOverSwiped.value = true;
-        overSwipedState.value = withSpring(1, overSwipedSpringConfig);
+        overSwipedState.value = withSpring(1, spring.soft);
         // Calculate a higher spring config for the rubber band effect
         const distanceBeyondMax = Math.abs(clampedVal) - maxTranslation;
         const springFactor = distanceBeyondMax * FRICTION;
@@ -245,7 +245,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
         stiffnessValue += springFactor;
       } else {
         if (dragOverSwiped.value) {
-          overSwipedState.value = withSpring(0, overSwipedSpringConfig, finished => {
+          overSwipedState.value = withSpring(0, spring.soft, finished => {
             if (finished) {
               dragOverSwiped.value = false;
             }

@@ -70,13 +70,9 @@ import {
 } from '@infrastructure/utils/messageVariableUtils';
 import { ReplyEmailHead } from './ReplyEmailHead';
 import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { spring } from '@infrastructure/animation';
 import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
-
-const SHEET_APPEAR_SPRING_CONFIG = {
-  damping: 28,
-  stiffness: 200,
-};
 
 // TODO: Implement this
 // const globalConfig = {
@@ -194,9 +190,7 @@ const BottomSheetContent = () => {
   }, [inbox, canReply, dispatch]);
 
   const derivedAddMenuOptionStateValue = useDerivedValue(() => {
-    return isAddMenuOptionSheetOpen
-      ? withSpring(1, SHEET_APPEAR_SPRING_CONFIG)
-      : withSpring(0, SHEET_APPEAR_SPRING_CONFIG);
+    return isAddMenuOptionSheetOpen ? withSpring(1, spring.soft) : withSpring(0, spring.soft);
   });
 
   const animatedInputWrapperStyle = useAnimatedStyle(
