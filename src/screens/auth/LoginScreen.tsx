@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EMAIL_REGEX } from '@domain/constants';

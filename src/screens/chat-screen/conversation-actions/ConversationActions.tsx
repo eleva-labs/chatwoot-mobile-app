@@ -3,7 +3,8 @@ import React from 'react';
 import { Alert, Dimensions, Platform, Share } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop, Button } from '@infrastructure/ui';
 import {

@@ -64,6 +64,25 @@ jest.mock('@react-navigation/native', () => ({
 
 // ─── Native Module Mocks ────────────────────────────────────────
 jest.mock('react-native-reanimated', () => {
+  // Chainable builder mock — each method returns a new object (fresh instance per call)
+  const createAnimationBuilder = () => {
+    const makeChainable = (): Record<string, any> => {
+      const builder: Record<string, any> = {};
+      const chainable = (..._args: any[]) => makeChainable();
+      builder.springify = chainable;
+      builder.damping = chainable;
+      builder.stiffness = chainable;
+      builder.mass = chainable;
+      builder.duration = chainable;
+      builder.easing = chainable;
+      builder.delay = chainable;
+      builder.withInitialValues = chainable;
+      builder.build = chainable;
+      return builder;
+    };
+    return makeChainable();
+  };
+
   return {
     default: {
       View: 'Animated.View',
@@ -87,7 +106,20 @@ jest.mock('react-native-reanimated', () => {
       in: jest.fn(),
       out: jest.fn(),
       inOut: jest.fn(),
+      bezier: jest.fn(() => ({ factory: jest.fn() })),
     },
+    // Layout animation builders
+    LinearTransition: createAnimationBuilder(),
+    SlideInDown: createAnimationBuilder(),
+    SlideInUp: createAnimationBuilder(),
+    SlideOutDown: createAnimationBuilder(),
+    SlideOutUp: createAnimationBuilder(),
+    SlideInRight: createAnimationBuilder(),
+    SlideInLeft: createAnimationBuilder(),
+    SlideOutRight: createAnimationBuilder(),
+    SlideOutLeft: createAnimationBuilder(),
+    FadeIn: createAnimationBuilder(),
+    FadeOut: createAnimationBuilder(),
   };
 });
 

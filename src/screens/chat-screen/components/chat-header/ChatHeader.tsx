@@ -1,6 +1,7 @@
 import React from 'react';
 import { ImageSourcePropType, Keyboard, Platform, Pressable } from 'react-native';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import Animated from 'react-native-reanimated';
 import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 import { Overflow } from '@/svg-icons/common/Overflow';

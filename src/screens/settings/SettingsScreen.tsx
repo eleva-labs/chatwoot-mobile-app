@@ -6,11 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import * as Device from 'expo-device';
 import ChatWootWidget from '@chatwoot/react-native-widget';
 import { useSelector } from 'react-redux';

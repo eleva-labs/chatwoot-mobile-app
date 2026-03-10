@@ -7,11 +7,8 @@ import Animated, {
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  BottomSheetModal,
-  useBottomSheetSpringConfigs,
-  useBottomSheetModal,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import { FlashList } from '@shopify/flash-list';
 
 import {

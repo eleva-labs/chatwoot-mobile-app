@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { BottomSheetBackdrop } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';

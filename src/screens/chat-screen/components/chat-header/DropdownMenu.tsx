@@ -2,11 +2,8 @@ import React, { forwardRef, PropsWithChildren, useCallback, useRef, type JSX } f
 import { Platform, Pressable, View } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  BottomSheetBackdropProps,
-  BottomSheetModal,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetBackdropProps, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
 import { BottomSheetHeader, BottomSheetWrapper } from '@infrastructure/ui';
