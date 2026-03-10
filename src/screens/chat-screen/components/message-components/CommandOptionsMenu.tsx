@@ -8,12 +8,13 @@ import {
   type DocumentPickerResponse,
 } from '@react-native-documents/picker';
 import * as ImagePicker from 'expo-image-picker';
-import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch } from '@/hooks';
 import { updateAttachments } from '@application/store/conversation/sendMessageSlice';
 import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';
+import { snappySlideInDown, snappySlideOutDown } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, processImageForUpload } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
@@ -232,8 +233,8 @@ export const CommandOptionsMenu = () => {
     : 175 + (bottom === 0 ? 16 : bottom);
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(80).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('mx-1 pt-2 items-start', `h-[${containerHeight}px]`)}>
       {ADD_MENU_OPTIONS.map((menuOption, index) => {
         return <MenuOption key={menuOption.key} {...{ menuOption, index }} />;

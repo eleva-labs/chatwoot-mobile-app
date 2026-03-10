@@ -1,12 +1,17 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { PickedAsset } from '@domain/types';
-import Animated, { SlideInDown, SlideInUp, SlideOutDown } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Image } from 'expo-image';
 
-import { softLayout } from '@infrastructure/animation';
+import {
+  softLayout,
+  snappySlideInDown,
+  snappySlideInUp,
+  snappySlideOutDown,
+} from '@infrastructure/animation';
 import { AttachFileIcon } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useScaleAnimation } from '@infrastructure/utils';
@@ -70,8 +75,8 @@ const AttachedImage = (props: AttachedImageProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(80).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={softLayout()}
@@ -122,8 +127,8 @@ const AttachedVideo = (props: AttachedVideoProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(80).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={softLayout()}
@@ -196,8 +201,8 @@ const AttachedFile = (props: AttachedFileProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(80).stiffness(240)}
-      exiting={SlideOutDown.springify().damping(80).stiffness(240)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
         layout={softLayout()}
@@ -257,8 +262,8 @@ export const AttachedMedia = () => {
     <Animated.View style={tailwind.style('py-4')}>
       <Animated.FlatList
         itemLayoutAnimation={softLayout()}
-        entering={SlideInUp.springify().damping(80).stiffness(240)}
-        exiting={SlideOutDown.springify().damping(80).stiffness(240)}
+        entering={snappySlideInUp()}
+        exiting={snappySlideOutDown()}
         style={tailwind.style('px-4 pr-12')}
         horizontal
         showsHorizontalScrollIndicator={false}
