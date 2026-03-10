@@ -173,6 +173,11 @@ class ConversationBuilder {
     return this;
   }
 
+  withCanReply(canReply: boolean): this {
+    this.conversation.canReply = canReply;
+    return this;
+  }
+
   build(): Conversation {
     return { ...this.conversation };
   }

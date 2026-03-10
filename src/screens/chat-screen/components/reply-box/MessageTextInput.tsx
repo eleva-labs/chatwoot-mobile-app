@@ -1,13 +1,8 @@
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import {
-  NativeSyntheticEvent,
-  Platform,
-  TextInputFocusEventData,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
-import Animated, { LayoutAnimationConfig, LinearTransition } from 'react-native-reanimated';
+import React, { useCallback, useEffect, useMemo, type ReactNode } from 'react';
+import { Platform, StyleSheet, ScrollView } from 'react-native';
+import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
 
+import { softLayout } from '@infrastructure/animation';
 import { useChatWindowContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
@@ -92,7 +87,7 @@ export const MessageTextInput = ({
   };
 
   const handleOnFocus = useCallback(
-    (_args: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    () => {
       setAddMenuOptionSheetState(false);
       setIsTextInputFocused(true);
     },
@@ -115,7 +110,7 @@ export const MessageTextInput = ({
   }, [quoteMessage]);
 
   const handleOnBlur = useCallback(
-    (_args: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    () => {
       // shouldHandleKeyboardEvents.value = false;
       setIsTextInputFocused(false);
       onBlur();
@@ -124,10 +119,12 @@ export const MessageTextInput = ({
     [],
   );
 
-  const renderSuggestions: (suggestions: Agent[]) => FC<MentionSuggestionsProps> =
+  const renderSuggestions: (
+    suggestions: Agent[],
+  ) => (props: MentionSuggestionsProps) => ReactNode =
     suggestions =>
     // eslint-disable-next-line react/display-name
-    ({ keyword, onSuggestionPress }) => {
+    ({ keyword, onSuggestionPress }: MentionSuggestionsProps) => {
       if (keyword == null || !isPrivateMessage) {
         return null;
       }
@@ -170,13 +167,11 @@ export const MessageTextInput = ({
 
   return (
     <LayoutAnimationConfig skipEntering={true}>
-      <Animated.View
-        layout={LinearTransition.springify().damping(20).stiffness(120)}
-        style={[tailwind.style('flex-1 my-0.5')]}>
+      <Animated.View layout={softLayout()} style={[tailwind.style('flex-1 my-0.5')]}>
         <MentionInput
           // @ts-expect-error MentionInput ref typing issue with forwardRef
           ref={textInputRef}
-          layout={LinearTransition.springify().damping(20).stiffness(120)}
+          layout={softLayout()}
           onChange={onChangeText}
           partTypes={[
             {

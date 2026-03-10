@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated } from 'react-native';
-import AutoHeightWebView from 'react-native-autoheight-webview';
+import AutoHeightWebView from '@infrastructure/ui/components/AutoHeightWebView';
 
 import { tailwind } from '@infrastructure/theme';
 

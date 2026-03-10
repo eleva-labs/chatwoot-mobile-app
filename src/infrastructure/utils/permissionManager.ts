@@ -1,19 +1,23 @@
-import { Alert, Platform, Linking } from 'react-native';
-import { PermissionsAndroid } from 'react-native';
+import { Alert, Platform, Linking, PermissionsAndroid } from 'react-native';
 import { getApp } from '@react-native-firebase/app';
 import {
   getMessaging,
   AuthorizationStatus,
   requestPermission,
 } from '@react-native-firebase/messaging';
-import { getApiLevel } from 'react-native-device-info';
+
 import i18n from '@infrastructure/i18n';
+import { isFirebaseInitialized } from '@infrastructure/utils/firebaseUtils';
 
 export const requestNotificationPermissions = async (): Promise<boolean> => {
   try {
+    if (!isFirebaseInitialized()) {
+      console.warn('[Firebase] Not initialized — skipping requestNotificationPermissions');
+      return false;
+    }
     if (Platform.OS === 'android') {
       // Android 13+ requires explicit permission
-      const apiLevel = await getApiLevel();
+      const apiLevel = Number(Platform.Version);
 
       if (apiLevel > 32) {
         const granted = await PermissionsAndroid.request(

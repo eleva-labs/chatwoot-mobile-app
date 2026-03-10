@@ -1,13 +1,10 @@
-import React, { forwardRef, PropsWithChildren, useCallback, useRef } from 'react';
+import React, { forwardRef, PropsWithChildren, useCallback, useRef, type JSX } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { interpolate, runOnJS, useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  BottomSheetBackdropProps,
-  BottomSheetModal,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetBackdropProps, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import * as ContextMenu from 'zeego/context-menu';
 
 import { tailwind } from '@infrastructure/theme';
@@ -46,7 +43,7 @@ const ContextMenuItem = ContextMenu.create<React.ComponentProps<typeof ContextMe
 
 // eslint-disable-next-line react/display-name
 const ContextMenuBottomSheetBackdrop = forwardRef<
-  React.RefObject<BottomSheetModal>,
+  React.RefObject<BottomSheetModal | null>,
   BottomSheetBackdropProps
 >((props, ref) => {
   const { animatedIndex, style } = props;
@@ -82,12 +79,6 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
 
   const { bottom } = useSafeAreaInsets();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
-
   const handleOnDismiss = () => {
     contextMenuSheetRef.current?.dismiss();
   };
@@ -121,7 +112,7 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
           style={tailwind.style('mx-3 rounded-[26px] overflow-hidden')}
           detached
           bottomInset={bottom === 0 ? 12 : bottom}
-          animationConfigs={animationConfigs}
+          animationConfigs={spring.sheet}
           enablePanDownToClose
           snapPoints={[menuOptions.length * 44 + 4 + 37]}
           onDismiss={handleOnDismiss}>

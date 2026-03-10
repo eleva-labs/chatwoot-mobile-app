@@ -1,5 +1,6 @@
 import React from 'react';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { slowFadeIn } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 
 import { Channel, Message } from '@domain/types';
@@ -45,7 +46,7 @@ export const TextMessageCell = (props: TextMessageCellProps) => {
 
   return (
     <Animated.View
-      entering={FadeIn.duration(350)}
+      entering={slowFadeIn()}
       style={[
         tailwind.style(
           'my-[1px]',

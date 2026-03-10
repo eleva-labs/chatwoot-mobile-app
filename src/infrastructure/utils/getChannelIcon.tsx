@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  ApiFilledIcon,
   ChatwootIcon,
   WebsiteFilledIcon,
   MailFilledIcon,
@@ -32,6 +33,10 @@ const isAWhatsAppChannel = (channelType: Channel) => {
 };
 
 export const getChannelIcon = (channelType: Channel, medium: string, additionalType: string) => {
+  if (channelType === InboxTypes.INSTAGRAM) {
+    return <InstagramFilledIcon />;
+  }
+
   if (isFacebookChannel(channelType)) {
     if (additionalType === 'instagram_direct_message') {
       return <InstagramFilledIcon />;
@@ -72,6 +77,10 @@ export const getChannelIcon = (channelType: Channel, medium: string, additionalT
 
   if (channelType === InboxTypes.TWITTER) {
     return <XFilledIcon />;
+  }
+
+  if (channelType === InboxTypes.API) {
+    return <ApiFilledIcon />;
   }
 
   return <ChatwootIcon />;

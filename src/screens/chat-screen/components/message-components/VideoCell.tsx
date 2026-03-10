@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, Pressable, Text } from 'react-native';
-import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
-import {
-  AVPlaybackStatus,
-  ResizeMode,
-  Video,
-  VideoFullscreenUpdate,
-  VideoFullscreenUpdateEvent,
-} from 'expo-av';
+import Animated from 'react-native-reanimated';
+import { contentFadeIn, contentFadeOut } from '@infrastructure/animation';
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { useEvent } from 'expo';
 import { Image, ImageBackground } from 'expo-image';
 
 import { tailwind } from '@infrastructure/theme';
@@ -39,61 +35,65 @@ type VideoPlayerProps = Pick<VideoCellProps, 'videoSrc'> & {
 
 export const VideoPlayer = (props: VideoPlayerProps) => {
   const { videoSrc, playerEnabled = true } = props;
-  const video = React.useRef<Video>(null);
+  const viewRef = React.useRef<InstanceType<typeof VideoView>>(null);
   const [playVideo, setPlayVideo] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const [videoLoading, setVideoLoading] = useState(true);
+  const player = useVideoPlayer(videoSrc, player => {
+    player.loop = false;
+    player.muted = true;
+  });
 
-  const [videoStatus, setVideoStatus] = React.useState<AVPlaybackStatus | null>(null);
+  const { status } = useEvent(player, 'statusChange', { status: player.status });
+  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
+
+  const videoLoading = status === 'loading';
+
   const handlePlayPress = () => {
+    player.muted = false;
+    player.play();
     setPlayVideo(true);
-    video.current?.presentFullscreenPlayer();
-    video.current?.playAsync();
+    viewRef.current?.enterFullscreen();
   };
 
+  // Reset when video finishes playing
   useEffect(() => {
-    if (videoStatus?.isLoaded) {
-      if (videoStatus?.didJustFinish) {
-        video.current?.playFromPositionAsync(0);
-        setPlayVideo(false);
-      }
-    }
-  }, [videoStatus]);
-
-  const handlePlaybackStatus = (status: AVPlaybackStatus) => {
-    setVideoStatus(status);
-  };
-
-  const handleOnFullScreenUpdate = (event: VideoFullscreenUpdateEvent) => {
-    if (event.fullscreenUpdate === VideoFullscreenUpdate.PLAYER_WILL_DISMISS) {
+    if (
+      status === 'readyToPlay' &&
+      !isPlaying &&
+      player.currentTime > 0 &&
+      player.duration > 0 &&
+      player.currentTime >= player.duration - 0.5
+    ) {
+      player.currentTime = 0;
+      player.muted = true;
       setPlayVideo(false);
     }
+  }, [isPlaying, status, player]);
+
+  const handleFullscreenEnter = () => {
+    setIsFullscreen(true);
   };
 
-  // To have a loader while the Video is loaded, and
-  // thumbnail is shown
-  const handleOnLoadStart = useCallback(() => {
-    setVideoLoading(true);
-  }, []);
-
-  const handleOnLoad = useCallback(() => {
-    setVideoLoading(false);
-  }, []);
+  const handleFullscreenExit = () => {
+    player.pause();
+    player.currentTime = 0;
+    player.muted = true;
+    setPlayVideo(false);
+    setIsFullscreen(false);
+  };
 
   return (
     <React.Fragment>
-      <Video
+      <VideoView
+        ref={viewRef}
         style={tailwind.style('w-full ios:h-full aspect-video')}
-        ref={video}
-        source={{
-          uri: videoSrc,
-        }}
-        shouldPlay={playVideo}
-        resizeMode={Platform.OS === 'android' ? ResizeMode.CONTAIN : ResizeMode.COVER}
-        onLoadStart={handleOnLoadStart}
-        onLoad={handleOnLoad}
-        onPlaybackStatusUpdate={handlePlaybackStatus}
-        onFullscreenUpdate={handleOnFullScreenUpdate}
+        player={player}
+        contentFit={Platform.OS === 'android' ? 'contain' : 'cover'}
+        nativeControls={isFullscreen}
+        fullscreenOptions={{ enable: true }}
+        onFullscreenEnter={handleFullscreenEnter}
+        onFullscreenExit={handleFullscreenExit}
       />
       {videoLoading ? (
         <Animated.View style={tailwind.style('absolute inset-0 flex items-center justify-center')}>
@@ -102,14 +102,14 @@ export const VideoPlayer = (props: VideoPlayerProps) => {
       ) : null}
       {!playVideo && playerEnabled ? (
         <Animated.View
-          entering={FadeIn.duration(300).easing(Easing.ease)}
-          exiting={FadeOut.duration(300).easing(Easing.ease)}
+          entering={contentFadeIn()}
+          exiting={contentFadeOut()}
           style={tailwind.style('absolute inset-0 flex items-center justify-center')}>
           <Pressable
             onPress={handlePlayPress}
             style={tailwind.style('h-full w-full flex items-center justify-center')}>
             <Image
-              source={require('../../../../assets/local/PlayIcon.png')} // eslint-disable-line @typescript-eslint/no-require-imports
+              source={require('../../../../assets/local/PlayIcon.png')}
               style={tailwind.style('h-12 w-12 z-10')}
             />
           </Pressable>
@@ -139,7 +139,7 @@ export const VideoCell = (props: VideoCellProps) => {
 
   return (
     <Animated.View
-      entering={FadeIn.duration(300).easing(Easing.ease)}
+      entering={contentFadeIn()}
       style={tailwind.style(
         'w-full my-[1px]',
         isIncoming && 'items-start',
@@ -173,10 +173,10 @@ export const VideoCell = (props: VideoCellProps) => {
             />
             <Animated.View
               pointerEvents={'none'}
-              entering={FadeIn.duration(300).easing(Easing.ease)}
-              exiting={FadeOut.duration(300).easing(Easing.ease)}>
+              entering={contentFadeIn()}
+              exiting={contentFadeOut()}>
               <ImageBackground
-                source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')} // eslint-disable-line @typescript-eslint/no-require-imports
+                source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
                 style={tailwind.style(
                   'absolute bottom-0 right-0 h-15 w-33 z-20 ',
                   shouldRenderAvatar

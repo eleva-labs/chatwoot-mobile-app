@@ -19,12 +19,3 @@ export interface ContactConversationPayload {
 export interface ContactConversationAPIResponse {
   payload: Conversation[];
 }
-
-export interface ToggleAIPayload {
-  contactId: number;
-  aiEnabled: boolean;
-}
-
-export interface ToggleAIResponse {
-  ai_enabled: boolean;
-}

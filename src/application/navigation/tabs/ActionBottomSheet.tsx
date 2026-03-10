@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { BottomSheetBackdrop } from '@infrastructure/ui';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import {
   resetActionState,
   selectCurrentActionState,
 } from '@application/store/conversation/conversationActionSlice';
 
 import { useRefsContext } from '@infrastructure/context';
-import { useThemedStyles } from '@/hooks';
 import {
   UpdateAssignee,
   UpdateStatus,
@@ -22,12 +22,6 @@ const ActionBottomSheet = () => {
   const dispatch = useAppDispatch();
   const currentActionState = useAppSelector(selectCurrentActionState);
   const themedTailwind = useThemedStyles();
-
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
 
   const { actionsModalSheetRef } = useRefsContext();
 
@@ -60,7 +54,7 @@ const ActionBottomSheet = () => {
       handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
       style={tailwind.style('rounded-[26px] overflow-hidden')}
       backgroundStyle={themedTailwind.style('bg-solid-1')}
-      animationConfigs={animationConfigs}
+      animationConfigs={spring.sheet}
       enablePanDownToClose
       snapPoints={actionSnapPoints}
       onDismiss={handleOnDismiss}>

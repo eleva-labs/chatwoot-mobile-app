@@ -27,7 +27,15 @@ export const selectNotificationSettings = createSelector(
   settings => settings.notificationSettings,
 );
 
-export const selectWebSocketUrl = createSelector(selectSettings, settings => settings.webSocketUrl);
+export const selectWebSocketUrl = createSelector(
+  selectInstallationUrl,
+  (installationUrl): string => {
+    if (!installationUrl) return '';
+    const wsProtocol = installationUrl.startsWith('https://') ? 'wss://' : 'ws://';
+    const wsHost = installationUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    return `${wsProtocol}${wsHost}/cable`;
+  },
+);
 
 export const selectTheme = createSelector(selectSettings, settings => settings.theme);
 

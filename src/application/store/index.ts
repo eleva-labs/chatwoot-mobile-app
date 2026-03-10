@@ -1,5 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { configureStore, ThunkAction, Action, Middleware, AnyAction } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  ThunkAction,
+  ThunkDispatch,
+  Action,
+  Middleware,
+  AnyAction,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
@@ -13,12 +21,6 @@ import {
 import { appReducer } from '@application/store/reducers';
 import { setStore } from './storeAccessor';
 import { contactListenerMiddleware } from './contact/contactListener';
-
-// Disable this in testing environment
-// Reactotron disabled - uncomment and install reactotron-react-native to enable
-const shouldLoadDebugger = false; // __DEV__ && !process.env.JEST_WORKER_ID;
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const reactotronInstance = null; // shouldLoadDebugger ? require('../../ReactotronConfig').default : null;
 
 const CURRENT_VERSION = 2;
 
@@ -47,41 +49,27 @@ const rootReducer = (state: ReturnType<typeof appReducer>, action: AnyAction) =>
     return { ...initialState, settings: state.settings };
   }
 
-  // Handle Redux Persist rehydration - check for environment mismatch
+  // Handle Redux Persist rehydration - check for environment mismatch.
   if (action.type === 'persist/REHYDRATE' && action.payload?.settings) {
     const persistedSettings = action.payload.settings;
     const envBaseUrl = process.env.EXPO_PUBLIC_BASE_URL;
     const envInstallationUrl = process.env.EXPO_PUBLIC_INSTALLATION_URL;
-    const currentEnvironment = process.env.ENVIRONMENT || process.env.EAS_BUILD_PROFILE;
 
     // Check if persisted URLs don't match current environment variables
     const urlMismatch =
       (envBaseUrl && persistedSettings.baseUrl !== envBaseUrl) ||
       (envInstallationUrl && persistedSettings.installationUrl !== envInstallationUrl);
 
-    if (urlMismatch && currentEnvironment) {
-      console.warn(
-        '[Store] Environment mismatch detected - Overriding persisted settings with environment variables:',
-        {
-          'Persisted baseUrl': persistedSettings.baseUrl,
-          'Environment baseUrl': envBaseUrl,
-          'Persisted installationUrl': persistedSettings.installationUrl,
-          'Environment installationUrl': envInstallationUrl,
-          'Current environment': currentEnvironment,
-          Action: 'Forcing environment variables to override persisted state',
-        },
-      );
-
-      // Override persisted settings with environment variables
+    if (urlMismatch) {
+      const resolvedInstallationUrl = envInstallationUrl || persistedSettings.installationUrl;
       const updatedPayload = {
         ...action.payload,
         settings: {
           ...persistedSettings,
           baseUrl: envBaseUrl || persistedSettings.baseUrl,
-          installationUrl: envInstallationUrl || persistedSettings.installationUrl,
+          installationUrl: resolvedInstallationUrl,
         },
       };
-
       return appReducer(state, { ...action, payload: updatedPayload });
     }
   }
@@ -95,10 +83,6 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  enhancers: getDefaultEnhancers =>
-    shouldLoadDebugger
-      ? getDefaultEnhancers().concat(reactotronInstance.createEnhancer!())
-      : getDefaultEnhancers(),
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -124,7 +108,10 @@ setStore(store);
 
 export const persistor = persistStore(store);
 
-export type AppDispatch = typeof store.dispatch;
+// Explicitly type AppDispatch using ThunkDispatch instead of `typeof store.dispatch`.
+// With redux-persist wrapping the reducer, TypeScript can't infer the correct dispatch type
+// from the store (it resolves to `never`). This manual typing restores full dispatch support.
+export type AppDispatch = ThunkDispatch<RootState, unknown, UnknownAction>;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,

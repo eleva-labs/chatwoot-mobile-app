@@ -1,8 +1,9 @@
 import React from 'react';
 import { Trash } from '@/svg-icons/common/Trash';
 import { Channel, Message } from '@domain/types';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import Animated from 'react-native-reanimated';
+import { quickFadeIn } from '@infrastructure/animation';
+import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { useChatWindowContext } from '@infrastructure/context';
 import { conversationActions } from '@application/store/conversation/conversationActions';
@@ -32,10 +33,9 @@ import {
   MESSAGE_TYPES,
 } from '@domain/constants';
 import i18n from '@infrastructure/i18n';
-import Clipboard from '@react-native-clipboard/clipboard';
+import * as Clipboard from 'expo-clipboard';
 import { CopyIcon } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { useThemedStyles } from '@/hooks';
 import { useThemeColors } from '@infrastructure/theme';
 import { Dimensions, View } from 'react-native';
 import { Avatar } from '@infrastructure/ui';
@@ -130,19 +130,19 @@ const MessageWrapper = ({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(350)}
+      entering={quickFadeIn()}
       style={[
         themedTailwind.style(
           'my-[1px]',
           flexOrientationClass(),
-          shouldGroupWithPrevious && orientation === ORIENTATION.LEFT ? 'ml-7' : '',
-          shouldGroupWithPrevious && orientation === ORIENTATION.RIGHT ? 'pr-7' : '',
+          shouldGroupWithNext && orientation === ORIENTATION.LEFT ? 'ml-7' : '',
+          shouldGroupWithNext && orientation === ORIENTATION.RIGHT ? 'pr-7' : '',
           !shouldGroupWithPrevious && !shouldGroupWithNext ? 'mb-2' : 'mb-1',
           item.private ? 'my-1' : '',
         ),
       ]}>
       <Animated.View style={themedTailwind.style('flex flex-row')}>
-        {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.LEFT ? (
+        {!shouldGroupWithNext && shouldShowAvatar && orientation === ORIENTATION.LEFT ? (
           <Animated.View style={themedTailwind.style('flex items-end justify-end mr-1')}>
             <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
           </Animated.View>
@@ -165,12 +165,13 @@ const MessageWrapper = ({
               ),
             ]}>
             {children}
-            {!shouldGroupWithPrevious && (
-              <Animated.View
-                style={themedTailwind.style(
-                  'h-[21px] pt-[5px] pb-0.5 flex flex-row items-center',
-                  orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
-                )}>
+            {/* Timestamp + delivery status row — timestamp only on last message of a group, status always shown */}
+            <Animated.View
+              style={themedTailwind.style(
+                'pt-[5px] pb-0.5 flex flex-row items-center',
+                orientation === ORIENTATION.LEFT ? 'justify-start' : 'justify-end',
+              )}>
+              {!shouldGroupWithNext && (
                 <Animated.Text
                   style={themedTailwind.style(
                     'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
@@ -178,21 +179,21 @@ const MessageWrapper = ({
                   )}>
                   {messageTimestamp(item.createdAt)}
                 </Animated.Text>
-                <DeliveryStatus
-                  isPrivate={item.private}
-                  status={item.status}
-                  messageType={item.messageType}
-                  channel={channel}
-                  sourceId={item.sourceId}
-                  errorMessage={item.contentAttributes?.externalError || ''}
-                  deliveredColor="text-slate-11"
-                  sentColor="text-slate-11"
-                />
-              </Animated.View>
-            )}
+              )}
+              <DeliveryStatus
+                isPrivate={item.private}
+                status={item.status}
+                messageType={item.messageType}
+                channel={channel}
+                sourceId={item.sourceId}
+                errorMessage={item.contentAttributes?.externalError || ''}
+                deliveredColor="text-slate-11"
+                sentColor="text-slate-11"
+              />
+            </Animated.View>
           </Animated.View>
         </MessageMenu>
-        {!shouldGroupWithPrevious && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (
+        {!shouldGroupWithNext && shouldShowAvatar && orientation === ORIENTATION.RIGHT ? (
           <Animated.View style={themedTailwind.style('flex items-end justify-end ml-1')}>
             <Avatar size={'md'} src={avatarInfo.src} name={avatarInfo.name || ''} />
           </Animated.View>
@@ -245,7 +246,7 @@ export const MessageComponent = (props: MessageComponentProps) => {
   const handleCopyMessage = (content: string) => {
     hapticSelection?.();
     if (content) {
-      Clipboard.setString(content);
+      Clipboard.setStringAsync(content);
       showToast({ message: i18n.t('CONVERSATION.COPY_MESSAGE') });
     }
   };

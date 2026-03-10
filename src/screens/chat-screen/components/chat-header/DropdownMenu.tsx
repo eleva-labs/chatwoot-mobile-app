@@ -1,12 +1,9 @@
-import React, { forwardRef, PropsWithChildren, useCallback, useRef } from 'react';
+import React, { forwardRef, PropsWithChildren, useCallback, useRef, type JSX } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  BottomSheetBackdropProps,
-  BottomSheetModal,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetBackdropProps, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
 import { BottomSheetHeader, BottomSheetWrapper } from '@infrastructure/ui';
@@ -51,7 +48,7 @@ const DropdownMenuItem = DropdownMenu.create<React.ComponentProps<typeof Dropdow
 
 // eslint-disable-next-line react/display-name
 const DropdownMenuBottomSheetBackdrop = forwardRef<
-  React.RefObject<BottomSheetModal>,
+  React.RefObject<BottomSheetModal | null>,
   BottomSheetBackdropProps
 >((props, ref) => {
   const { animatedIndex, style } = props;
@@ -93,12 +90,6 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
 
   const { bottom } = useSafeAreaInsets();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
-
   const renderBackDrop = useCallback(
     (backdropProps: BottomSheetBackdropProps) => (
       <DropdownMenuBottomSheetBackdrop
@@ -127,7 +118,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
           backgroundStyle={themedTailwind.style('bg-solid-1')}
           detached
           bottomInset={bottom === 0 ? 12 : bottom}
-          animationConfigs={animationConfigs}
+          animationConfigs={spring.sheet}
           enablePanDownToClose
           snapPoints={[dropdownMenuList.length * 44 + 4 + 37]}>
           <BottomSheetWrapper>

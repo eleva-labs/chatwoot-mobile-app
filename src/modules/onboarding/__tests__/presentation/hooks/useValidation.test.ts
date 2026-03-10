@@ -6,7 +6,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react-native';
-import { useValidation } from '../../../presentation/hooks/useValidation';
+import { useValidation, type UseValidationReturn } from '../../../presentation/hooks/useValidation';
 import type { IValidateAnswerUseCase } from '../../../domain/use-cases/IValidateAnswerUseCase';
 import { Result } from '../../../domain/entities/Result';
 import type { ValidationRule } from '../../../domain/common';
@@ -674,7 +674,7 @@ describe('useValidation', () => {
       const firstClearError = result.current.clearError;
       const firstClearAllErrors = result.current.clearAllErrors;
 
-      rerender();
+      rerender(undefined);
 
       expect(result.current.validate).toBe(firstValidate);
       expect(result.current.clearError).toBe(firstClearError);
@@ -683,7 +683,10 @@ describe('useValidation', () => {
     });
 
     it('should update when use case changes', () => {
-      const { result, rerender } = renderHook(({ useCase }) => useValidation(useCase), {
+      const { result, rerender } = renderHook<
+        UseValidationReturn,
+        { useCase: jest.Mocked<IValidateAnswerUseCase> }
+      >(({ useCase }) => useValidation(useCase), {
         initialProps: { useCase: mockValidateUseCase },
       });
 

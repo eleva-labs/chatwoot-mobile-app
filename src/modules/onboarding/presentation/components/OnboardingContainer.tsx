@@ -60,8 +60,7 @@ export function OnboardingContainer({
     if (networkState.isConnected && processOfflineQueueUseCase && !networkState.isLoading) {
       processOfflineQueueUseCase.execute().then(result => {
         if (result.isSuccess && result.getValue() > 0) {
-          // Show notification that queued items were processed
-          console.log(`Processed ${result.getValue()} queued submission(s)`);
+          if (__DEV__) console.log(`Processed ${result.getValue()} queued submission(s)`);
         }
       });
     }

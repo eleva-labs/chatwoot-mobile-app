@@ -4,7 +4,7 @@
  * This file configures the test environment with global mocks,
  * console suppression, and test utilities for ALL test suites.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports, @typescript-eslint/no-unused-vars, @typescript-eslint/no-namespace */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import 'reflect-metadata';
 
@@ -64,6 +64,25 @@ jest.mock('@react-navigation/native', () => ({
 
 // ─── Native Module Mocks ────────────────────────────────────────
 jest.mock('react-native-reanimated', () => {
+  // Chainable builder mock — each method returns a new object (fresh instance per call)
+  const createAnimationBuilder = () => {
+    const makeChainable = (): Record<string, any> => {
+      const builder: Record<string, any> = {};
+      const chainable = (..._args: any[]) => makeChainable();
+      builder.springify = chainable;
+      builder.damping = chainable;
+      builder.stiffness = chainable;
+      builder.mass = chainable;
+      builder.duration = chainable;
+      builder.easing = chainable;
+      builder.delay = chainable;
+      builder.withInitialValues = chainable;
+      builder.build = chainable;
+      return builder;
+    };
+    return makeChainable();
+  };
+
   return {
     default: {
       View: 'Animated.View',
@@ -87,7 +106,20 @@ jest.mock('react-native-reanimated', () => {
       in: jest.fn(),
       out: jest.fn(),
       inOut: jest.fn(),
+      bezier: jest.fn(() => ({ factory: jest.fn() })),
     },
+    // Layout animation builders
+    LinearTransition: createAnimationBuilder(),
+    SlideInDown: createAnimationBuilder(),
+    SlideInUp: createAnimationBuilder(),
+    SlideOutDown: createAnimationBuilder(),
+    SlideOutUp: createAnimationBuilder(),
+    SlideInRight: createAnimationBuilder(),
+    SlideInLeft: createAnimationBuilder(),
+    SlideOutRight: createAnimationBuilder(),
+    SlideOutLeft: createAnimationBuilder(),
+    FadeIn: createAnimationBuilder(),
+    FadeOut: createAnimationBuilder(),
   };
 });
 
@@ -98,12 +130,103 @@ jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaFrame: () => ({ x: 0, y: 0, width: 375, height: 812 }),
 }));
 
+jest.mock('expo-notifications', () => ({
+  dismissAllNotificationsAsync: jest.fn(() => Promise.resolve()),
+  setBadgeCountAsync: jest.fn(() => Promise.resolve(true)),
+}));
+
+jest.mock('expo-clipboard', () => ({
+  setStringAsync: jest.fn(() => Promise.resolve(true)),
+  getStringAsync: jest.fn(() => Promise.resolve('')),
+}));
+
+jest.mock('expo-image-picker', () => ({
+  launchImageLibraryAsync: jest.fn(() => Promise.resolve({ canceled: true, assets: [] })),
+  launchCameraAsync: jest.fn(() => Promise.resolve({ canceled: true, assets: [] })),
+  requestCameraPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'granted' })),
+  UIImagePickerPresentationStyle: { FORM_SHEET: 'formSheet' },
+  MediaType: { Images: 'images', Videos: 'videos' },
+}));
+
+jest.mock('@react-native-documents/picker', () => ({
+  pick: jest.fn(() =>
+    Promise.resolve([
+      { uri: 'file://test.pdf', name: 'test.pdf', size: 1024, type: 'application/pdf' },
+    ]),
+  ),
+  types: {
+    allFiles: '*/*',
+    images: 'image/*',
+    plainText: 'text/plain',
+    audio: 'audio/*',
+    pdf: 'application/pdf',
+    zip: 'application/zip',
+    csv: 'text/csv',
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ppt: 'application/vnd.ms-powerpoint',
+    pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    xls: 'application/vnd.ms-excel',
+    xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  },
+  isErrorWithCode: jest.fn(() => false),
+  errorCodes: { OPERATION_CANCELED: 'OPERATION_CANCELED' },
+}));
+
+jest.mock('expo-image-manipulator', () => ({
+  ImageManipulator: {
+    manipulate: jest.fn(() => ({
+      rotate: jest.fn().mockReturnThis(),
+      renderAsync: jest.fn(() =>
+        Promise.resolve({
+          width: 100,
+          height: 100,
+          saveAsync: jest.fn(() =>
+            Promise.resolve({ uri: 'file://converted.jpg', width: 100, height: 100 }),
+          ),
+        }),
+      ),
+    })),
+  },
+  SaveFormat: { JPEG: 'jpeg', PNG: 'png', WEBP: 'webp' },
+}));
+
+jest.mock('expo-file-system', () => {
+  class MockFile {
+    uri: string;
+    exists = true;
+    size = 1024;
+    constructor(uri: string) {
+      this.uri = uri;
+    }
+  }
+  return { File: MockFile, Directory: jest.fn(), Paths: { cache: '', document: '' } };
+});
+
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
   selectionAsync: jest.fn(),
   ImpactFeedbackStyle: { Light: 'light', Medium: 'medium', Heavy: 'heavy' },
   NotificationFeedbackType: { Success: 'success', Warning: 'warning', Error: 'error' },
+}));
+
+jest.mock('expo-video', () => ({
+  useVideoPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    pause: jest.fn(),
+    loop: false,
+    muted: false,
+    currentTime: 0,
+    duration: 0,
+    status: 'idle',
+    playing: false,
+  })),
+  VideoView: 'VideoView',
+}));
+
+jest.mock('expo', () => ({
+  useEvent: jest.fn((_player: unknown, _event: string, initial: unknown) => initial),
 }));
 
 jest.mock('@react-native-community/netinfo', () => ({
@@ -209,23 +332,28 @@ jest.mock('axios', () => ({
   },
 }));
 
-jest.mock('i18n-js', () => ({
-  __esModule: true,
-  default: {
+jest.mock('i18n-js', () => {
+  const translations: Record<string, string> = {
+    'onboarding.retry': 'Retry',
+    'onboarding.errorTitle': 'Error',
+    'onboarding.genericError': 'An error occurred',
+    'onboarding.offlineIndicator':
+      'No internet connection. Your answers will be saved and submitted when you come back online.',
+  };
+  const mockInstance = {
     translations: {},
-    t: (key: string) => {
-      // Return the key as fallback, or a simple translation map
-      const translations: Record<string, string> = {
-        'onboarding.retry': 'Retry',
-        'onboarding.errorTitle': 'Error',
-        'onboarding.genericError': 'An error occurred',
-        'onboarding.offlineIndicator':
-          'No internet connection. Your answers will be saved and submitted when you come back online.',
-      };
-      return translations[key] || key;
-    },
-  },
-}));
+    locale: 'en',
+    defaultLocale: 'en',
+    enableFallback: true,
+    t: (key: string) => translations[key] || key,
+    store: jest.fn(),
+  };
+  return {
+    __esModule: true,
+    I18n: jest.fn(() => mockInstance),
+    default: mockInstance,
+  };
+});
 
 // ─── Console Suppression ─────────────────────────────────────────
 const originalWarn = console.warn;

@@ -5,7 +5,8 @@ import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
-import { contactActions } from '@application/store/contact/contactActions';
+import { selectInboxById, selectHasMultipleInboxes } from '@application/store/inbox/inboxSelectors';
+import { conversationActions } from '@application/store/conversation/conversationActions';
 import { CONVERSATION_STATUS } from '@domain/constants';
 import { ChatHeader } from './ChatHeader';
 import { DashboardList } from './DropdownMenu';
@@ -29,14 +30,17 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
   const dispatch = useAppDispatch();
   const { conversationId } = useChatWindowContext();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
+  const inbox = useAppSelector(state =>
+    conversation?.inboxId ? selectInboxById(state, conversation.inboxId) : undefined,
+  );
+  const hasMultipleInboxes = useAppSelector(selectHasMultipleInboxes);
 
   const currentUser = useAppSelector(selectUser);
   const dashboardApps = useAppSelector(selectAllDashboardApps);
 
-  const contactId = conversation?.meta?.sender?.id;
-
   // Read AI status from conversation's custom_attributes (aligned with web logic)
-  const isAIEnabled = conversation?.customAttributes?.aiEnabled === 'true';
+  // Backend stores ai_enabled as boolean, but serialization may stringify it
+  const isAIEnabled = String(conversation?.customAttributes?.aiEnabled) === 'true';
 
   const appliedSla = conversation?.appliedSla;
 
@@ -121,17 +125,17 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
   };
 
   const toggleAI = async () => {
-    if (!contactId) return;
+    if (!conversationId) return;
 
     try {
       const result = await dispatch(
-        contactActions.toggleAI({
-          contactId,
+        conversationActions.toggleAI({
+          conversationId,
           aiEnabled: !isAIEnabled,
         }),
       );
 
-      if (contactActions.toggleAI.fulfilled.match(result)) {
+      if (conversationActions.toggleAI.fulfilled.match(result)) {
         showToast({
           message: isAIEnabled
             ? i18n.t('SUCCESS.AI_DISABLED_SUCCESS')
@@ -177,6 +181,9 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
     <ChatHeader
       name={name}
       imageSrc={imageSrc}
+      inbox={inbox ?? null}
+      showInboxIndicator={hasMultipleInboxes}
+      additionalAttributes={conversation?.additionalAttributes}
       isResolved={isResolved}
       dashboardsList={dashboardsList}
       isSlaMissed={slaStatus?.isSlaMissed}

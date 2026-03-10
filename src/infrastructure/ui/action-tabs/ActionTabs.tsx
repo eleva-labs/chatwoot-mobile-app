@@ -8,11 +8,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { BlurView, BlurViewProps } from '@react-native-community/blur';
+import { BlurView, BlurViewProps } from 'expo-blur';
 
 import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { spring } from '@infrastructure/animation';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { Icon } from '../common';
 import { useAppDispatch, useAppSelector } from '@/hooks';
@@ -24,9 +25,6 @@ const ACTION_TAB_HEIGHT = 58;
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-
-const tabExitSpringConfig = { damping: 20, stiffness: 360, mass: 1 };
-const tabEnterSpringConfig = { damping: 30, stiffness: 360, mass: 1 };
 
 type ActionTabBarBackgroundProps = BlurViewProps & PropsWithChildren;
 
@@ -69,14 +67,12 @@ const ActionStatusIcon = ({ stroke }: { stroke: string }) => (
 );
 
 const ActionTabBarBackground = (props: ActionTabBarBackgroundProps) => {
-  const { children, blurAmount, blurType, style } = props;
+  const { children, intensity, tint, style } = props;
 
   const currentState = useAppSelector(selectCurrentState);
 
   const derivedAnimatedState = useDerivedValue(() =>
-    currentState === 'Select'
-      ? withSpring(0, tabEnterSpringConfig)
-      : withSpring(1, tabExitSpringConfig),
+    currentState === 'Select' ? withSpring(0, spring.tabEnter) : withSpring(1, spring.tabExit),
   );
 
   const animatedTabBarStyle = useAnimatedStyle(() => {
@@ -90,7 +86,7 @@ const ActionTabBarBackground = (props: ActionTabBarBackgroundProps) => {
   });
 
   return Platform.OS === 'ios' ? (
-    <AnimatedBlurView {...{ blurAmount, blurType }} style={[style, animatedTabBarStyle]}>
+    <AnimatedBlurView {...{ intensity, tint }} style={[style, animatedTabBarStyle]}>
       {children}
     </AnimatedBlurView>
   ) : (
@@ -179,8 +175,8 @@ export const ActionTabs = () => {
 
   return (
     <ActionTabBarBackground
-      blurAmount={25}
-      blurType="light"
+      intensity={25}
+      tint="light"
       style={Platform.select({
         ios: [
           tailwind.style(

@@ -63,27 +63,27 @@ export const OnboardingScreen: React.FC = () => {
       onSkip={handleSkip}
       onEvent={{
         onFlowStarted: event => {
-          console.log('[Onboarding] Flow started:', event);
+          if (__DEV__) console.log('[Onboarding] Flow started:', event);
           analyticsCallbacks.onFlowStarted(event as unknown as Record<string, unknown>);
         },
         onQuestionAnswered: event => {
-          console.log('[Onboarding] Question answered:', event);
+          if (__DEV__) console.log('[Onboarding] Question answered:', event);
           analyticsCallbacks.onQuestionAnswered(event as unknown as Record<string, unknown>);
         },
         onScreenChanged: event => {
-          console.log('[Onboarding] Screen changed:', event);
+          if (__DEV__) console.log('[Onboarding] Screen changed:', event);
           analyticsCallbacks.onScreenChanged(event as unknown as Record<string, unknown>);
         },
         onFlowCompleted: event => {
-          console.log('[Onboarding] Flow completed:', event);
+          if (__DEV__) console.log('[Onboarding] Flow completed:', event);
           analyticsCallbacks.onFlowCompleted(event as unknown as Record<string, unknown>);
         },
         onFlowSkipped: event => {
-          console.log('[Onboarding] Flow skipped:', event);
+          if (__DEV__) console.log('[Onboarding] Flow skipped:', event);
           analyticsCallbacks.onFlowSkipped(event as unknown as Record<string, unknown>);
         },
         onError: event => {
-          console.error('[Onboarding] Error:', event);
+          if (__DEV__) console.warn('[Onboarding] Error:', event);
           analyticsCallbacks.onError(event as unknown as Record<string, unknown>);
         },
       }}

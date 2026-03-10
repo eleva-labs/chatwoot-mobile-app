@@ -4,3 +4,4 @@ export * from './AttributeList';
 export * from './PriorityIndicator';
 export * from './ChannelIndicator';
 export * from './ThemeSettingsItem';
+export * from './InboxIndicator';

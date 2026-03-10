@@ -33,16 +33,30 @@ export type PartComponent = React.ComponentType<PartRendererProps>;
 // Registry Context
 // ============================================================================
 
+/**
+ * A React component that renders markdown text.
+ * Must accept `children: ReactNode` (the markdown string) and an optional `style` prop.
+ * Note: advanced props like onLinkPress or markdownit configuration must be pre-applied
+ * by wrapping the renderer before passing it to AIChatProvider.
+ */
+export type MarkdownRendererComponent = React.ComponentType<{
+  children: React.ReactNode;
+  style?: Record<string, unknown>;
+}>;
+
 export interface AIChatRegistries {
   /** Registry for part type renderers (text, reasoning, etc.) */
   parts: ComponentRegistry<PartComponent>;
   /** Registry for tool-specific renderers (by toolName) */
   tools: ComponentRegistry<PartComponent>;
+  /** Default markdown renderer component (injection point for @ronradtke/react-native-markdown-display or any alternative) */
+  markdownRenderer: MarkdownRendererComponent | null;
 }
 
 const defaultRegistries: AIChatRegistries = {
   parts: new ComponentRegistry<PartComponent>(),
   tools: new ComponentRegistry<PartComponent>(),
+  markdownRenderer: null,
 };
 
 const RegistryContext = createContext<AIChatRegistries>(defaultRegistries);
@@ -67,6 +81,8 @@ export interface AIChatProviderProps {
   registry?: {
     parts?: Record<string, PartComponent>;
     tools?: Record<string, PartComponent>;
+    /** Pass the Markdown component from @ronradtke/react-native-markdown-display (or any alternative) */
+    markdownRenderer?: MarkdownRendererComponent;
   };
   children: React.ReactNode;
 }
@@ -117,7 +133,11 @@ export const AIChatProvider: React.FC<AIChatProviderProps> = ({
       }
     }
 
-    return { parts, tools };
+    return {
+      parts,
+      tools,
+      markdownRenderer: registryProp?.markdownRenderer ?? null,
+    };
   }, [registryProp]);
 
   return (

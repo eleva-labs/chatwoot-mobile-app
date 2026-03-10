@@ -40,7 +40,9 @@ class Logger {
    * Log with automatic buffer storage
    */
   log(message: string, ...args: unknown[]): void {
-    console.log(message, ...args);
+    if (this.enabled) {
+      console.log(message, ...args);
+    }
     this.addToBuffer('log', message, args.length > 0 ? args : undefined);
   }
 
@@ -64,17 +66,19 @@ class Logger {
    * Debug with automatic buffer storage
    */
   debug(message: string, ...args: unknown[]): void {
-    if (__DEV__) {
+    if (this.enabled) {
       console.debug(message, ...args);
-      this.addToBuffer('debug', message, args.length > 0 ? args : undefined);
     }
+    this.addToBuffer('debug', message, args.length > 0 ? args : undefined);
   }
 
   /**
    * Info with automatic buffer storage
    */
   info(message: string, ...args: unknown[]): void {
-    console.info(message, ...args);
+    if (this.enabled) {
+      console.info(message, ...args);
+    }
     this.addToBuffer('info', message, args.length > 0 ? args : undefined);
   }
 
@@ -109,7 +113,9 @@ class Logger {
    */
   clear(): void {
     this.buffer = [];
-    console.log('[Logger] Buffer cleared');
+    if (this.enabled) {
+      console.log('[Logger] Buffer cleared');
+    }
   }
 
   /**
@@ -125,14 +131,18 @@ class Logger {
   async exportToClipboard(): Promise<void> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { Clipboard } = require('@react-native-clipboard/clipboard');
+      const Clipboard = require('expo-clipboard');
       const logsString = this.getLogsAsString();
-      await Clipboard.setString(logsString);
-      console.log(`[Logger] Exported ${this.buffer.length} log entries to clipboard`);
+      await Clipboard.setStringAsync(logsString);
+      if (this.enabled) {
+        console.log(`[Logger] Exported ${this.buffer.length} log entries to clipboard`);
+      }
     } catch (error) {
       console.error('[Logger] Failed to export to clipboard:', error);
-      // Fallback: log the export string
-      console.log('[Logger] Logs export:', this.getLogsAsString());
+      if (this.enabled) {
+        // Fallback: log the export string
+        console.log('[Logger] Logs export:', this.getLogsAsString());
+      }
     }
   }
 
@@ -143,18 +153,25 @@ class Logger {
   async exportToFile(): Promise<string | null> {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const RNFS = require('react-native-fs');
+      const FileSystem = require('expo-file-system');
       const logsString = this.getLogsAsString();
       const fileName = `chatwoot-logs-${Date.now()}.txt`;
-      const filePath = `${RNFS.CachesDirectoryPath}/${fileName}`;
+      // Note: cacheDirectory already has trailing slash
+      const filePath = `${FileSystem.cacheDirectory}${fileName}`;
 
-      await RNFS.writeFile(filePath, logsString, 'utf8');
-      console.log(`[Logger] Exported ${this.buffer.length} log entries to file: ${filePath}`);
+      await FileSystem.writeAsStringAsync(filePath, logsString, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+      if (this.enabled) {
+        console.log(`[Logger] Exported ${this.buffer.length} log entries to file: ${filePath}`);
+      }
       return filePath;
     } catch (error) {
       console.error('[Logger] Failed to export to file:', error);
-      // Fallback: log the export string
-      console.log('[Logger] Logs export (fallback):', this.getLogsAsString());
+      if (this.enabled) {
+        // Fallback: log the export string
+        console.log('[Logger] Logs export (fallback):', this.getLogsAsString());
+      }
       return null;
     }
   }
@@ -194,9 +211,9 @@ export const error = logger.error.bind(logger);
 export const debug = logger.debug.bind(logger);
 export const info = logger.info.bind(logger);
 
-// Expose logger globally for easy access from console/debugger
+// Expose logger globally for easy access from console/debugger (dev only)
 /* eslint-disable @typescript-eslint/no-explicit-any */
-if (typeof global !== 'undefined') {
+if (__DEV__ && typeof global !== 'undefined') {
   (global as any).__logger = logger;
   (global as any).__getLogs = () => logger.getLogs();
   (global as any).__getLogsString = () => logger.getLogsAsString();

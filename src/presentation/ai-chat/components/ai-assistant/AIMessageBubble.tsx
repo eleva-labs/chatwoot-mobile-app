@@ -15,7 +15,7 @@
 
 import React, { useMemo } from 'react';
 import { View, Pressable, ActivityIndicator, Text } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
+import * as Clipboard from 'expo-clipboard';
 import { useHaptic } from '@infrastructure/utils';
 import { Copy } from 'lucide-react-native';
 import { TickIcon } from '@/svg-icons/common/TickIcon';
@@ -201,7 +201,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
                   if (onCopyProp) {
                     onCopyProp(fullText);
                   } else {
-                    Clipboard.setString(fullText);
+                    Clipboard.setStringAsync(fullText);
                   }
                   if (onHapticProp) {
                     onHapticProp();

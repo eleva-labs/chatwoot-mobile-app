@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { Path, Svg } from 'react-native-svg';
 import { useThemeColors } from '@infrastructure/theme';
 

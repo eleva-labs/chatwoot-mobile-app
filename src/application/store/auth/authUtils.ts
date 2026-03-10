@@ -3,7 +3,7 @@ import { showToast } from '@infrastructure/utils/toastUtils';
 import I18n from '@infrastructure/i18n';
 import type { ApiErrorResponse } from './authTypes';
 
-export const handleApiError = (error: unknown, customErrorMsg?: string) => {
+export const handleApiError = (error: unknown, customErrorMsg?: string): ApiErrorResponse => {
   const { response } = error as AxiosError<ApiErrorResponse>;
 
   // Handle specific error responses (401, 400, etc.)
@@ -23,7 +23,7 @@ export const handleApiError = (error: unknown, customErrorMsg?: string) => {
     }
   }
 
-  const message = customErrorMsg || I18n.t('ERRORS.COMMON_ERROR');
+  const message: string = customErrorMsg || I18n.t('ERRORS.COMMON_ERROR');
   showToast({ message });
   return { success: false, errors: [message] };
 };

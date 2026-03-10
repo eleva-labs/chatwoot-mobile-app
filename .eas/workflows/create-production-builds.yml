@@ -1,8 +1,8 @@
 name: Create production builds
 
 on:
-  push:
-    branches: ['main']
+  workflow_dispatch:
+    inputs: {}
 
 jobs:
   build_android:
@@ -20,7 +20,6 @@ jobs:
   submit_android:
     type: submit
     params:
-      platform: android
       profile: production
       build_id: ${{ needs.build_android.outputs.build_id }}
     needs:
@@ -29,7 +28,6 @@ jobs:
   submit_ios:
     type: submit
     params:
-      platform: ios
       profile: production
       build_id: ${{ needs.build_ios.outputs.build_id }}
     needs:

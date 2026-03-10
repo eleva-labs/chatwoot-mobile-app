@@ -1,5 +1,6 @@
 import React from 'react';
-import { Twitter, Linkedin, Github } from 'lucide-react-native';
+import { Path, Svg } from 'react-native-svg';
+import { Linkedin, Github } from 'lucide-react-native';
 import { useThemeColors } from '@infrastructure/theme';
 
 interface IconProps {
@@ -8,48 +9,28 @@ interface IconProps {
   [key: string]: unknown;
 }
 
-/**
- * XIcon - Proxies to Lucide Twitter (X is the new Twitter)
- *
- * @migrated 2026-03-02 (Cycle 2 Batch 6 Final)
- * @lucide https://lucide.dev/icons/twitter
- */
 export const XIcon = ({ color, size = 24, ...props }: IconProps) => {
   const { colors } = useThemeColors();
-  const iconColor = color || colors.slate[8];
-  return <Twitter color={iconColor} size={size} {...props} />;
+  const iconColor = color || colors.slate[11];
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+      <Path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+        fill={iconColor}
+      />
+    </Svg>
+  );
 };
 
-/**
- * XFilledIcon - Proxies to Lucide Twitter (X is the new Twitter)
- *
- * @migrated 2026-03-02 (Cycle 2 Batch 6 Final)
- * @lucide https://lucide.dev/icons/twitter
- */
-export const XFilledIcon = ({ color, size = 24, ...props }: IconProps) => {
-  const { colors } = useThemeColors();
-  const iconColor = color || colors.slate[8];
-  return <Twitter color={iconColor} size={size} {...props} />;
-};
+export const XFilledIcon = XIcon;
 
-/**
- * LinkedinIcon - Proxies to Lucide Linkedin
- *
- * @migrated 2026-03-02 (Cycle 2 Batch 6 Final)
- * @lucide https://lucide.dev/icons/linkedin
- */
+// Keep existing Lucide proxies for non-channel social icons
 export const LinkedinIcon = ({ color, size = 24, ...props }: IconProps) => {
   const { colors } = useThemeColors();
   const iconColor = color || colors.slate[8];
   return <Linkedin color={iconColor} size={size} {...props} />;
 };
 
-/**
- * GithubIcon - Proxies to Lucide Github
- *
- * @migrated 2026-03-02 (Cycle 2 Batch 6 Final)
- * @lucide https://lucide.dev/icons/github
- */
 export const GithubIcon = ({ color, size = 24, ...props }: IconProps) => {
   const { colors } = useThemeColors();
   const iconColor = color || colors.slate[8];

@@ -8,7 +8,7 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
-import { useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { AssigneeTypeFilters } from '../AssigneeTypeFilters';
 import { defaultFilterState } from '@application/store/conversation/conversationFilterSlice';
@@ -40,12 +40,6 @@ const mockStore = configureStore({
 });
 
 const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
-
   const { filtersModalSheetRef } = useRefsContext();
 
   useEffect(() => {
@@ -66,7 +60,7 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
               )}
               detached
               enablePanDownToClose
-              animationConfigs={animationConfigs}
+              animationConfigs={spring.sheet}
               handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
               style={tailwind.style('overflow-hidden')}
               snapPoints={['50%']}>

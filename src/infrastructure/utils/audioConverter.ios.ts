@@ -1,4 +1,4 @@
-import RNFS from 'react-native-fs';
+import { File, Paths } from 'expo-file-system';
 import * as Sentry from '@sentry/react-native';
 
 /**
@@ -8,25 +8,15 @@ import * as Sentry from '@sentry/react-native';
  */
 export const convertOggToWav = async (oggUrl: string): Promise<string | Error> => {
   const fileName = `audio_${Date.now()}.ogg`;
-  const outputPath = `${RNFS.CachesDirectoryPath}/${fileName}`;
 
   try {
-    // Download the OGG file
-    const downloadResult = await RNFS.downloadFile({
-      fromUrl: oggUrl,
-      toFile: outputPath,
-    }).promise;
-
-    if (downloadResult.statusCode !== 200) {
-      const error = new Error(`Download failed with status ${downloadResult.statusCode}`);
-      Sentry.captureException(error);
-      return error;
-    }
+    // Download the OGG file using the new expo-file-system API
+    const outputFile = await File.downloadFileAsync(oggUrl, new File(Paths.cache, fileName));
 
     // For now, return the original file path
     // Note: This doesn't actually convert OGG to WAV
     // You would need a proper audio conversion library for that
-    return outputPath;
+    return outputFile.uri;
   } catch (error) {
     const conversionError = new Error(`Audio conversion failed: ${error}`);
     Sentry.captureException(conversionError);

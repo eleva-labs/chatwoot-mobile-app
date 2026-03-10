@@ -6,23 +6,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  useBottomSheetSpringConfigs,
-} from '@gorhom/bottom-sheet';
-import DeviceInfo from 'react-native-device-info';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
+import * as Device from 'expo-device';
 import ChatWootWidget from '@chatwoot/react-native-widget';
 import { useSelector } from 'react-redux';
 import * as Application from 'expo-application';
-import { Account, AvailabilityStatus } from '@domain/types';
+import { Account, AvailabilityStatus, GenericListType } from '@domain/types';
 import { clearAllConversations } from '@application/store/conversation/conversationSlice';
 import { resetNotifications } from '@application/store/notification/notificationSlice';
 import { clearAllContacts } from '@application/store/contact/contactSlice';
 
 import i18n from '@infrastructure/i18n';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles, useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 import {
   BottomSheetBackdrop,
@@ -41,7 +38,6 @@ import { BuildInfo } from '@infrastructure/ui/common';
 import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
 import { useRefsContext, useTheme } from '@infrastructure/context';
 import { NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
-import { GenericListType } from '@domain/types';
 
 import { useHaptic } from '@infrastructure/utils';
 import { SettingsHeader } from './SettingsHeader';
@@ -65,7 +61,6 @@ import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';
 import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
-import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
 
 const appName = Application.applicationName;
 const appVersion = Application.nativeApplicationVersion;
@@ -118,7 +113,7 @@ const SettingsScreen = () => {
     originatedFrom: 'mobile-app',
     appName,
     appVersion: appVersionDetails,
-    deviceId: DeviceInfo.getDeviceId(),
+    deviceId: Device.modelId ?? Device.modelName ?? 'unknown',
     packageName: appName,
     operatingSystem: Platform.OS, // android/ios
   };
@@ -148,12 +143,6 @@ const SettingsScreen = () => {
   const themedTailwind = useThemedStyles();
   const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
-
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
 
   const openSheet = () => {
     hapticSelection?.();
@@ -371,7 +360,7 @@ const SettingsScreen = () => {
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
@@ -393,7 +382,7 @@ const SettingsScreen = () => {
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -410,7 +399,7 @@ const SettingsScreen = () => {
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -427,7 +416,7 @@ const SettingsScreen = () => {
         // TODO: Fix this later
         // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -446,7 +435,7 @@ const SettingsScreen = () => {
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}

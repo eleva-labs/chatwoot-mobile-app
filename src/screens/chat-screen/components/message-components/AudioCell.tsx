@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { PlayBackType } from 'react-native-audio-recorder-player';
-import Animated, { Easing, FadeIn, FadeOut, useSharedValue } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, useSharedValue } from 'react-native-reanimated';
+import { contentFadeIn } from '@infrastructure/animation';
 import Svg, { Path, Rect } from 'react-native-svg';
 
 import {
@@ -202,7 +203,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
 
   return (
     <Animated.View
-      entering={FadeIn.duration(300).easing(Easing.ease)}
+      entering={contentFadeIn()}
       style={tailwind.style(
         'w-full my-[1px]',
         isIncoming && 'items-start',

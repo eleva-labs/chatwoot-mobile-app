@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet } from 'react-native';
 import FileViewer from 'react-native-file-viewer';
-import Animated, { Easing, FadeIn } from 'react-native-reanimated';
-import RNFetchBlob from 'rn-fetch-blob';
+import Animated from 'react-native-reanimated';
+import { contentFadeIn } from '@infrastructure/animation';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 import { FileIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
@@ -23,7 +24,7 @@ type FilePreviewProps = Pick<FileCellProps, 'fileSrc'> & {
 
 export const FilePreview = (props: FilePreviewProps) => {
   const { fileSrc, isIncoming, isOutgoing, isComposed = false } = props;
-  const dirs = RNFetchBlob.fs.dirs;
+  const dirs = ReactNativeBlobUtil.fs.dirs;
 
   const [fileDownload, setFileDownload] = useState(false);
   const fileName = fileSrc.split('/')[fileSrc.split('/').length - 1];
@@ -39,12 +40,12 @@ export const FilePreview = (props: FilePreviewProps) => {
 
   useEffect(() => {
     const asyncFileDownload = () => {
-      RNFetchBlob.fs.exists(localFilePath).then(res => {
+      ReactNativeBlobUtil.fs.exists(localFilePath).then(res => {
         if (res) {
           setFileDownload(false);
         } else {
           setFileDownload(true);
-          RNFetchBlob.config({
+          ReactNativeBlobUtil.config({
             overwrite: true,
             path: localFilePath,
             fileCache: true,
@@ -150,7 +151,7 @@ export const FileCell = (props: FileCellProps) => {
 
   return (
     <Animated.View
-      entering={FadeIn.duration(300).easing(Easing.ease)}
+      entering={contentFadeIn()}
       style={tailwind.style(
         'w-full my-[1px]',
         isIncoming && 'items-start',

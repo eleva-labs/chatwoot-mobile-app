@@ -25,12 +25,12 @@ import type {
   SendMessageAPIResponse,
   SendMessagePayload,
   TogglePriorityPayload,
+  ToggleAIPayload,
 } from './conversationTypes';
 import { AxiosError } from 'axios';
 import { MESSAGE_STATUS } from '@domain/constants';
 import { buildCreatePayload, createPendingMessage } from '@infrastructure/utils/messageUtils';
 import { transformMessage } from '@infrastructure/utils/camelCaseKeys';
-import { Platform } from 'react-native';
 
 export const conversationActions = {
   fetchConversations: createAsyncThunk<ConversationListResponse, ConversationPayload>(
@@ -91,12 +91,7 @@ export const conversationActions = {
         });
         const payload = buildCreatePayload(pendingMessage);
         const { file } = sendMessagePayload;
-        const contentType =
-          Platform.OS === 'ios' && file
-            ? file.type
-            : Platform.OS === 'android' && file
-              ? 'multipart/form-data'
-              : 'application/json';
+        const contentType = file ? 'multipart/form-data' : 'application/json';
 
         const response = await ConversationService.sendMessage(conversationId, payload, {
           headers: {
@@ -252,6 +247,24 @@ export const conversationActions = {
     'conversations/togglePriority',
     async (payload, { rejectWithValue }) => {
       return await ConversationService.togglePriority(payload);
+    },
+  ),
+  toggleAI: createAsyncThunk<{ conversationId: number; aiEnabled: boolean }, ToggleAIPayload>(
+    'conversations/toggleAI',
+    async (payload, { rejectWithValue }) => {
+      try {
+        const response = await ConversationService.toggleAI(payload);
+        return {
+          conversationId: payload.conversationId,
+          aiEnabled: response.ai_enabled,
+        };
+      } catch (error) {
+        const { response } = error as AxiosError<ApiErrorResponse>;
+        if (!response) {
+          throw error;
+        }
+        return rejectWithValue(response.data);
+      }
     },
   ),
 };

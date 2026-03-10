@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Pressable, Text, Animated, View } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
+import * as Clipboard from 'expo-clipboard';
 
 import { showToast } from '@infrastructure/utils/toastUtils';
 import { useThemedStyles } from '@/hooks';
@@ -55,17 +55,13 @@ const DebugActionCell = ({ item, index, isLastItem }: DebugActionCellProps) => {
   const version = useAppSelector(selectChatwootVersion);
   const pushToken = useAppSelector(selectPushToken);
 
-  useEffect(() => {
-    console.warn('installationUrl', installationUrl);
-  }, [installationUrl]);
-
   const hapticSelection = useHaptic();
 
   const handlePress = (item: DebugAction) => {
     const value = debugValue(item.key);
     hapticSelection?.();
     if (value) {
-      Clipboard.setString(value);
+      Clipboard.setStringAsync(value);
       showToast({ message: `${item.label} copied to clipboard` });
     }
   };

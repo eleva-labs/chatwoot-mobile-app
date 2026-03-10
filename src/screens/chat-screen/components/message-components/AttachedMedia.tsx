@@ -1,16 +1,17 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { Asset } from 'react-native-image-picker';
-import Animated, {
-  LinearTransition,
-  SlideInDown,
-  SlideInUp,
-  SlideOutDown,
-} from 'react-native-reanimated';
+import { PickedAsset } from '@domain/types';
+import Animated from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
-import { ResizeMode, Video } from 'expo-av';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { Image } from 'expo-image';
 
+import {
+  softLayout,
+  snappySlideInDown,
+  snappySlideInUp,
+  snappySlideOutDown,
+} from '@infrastructure/animation';
 import { AttachFileIcon } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useScaleAnimation } from '@infrastructure/utils';
@@ -55,7 +56,7 @@ const DeleteIcon = ({ color }: { color: string }) => {
 };
 
 type AttachedMediaProps = {
-  item: Asset;
+  item: PickedAsset;
   index: number;
 };
 
@@ -74,11 +75,11 @@ const AttachedImage = (props: AttachedImageProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -120,22 +121,26 @@ const AttachedVideo = (props: AttachedVideoProps) => {
     dispatch(deleteAttachment(index));
   };
 
+  const player = useVideoPlayer(item.uri ?? null, () => {
+    // Don't play — just use as thumbnail
+  });
+
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
         )}>
         {item.uri ? (
-          <Video
-            shouldPlay={false}
-            resizeMode={ResizeMode.COVER}
-            source={{ uri: item.uri }}
+          <VideoView
+            player={player}
+            contentFit="cover"
+            nativeControls={false}
             style={[tailwind.style('h-full w-full rounded-lg')]}
           />
         ) : null}
@@ -162,7 +167,6 @@ const AttachedVideo = (props: AttachedVideoProps) => {
             tailwind.style('rounded-lg'),
             { transform: [{ rotateY: '180deg' }] },
           ]}
-          // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
           source={require('../../../../assets/local/ImageCellTimeStampOverlay.png')}
         />
         <Animated.View
@@ -197,11 +201,11 @@ const AttachedFile = (props: AttachedFileProps) => {
 
   return (
     <Animated.View
-      entering={SlideInDown.springify().damping(20).stiffness(120)}
-      exiting={SlideOutDown.springify().damping(20).stiffness(120)}
+      entering={snappySlideInDown()}
+      exiting={snappySlideOutDown()}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify()}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg items-center justify-center',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -257,16 +261,15 @@ export const AttachedMedia = () => {
   return attachments.length > 0 ? (
     <Animated.View style={tailwind.style('py-4')}>
       <Animated.FlatList
-        itemLayoutAnimation={LinearTransition.springify().damping(25).stiffness(200)}
-        entering={SlideInUp}
-        exiting={SlideOutDown}
+        itemLayoutAnimation={softLayout()}
+        entering={snappySlideInUp()}
+        exiting={snappySlideOutDown()}
         style={tailwind.style('px-4 pr-12')}
         horizontal
         showsHorizontalScrollIndicator={false}
         data={attachments}
         renderItem={handleRenderItem}
-        // @ts-expect-error - FlatList keyExtractor expects string but Asset.uri is string
-        keyExtractor={(item: Asset) => item.uri}
+        keyExtractor={(item: PickedAsset, index: number) => item.uri ?? `attachment-${index}`}
       />
     </Animated.View>
   ) : null;

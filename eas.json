@@ -1,17 +1,14 @@
 {
   "cli": {
-    "version": ">= 14.2.0",
+    "version": ">= 16.0.0",
     "appVersionSource": "remote"
   },
   "build": {
     "base": {
       "cache": {
         "disabled": false,
-        "key": "v1",
-        "cacheDefaultPaths": true,
-        "customPaths": [
-          "./ios/Podfile.lock"
-        ]
+        "key": "sdk55-v1",
+        "cacheDefaultPaths": true
       }
     },
     "development:simulator": {
@@ -19,7 +16,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "cache": {
-        "key": "dev-sim-v1"
+        "key": "sdk55-dev-sim-v1"
       },
       "ios": {
         "simulator": true
@@ -33,7 +30,7 @@
       "developmentClient": true,
       "distribution": "store",
       "cache": {
-        "key": "dev-v1"
+        "key": "sdk55-dev-v1"
       },
       "env": {
         "ENVIRONMENT": "dev",
@@ -60,7 +57,7 @@
       "extends": "base",
       "distribution": "internal",
       "cache": {
-        "key": "preview-v1"
+        "key": "sdk55-preview-v1"
       },
       "env": {
         "ENVIRONMENT": "dev",
@@ -78,17 +75,29 @@
         "buildType": "apk"
       }
     },
-    "production": {
-      "extends": "base",
-      "autoIncrement": true,
+    "staging": {
+      "extends": "production",
       "cache": {
-        "key": "prod-v1"
+        "key": "sdk55-staging-v2"
       },
       "env": {
         "ENVIRONMENT": "prod",
         "SENTRY_ORG": "eleva-labs",
-        "SENTRY_PROJECT": "chatscommerce",
-        "EXPO_DEBUG": "1"
+        "SENTRY_PROJECT": "chatscommerce"
+      },
+      "environment": "development",
+      "channel": "staging"
+    },
+    "production": {
+      "extends": "base",
+      "autoIncrement": true,
+      "cache": {
+        "key": "sdk55-prod-v1"
+      },
+      "env": {
+        "ENVIRONMENT": "prod",
+        "SENTRY_ORG": "eleva-labs",
+        "SENTRY_PROJECT": "chatscommerce"
       },
       "environment": "production",
       "channel": "production",
@@ -113,13 +122,24 @@
         "appleTeamId": "TGB3VRK9LR"
       }
     },
+    "staging": {
+      "android": {
+        "serviceAccountKeyPath": "./credentials/android/service-account-key.json",
+        "track": "internal"
+      },
+      "ios": {
+        "ascAppId": "6749920971",
+        "appleTeamId": "TGB3VRK9LR"
+      }
+    },
     "production": {
       "android": {
         "serviceAccountKeyPath": "./credentials/android/service-account-key.json",
         "track": "internal"
       },
       "ios": {
-        "ascAppId": "6749920971"
+        "ascAppId": "6749920971",
+        "appleTeamId": "TGB3VRK9LR"
       }
     }
   }

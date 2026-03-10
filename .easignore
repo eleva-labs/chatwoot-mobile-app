@@ -12,12 +12,13 @@
 *.jks
 *.mobileprovision
 service-account-key.json
-z
+
 # Ignore local environment files
 .env*.local
 dev.env
 prod.env
 
-# Ignore native build artifacts
-android/app/google-services.json
-ios/GoogleService-Info.plist
+# Exclude native directories so EAS always runs expo prebuild
+# This ensures app.config.ts processes googleServicesFile from EAS secrets correctly
+/android/
+/ios/

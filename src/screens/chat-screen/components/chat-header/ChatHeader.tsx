@@ -1,14 +1,17 @@
 import React from 'react';
 import { ImageSourcePropType, Keyboard, Platform, Pressable } from 'react-native';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import Animated from 'react-native-reanimated';
 import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 import { Overflow } from '@/svg-icons/common/Overflow';
 
-import { Avatar, Icon } from '@infrastructure/ui';
+import { Avatar, Icon, BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { InboxIndicator } from '@infrastructure/ui/list-components';
+import { Inbox } from '@domain/types/Inbox';
+import { ConversationAdditionalAttributes } from '@domain/types/Conversation';
 import { /* OpenIcon, ResolvedIcon, */ SLAIcon } from '@/svg-icons';
 import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
-import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { ChatDropdownMenu, DashboardList } from './DropdownMenu';
@@ -19,6 +22,9 @@ import { SlaEvents } from './SlaEvents';
 type ChatHeaderProps = {
   name: string;
   imageSrc: ImageSourcePropType;
+  inbox: Inbox | null;
+  showInboxIndicator?: boolean;
+  additionalAttributes?: ConversationAdditionalAttributes;
   isResolved: boolean;
   isSlaMissed?: boolean;
   hasSla?: boolean;
@@ -34,6 +40,9 @@ type ChatHeaderProps = {
 export const ChatHeader = ({
   name,
   imageSrc,
+  inbox,
+  showInboxIndicator = false,
+  additionalAttributes,
   isResolved,
   slaEvents,
   isSlaMissed,
@@ -49,12 +58,6 @@ export const ChatHeader = ({
   const { colors } = useThemeColors();
   const { slaEventsSheetRef } = useRefsContext();
 
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
-
   const toggleSlaEventsSheet = () => {
     if (slaEvents?.length) {
       Keyboard.dismiss();
@@ -64,7 +67,7 @@ export const ChatHeader = ({
 
   return (
     <Animated.View style={[themedTailwind.style('border-b-[1px] border-b-slate-6')]}>
-      <Animated.View style={tailwind.style('flex flex-row justify-between items-center px-4 py-2')}>
+      <Animated.View style={tailwind.style('flex flex-row justify-between items-center px-4 py-3')}>
         <Animated.View style={tailwind.style('flex-1 flex-row gap-2 items-center justify-center')}>
           <Pressable
             hitSlop={8}
@@ -76,7 +79,7 @@ export const ChatHeader = ({
             onPress={onContactDetailsPress}
             style={tailwind.style('flex flex-row items-center flex-1')}>
             <Avatar size="xl" src={imageSrc} name={name} />
-            <Animated.View style={tailwind.style('pl-2')}>
+            <Animated.View style={tailwind.style('pl-2 flex-1 min-w-0')}>
               <Animated.Text
                 numberOfLines={1}
                 style={themedTailwind.style(
@@ -84,13 +87,20 @@ export const ChatHeader = ({
                 )}>
                 {name}
               </Animated.Text>
+              {showInboxIndicator && inbox && (
+                <InboxIndicator
+                  inbox={inbox}
+                  additionalAttributes={additionalAttributes}
+                  size="md"
+                />
+              )}
             </Animated.View>
           </Pressable>
         </Animated.View>
 
         <Animated.View
           style={tailwind.style(
-            `flex flex-row flex-1 justify-end ${Platform.OS === 'ios' ? 'gap-4' : ''}`,
+            `flex flex-row justify-end ${Platform.OS === 'ios' ? 'gap-4' : ''}`,
           )}>
           <Animated.View style={tailwind.style('flex flex-row items-center gap-4')}>
             {hasSla && (
@@ -127,7 +137,7 @@ export const ChatHeader = ({
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         snapPoints={['36%']}>

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { contentFadeInLinear } from '@infrastructure/animation';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 
@@ -79,7 +80,7 @@ const MacroDetails = ({ macro, onBack, onClose }: MacroDetailsProps) => {
   }, []);
 
   return (
-    <Animated.View entering={FadeIn.duration(300).springify()} style={tailwind.style('flex-1')}>
+    <Animated.View entering={contentFadeInLinear()} style={tailwind.style('flex-1')}>
       <View style={tailwind.style('flex-row items-center p-4')}>
         <Pressable onPress={onBack} style={tailwind.style('flex-1 flex-row items-center')}>
           <View style={tailwind.style('mr-1')}>

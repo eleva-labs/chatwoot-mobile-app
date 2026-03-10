@@ -1,7 +1,8 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { BottomSheetModal, useBottomSheetSpringConfigs } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
 
@@ -22,12 +23,6 @@ export const InboxHeader = (props: InboxHeaderProps) => {
   const handleToggleState = () => {
     inboxFiltersSheetRef.current?.present();
   };
-
-  const animationConfigs = useBottomSheetSpringConfigs({
-    mass: 1,
-    stiffness: 420,
-    damping: 30,
-  });
 
   return (
     <Animated.View style={[tailwind.style('border-b-[1px] border-b-slate-6')]}>
@@ -58,7 +53,7 @@ export const InboxHeader = (props: InboxHeaderProps) => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        animationConfigs={animationConfigs}
+        animationConfigs={spring.sheet}
         enablePanDownToClose
         snapPoints={[160]}>
         <BottomSheetWrapper>

@@ -15,27 +15,26 @@ import { useEASUpdates } from '@infrastructure/hooks/useEASUpdates';
 const Chatwoot = () => {
   useEASUpdates();
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackButtonClick);
+    const handleBackButtonClick = () => {
+      Alert.alert(
+        i18n.t('EXIT.TITLE'),
+        i18n.t('EXIT.SUBTITLE'),
+        [
+          {
+            text: i18n.t('EXIT.CANCEL'),
+            onPress: () => {},
+            style: 'cancel',
+          },
+          { text: i18n.t('EXIT.OK'), onPress: () => BackHandler.exitApp() },
+        ],
+        { cancelable: false },
+      );
+      return true;
     };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => subscription.remove();
   }, []);
-  const handleBackButtonClick = () => {
-    Alert.alert(
-      i18n.t('EXIT.TITLE'),
-      i18n.t('EXIT.SUBTITLE'),
-      [
-        {
-          text: i18n.t('EXIT.CANCEL'),
-          onPress: () => {},
-          style: 'cancel',
-        },
-        { text: i18n.t('EXIT.OK'), onPress: () => BackHandler.exitApp() },
-      ],
-      { cancelable: false },
-    );
-    return true;
-  };
 
   return (
     <Provider store={store}>

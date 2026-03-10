@@ -3,15 +3,9 @@ import * as Sentry from '@sentry/react-native';
 
 import { getApp } from '@react-native-firebase/app';
 import { getMessaging, hasPermission, getToken } from '@react-native-firebase/messaging';
-import {
-  getSystemName,
-  getManufacturer,
-  getModel,
-  getApiLevel,
-  getBrand,
-  getBuildNumber,
-  getUniqueId,
-} from 'react-native-device-info';
+import { Platform } from 'react-native';
+import * as Device from 'expo-device';
+import * as Application from 'expo-application';
 
 import { SettingsService } from './settingsService';
 import type {
@@ -25,6 +19,7 @@ import { URL_TYPE } from '@domain/constants/url';
 import { checkValidUrl, extractDomain, handleApiError } from './settingsUtils';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import { requestNotificationPermissions } from '@infrastructure/utils/permissionManager';
+import { isFirebaseInitialized } from '@infrastructure/utils/firebaseUtils';
 
 const createSettingsThunk = <TResponse, TPayload>(
   type: string,
@@ -53,9 +48,7 @@ export const settingsActions = {
         // Support http:// for local development (e.g. http://localhost:3000)
         const isHttp = url.startsWith('http://');
         const protocol = isHttp ? 'http://' : URL_TYPE;
-        const wsProtocol = isHttp ? 'ws://' : 'wss://';
         const INSTALLATION_URL = `${protocol}${installationUrl}/`;
-        const WEB_SOCKET_URL = `${wsProtocol}${installationUrl}/cable`;
         const isValid = await SettingsService.verifyInstallationUrl(INSTALLATION_URL);
 
         if (!isValid) {
@@ -64,7 +57,6 @@ export const settingsActions = {
 
         return {
           installationUrl: INSTALLATION_URL,
-          webSocketUrl: WEB_SOCKET_URL,
           baseUrl: installationUrl,
         };
       } catch (error) {
@@ -94,17 +86,24 @@ export const settingsActions = {
     'settings/saveDeviceDetails',
     async (_, { rejectWithValue }) => {
       try {
+        if (!isFirebaseInitialized()) {
+          console.warn('[Firebase] Not initialized — skipping saveDeviceDetails');
+          return rejectWithValue('Firebase not initialized');
+        }
         const messaging = getMessaging(getApp());
         const permissionEnabled = await hasPermission(messaging);
-        const deviceId = await getUniqueId();
-        const devicePlatform = getSystemName();
-        const manufacturer = await getManufacturer();
-        const model = await getModel();
-        const apiLevel = await getApiLevel();
+        const deviceId =
+          Platform.OS === 'ios'
+            ? await Application.getIosIdForVendorAsync()
+            : Application.getAndroidId();
+        const devicePlatform = Device.osName ?? Platform.OS;
+        const manufacturer = Device.manufacturer ?? 'unknown';
+        const model = Device.modelName ?? 'unknown';
+        const apiLevel = Platform.OS === 'android' ? Number(Platform.Version) : 0;
         const deviceName = `${manufacturer} ${model}`;
 
-        const brandName = await getBrand();
-        const buildNumber = await getBuildNumber();
+        const brandName = Device.brand ?? 'unknown';
+        const buildNumber = Application.nativeBuildVersion ?? '0';
 
         if (!permissionEnabled || permissionEnabled === -1) {
           const permissionGranted = await requestNotificationPermissions();
@@ -128,7 +127,7 @@ export const settingsActions = {
             brandName,
             buildNumber,
             push_token: fcmToken,
-            device_id: deviceId,
+            device_id: deviceId ?? 'unknown',
           },
         };
         await SettingsService.saveDeviceDetails(pushData);

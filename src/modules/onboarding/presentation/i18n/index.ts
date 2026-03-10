@@ -5,39 +5,37 @@
  * This allows the module to be used as a standalone library.
  */
 
-import I18n from 'i18n-js';
+import i18n from '@infrastructure/i18n';
 import en from './locales/en.json';
 import es from './locales/es.json';
 import pt from './locales/pt.json';
 
 // Store the onboarding translations separately
-const onboardingTranslations = {
+const onboardingTranslations: Record<string, Record<string, string>> = {
   en,
   es,
   pt,
 };
 
-// Type for i18n translations that include onboarding
+// Type for onboarding locales
 type OnboardingLocales = 'en' | 'es' | 'pt';
-type TranslationsWithOnboarding = Record<
-  string,
-  { onboarding?: Record<string, string> } & Record<string, unknown>
->;
 
 // Merge onboarding translations into the existing i18n instance
-// This ensures we don't overwrite the app's translations
-const translations = I18n.translations as TranslationsWithOnboarding;
-if (!translations.en?.onboarding) {
+// using i18n-js v4 store() API — only if not already merged
+const existingTranslations = i18n.translations ?? {};
+const existingEn = existingTranslations.en as Record<string, unknown> | undefined;
+if (!existingEn?.onboarding) {
+  const translationsToStore: Record<string, { onboarding: Record<string, string> }> = {};
   (Object.keys(onboardingTranslations) as OnboardingLocales[]).forEach(locale => {
-    if (!translations[locale]) {
-      translations[locale] = {};
-    }
-    translations[locale].onboarding = onboardingTranslations[locale];
+    translationsToStore[locale] = { onboarding: onboardingTranslations[locale] };
   });
+  if (typeof i18n.store === 'function') {
+    i18n.store(translationsToStore);
+  }
 }
 
 // Export the i18n instance
-export const onboardingI18n = I18n;
+export const onboardingI18n = i18n;
 
 /**
  * Translation helper for the onboarding module
@@ -82,37 +80,38 @@ export function getLocale(): string {
  * Useful for extending the module with additional languages
  */
 export function addTranslations(locale: string, newTranslations: Record<string, string>) {
-  const i18nTranslations = onboardingI18n.translations as TranslationsWithOnboarding;
-  if (!i18nTranslations[locale]) {
-    i18nTranslations[locale] = {};
+  // In v4, use store() to merge new translations
+  const allTranslations = i18n.translations ?? {};
+  const existing = (allTranslations[locale] as Record<string, unknown> | undefined) ?? {};
+  const existingOnboarding = (existing.onboarding ?? {}) as Record<string, string>;
+  if (typeof i18n.store === 'function') {
+    i18n.store({
+      [locale]: {
+        onboarding: {
+          ...existingOnboarding,
+          ...newTranslations,
+        },
+      },
+    });
   }
-
-  if (!i18nTranslations[locale].onboarding) {
-    i18nTranslations[locale].onboarding = {};
-  }
-
-  i18nTranslations[locale].onboarding = {
-    ...i18nTranslations[locale].onboarding,
-    ...newTranslations,
-  };
 }
 
 /**
  * Check if a locale is supported
  */
 export function isLocaleSupported(locale: string): boolean {
-  return (
-    locale in onboardingI18n.translations &&
-    'onboarding' in (onboardingI18n.translations[locale] || {})
-  );
+  const allTranslations = i18n.translations ?? {};
+  const translation = allTranslations[locale] as Record<string, unknown> | undefined;
+  return !!translation && 'onboarding' in translation;
 }
 
 /**
  * Get all available locales
  */
 export function getAvailableLocales(): string[] {
-  return Object.keys(onboardingI18n.translations).filter(locale => {
-    const translation = onboardingI18n.translations[locale] as Record<string, unknown> | undefined;
+  const allTranslations = i18n.translations ?? {};
+  return Object.keys(allTranslations).filter(locale => {
+    const translation = allTranslations[locale] as Record<string, unknown> | undefined;
     return translation && 'onboarding' in translation;
   });
 }

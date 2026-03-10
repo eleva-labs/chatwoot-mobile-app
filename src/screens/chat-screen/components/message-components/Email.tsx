@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Text, Dimensions } from 'react-native';
-import AutoHeightWebView from 'react-native-autoheight-webview';
+import AutoHeightWebView from '@infrastructure/ui/components/AutoHeightWebView';
 
 import { tailwind } from '@infrastructure/theme';
 import { Channel, Message, MessageStatus, MessageType } from '@domain/types';

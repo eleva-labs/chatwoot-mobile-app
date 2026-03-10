@@ -3,13 +3,12 @@ import type { SharedValue } from 'react-native-reanimated';
 import { tailwind } from '@infrastructure/theme';
 import Animated, {
   Easing,
-  FadeIn,
-  FadeOut,
   FlipInXDown,
   FlipOutXDown,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
+import { standardFadeIn, standardFadeOut } from '@infrastructure/animation';
 
 export type StatusType = 'inProgress' | 'correct' | 'wrong';
 
@@ -37,7 +36,7 @@ export const AnimatedCodeNumber: React.FC<AnimatedCodeNumberProps> = ({
   return (
     <Animated.View style={[styles.container, rBoxStyle]}>
       {code != null && (
-        <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(250)}>
+        <Animated.View entering={standardFadeIn()} exiting={standardFadeOut()}>
           <Animated.Text
             entering={FlipInXDown.duration(500)
               // Go to this website and you'll see the curve I used:

@@ -1,25 +1,27 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useCallback, useRef, useEffect } from 'react';
-import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
-import { getApps } from '@react-native-firebase/app';
-import { getApp } from '@react-native-firebase/app';
+import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
+import { getApps, getApp } from '@react-native-firebase/app';
 import {
   getMessaging,
   setBackgroundMessageHandler,
   onNotificationOpenedApp,
   getInitialNotification,
 } from '@react-native-firebase/messaging';
-import { getStateFromPath } from '@react-navigation/native';
+import {
+  getStateFromPath,
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { AppTabs } from './tabs/AppTabs';
 import i18n from '@infrastructure/i18n';
 import { navigationRef } from '@infrastructure/utils/navigationUtils';
-import { useTheme } from '@infrastructure/context';
+import { useTheme, RefsProvider } from '@infrastructure/context';
 import {
   findConversationLinkFromPush,
   findNotificationFromFCM,
@@ -27,16 +29,14 @@ import {
 } from '@infrastructure/utils/pushUtils';
 import { extractConversationIdFromUrl } from '@infrastructure/utils/conversationUtils';
 import { tailwind } from '@infrastructure/theme';
-import { useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppSelector, useThemedStyles, useAppDispatch } from '@/hooks';
 import { selectInstallationUrl, selectLocale } from '@application/store/settings/settingsSelectors';
 import { SSO_CALLBACK_URL } from '@domain/constants';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { RefsProvider } from '@infrastructure/context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { waitForFirebaseInit } from '@infrastructure/utils/firebaseUtils';
+import { isFirebaseInitialized, waitForFirebaseInit } from '@infrastructure/utils/firebaseUtils';
 import { transformNotification } from '@infrastructure/utils/camelCaseKeys';
 import { SsoUtils } from '@infrastructure/utils/ssoUtils';
-import { useAppDispatch } from '@/hooks';
 import Inter40020 from '@/assets/fonts/Inter-400-20.ttf';
 import Inter42020 from '@/assets/fonts/Inter-420-20.ttf';
 import Inter50024 from '@/assets/fonts/Inter-500-24.ttf';
@@ -46,14 +46,10 @@ import Inter60020 from '@/assets/fonts/Inter-600-20.ttf';
 // Initialize Firebase messaging handlers after app starts
 const initializeFirebaseMessaging = () => {
   try {
-    // Ensure Firebase is initialized (should be auto-initialized by plugin, but let's be explicit)
-    const apps = getApps();
-    if (!apps.length) {
-      console.warn('Firebase not initialized, skipping messaging setup...');
+    if (!isFirebaseInitialized()) {
+      console.warn('[Firebase] Not initialized — skipping messaging setup');
       return;
     }
-
-    console.warn('Firebase already initialized, setting up messaging...');
 
     const messaging = getMessaging(getApp());
     setBackgroundMessageHandler(messaging, async remoteMessage => {
@@ -63,10 +59,8 @@ const initializeFirebaseMessaging = () => {
       const notification = findNotificationFromFCM({ message: remoteMessage });
       const camelCaseNotification = transformNotification(notification);
 
-      // Update badge count for iOS
-      if (Platform.OS === 'ios') {
-        updateBadgeCount({ count: 1 }); // You might want to track actual count
-      }
+      // Update badge count (cross-platform via expo-notifications)
+      updateBadgeCount({ count: 1 });
 
       // TODO: Process camelCaseNotification data for background tasks
       console.warn('Processed notification:', camelCaseNotification.id);
@@ -231,6 +225,10 @@ export const AppNavigationContainer = () => {
       }
 
       // getInitialNotification: When the application is opened from a quit state.
+      if (!isFirebaseInitialized()) {
+        console.warn('[Firebase] Not initialized — skipping getInitialNotification');
+        return undefined;
+      }
       const messaging = getMessaging(getApp());
       const message = await getInitialNotification(messaging);
       if (message) {

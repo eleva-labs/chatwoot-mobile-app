@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch, useThemedStyles } from '@/hooks';
 import { useChatWindowContext } from '@infrastructure/context';
-import { AppState, Platform } from 'react-native';
+import { AppState, Platform, Animated } from 'react-native';
 import { KeyboardGestureArea } from 'react-native-keyboard-controller';
-import { flatMap } from 'lodash';
+import flatMap from 'lodash/flatMap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   getMessagesByConversationId,
@@ -13,7 +13,6 @@ import {
 } from '@application/store/conversation/conversationSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 import { selectAttachments } from '@application/store/conversation/sendMessageSlice';
-import { Animated } from 'react-native';
 import { getGroupedMessages, isAnEmailChannel } from '@infrastructure/utils';
 import { MessagesList } from './MessagesList';
 import { conversationParticipantActions } from '@application/store/conversation-participant/conversationParticipantActions';
@@ -136,6 +135,8 @@ export const MessagesListContainer = () => {
     };
   }, [appState, conversationId, dispatch]);
 
+  // With inverted FlashList, scrolling UP (toward older messages) triggers onEndReached.
+  // "End" of the data array = oldest messages = visual top of the inverted list.
   const onEndReached = () => {
     const shouldFetchMoreMessages = !isAllMessagesFetched && !isLoadingMessages && isFlashListReady;
     if (shouldFetchMoreMessages) {
@@ -151,16 +152,25 @@ export const MessagesListContainer = () => {
 
   const groupedMessages = getGroupedMessages(messages);
 
+  // With inverted FlashList, data must be newest-first.
+  // Index 0 = newest message, renders at visual bottom.
+  // Date separators come AFTER each group's messages in the array,
+  // which means they render ABOVE (visually) in the inverted list.
   const allMessages = flatMap(groupedMessages, section => [
     ...section.data,
     { date: section.date },
   ]);
 
   const messagesWithGrouping = allMessages.map((message, index) => {
+    // With inverted list (newest-first data), array index+1 = older = visually ABOVE.
+    // shouldGroupWithNext(index) checks if [index] groups with [index+1] (= visual above).
+    // We SWAP the assignments so the prop names match their VISUAL meaning:
+    //   groupWithNext (visually below) = does the message below me (index-1, newer) group with me?
+    //   groupWithPrevious (visually above) = do I group with the message above me (index+1, older)?
     return {
       ...message,
-      groupWithNext: shouldGroupWithNext(index, allMessages as MessageOrDate[]),
-      groupWithPrevious: shouldGroupWithNext(index - 1, allMessages as MessageOrDate[]),
+      groupWithNext: shouldGroupWithNext(index - 1, allMessages as MessageOrDate[]),
+      groupWithPrevious: shouldGroupWithNext(index, allMessages as MessageOrDate[]),
     };
   });
 

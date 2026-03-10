@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { View, Text } from 'react-native';
 import BottomSheet, { BottomSheetScrollView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { spring } from '@infrastructure/animation';
 import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { AISessionList } from './AISessionList';
 import type { AIChatSession } from '@application/store/ai-chat/aiChatTypes';
@@ -51,6 +52,7 @@ export const AIChatSessionPanel: React.FC<AIChatSessionPanelProps> = React.memo(
         snapPoints={snapPoints}
         enablePanDownToClose
         onChange={handleSheetChange}
+        animationConfigs={spring.sheet}
         backdropComponent={renderBackdrop}
         backgroundStyle={style(sessionTokens.background)}
         handleIndicatorStyle={style('bg-slate-6 w-10')}>

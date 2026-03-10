@@ -15,7 +15,9 @@ class Logger {
   }
 
   private log(level: LogLevel, message: string, ...args: unknown[]): void {
-    if (!this.enabled) return;
+    // warn/error always emit (useful for crash reporting in production)
+    const isAlwaysOn = level === 'warn' || level === 'error';
+    if (!isAlwaysOn && !this.enabled) return;
 
     const prefix = `[Onboarding:${level.toUpperCase()}]`;
     const timestamp = new Date().toISOString();

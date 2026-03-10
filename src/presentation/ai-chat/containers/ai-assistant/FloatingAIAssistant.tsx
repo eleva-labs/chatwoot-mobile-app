@@ -7,8 +7,8 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { useScaleAnimation } from '@infrastructure/utils';
-import { useHaptic } from '@infrastructure/utils';
+import { spring, timing } from '@infrastructure/animation';
+import { useScaleAnimation, useHaptic } from '@infrastructure/utils';
 import { Sparkles } from 'lucide-react-native';
 import { AIChatInterface } from './AIChatInterface';
 import type { FloatingAIAssistantProps } from './types';
@@ -45,17 +45,11 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
         const newValue = !prev;
 
         // Animate FAB
-        fabScale.value = withSpring(newValue ? 0 : 1, {
-          damping: 15,
-          stiffness: 150,
-        });
+        fabScale.value = withSpring(newValue ? 0 : 1, spring.soft);
 
         // Animate chat interface
-        opacity.value = withTiming(newValue ? 1 : 0, { duration: 200 });
-        translateY.value = withSpring(newValue ? 0 : 100, {
-          damping: 20,
-          stiffness: 200,
-        });
+        opacity.value = withTiming(newValue ? 1 : 0, timing.fast);
+        translateY.value = withSpring(newValue ? 0 : 100, spring.soft);
 
         return newValue;
       });
@@ -73,15 +67,9 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
 
     const handleClose = useCallback(() => {
       setIsExpanded(false);
-      opacity.value = withTiming(0, { duration: 200 });
-      translateY.value = withSpring(100, {
-        damping: 20,
-        stiffness: 200,
-      });
-      fabScale.value = withSpring(1, {
-        damping: 15,
-        stiffness: 150,
-      });
+      opacity.value = withTiming(0, timing.fast);
+      translateY.value = withSpring(100, spring.soft);
+      fabScale.value = withSpring(1, spring.soft);
     }, [opacity, translateY, fabScale]);
 
     if (isExpanded) {

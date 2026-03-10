@@ -161,7 +161,7 @@ export function OnboardingModule({
     ) {
       dependencies.processOfflineQueueUseCase.execute().then(result => {
         if (result.isSuccess && result.getValue() > 0) {
-          console.log(`Processed ${result.getValue()} queued submission(s)`);
+          if (__DEV__) console.log(`Processed ${result.getValue()} queued submission(s)`);
         }
       });
     }
