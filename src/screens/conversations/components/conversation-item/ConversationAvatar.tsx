@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { ImageURISource } from 'react-native';
-import { LinearTransition } from 'react-native-reanimated';
+import { softLayout } from '@infrastructure/animation';
 import isEqual from 'lodash/isEqual';
 
 import { Avatar, AvatarStatusType } from '@infrastructure/ui/common';
@@ -21,7 +21,7 @@ const checkIfPropsAreSame = (prev: ConversationAvatarProps, next: ConversationAv
 export const ConversationAvatar = memo((props: ConversationAvatarProps) => {
   const { src, name, status } = props;
   return (
-    <AnimatedNativeView layout={LinearTransition.springify().damping(28).stiffness(200)}>
+    <AnimatedNativeView layout={softLayout()}>
       <Avatar
         size="2xl"
         src={src}

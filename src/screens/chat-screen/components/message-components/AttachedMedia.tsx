@@ -1,16 +1,12 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { PickedAsset } from '@domain/types';
-import Animated, {
-  LinearTransition,
-  SlideInDown,
-  SlideInUp,
-  SlideOutDown,
-} from 'react-native-reanimated';
+import Animated, { SlideInDown, SlideInUp, SlideOutDown } from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Image } from 'expo-image';
 
+import { softLayout } from '@infrastructure/animation';
 import { AttachFileIcon } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useScaleAnimation } from '@infrastructure/utils';
@@ -78,7 +74,7 @@ const AttachedImage = (props: AttachedImageProps) => {
       exiting={SlideOutDown.springify().damping(80).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify().damping(28).stiffness(200)}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -130,7 +126,7 @@ const AttachedVideo = (props: AttachedVideoProps) => {
       exiting={SlideOutDown.springify().damping(80).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify().damping(28).stiffness(200)}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -204,7 +200,7 @@ const AttachedFile = (props: AttachedFileProps) => {
       exiting={SlideOutDown.springify().damping(80).stiffness(240)}
       style={tailwind.style('pr-3 relative')}>
       <Animated.View
-        layout={LinearTransition.springify().damping(28).stiffness(200)}
+        layout={softLayout()}
         style={tailwind.style(
           'h-23 w-[137px] rounded-lg items-center justify-center',
           index === attachmentsLength - 1 ? 'mr-4' : '',
@@ -260,7 +256,7 @@ export const AttachedMedia = () => {
   return attachments.length > 0 ? (
     <Animated.View style={tailwind.style('py-4')}>
       <Animated.FlatList
-        itemLayoutAnimation={LinearTransition.springify().damping(28).stiffness(200)}
+        itemLayoutAnimation={softLayout()}
         entering={SlideInUp.springify().damping(80).stiffness(240)}
         exiting={SlideOutDown.springify().damping(80).stiffness(240)}
         style={tailwind.style('px-4 pr-12')}

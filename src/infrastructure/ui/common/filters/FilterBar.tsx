@@ -1,5 +1,6 @@
 import React from 'react';
-import Animated, { LinearTransition, withTiming } from 'react-native-reanimated';
+import Animated, { withTiming } from 'react-native-reanimated';
+import { softLayout } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { FilterButton } from './FilterButton';
 import i18n from '@infrastructure/i18n';
@@ -46,10 +47,7 @@ export const FilterBar = ({ allFilters, selectedFilters, onFilterPress }: Filter
       {allFilters.map((value, index) => {
         if (value.type === 'inbox_id') {
           return (
-            <Animated.View
-              layout={LinearTransition.springify().stiffness(200).damping(28)}
-              key={index}
-              style={tailwind.style('pr-2')}>
+            <Animated.View layout={softLayout()} key={index} style={tailwind.style('pr-2')}>
               <FilterButton
                 handleOnPress={() => onFilterPress(value.type)}
                 value={value.options[selectedFilters[value.type] as keyof typeof value.options]}
@@ -58,10 +56,7 @@ export const FilterBar = ({ allFilters, selectedFilters, onFilterPress }: Filter
           );
         }
         return (
-          <Animated.View
-            layout={LinearTransition.springify().stiffness(200).damping(28)}
-            key={index}
-            style={tailwind.style('pr-2')}>
+          <Animated.View layout={softLayout()} key={index} style={tailwind.style('pr-2')}>
             <FilterButton
               handleOnPress={() => onFilterPress(value.type)}
               value={getFilterTitle(value)}

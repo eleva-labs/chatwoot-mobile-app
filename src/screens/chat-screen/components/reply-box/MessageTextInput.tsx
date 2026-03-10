@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { Platform, StyleSheet, ScrollView } from 'react-native';
-import Animated, { LayoutAnimationConfig, LinearTransition } from 'react-native-reanimated';
+import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
 
+import { softLayout } from '@infrastructure/animation';
 import { useChatWindowContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
@@ -166,13 +167,11 @@ export const MessageTextInput = ({
 
   return (
     <LayoutAnimationConfig skipEntering={true}>
-      <Animated.View
-        layout={LinearTransition.springify().damping(28).stiffness(200)}
-        style={[tailwind.style('flex-1 my-0.5')]}>
+      <Animated.View layout={softLayout()} style={[tailwind.style('flex-1 my-0.5')]}>
         <MentionInput
           // @ts-expect-error MentionInput ref typing issue with forwardRef
           ref={textInputRef}
-          layout={LinearTransition.springify().damping(28).stiffness(200)}
+          layout={softLayout()}
           onChange={onChangeText}
           partTypes={[
             {

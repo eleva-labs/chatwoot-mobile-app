@@ -1,14 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, AppState, RefreshControl, StatusBar } from 'react-native';
-import Animated, {
-  LinearTransition,
-  runOnJS,
-  SharedValue,
-  useAnimatedScrollHandler,
-} from 'react-native-reanimated';
+import Animated, { runOnJS, SharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
+import { spring, softLayout } from '@infrastructure/animation';
 import { FlashList } from '@shopify/flash-list';
 
 import {
@@ -264,7 +259,7 @@ const ConversationList = () => {
   ) : (
     <AnimatedFlashList
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      layout={LinearTransition.springify().damping(28).stiffness(200)}
+      layout={softLayout()}
       showsVerticalScrollIndicator={false}
       data={allConversations}
       estimatedItemSize={91}

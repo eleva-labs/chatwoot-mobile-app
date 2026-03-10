@@ -6,7 +6,6 @@ import Animated, {
   FadeIn,
   interpolate,
   interpolateColor,
-  LinearTransition,
   runOnJS,
   SharedValue,
   useAnimatedReaction,
@@ -16,7 +15,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { spring } from '@infrastructure/animation';
+import { spring, softLayout } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic } from '@infrastructure/utils';
 import { AnimatedNativeView } from '@infrastructure/ui/native-components';
@@ -469,7 +468,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
       <GestureDetector gesture={cellGestures}>
         <AnimatedNativeView
           entering={FadeIn.duration(200)}
-          layout={LinearTransition.springify().damping(28).stiffness(200)}
+          layout={softLayout()}
           style={[tailwind.style('flex-1 z-10', `w-[${WIDTH}px]`), overlayStyle, tappedCellStyle]}>
           {children}
         </AnimatedNativeView>

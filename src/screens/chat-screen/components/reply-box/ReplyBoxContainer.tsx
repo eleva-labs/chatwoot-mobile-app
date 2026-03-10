@@ -4,7 +4,6 @@ import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, {
   FadeIn,
   FadeOut,
-  LinearTransition,
   useDerivedValue,
   useAnimatedStyle,
   withSpring,
@@ -70,7 +69,7 @@ import {
 } from '@infrastructure/utils/messageVariableUtils';
 import { ReplyEmailHead } from './ReplyEmailHead';
 import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
-import { spring } from '@infrastructure/animation';
+import { spring, snappyLayout } from '@infrastructure/animation';
 import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
 
@@ -433,7 +432,7 @@ const BottomSheetContent = () => {
       )}
 
       <Animated.View
-        layout={LinearTransition.springify().damping(80).stiffness(240)}
+        layout={snappyLayout()}
         style={themedTailwind.style(
           `pb-2 border-t-[1px] border-t-slate-6 ${shouldShowReplyHeader ? 'pt-0' : 'pt-2'}`,
         )}>

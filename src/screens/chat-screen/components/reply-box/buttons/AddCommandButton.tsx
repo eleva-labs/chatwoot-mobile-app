@@ -1,7 +1,8 @@
 import React from 'react';
-import Animated, { LinearTransition, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 import { Plus } from 'lucide-react-native';
+import { softLayout } from '@infrastructure/animation';
 import { useScaleAnimation } from '@infrastructure/utils';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { AddCommandButtonProps } from '../types';
@@ -24,9 +25,7 @@ export const AddCommandButton = ({
   });
 
   return (
-    <Animated.View
-      layout={LinearTransition.springify().damping(28).stiffness(200)}
-      style={animatedStyle}>
+    <Animated.View layout={softLayout()} style={animatedStyle}>
       <Pressable
         {...otherProps}
         style={({ pressed }) => [tailwind.style(pressed ? 'opacity-70' : '')]}

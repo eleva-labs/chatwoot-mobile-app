@@ -1,7 +1,8 @@
 import React from 'react';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { Pressable } from 'react-native';
 import { ArrowUp } from 'lucide-react-native';
+import { softLayout } from '@infrastructure/animation';
 import { useScaleAnimation } from '@infrastructure/utils';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useAppSelector, useThemedStyles } from '@/hooks';
@@ -21,7 +22,7 @@ export const SendMessageButton = (props: SendMessageButtonProps) => {
   return (
     <Pressable {...props} {...handlers}>
       <Animated.View
-        layout={LinearTransition.springify().damping(28).stiffness(200)}
+        layout={softLayout()}
         entering={sendIconEnterAnimation}
         exiting={sendIconExitAnimation}
         style={[tailwind.style('flex items-center justify-center h-10 w-10'), animatedStyle]}>
