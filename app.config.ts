@@ -125,12 +125,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         cacheDir: 'node_modules/.expo-build-disk-cache',
       },
     },
-    splash: {
-      image: './assets/splash.png',
-      resizeMode: 'contain',
-      backgroundColor: '#5d17eb',
-      enableFullScreenImage_legacy: true,
-    },
     ios: {
       supportsTablet: true,
       bundleIdentifier: getBundleIdentifier(),
@@ -199,6 +193,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       'expo-video',
       'expo-image-picker',
       [
+        'expo-splash-screen',
+        {
+          backgroundColor: '#5d17eb',
+          image: './assets/generated/splash-logo.png',
+          imageWidth: 250,
+          resizeMode: 'contain',
+        },
+      ],
+      [
         '@sentry/react-native/expo',
         {
           url: 'https://sentry.io/',
@@ -220,6 +223,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             minSdkVersion: 24,
             compileSdkVersion: 36,
             targetSdkVersion: 36,
+            kotlinVersion: '2.1.20',
             enableProguardInReleaseBuilds: true,
             // Support for 16 KB memory page sizes
             ndk: {

@@ -10,6 +10,7 @@ This file provides guidance to AI coding agents working in this repository.
 - **Run on iOS**: `task run-ios` (uses SIMULATOR env from .env)
 - **Run on Android**: `task run-android`
 - **Start with specific port**: `npx expo start --ios --port 8081`
+- **Important for CLI agents**: Prefer launching long-running native commands asynchronously/in the background when possible (Expo start, `pnpm run ios`, `pnpm run android`, emulator boot) so the CLI does not block or time out on native build output.
 
 ### Code Quality
 - **Run tests**: `task test` or `pnpm run test`
