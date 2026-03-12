@@ -67,10 +67,12 @@ const UnreadBadge = ({ count }: { count: number }) => {
   return (
     <NativeView
       style={tailwind.style(
-        'h-5 min-w-[20px] px-1 flex justify-center items-center rounded-full bg-teal-9',
+        'h-[18px] min-w-[18px] px-0.5 flex justify-center items-center rounded-full bg-teal-9',
       )}>
       <Text
-        style={tailwind.style('text-sm font-inter-semibold-20 leading-5 text-center text-white')}>
+        style={tailwind.style(
+          'text-xs font-inter-semibold-20 leading-none text-center text-white',
+        )}>
         {count > 9 ? '9+' : count}
       </Text>
     </NativeView>
