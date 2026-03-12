@@ -47,7 +47,4 @@ export const selectChatwootVersion = createSelector(selectSettings, settings => 
 
 export const selectPushToken = createSelector(selectSettings, settings => settings.pushToken);
 
-export const selectOnboardingCompleted = createSelector(
-  selectSettings,
-  settings => settings.onboardingCompleted,
-);
+export const selectOnboardingCompleted = createSelector(selectSettings, () => true);
