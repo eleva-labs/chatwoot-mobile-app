@@ -20,10 +20,10 @@ export const VoiceRecordButton = (props: VoiceRecordButtonProps) => {
         entering={voiceNoteIconEnterAnimation}
         exiting={voiceNoteIconExitAnimation}
         style={[
-          tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
+          tailwind.style('flex items-center justify-center h-12 w-12 rounded-2xl'),
           animatedStyle,
         ]}>
-        <Mic size={20} strokeWidth={2} color={colors.slate[11]} />
+        <Mic size={26} strokeWidth={2} color={colors.slate[11]} />
       </Animated.View>
     </Pressable>
   );

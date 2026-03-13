@@ -4,11 +4,9 @@ import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { ChatHeaderContainer } from './components';
+import { ChatHeaderContainer, ReplyBoxContainer, MessagesListContainer } from './components';
 import { ConversationActions } from './conversation-actions';
 
-import { ReplyBoxContainer } from './components';
-import { MessagesListContainer } from './components';
 import { ChatWindowProvider, useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { TabBarExcludedScreenParamList } from '@application/navigation/tabs/AppTabs';
 import { tailwind } from '@infrastructure/theme';
@@ -153,7 +151,7 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   if (conversation) {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
+      <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-solid-1')}>
         <LightBoxProvider>
           <ChatWindowProvider conversationId={conversationId}>
             <ChatScreenWrapper {...props} />

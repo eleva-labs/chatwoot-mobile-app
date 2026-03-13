@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, { useDerivedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lock, LockOpen } from 'lucide-react-native';
 
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
@@ -78,7 +77,6 @@ const BottomSheetContent = () => {
   const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
   const dispatch = useAppDispatch();
-  const { bottom } = useSafeAreaInsets();
   const { messageListRef } = useRefsContext();
   const isSendingRef = useRef(false);
 
@@ -96,7 +94,6 @@ const BottomSheetContent = () => {
     isAddMenuOptionSheetOpen,
     setAddMenuOptionSheetState,
     textInputRef,
-    isTextInputFocused,
     conversationId,
     isVoiceRecorderOpen,
     setIsVoiceRecorderOpen,
@@ -188,9 +185,9 @@ const BottomSheetContent = () => {
 
   const animatedInputWrapperStyle = useAnimatedStyle(
     () => ({
-      marginBottom: isTextInputFocused ? 0 : bottom,
+      marginBottom: 0,
     }),
-    [isTextInputFocused],
+    [],
   );
 
   const handleShowAddMenuOption = () => {
@@ -473,11 +470,11 @@ const BottomSheetContent = () => {
               onPress={handleTogglePrivateMode}
               disabled={replyEditorMode !== REPLY_EDITOR_MODES.REPLY}
               hitSlop={4}
-              style={tailwind.style('flex items-center justify-center h-10 w-10')}>
+              style={tailwind.style('flex items-center justify-center h-12 w-12')}>
               {isPrivate ? (
-                <Lock size={20} strokeWidth={2} color={colors.amber[9]} />
+                <Lock size={26} strokeWidth={2} color={colors.amber[9]} />
               ) : (
-                <LockOpen size={20} strokeWidth={2} color={colors.slate[11]} />
+                <LockOpen size={26} strokeWidth={2} color={colors.slate[11]} />
               )}
             </Pressable>
             {(messageContent.length > 0 || attachmentsLength > 0) && (

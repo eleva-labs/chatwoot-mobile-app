@@ -32,10 +32,10 @@ export const AddCommandButton = ({
         {...handlers}>
         <Animated.View
           style={[
-            tailwind.style('flex items-center justify-center h-10 w-10 rounded-2xl'),
+            tailwind.style('flex items-center justify-center h-12 w-12 rounded-2xl'),
             addIconAnimation,
           ]}>
-          <Plus size={20} strokeWidth={2} color={colors.slate[11]} />
+          <Plus size={26} strokeWidth={2} color={colors.slate[11]} />
         </Animated.View>
       </Pressable>
     </Animated.View>

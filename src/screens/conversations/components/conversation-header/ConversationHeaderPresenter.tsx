@@ -158,7 +158,7 @@ export const ConversationHeaderPresenter = ({
 
   return (
     <Animated.View
-      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-2 pb-[12px]')]}>
+      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-3 pb-4')]}>
       <LeftSection
         currentState={currentState}
         isSelectedAll={isSelectedAll}

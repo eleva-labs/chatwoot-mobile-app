@@ -45,21 +45,21 @@ const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
   switch (route.name) {
     case 'Conversations':
       return focused ? (
-        <ConversationIconFilled color={iconColor} size={28} />
+        <ConversationIconFilled color={iconColor} size={32} />
       ) : (
-        <ConversationIconOutline color={iconColor} size={28} />
+        <ConversationIconOutline color={iconColor} size={32} />
       );
     case 'Inbox':
       return focused ? (
-        <InboxIconFilled color={iconColor} size={28} />
+        <InboxIconFilled color={iconColor} size={32} />
       ) : (
-        <InboxIconOutline color={iconColor} size={28} />
+        <InboxIconOutline color={iconColor} size={32} />
       );
     case 'Settings':
       return focused ? (
-        <SettingsIconFilled color={iconColor} size={28} />
+        <SettingsIconFilled color={iconColor} size={32} />
       ) : (
-        <SettingsIconOutline color={iconColor} size={28} />
+        <SettingsIconOutline color={iconColor} size={32} />
       );
   }
 };
@@ -115,6 +115,9 @@ const TabItem = (props: any) => {
       style={[tailwind.style('justify-center items-center flex-1 bg-transparent'), animatedStyle]}>
       <Pressable
         hitSlop={hitSlop}
+        style={tailwind.style(
+          `h-12 w-12 items-center justify-center rounded-2xl ${isFocused ? 'bg-slate-6' : ''}`,
+        )}
         {...handlers}
         accessibilityRole="button"
         accessibilityState={accessibilityState}
@@ -174,13 +177,13 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
       style={Platform.select({
         ios: [
           themedTailwind.style(
-            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-[${Math.max(bottom, 32)}px] bg-solid-1`,
+            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] pb-[${Math.max(bottom, 34)}px] bg-solid-1`,
             `h-[${tabBarHeight}px]`,
           ),
         ],
         android: [
           themedTailwind.style(
-            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[11px] pb-[${Math.max(bottom, 11)}px] bg-solid-1`,
+            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] pb-[${Math.max(bottom, 12)}px] bg-solid-1`,
             `h-[${tabBarHeight}px]`,
           ),
         ],

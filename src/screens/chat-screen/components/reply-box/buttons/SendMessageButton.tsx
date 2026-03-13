@@ -25,13 +25,13 @@ export const SendMessageButton = (props: SendMessageButtonProps) => {
         layout={softLayout()}
         entering={sendIconEnterAnimation}
         exiting={sendIconExitAnimation}
-        style={[tailwind.style('flex items-center justify-center h-10 w-10'), animatedStyle]}>
+        style={[tailwind.style('flex items-center justify-center h-12 w-12'), animatedStyle]}>
         <Animated.View
           style={themedTailwind.style(
-            'flex items-center justify-center h-7 w-7 rounded-full',
+            'flex items-center justify-center h-9 w-9 rounded-full',
             isPrivateMessage ? 'bg-amber-9' : 'bg-slate-12',
           )}>
-          <ArrowUp size={16} strokeWidth={2} color={semanticColors.textInverse} />
+          <ArrowUp size={21} strokeWidth={2} color={semanticColors.textInverse} />
         </Animated.View>
       </Animated.View>
     </Pressable>
