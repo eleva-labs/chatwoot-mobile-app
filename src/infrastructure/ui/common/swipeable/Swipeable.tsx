@@ -24,6 +24,7 @@ const WIDTH = Dimensions.get('screen').width;
 const SNAP_POINT = 96;
 const FRICTION = 10;
 const DRAG_TOSS = 0.05;
+const VISUAL_SWIPE_MULTIPLIER = 0.25;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -381,15 +382,21 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
   });
 
   const leftTranslation = useAnimatedStyle(() => {
+    const visualSwipePosition = animStatePos.value * VISUAL_SWIPE_MULTIPLIER;
+
     return {
       transform: [
         {
           translateX: dragOverSwiped.value
-            ? interpolate(overSwipedState.value, [0, 1], [0, animStatePos.value - SNAP_POINT])
+            ? interpolate(
+                overSwipedState.value,
+                [0, 1],
+                [0, visualSwipePosition - SNAP_POINT * VISUAL_SWIPE_MULTIPLIER],
+              )
             : interpolate(
-                animStatePos.value,
-                [0, SNAP_POINT],
-                [-SNAP_POINT, 0],
+                visualSwipePosition,
+                [0, SNAP_POINT * VISUAL_SWIPE_MULTIPLIER],
+                [-SNAP_POINT * VISUAL_SWIPE_MULTIPLIER, 0],
                 Extrapolation.CLAMP,
               ),
         },
@@ -398,15 +405,21 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
   });
 
   const rightTranslation = useAnimatedStyle(() => {
+    const visualSwipePosition = animStatePos.value * VISUAL_SWIPE_MULTIPLIER;
+
     return {
       transform: [
         {
           translateX: dragOverSwiped.value
-            ? interpolate(overSwipedState.value, [0, 1], [0, animStatePos.value + SNAP_POINT])
+            ? interpolate(
+                overSwipedState.value,
+                [0, 1],
+                [0, visualSwipePosition + SNAP_POINT * VISUAL_SWIPE_MULTIPLIER],
+              )
             : interpolate(
-                animStatePos.value,
-                [0, -SNAP_POINT],
-                [SNAP_POINT, 0],
+                visualSwipePosition,
+                [0, -SNAP_POINT * VISUAL_SWIPE_MULTIPLIER],
+                [SNAP_POINT * VISUAL_SWIPE_MULTIPLIER, 0],
                 Extrapolation.CLAMP,
               ),
         },

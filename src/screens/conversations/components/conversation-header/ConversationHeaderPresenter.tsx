@@ -51,7 +51,7 @@ const HeaderTitle = () => {
         adjustsFontSizeToFit
         minimumFontScale={0.85}
         style={themedTailwind.style(
-          'text-[17px] font-inter-medium-24 tracking-[0.32px] leading-[22px] text-center text-slate-12',
+          'text-[21px] font-inter-medium-24 tracking-[0.32px] leading-[26px] text-center text-slate-12',
         )}>
         {i18n.t('CONVERSATION.HEADER.TITLE')}
       </Text>
@@ -158,7 +158,7 @@ export const ConversationHeaderPresenter = ({
 
   return (
     <Animated.View
-      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-3 pb-4')]}>
+      style={[tailwind.style('flex flex-row justify-between items-center px-4 pt-4 pb-5')]}>
       <LeftSection
         currentState={currentState}
         isSelectedAll={isSelectedAll}
