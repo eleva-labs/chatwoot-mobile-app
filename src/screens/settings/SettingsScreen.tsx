@@ -303,7 +303,7 @@ const SettingsScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['top', 'bottom']}
+      edges={['top']}
       style={themedTailwind.style('flex-1 bg-solid-1 font-inter-normal-20')}>
       <StatusBar
         translucent

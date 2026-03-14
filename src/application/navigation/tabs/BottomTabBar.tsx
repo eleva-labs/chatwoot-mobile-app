@@ -1,17 +1,10 @@
 import React, { PropsWithChildren } from 'react';
 import { Platform, Pressable } from 'react-native';
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useDerivedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { BlurView, BlurViewProps } from 'expo-blur';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { selectCurrentState } from '@application/store/conversation/conversationHeaderSlice';
-import { spring } from '@infrastructure/animation';
 
 import {
   ConversationIconFilled,
@@ -25,10 +18,12 @@ import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, useTabBarHeight } from '@infrastructure/utils';
 
 import { TabParamList } from './AppTabs';
-import { useAppSelector, useThemedStyles } from '@/hooks';
+import { useThemedStyles } from '@/hooks';
 import { useTheme } from '@infrastructure/context';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+const IOS_TAB_BAR_BOTTOM_PADDING = 34;
+const ANDROID_TAB_BAR_BOTTOM_INSET = 8;
 
 type TabBarIconsProps = {
   focused: boolean;
@@ -69,30 +64,12 @@ type TabBarBackgroundProps = BlurViewProps & PropsWithChildren;
 const TabBarBackground = (props: TabBarBackgroundProps) => {
   const { children, style, intensity, tint } = props;
 
-  const currentState = useAppSelector(selectCurrentState);
-
-  const tabBarHeight = useTabBarHeight();
-
-  const derivedAnimatedState = useDerivedValue(() =>
-    currentState === 'Select' ? withSpring(1, spring.tabExit) : withSpring(0, spring.tabEnter),
-  );
-
-  const animatedTabBarStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(derivedAnimatedState.value, [0, 1], [0, tabBarHeight]),
-        },
-      ],
-    };
-  });
-
   return Platform.OS === 'ios' ? (
-    <AnimatedBlurView {...{ intensity, tint }} style={[style, animatedTabBarStyle]}>
+    <AnimatedBlurView {...{ intensity, tint }} style={style}>
       {children}
     </AnimatedBlurView>
   ) : (
-    <Animated.View style={[style, animatedTabBarStyle]}>{children}</Animated.View>
+    <Animated.View style={style}>{children}</Animated.View>
   );
 };
 
@@ -137,6 +114,8 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const { bottom } = useSafeAreaInsets();
+  const iosBottomPadding = Math.max(bottom, IOS_TAB_BAR_BOTTOM_PADDING);
+  const androidBottomInset = Math.max(bottom, ANDROID_TAB_BAR_BOTTOM_INSET);
 
   // Memoize press handlers using useCallback
   const createPressHandler = React.useCallback(
@@ -177,15 +156,15 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
       style={Platform.select({
         ios: [
           themedTailwind.style(
-            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] pb-[${Math.max(bottom, 34)}px] bg-solid-1`,
-            `h-[${tabBarHeight}px]`,
+            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] bg-solid-1',
           ),
+          { height: tabBarHeight, paddingBottom: iosBottomPadding },
         ],
         android: [
           themedTailwind.style(
-            `flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] pb-[${Math.max(bottom, 12)}px] bg-solid-1`,
-            `h-[${tabBarHeight}px]`,
+            'flex flex-row absolute w-full pl-[72px] pr-[71px] pt-[12px] pb-[12px] bg-solid-1',
           ),
+          { height: tabBarHeight, bottom: androidBottomInset },
         ],
       })}>
       <Animated.View style={themedTailwind.style('absolute inset-0 h-[1px] bg-slate-6')} />

@@ -38,6 +38,7 @@ import { Conversation } from '@domain/types';
 import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
 import {
   selectBottomSheetState,
+  selectCurrentState,
   setBottomSheetState,
 } from '@application/store/conversation/conversationHeaderSlice';
 import { resetActionState } from '@application/store/conversation/conversationActionSlice';
@@ -277,6 +278,7 @@ const ConversationList = () => {
 const ConversationScreen = () => {
   useScreenAnalytics(SCREENS.CONVERSATION);
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
+  const currentConversationState = useAppSelector(selectCurrentState);
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const dispatch = useAppDispatch();
@@ -308,7 +310,7 @@ const ConversationScreen = () => {
   }, [currentBottomSheet]);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
+    <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
         backgroundColor={themedTailwind.color('bg-solid-1')}
@@ -338,7 +340,7 @@ const ConversationScreen = () => {
           </BottomSheetWrapper>
         </BottomSheetModal>
         <ActionBottomSheet />
-        <ActionTabs />
+        {currentConversationState === 'Select' && <ActionTabs />}
         {/* AI assistant FAB disabled — not yet ready for production */}
         {/* <FloatingAIAssistant /> */}
       </ConversationListStateProvider>

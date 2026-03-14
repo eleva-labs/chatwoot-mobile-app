@@ -76,7 +76,7 @@ const LeftSection = ({ currentState, isSelectedAll, onLeftIconPress }: LeftSecti
 
   return (
     <Animated.View style={tailwind.style('flex-1 items-start')}>
-      <Pressable onPress={onLeftIconPress} hitSlop={16}>
+      <Pressable onPress={onLeftIconPress} hitSlop={16} style={tailwind.style('-ml-1')}>
         <Animated.View exiting={exiting} entering={entering}>
           <Icon
             size={24}
