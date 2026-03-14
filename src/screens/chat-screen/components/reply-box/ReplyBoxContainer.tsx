@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, { useDerivedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lock, LockOpen } from 'lucide-react-native';
 
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
@@ -77,6 +78,7 @@ const BottomSheetContent = () => {
   const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
   const dispatch = useAppDispatch();
+  const { bottom } = useSafeAreaInsets();
   const { messageListRef } = useRefsContext();
   const isSendingRef = useRef(false);
 
@@ -94,6 +96,7 @@ const BottomSheetContent = () => {
     isAddMenuOptionSheetOpen,
     setAddMenuOptionSheetState,
     textInputRef,
+    isTextInputFocused,
     conversationId,
     isVoiceRecorderOpen,
     setIsVoiceRecorderOpen,
@@ -185,9 +188,9 @@ const BottomSheetContent = () => {
 
   const animatedInputWrapperStyle = useAnimatedStyle(
     () => ({
-      marginBottom: 0,
+      marginBottom: isTextInputFocused ? 0 : bottom,
     }),
-    [],
+    [isTextInputFocused],
   );
 
   const handleShowAddMenuOption = () => {
