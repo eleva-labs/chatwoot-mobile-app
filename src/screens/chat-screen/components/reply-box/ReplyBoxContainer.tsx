@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
+import { Alert, Keyboard, Platform, Pressable, TextInput } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, { useDerivedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,7 +20,7 @@ import {
   getTypingUsersText,
 } from '@infrastructure/utils';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
-import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@domain/constants';
+import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES, ANDROID_NAV_BAR_INSET } from '@domain/constants';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import {
   selectMessageContent,
@@ -186,11 +186,16 @@ const BottomSheetContent = () => {
     return isAddMenuOptionSheetOpen ? withSpring(1, spring.soft) : withSpring(0, spring.soft);
   });
 
+  // On Android, useSafeAreaInsets().bottom returns 0 (no edge-to-edge), so the reply box
+  // sits behind system navigation buttons. Use a minimum inset to float above them.
+  const effectiveBottom =
+    Platform.OS === 'android' ? Math.max(bottom, ANDROID_NAV_BAR_INSET) : bottom;
+
   const animatedInputWrapperStyle = useAnimatedStyle(
     () => ({
-      marginBottom: isTextInputFocused ? 0 : bottom,
+      marginBottom: isTextInputFocused ? 0 : effectiveBottom,
     }),
-    [isTextInputFocused],
+    [isTextInputFocused, effectiveBottom],
   );
 
   const handleShowAddMenuOption = () => {
@@ -432,7 +437,7 @@ const BottomSheetContent = () => {
         )}>
         {quoteMessage && (
           <Animated.View entering={standardFadeIn()} exiting={instantFadeOut()}>
-            <QuoteReply />s
+            <QuoteReply />
           </Animated.View>
         )}
 
