@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import camelCase from 'camelcase';
 
-import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { SCREENS } from '@domain/constants';
 import {
   CallIcon,
   EmailIcon,
@@ -118,6 +119,7 @@ const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
   useScreenAnalytics(SCREENS.DETAIL);
   const { conversationId } = props.route.params;
   const dispatch = useAppDispatch();
+  const { bottom } = useSafeAreaInsets();
 
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
 
@@ -219,7 +221,7 @@ const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
       />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
+        contentContainerStyle={{ paddingBottom: Math.max(bottom, 16) }}>
         {email || phoneNumber ? (
           <Animated.View style={tailwind.style('mt-[23px] px-4')}>
             <ContactBasicActions phoneNumber={phoneNumber || ''} email={email || ''} />

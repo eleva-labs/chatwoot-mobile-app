@@ -5,7 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
 import { softLayout } from '@infrastructure/animation';
-import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { SCREENS } from '@domain/constants';
+import { useChromeMetrics } from '@infrastructure/utils';
 import {
   InboxListStateProvider,
   useTheme,
@@ -31,6 +32,7 @@ import { InboxSortTypes } from '@application/store/notification/notificationType
 const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Notification>);
 
 const InboxList = () => {
+  const { contentBottomPadding } = useChromeMetrics();
   const [pageNumber, setPageNumber] = useState(1);
 
   const [isFlashListReady, setFlashListReady] = useState(false);
@@ -59,10 +61,10 @@ const InboxList = () => {
     if (isAllNotificationsFetched) return null;
     return (
       <Animated.View
-        style={tailwind.style(
-          'flex-1 items-center justify-center pt-8',
-          `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+        style={[
+          tailwind.style('flex-1 items-center justify-center pt-8'),
+          { paddingBottom: contentBottomPadding },
+        ]}>
         {isAllNotificationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -135,16 +137,19 @@ const InboxList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
+      style={[
+        tailwind.style('flex-1 items-center justify-center'),
+        { paddingBottom: contentBottomPadding },
+      ]}>
       <ActivityIndicator />
     </Animated.View>
   ) : notifications.length === 0 ? (
     <Animated.ScrollView
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      contentContainerStyle={tailwind.style(
-        'flex-1 items-center justify-center',
-        `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}>
+      contentContainerStyle={[
+        tailwind.style('flex-1 items-center justify-center'),
+        { paddingBottom: contentBottomPadding },
+      ]}>
       <EmptyStateIcon />
       <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-slate-12')}>
         {i18n.t('NOTIFICATION.EMPTY')}
@@ -161,7 +166,7 @@ const InboxList = () => {
       onEndReachedThreshold={0.5}
       ListFooterComponent={ListFooterComponent}
       renderItem={handleRender}
-      contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
+      contentContainerStyle={{ paddingBottom: contentBottomPadding }}
     />
   );
 };

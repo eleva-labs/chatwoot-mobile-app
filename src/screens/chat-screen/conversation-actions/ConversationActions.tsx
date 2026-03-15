@@ -3,6 +3,7 @@ import React from 'react';
 import { Alert, Dimensions, Platform, Share } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { spring } from '@infrastructure/animation';
 
@@ -14,7 +15,6 @@ import {
   AddParticipantList,
   UpdateParticipant,
 } from './components';
-import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationStatus } from '@domain/types';
 import i18n from '@infrastructure/i18n';
@@ -40,6 +40,7 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
   const themedTailwind = useThemedStyles();
+  const { bottom } = useSafeAreaInsets();
   const { updateParticipantSheetRef, actionsModalSheetRef } = useRefsContext();
   const { conversationId } = useChatWindowContext();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
@@ -144,7 +145,7 @@ export const ConversationActions = () => {
     <Animated.View style={tailwind.style('', `w-[${SCREEN_WIDTH}px]`)}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
+        contentContainerStyle={{ paddingBottom: Math.max(bottom, 16) }}>
         <ConversationBasicActions
           status={status}
           updateConversationStatus={updateConversationStatus}

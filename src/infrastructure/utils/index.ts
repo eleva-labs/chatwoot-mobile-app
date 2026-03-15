@@ -21,3 +21,4 @@ export * from './audioConverter';
 export * from './activityMessageUtils';
 export * from './avatarUtils';
 export * from './imageUtils';
+export * from './useChromeMetrics';

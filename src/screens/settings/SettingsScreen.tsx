@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StatusBar, Platform, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-// import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,11 +34,11 @@ import {
 import { UserAvatar } from './components/UserAvatar';
 import { BuildInfo } from '@infrastructure/ui/common';
 
-import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { LANGUAGES, SCREENS } from '@domain/constants';
+import { useChromeMetrics, useHaptic } from '@infrastructure/utils';
 import { useRefsContext, useTheme } from '@infrastructure/context';
 import { NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
 
-import { useHaptic } from '@infrastructure/utils';
 import { SettingsHeader } from './SettingsHeader';
 import { DebugActions } from './components/DebugActions';
 import {
@@ -76,8 +75,6 @@ const SettingsScreen = () => {
   const dispatch = useAppDispatch();
   const availabilityStatus =
     (useSelector(selectCurrentUserAvailability) as AvailabilityStatus) || 'offline';
-
-  // const { bottom } = useSafeAreaInsets();
 
   const [showWidget, toggleWidget] = useState(false);
   const user = useSelector(selectUser);
@@ -142,6 +139,7 @@ const SettingsScreen = () => {
   const { theme, setTheme, isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const { colors } = useThemeColors();
+  const { contentBottomPadding } = useChromeMetrics();
   const hapticSelection = useHaptic();
 
   const openSheet = () => {
@@ -313,7 +311,7 @@ const SettingsScreen = () => {
       <SettingsHeader />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}>
+        contentContainerStyle={{ paddingBottom: contentBottomPadding }}>
         <Animated.View style={tailwind.style('flex justify-center items-center pt-4 gap-4')}>
           <Animated.View>
             <UserAvatar src={avatarUrl} name={name} status={availabilityStatus} />

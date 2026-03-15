@@ -22,10 +22,10 @@ import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@infrastruc
 import { EmptyStateIcon } from '@/svg-icons';
 import {
   SCREENS,
-  TAB_BAR_HEIGHT,
   LAST_ACTIVE_TIMESTAMP_KEY,
   LAST_ACTIVE_TIMESTAMP_THRESHOLD,
 } from '@domain/constants';
+import { useChromeMetrics } from '@infrastructure/utils';
 import {
   ConversationListStateProvider,
   useConversationListStateContext,
@@ -79,6 +79,7 @@ const ConversationList = () => {
   const { dismissAll } = useBottomSheetModal();
   const dispatch = useAppDispatch();
   const themedTailwind = useThemedStyles();
+  const { contentBottomPadding } = useChromeMetrics();
   const [appState, setAppState] = useState(AppState.currentState);
 
   // This is used to prevent the infinite scrolling before the list is ready
@@ -143,10 +144,10 @@ const ConversationList = () => {
     if (isAllConversationsFetched) return null;
     return (
       <Animated.View
-        style={tailwind.style(
-          'flex-1 items-center justify-center pt-8',
-          `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+        style={[
+          tailwind.style('flex-1 items-center justify-center pt-8'),
+          { paddingBottom: contentBottomPadding },
+        ]}>
         {isAllConversationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -242,16 +243,19 @@ const ConversationList = () => {
 
   return shouldShowEmptyLoader ? (
     <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
+      style={[
+        tailwind.style('flex-1 items-center justify-center'),
+        { paddingBottom: contentBottomPadding },
+      ]}>
       <ActivityIndicator />
     </Animated.View>
   ) : allConversations.length === 0 ? (
     <Animated.ScrollView
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      contentContainerStyle={tailwind.style(
-        'flex-1 items-center justify-center',
-        `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}>
+      contentContainerStyle={[
+        tailwind.style('flex-1 items-center justify-center'),
+        { paddingBottom: contentBottomPadding },
+      ]}>
       <EmptyStateIcon />
       <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-slate-12')}>
         {i18n.t('CONVERSATION.EMPTY')}
@@ -270,7 +274,7 @@ const ConversationList = () => {
       ListFooterComponent={ListFooterComponent}
       // @ts-ignore
       renderItem={handleRender}
-      contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
+      contentContainerStyle={{ paddingBottom: contentBottomPadding }}
     />
   );
 };
