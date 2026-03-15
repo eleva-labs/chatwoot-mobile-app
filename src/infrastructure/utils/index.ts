@@ -23,3 +23,4 @@ export * from './avatarUtils';
 export * from './imageUtils';
 export * from './useChromeMetrics';
 export * from './useBottomSheetInset';
+export * from './useSheetDefaults';

@@ -3,8 +3,7 @@ import { Platform, Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { interpolate, runOnJS, useAnimatedStyle } from 'react-native-reanimated';
 import { BottomSheetBackdropProps, BottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
-import { useBottomSheetInset } from '@infrastructure/utils';
+import { useSheetDefaults } from '@infrastructure/utils';
 import * as ContextMenu from 'zeego/context-menu';
 
 import { tailwind } from '@infrastructure/theme';
@@ -68,6 +67,7 @@ const ContextMenuBottomSheetBackdrop = forwardRef<
 
 export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
   const { children, menuOptions } = props;
+  const sheetDefaults = useSheetDefaults();
 
   const contextMenuSheetRef = useRef<BottomSheetModal>(null);
   const openSheet = () => {
@@ -76,8 +76,6 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
   const longPressGesture = Gesture.LongPress()
     .minDuration(500)
     .onStart(() => runOnJS(openSheet)());
-
-  const bottomSheetInset = useBottomSheetInset();
 
   const handleOnDismiss = () => {
     contextMenuSheetRef.current?.dismiss();
@@ -104,16 +102,10 @@ export const MessageMenu = (props: PropsWithChildren<MessageMenuProps>) => {
         <GestureDetector gesture={longPressGesture}>{children}</GestureDetector>
         <BottomSheetModal
           ref={contextMenuSheetRef}
+          {...sheetDefaults}
           backdropComponent={renderBackDrop}
-          handleIndicatorStyle={tailwind.style(
-            'overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]',
-          )}
-          handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('mx-3 rounded-[26px] overflow-hidden')}
           detached
-          bottomInset={bottomSheetInset}
-          animationConfigs={spring.sheet}
-          enablePanDownToClose
           snapPoints={[menuOptions.length * 44 + 4 + 37]}
           onDismiss={handleOnDismiss}>
           <BottomSheetWrapper>

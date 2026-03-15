@@ -6,6 +6,7 @@ import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { LabelTag } from '@/svg-icons';
 import { tailwind, useBoxShadow } from '@infrastructure/theme';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { Label } from '@domain/types';
 import { BottomSheetBackdrop, Icon, SearchBar } from '@infrastructure/ui';
 import { useBottomSheetInset } from '@infrastructure/utils';
@@ -50,6 +51,7 @@ interface LabelSectionProps {
 
 export const ConversationLabelActions = (props: LabelSectionProps) => {
   const { labels } = props;
+  const themedTailwind = useThemedStyles();
   const bottomSheetInset = useBottomSheetInset();
   const [searchTerm, setSearchTerm] = useState('');
   const { conversationId } = useChatWindowContext();
@@ -156,7 +158,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={tailwind.style('bg-solid-1')}
+        backgroundStyle={themedTailwind.style('bg-solid-1')}
         enablePanDownToClose
         bottomInset={bottomSheetInset}
         snapPoints={[400, '75%']}
