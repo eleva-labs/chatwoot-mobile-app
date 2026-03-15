@@ -1,49 +1,22 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { LabelTag } from '@/svg-icons';
 import { tailwind, useBoxShadow } from '@infrastructure/theme';
-import { useThemedStyles } from '@infrastructure/hooks';
-import { Label } from '@domain/types';
-import { BottomSheetBackdrop, Icon, SearchBar } from '@infrastructure/ui';
-import { useBottomSheetInset } from '@infrastructure/utils';
+import { Icon } from '@infrastructure/ui';
+import { useSheetDefaults } from '@infrastructure/utils';
 import i18n from '@infrastructure/i18n';
 import { useAppSelector, useAppDispatch } from '@/hooks';
 import { filterLabels } from '@application/store/label/labelSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
-import { LabelCell, LabelItemRemovable } from '@infrastructure/ui/label-section';
+import { LabelItemRemovable } from '@infrastructure/ui/label-section';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
-
-type LabelStackProps = {
-  filteredLabels: Label[];
-  selectedLabels: string[];
-  handleLabelPress: (label: string) => void;
-  isStandAloneComponent?: boolean;
-};
-const LabelStack = (props: LabelStackProps) => {
-  const { filteredLabels, selectedLabels, isStandAloneComponent = true, handleLabelPress } = props;
-
-  return (
-    <BottomSheetScrollView showsVerticalScrollIndicator={false} style={tailwind.style('my-1 pl-3')}>
-      {filteredLabels.map((value, index) => {
-        return (
-          <LabelCell
-            key={index}
-            {...{ value, index }}
-            handleLabelPress={handleLabelPress}
-            isActive={selectedLabels.includes(value.title)}
-            isLastItem={index === filteredLabels.length - 1 && isStandAloneComponent ? true : false}
-          />
-        );
-      })}
-    </BottomSheetScrollView>
-  );
-};
+import { LabelPicker } from '@screens/conversations/components/conversation-actions/LabelPicker';
 
 interface LabelSectionProps {
   labels: string[];
@@ -51,9 +24,7 @@ interface LabelSectionProps {
 
 export const ConversationLabelActions = (props: LabelSectionProps) => {
   const { labels } = props;
-  const themedTailwind = useThemedStyles();
-  const bottomSheetInset = useBottomSheetInset();
-  const [searchTerm, setSearchTerm] = useState('');
+  const sheetDefaults = useSheetDefaults();
   const { conversationId } = useChatWindowContext();
   const dispatch = useAppDispatch();
   const cardShadow = useBoxShadow('card');
@@ -63,8 +34,6 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
   const { addLabelSheetRef } = useRefsContext();
 
   const allLabels = useAppSelector(state => filterLabels(state, ''));
-
-  const filteredLabels = useAppSelector(state => filterLabels(state, searchTerm));
 
   const conversationLabels =
     allLabels && selectedLabels
@@ -77,43 +46,32 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
     addLabelSheetRef.current?.present();
   };
 
-  const handleOnSubmitEditing = () => {
-    addLabelSheetRef.current?.close();
-  };
+  const handleAddOrUpdateLabels = useCallback(
+    async (label: string) => {
+      setSelectedLabels(prevLabels => {
+        const isRemoving = prevLabels.includes(label);
+        const updatedLabels = isRemoving
+          ? prevLabels.filter(item => item !== label)
+          : [...prevLabels, label];
 
-  const handleChangeText = (text: string) => {
-    setSearchTerm(text);
-  };
+        dispatch(
+          conversationActions.addOrUpdateConversationLabels({
+            conversationId: conversationId,
+            labels: updatedLabels,
+          }),
+        );
 
-  const handleChange = (index: number) => {
-    if (index === -1) {
-      setSearchTerm('');
-    }
-  };
+        AnalyticsHelper.track(LABEL_EVENTS.APPLY_LABEL, {
+          conversationId,
+          label,
+          action: isRemoving ? 'remove' : 'add',
+        });
 
-  const handleAddOrUpdateLabels = async (label: string) => {
-    setSelectedLabels(prevLabels => {
-      const isRemoving = prevLabels.includes(label);
-      const updatedLabels = isRemoving
-        ? prevLabels.filter(item => item !== label)
-        : [...prevLabels, label];
-
-      dispatch(
-        conversationActions.addOrUpdateConversationLabels({
-          conversationId: conversationId,
-          labels: updatedLabels,
-        }),
-      );
-
-      AnalyticsHelper.track(LABEL_EVENTS.APPLY_LABEL, {
-        conversationId,
-        label,
-        action: isRemoving ? 'remove' : 'add',
+        return updatedLabels;
       });
-
-      return updatedLabels;
-    });
-  };
+    },
+    [dispatch, conversationId],
+  );
   return (
     <Animated.View>
       <Animated.View style={tailwind.style('pl-4')}>
@@ -154,35 +112,12 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
       </Animated.View>
       <BottomSheetModal
         ref={addLabelSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
-        enablePanDownToClose
-        bottomInset={bottomSheetInset}
+        {...sheetDefaults}
         snapPoints={[400, '75%']}
         index={1}
         keyboardBehavior="interactive"
-        keyboardBlurBehavior="restore"
-        onChange={handleChange}>
-        <SearchBar
-          isInsideBottomSheet
-          onSubmitEditing={handleOnSubmitEditing}
-          onChangeText={handleChangeText}
-          placeholder={i18n.t('CONVERSATION.LABELS.SEARCH_PLACEHOLDER')}
-          returnKeyLabel="done"
-          returnKeyType="done"
-        />
-        <BottomSheetScrollView showsVerticalScrollIndicator={false}>
-          <LabelStack
-            filteredLabels={filteredLabels}
-            selectedLabels={selectedLabels}
-            isStandAloneComponent={allLabels.length > 3}
-            handleLabelPress={handleAddOrUpdateLabels}
-          />
-          <Animated.View style={tailwind.style('items-start')}></Animated.View>
-        </BottomSheetScrollView>
+        keyboardBlurBehavior="restore">
+        <LabelPicker selectedLabels={selectedLabels} onToggleLabel={handleAddOrUpdateLabels} />
       </BottomSheetModal>
     </Animated.View>
   );

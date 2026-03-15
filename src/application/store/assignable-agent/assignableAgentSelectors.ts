@@ -24,17 +24,7 @@ export const selectAssignableAgentsByInboxId = createSelector(
   (state, inboxIds, searchTerm) => {
     const allAgents = inboxIds.flatMap(id => state[id] || []);
     const agents = [...new Map(allAgents.map(a => [a.id, a])).values()];
-    const agentsList = [
-      {
-        confirmed: true,
-        name: 'None',
-        id: 0,
-        role: 'agent',
-        accountId: 0,
-      },
-      ...agents,
-    ];
-    return searchTerm ? agentsList.filter(agent => agent?.name?.includes(searchTerm)) : agentsList;
+    return searchTerm ? agents.filter(agent => agent?.name?.includes(searchTerm)) : agents;
   },
 );
 

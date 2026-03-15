@@ -15,28 +15,10 @@ describe('inboxAgentSelectors', () => {
   } as Partial<RootState> as RootState;
 
   it('selects all inbox agents for single inbox', () => {
-    expect(selectAssignableAgentsByInboxId(state, [1], '')).toEqual([
-      {
-        confirmed: true,
-        name: 'None',
-        id: 0,
-        role: 'agent',
-        accountId: 0,
-      },
-      agent,
-    ]);
+    expect(selectAssignableAgentsByInboxId(state, [1], '')).toEqual([agent]);
   });
 
   it('selects all inbox agents for multiple inboxes (deduplicates by id)', () => {
-    expect(selectAssignableAgentsByInboxId(state, [2, 3], '')).toEqual([
-      {
-        confirmed: true,
-        name: 'None',
-        id: 0,
-        role: 'agent',
-        accountId: 0,
-      },
-      agent,
-    ]);
+    expect(selectAssignableAgentsByInboxId(state, [2, 3], '')).toEqual([agent]);
   });
 });

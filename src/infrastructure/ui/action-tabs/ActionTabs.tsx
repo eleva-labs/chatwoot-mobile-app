@@ -9,8 +9,9 @@ import { useThemedStyles } from '@infrastructure/hooks';
 import { useBoxShadow, useThemeColors } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, useChromeMetrics } from '@infrastructure/utils';
 import { Icon } from '../common';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
+import { selectSelectedIds } from '@application/store/conversation/conversationSelectedSlice';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -58,24 +59,27 @@ type ActionItemProps = {
     icon: React.ReactNode;
     onPress: () => void;
   };
+  disabled?: boolean;
 };
 
 const ActionItem = (props: ActionItemProps) => {
-  const { actionItem } = props;
+  const { actionItem, disabled } = props;
   const { handlers, animatedStyle } = useScaleAnimation();
 
   const hapticSelection = useHaptic();
 
   const handleOnPress = () => {
+    if (disabled) return;
     actionItem.onPress();
     hapticSelection?.();
   };
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View style={[animatedStyle, disabled && { opacity: 0.35 }]}>
       <Pressable
         {...handlers}
         hitSlop={{ left: 10, right: 10, bottom: 8, top: 4 }}
         onPress={handleOnPress}
+        disabled={disabled}
         key={actionItem.action}>
         <Icon size={28} icon={actionItem.icon} />
       </Pressable>
@@ -92,6 +96,8 @@ export const ActionTabs = () => {
   const actionTabsLeft = (SCREEN_WIDTH - 220) / 2;
 
   const { actionsModalSheetRef } = useRefsContext();
+  const selectedIds = useAppSelector(selectSelectedIds);
+  const hasSelection = selectedIds.length > 0;
 
   const iconStroke = colors.slate[12];
 
@@ -110,7 +116,7 @@ export const ActionTabs = () => {
 
   const bulkSelectActions = [
     {
-      action: 'change_status',
+      action: 'set_labels',
       icon: <ActionLabelTag stroke={iconStroke} />,
       onPress: handleBulkSetLabels,
     },
@@ -120,7 +126,7 @@ export const ActionTabs = () => {
       onPress: handleBulkChangeAssignee,
     },
     {
-      action: 'assign_team',
+      action: 'change_status',
       icon: <ActionStatusIcon stroke={iconStroke} />,
       onPress: handleBulkChangeStatus,
     },
@@ -140,7 +146,9 @@ export const ActionTabs = () => {
         },
       ]}>
       {bulkSelectActions.map(actionItem => {
-        return <ActionItem key={actionItem.action} {...{ actionItem }} />;
+        return (
+          <ActionItem key={actionItem.action} actionItem={actionItem} disabled={!hasSelection} />
+        );
       })}
     </Animated.View>
   );

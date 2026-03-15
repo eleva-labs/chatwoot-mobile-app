@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -8,7 +8,7 @@ import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { Agent } from '@domain/types';
 import { Avatar, Icon, SearchBar } from '@infrastructure/ui';
-import { SelfAssign } from '@/svg-icons';
+import { SelfAssign, Unassigned } from '@/svg-icons';
 
 import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
@@ -62,6 +62,32 @@ const AssigneeCell = (props: AssigneeCellProps) => {
   );
 };
 
+type AssigneeActionRowProps = {
+  icon: React.ReactNode;
+  label: string;
+  labelColor: string;
+  onPress: () => void;
+};
+
+const AssigneeActionRow = ({ icon, label, labelColor, onPress }: AssigneeActionRowProps) => (
+  <Pressable style={tailwind.style('flex flex-row items-center')} onPress={onPress}>
+    <Animated.View style={tailwind.style('p-0.5')}>
+      <Icon icon={icon} size={24} />
+    </Animated.View>
+    <Animated.View
+      style={tailwind.style(
+        'flex-1 ml-3 flex-row justify-between py-[11px] pr-3 border-b-[1px] border-slate-6',
+      )}>
+      <Animated.Text
+        style={tailwind.style(
+          `text-base ${labelColor} font-inter-420-20 leading-[21px] tracking-[0.16px]`,
+        )}>
+        {label}
+      </Animated.Text>
+    </Animated.View>
+  </Pressable>
+);
+
 export const UpdateAssignee = () => {
   const dispatch = useAppDispatch();
   const { actionsModalSheetRef } = useRefsContext();
@@ -85,7 +111,7 @@ export const UpdateAssignee = () => {
 
   const isSelfAssign = assigneeId === userId;
 
-  const isMultipleConversationsSelected = selectedIds.length !== 0;
+  const isBulkMode = selectedIds.length !== 0;
 
   const isFetching = useAppSelector(isAssignableAgentFetching);
 
@@ -96,58 +122,82 @@ export const UpdateAssignee = () => {
     actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
   };
 
+  const inboxIdKey = inboxIds.join(',');
+
   useEffect(() => {
-    if (inboxIds.length > 0) {
-      dispatch(assignableAgentActions.fetchAgents({ inboxIds }));
+    // Derive inboxIds from the stable key to satisfy ESLint exhaustive-deps
+    const ids = inboxIdKey ? inboxIdKey.split(',').map(Number) : [];
+
+    if (ids.length > 0) {
+      dispatch(assignableAgentActions.fetchAgents({ inboxIds: ids }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inboxIdKey, dispatch]);
+
+  const handleChangeText = useCallback((text: string) => {
+    setSearchTerm(text);
   }, []);
 
-  const handleChangeText = (text: string) => {
-    setSearchTerm(text);
-  };
-
   const handleAssigneePress = async (agent: Agent) => {
-    if (isMultipleConversationsSelected) {
+    // Already assigned to this agent — no-op (use the dedicated Unassign row instead)
+    if (!isBulkMode && agent.id === assigneeId) return;
+
+    if (isBulkMode) {
       const payload = { type: 'Conversation', ids: selectedIds, fields: { assignee_id: agent.id } };
       await dispatch(conversationActions.bulkAction(payload));
       AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
         bulkAction: true,
         conversationCount: selectedIds.length,
       });
-      actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
     } else {
       if (!selectedConversation?.id) return;
-      const isUnassigning = agent.id === assigneeId;
-      const isSelfAssigning = agent.id === userId;
       await dispatch(
         conversationActions.assignConversation({
-          conversationId: selectedConversation?.id,
-          assigneeId: isUnassigning ? 0 : agent.id,
+          conversationId: selectedConversation.id,
+          assigneeId: agent.id,
         }),
       );
-      if (isUnassigning) {
-        AnalyticsHelper.track(CONVERSATION_EVENTS.UNASSIGN_CONVERSATION, {
-          conversationId: selectedConversation?.id,
-        });
-      } else if (isSelfAssigning) {
-        AnalyticsHelper.track(CONVERSATION_EVENTS.SELF_ASSIGN_CONVERSATION, {
-          conversationId: selectedConversation?.id,
-        });
-      } else {
-        AnalyticsHelper.track(CONVERSATION_EVENTS.ASSIGNEE_CHANGED, {
-          conversationId: selectedConversation?.id,
-          assigneeId: agent.id,
-        });
-      }
-      showToast({
-        message: i18n.t('CONVERSATION.ASSIGN_CHANGE'),
-      });
-      actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
+      const isSelfAssigning = agent.id === userId;
+      AnalyticsHelper.track(
+        isSelfAssigning
+          ? CONVERSATION_EVENTS.SELF_ASSIGN_CONVERSATION
+          : CONVERSATION_EVENTS.ASSIGNEE_CHANGED,
+        isSelfAssigning
+          ? { conversationId: selectedConversation.id }
+          : { conversationId: selectedConversation.id, assigneeId: agent.id },
+      );
+      showToast({ message: i18n.t('CONVERSATION.ASSIGN_CHANGE') });
     }
+    actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
   };
 
   const selfAgent = agents.find(agent => agent.id === userId);
+
+  const hasAssignee = assigneeId != null && assigneeId !== 0;
+  // Show unassign in bulk mode always, in single mode only when there is a current assignee
+  const showUnassign = isBulkMode || hasAssignee;
+
+  const handleUnassign = async () => {
+    if (isBulkMode) {
+      const payload = { type: 'Conversation', ids: selectedIds, fields: { assignee_id: 0 } };
+      await dispatch(conversationActions.bulkAction(payload));
+      AnalyticsHelper.track(CONVERSATION_EVENTS.UNASSIGN_CONVERSATION, {
+        bulkAction: true,
+        conversationCount: selectedIds.length,
+      });
+    } else if (selectedConversation?.id) {
+      await dispatch(
+        conversationActions.assignConversation({
+          conversationId: selectedConversation.id,
+          assigneeId: 0,
+        }),
+      );
+      AnalyticsHelper.track(CONVERSATION_EVENTS.UNASSIGN_CONVERSATION, {
+        conversationId: selectedConversation.id,
+      });
+      showToast({ message: i18n.t('CONVERSATION.ASSIGN_CHANGE') });
+    }
+    actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
+  };
 
   return (
     <React.Fragment>
@@ -166,27 +216,22 @@ export const UpdateAssignee = () => {
           <ActivityIndicator />
         ) : (
           <>
-            {!isSelfAssign && (
-              <Pressable
-                style={tailwind.style('flex flex-row items-center')}
-                onPress={() => handleAssigneePress(selfAgent as Agent)}>
-                <Animated.View style={tailwind.style('p-0.5')}>
-                  <Icon icon={<SelfAssign />} size={24} />
-                </Animated.View>
-                <Animated.View
-                  style={tailwind.style(
-                    'flex-1 ml-3 flex-row justify-between py-[11px] pr-3 border-b-[1px] border-slate-6',
-                  )}>
-                  <Animated.Text
-                    style={[
-                      tailwind.style(
-                        'text-base text-iris-11 font-inter-420-20 leading-[21px] tracking-[0.16px]',
-                      ),
-                    ]}>
-                    {i18n.t('CONVERSATION.SELF_ASSIGN')}
-                  </Animated.Text>
-                </Animated.View>
-              </Pressable>
+            {!isSelfAssign && selfAgent && (
+              <AssigneeActionRow
+                icon={<SelfAssign />}
+                label={i18n.t('CONVERSATION.SELF_ASSIGN')}
+                labelColor="text-iris-11"
+                onPress={() => handleAssigneePress(selfAgent as Agent)}
+              />
+            )}
+
+            {showUnassign && (
+              <AssigneeActionRow
+                icon={<Unassigned color={tailwind.color('text-ruby-11')} />}
+                label={i18n.t('CONVERSATION.UNASSIGN')}
+                labelColor="text-ruby-11"
+                onPress={handleUnassign}
+              />
             )}
 
             {agents.map((agent, index) => {

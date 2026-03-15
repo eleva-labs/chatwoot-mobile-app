@@ -27,20 +27,20 @@ const ActionBottomSheet = () => {
 
   const { actionsModalSheetRef } = useRefsContext();
 
-  const actionSnapPoints = useMemo(() => {
+  const { snapPoints: actionSnapPoints, index: actionIndex } = useMemo(() => {
     switch (currentActionState) {
       case 'Assign':
-        return ['50%'];
+        return { snapPoints: ['50%'], index: 0 };
       case 'Status':
-        return [250];
+        return { snapPoints: [250], index: 0 };
       case 'Label':
-        return [368];
+        return { snapPoints: [400, '75%'], index: 1 };
       case 'Priority':
-        return [300];
+        return { snapPoints: [300], index: 0 };
       case 'TeamAssign':
-        return ['50%'];
+        return { snapPoints: ['50%'], index: 0 };
       default:
-        return [250];
+        return { snapPoints: [250], index: 0 };
     }
   }, [currentActionState]);
 
@@ -60,6 +60,7 @@ const ActionBottomSheet = () => {
       enablePanDownToClose
       bottomInset={bottomSheetInset}
       snapPoints={actionSnapPoints}
+      index={actionIndex}
       onDismiss={handleOnDismiss}>
       {currentActionState === 'Assign' ? <UpdateAssignee /> : null}
       {currentActionState === 'TeamAssign' ? <UpdateTeam /> : null}

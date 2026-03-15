@@ -166,6 +166,7 @@
       "BCC": "Bcc"
     },
     "SELF_ASSIGN": "Asignar a mi",
+    "UNASSIGN": "Desasignar",
     "UN_ASSIGN": "Desasignar conversación",
     "CONVERSATION_NOT_FOUND": "No se pudo obtener la conversación",
     "MARK_AS_PENDING": "Marcar como pendiente",
