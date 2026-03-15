@@ -90,6 +90,7 @@ export const MessagesList = ({
         onEndReachedThreshold={0.2}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={tailwind.style('px-3')}
+        keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item: { date: string } | Message) => {
           if ('date' in item) {

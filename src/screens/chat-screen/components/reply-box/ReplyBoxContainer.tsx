@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Keyboard, Platform, Pressable, TextInput } from 'react-native';
-import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, { useDerivedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lock, LockOpen } from 'lucide-react-native';
@@ -72,7 +71,6 @@ import { VoiceRecordButton } from './buttons/VoiceRecordButton';
 //   directUploadsEnabled: true,
 // };
 
-const AnimatedKeyboardStickyView = Animated.createAnimatedComponent(KeyboardStickyView);
 const BottomSheetContent = () => {
   const themedTailwind = useThemedStyles();
   const { colors } = useThemeColors();
@@ -193,9 +191,9 @@ const BottomSheetContent = () => {
 
   const animatedInputWrapperStyle = useAnimatedStyle(
     () => ({
-      marginBottom: isTextInputFocused ? 0 : effectiveBottom,
+      marginBottom: effectiveBottom,
     }),
-    [isTextInputFocused, effectiveBottom],
+    [effectiveBottom],
   );
 
   const handleShowAddMenuOption = () => {
@@ -424,8 +422,7 @@ const BottomSheetContent = () => {
   const shouldShowCannedResponses = messageContent?.charAt(0) === '/';
 
   return (
-    <AnimatedKeyboardStickyView
-      style={[themedTailwind.style('bg-solid-1'), animatedInputWrapperStyle]}>
+    <Animated.View style={[themedTailwind.style('bg-solid-1'), animatedInputWrapperStyle]}>
       {shouldShowCannedResponses && (
         <CannedResponses searchKey={messageContent} onSelect={onSelectCannedResponse} />
       )}
@@ -500,7 +497,7 @@ const BottomSheetContent = () => {
       ) : attachmentsLength > 0 ? (
         <AttachedMedia />
       ) : null}
-    </AnimatedKeyboardStickyView>
+    </Animated.View>
   );
 };
 

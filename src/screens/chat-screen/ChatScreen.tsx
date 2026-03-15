@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PagerView, { PagerViewOnPageSelectedEvent } from 'react-native-pager-view';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { ChatHeaderContainer, ReplyBoxContainer, MessagesListContainer } from './components';
@@ -35,12 +36,13 @@ import { macroActions } from '@application/store/macro/macroActions';
 import { LightBoxProvider } from '@alantoa/lightbox';
 
 export const ChatWindow = (props: ChatScreenProps) => {
+  // translate-with-padding: translates content + adds padding to shrink flex layout (ideal for chat)
   return (
-    <Animated.View style={tailwind.style('flex-1')}>
+    <KeyboardAvoidingView style={tailwind.style('flex-1')} behavior="translate-with-padding">
       <MessagesListContainer />
       <ReplyBoxContainer />
       <MacrosList conversationId={props.route.params.conversationId} />
-    </Animated.View>
+    </KeyboardAvoidingView>
   );
 };
 
