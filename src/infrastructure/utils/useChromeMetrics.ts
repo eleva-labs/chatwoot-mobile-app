@@ -5,9 +5,9 @@ import {
   TAB_BAR_CONTENT_HEIGHT,
   IOS_TAB_BAR_BOTTOM_PADDING,
   ANDROID_NAV_BAR_INSET,
+  ANDROID_FOOTER_LIFT,
   ACTION_TAB_HEIGHT,
   ACTION_TABS_GAP,
-  ANDROID_ACTION_TABS_BOTTOM_INSET,
 } from '@domain/constants/chrome';
 
 export type ChromeMetrics = {
@@ -15,8 +15,7 @@ export type ChromeMetrics = {
   tabBarHeight: number;
 
   /** How far above the screen bottom the footer's TOP edge sits.
-   *  iOS: equals tabBarHeight (footer at bottom:0).
-   *  Android: tabBarHeight + bottom offset (footer floats above nav bar). */
+   *  iOS: tabBarHeight.  Android: tabBarHeight + ANDROID_FOOTER_LIFT. */
   footerTopFromBottom: number;
 
   /** Bottom content padding for tab-root screens so content doesn't hide behind footer. */
@@ -28,9 +27,8 @@ export type ChromeMetrics = {
   /** Height of the ActionTabs pill. */
   actionTabHeight: number;
 
-  /** Bottom inset for footer positioning.
-   *  iOS: 0 (footer sits at bottom:0 with internal padding).
-   *  Android: max(safeArea, ANDROID_NAV_BAR_INSET) to float above system nav bar. */
+  /** Bottom inset for footer positioning (the `bottom` style prop).
+   *  iOS: 0.  Android: ANDROID_FOOTER_LIFT (small lift above nav bar). */
   footerBottomInset: number;
 
   /** Internal bottom padding of the tab bar (below icons).
@@ -55,28 +53,20 @@ export const useChromeMetrics = (): ChromeMetrics => {
     // iOS: 51 + max(bottom, 34) — typically 85 on notched iPhones
     // Android: 51 + max(bottom, 8) — forward-compatible with edge-to-edge
 
-    // ── Android bottom offset ──
-    // Footer additionally uses `bottom: max(bottom, 8)` to float above the nav bar.
-    const androidBottomOffset = Math.max(bottom, ANDROID_NAV_BAR_INSET);
-
     // ── Footer bottom inset ──
+    // iOS: 0 — footer sits flush at screen bottom, safe-area handled by paddingBottom.
+    // Android: small lift so the system nav bar gesture area doesn't occlude icons.
     const footerBottomInset = Platform.select({
       ios: 0,
-      android: androidBottomOffset,
+      android: ANDROID_FOOTER_LIFT,
     })!;
 
     // ── Footer top from bottom ──
-    const footerTopFromBottom = Platform.select({
-      ios: tabBarHeight,
-      android: tabBarHeight + androidBottomOffset,
-    })!;
-    // iOS: ~85. Android: 59 + 8 = 67.
+    const footerTopFromBottom = tabBarHeight + footerBottomInset;
 
     // ── ActionTabs bottom offset ──
-    const actionTabsBottomOffset = Platform.select({
-      ios: tabBarHeight + ACTION_TABS_GAP,
-      android: tabBarHeight + Math.max(bottom, ANDROID_ACTION_TABS_BOTTOM_INSET) + ACTION_TABS_GAP,
-    })!;
+    // Pill floats ACTION_TABS_GAP above the tab bar top edge.
+    const actionTabsBottomOffset = footerTopFromBottom + ACTION_TABS_GAP;
 
     // ── Content bottom padding ──
     const contentBottomPadding = footerTopFromBottom;

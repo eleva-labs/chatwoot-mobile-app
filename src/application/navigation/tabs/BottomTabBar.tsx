@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
@@ -127,25 +127,17 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
 
   return (
     <Animated.View
-      style={Platform.select({
-        ios: [
-          themedTailwind.style(
-            'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] bg-solid-1',
-          ),
-          { height: tabBarHeight, paddingBottom: bottomPadding, boxShadow: cardShadow },
-        ],
-        android: [
-          themedTailwind.style(
-            'flex flex-row absolute w-full pl-[72px] pr-[71px] pt-[12px] bg-solid-1',
-          ),
-          {
-            height: tabBarHeight,
-            bottom: footerBottomInset,
-            paddingBottom: bottomPadding,
-            boxShadow: cardShadow,
-          },
-        ],
-      })}>
+      style={[
+        themedTailwind.style(
+          'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] bg-solid-1',
+        ),
+        {
+          height: tabBarHeight,
+          bottom: footerBottomInset,
+          paddingBottom: bottomPadding,
+          boxShadow: cardShadow,
+        },
+      ]}>
       <Animated.View style={themedTailwind.style('absolute inset-0 h-[1px] bg-slate-6')} />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];

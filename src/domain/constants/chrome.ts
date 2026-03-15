@@ -14,9 +14,15 @@ export const IOS_TAB_BAR_BOTTOM_PADDING = 34;
 
 // ── Android insets ───────────────────────────────────────────────────
 
-/** Minimum Android system-navigation-bar inset — how far the footer floats
- *  above the system nav bar. Shared between BottomTabBar and ReplyBoxContainer. */
+/** Minimum Android system-navigation-bar inset applied as internal bottom padding.
+ *  Used by BottomTabBar (via useChromeMetrics) and ReplyBoxContainer (via useEffectiveBottom).
+ *  On edge-to-edge devices useSafeAreaInsets().bottom (~48dp) dominates via Math.max.
+ *  On non-edge-to-edge devices (bottom=0) this provides a fallback. */
 export const ANDROID_NAV_BAR_INSET = 8;
+
+/** Small upward lift for the Android footer so the system nav bar gesture area
+ *  doesn't occlude the bottom edge of the tab bar icons. */
+export const ANDROID_FOOTER_LIFT = 6;
 
 // ── Action tabs (bulk-select pill) ───────────────────────────────────
 
@@ -26,9 +32,6 @@ export const ACTION_TAB_HEIGHT = 58;
 /** Gap between action pill bottom edge and footer top edge. */
 export const ACTION_TABS_GAP = 8;
 
-/** Minimum Android bottom inset for action pill positioning.
- *  Larger than ANDROID_NAV_BAR_INSET (16 vs 8) because the pill needs
- *  more clearance above the nav bar than the footer does. */
-// TODO: CommandOptionsMenu.tsx has a similar hardcoded `16` that could be
-// migrated to use this constant in a follow-up.
-export const ANDROID_ACTION_TABS_BOTTOM_INSET = 16;
+// Note: ANDROID_ACTION_TABS_BOTTOM_INSET (16) was removed — no longer needed
+// now that the tab bar sits at bottom:0 on Android (action pill uses
+// tabBarHeight + ACTION_TABS_GAP, same as iOS).
