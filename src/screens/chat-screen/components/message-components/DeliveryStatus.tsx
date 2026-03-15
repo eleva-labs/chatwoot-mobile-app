@@ -6,6 +6,7 @@ import { CheckCheck, Clock } from 'lucide-react-native';
 import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { WarningIcon } from '@/svg-icons';
 import { Icon } from '@infrastructure/ui/common';
@@ -40,6 +41,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   } = props;
 
   const { colors, semanticColors } = useThemeColors();
+  const bottomSheetInset = useBottomSheetInset();
   const { deliveryStatusSheetRef } = useRefsContext();
 
   const isDelivered = status === MESSAGE_STATUS.DELIVERED;
@@ -147,6 +149,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
           )}
           enablePanDownToClose
           animationConfigs={spring.sheet}
+          bottomInset={bottomSheetInset}
           handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('rounded-[26px] overflow-hidden')}
           snapPoints={['15']}>

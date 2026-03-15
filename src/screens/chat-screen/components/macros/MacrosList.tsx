@@ -5,6 +5,7 @@ import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop } from '@infrastructure/ui';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import i18n from '@infrastructure/i18n';
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
@@ -17,6 +18,7 @@ import MacroDetails from './MacroDetails';
 import { MacroProvider } from './MacroContext';
 
 export const MacrosList = ({ conversationId }: { conversationId: number }) => {
+  const bottomSheetInset = useBottomSheetInset();
   const macros = useAppSelector(selectAllMacros);
   const [selectedMacro, setSelectedMacro] = useState<Macro | null>(null);
 
@@ -44,6 +46,7 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-t-[26px] overflow-hidden')}
         enablePanDownToClose
+        bottomInset={bottomSheetInset}
         snapPoints={['75%']}
         enableDynamicSizing={false}
         animationConfigs={spring.sheet}>

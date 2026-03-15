@@ -35,7 +35,7 @@ import { UserAvatar } from './components/UserAvatar';
 import { BuildInfo } from '@infrastructure/ui/common';
 
 import { LANGUAGES, SCREENS } from '@domain/constants';
-import { useChromeMetrics, useHaptic } from '@infrastructure/utils';
+import { useChromeMetrics, useHaptic, useBottomSheetInset } from '@infrastructure/utils';
 import { useRefsContext, useTheme } from '@infrastructure/context';
 import { NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
 
@@ -140,6 +140,7 @@ const SettingsScreen = () => {
   const themedTailwind = useThemedStyles();
   const { colors } = useThemeColors();
   const { contentBottomPadding } = useChromeMetrics();
+  const bottomSheetInset = useBottomSheetInset();
   const hapticSelection = useHaptic();
 
   const openSheet = () => {
@@ -359,8 +360,7 @@ const SettingsScreen = () => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
         animationConfigs={spring.sheet}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
+        bottomInset={bottomSheetInset}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -377,10 +377,9 @@ const SettingsScreen = () => {
         ref={languagesModalSheetRef}
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
         animationConfigs={spring.sheet}
+        bottomInset={bottomSheetInset}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -394,10 +393,9 @@ const SettingsScreen = () => {
         ref={notificationPreferencesSheetRef}
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
         animationConfigs={spring.sheet}
+        bottomInset={bottomSheetInset}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -411,10 +409,9 @@ const SettingsScreen = () => {
         ref={switchAccountSheetRef}
         backdropComponent={BottomSheetBackdrop}
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
         enablePanDownToClose
         animationConfigs={spring.sheet}
+        bottomInset={bottomSheetInset}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
@@ -434,6 +431,7 @@ const SettingsScreen = () => {
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
         animationConfigs={spring.sheet}
+        bottomInset={bottomSheetInset}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}

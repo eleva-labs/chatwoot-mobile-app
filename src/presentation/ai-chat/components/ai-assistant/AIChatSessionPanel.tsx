@@ -7,6 +7,7 @@ import { AISessionList } from './AISessionList';
 import type { AIChatSession } from '@application/store/ai-chat/aiChatTypes';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
+import { useBottomSheetInset } from '@infrastructure/utils';
 
 export interface AIChatSessionPanelProps {
   sessions: AIChatSession[];
@@ -21,6 +22,7 @@ export const AIChatSessionPanel: React.FC<AIChatSessionPanelProps> = React.memo(
   ({ sessions, activeSessionId, onSelectSession, isLoading, isVisible, onClose }) => {
     const { style, tokens } = useAIStyles();
     const { t } = useAIi18n();
+    const bottomSheetInset = useBottomSheetInset();
     const sessionTokens = tokens.session;
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['40%', '75%'], []);
@@ -51,6 +53,7 @@ export const AIChatSessionPanel: React.FC<AIChatSessionPanelProps> = React.memo(
         index={0}
         snapPoints={snapPoints}
         enablePanDownToClose
+        bottomInset={bottomSheetInset}
         onChange={handleSheetChange}
         animationConfigs={spring.sheet}
         backdropComponent={renderBackdrop}

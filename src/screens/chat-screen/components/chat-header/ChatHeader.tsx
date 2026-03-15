@@ -14,6 +14,7 @@ import { /* OpenIcon, ResolvedIcon, */ SLAIcon } from '@/svg-icons';
 import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import { ChatDropdownMenu, DashboardList } from './DropdownMenu';
 import { SLAEvent } from '@domain/types/common';
 import { useRefsContext } from '@infrastructure/context';
@@ -56,6 +57,7 @@ export const ChatHeader = ({
 }: ChatHeaderProps) => {
   const themedTailwind = useThemedStyles();
   const { colors } = useThemeColors();
+  const bottomSheetInset = useBottomSheetInset();
   const { slaEventsSheetRef } = useRefsContext();
 
   const toggleSlaEventsSheet = () => {
@@ -138,6 +140,7 @@ export const ChatHeader = ({
         handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
         enablePanDownToClose
         animationConfigs={spring.sheet}
+        bottomInset={bottomSheetInset}
         handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         snapPoints={['36%']}>

@@ -8,6 +8,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop, Button } from '@infrastructure/ui';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import {
   ConversationBasicActions,
   ConversationLabelActions,
@@ -40,6 +41,7 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
   const themedTailwind = useThemedStyles();
+  const bottomSheetInset = useBottomSheetInset();
   const { bottom } = useSafeAreaInsets();
   const { updateParticipantSheetRef, actionsModalSheetRef } = useRefsContext();
   const { conversationId } = useChatWindowContext();
@@ -188,6 +190,7 @@ export const ConversationActions = () => {
         backgroundStyle={themedTailwind.style('bg-solid-1')}
         animationConfigs={spring.sheet}
         enablePanDownToClose
+        bottomInset={bottomSheetInset}
         snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />
       </BottomSheetModal>

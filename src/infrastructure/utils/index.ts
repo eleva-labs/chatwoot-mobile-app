@@ -22,3 +22,4 @@ export * from './activityMessageUtils';
 export * from './avatarUtils';
 export * from './imageUtils';
 export * from './useChromeMetrics';
+export * from './useBottomSheetInset';

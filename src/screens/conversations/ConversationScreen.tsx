@@ -25,7 +25,7 @@ import {
   LAST_ACTIVE_TIMESTAMP_KEY,
   LAST_ACTIVE_TIMESTAMP_THRESHOLD,
 } from '@domain/constants';
-import { useChromeMetrics } from '@infrastructure/utils';
+import { useChromeMetrics, useBottomSheetInset } from '@infrastructure/utils';
 import {
   ConversationListStateProvider,
   useConversationListStateContext,
@@ -281,6 +281,7 @@ const ConversationList = () => {
 
 const ConversationScreen = () => {
   useScreenAnalytics(SCREENS.CONVERSATION);
+  const bottomSheetInset = useBottomSheetInset();
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
   const currentConversationState = useAppSelector(selectCurrentState);
   const { isDark } = useTheme();
@@ -334,6 +335,7 @@ const ConversationScreen = () => {
           backgroundStyle={themedTailwind.style('bg-solid-1')}
           animationConfigs={spring.sheet}
           enablePanDownToClose
+          bottomInset={bottomSheetInset}
           snapPoints={filterSnapPoints}
           onDismiss={handleOnDismiss}>
           <BottomSheetWrapper>

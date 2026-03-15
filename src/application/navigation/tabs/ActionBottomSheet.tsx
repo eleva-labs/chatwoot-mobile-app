@@ -4,6 +4,7 @@ import { spring } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { BottomSheetBackdrop } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import {
   resetActionState,
   selectCurrentActionState,
@@ -19,6 +20,7 @@ import {
 } from '@/screens/conversations/components/conversation-actions';
 
 const ActionBottomSheet = () => {
+  const bottomSheetInset = useBottomSheetInset();
   const dispatch = useAppDispatch();
   const currentActionState = useAppSelector(selectCurrentActionState);
   const themedTailwind = useThemedStyles();
@@ -56,6 +58,7 @@ const ActionBottomSheet = () => {
       backgroundStyle={themedTailwind.style('bg-solid-1')}
       animationConfigs={spring.sheet}
       enablePanDownToClose
+      bottomInset={bottomSheetInset}
       snapPoints={actionSnapPoints}
       onDismiss={handleOnDismiss}>
       {currentActionState === 'Assign' ? <UpdateAssignee /> : null}

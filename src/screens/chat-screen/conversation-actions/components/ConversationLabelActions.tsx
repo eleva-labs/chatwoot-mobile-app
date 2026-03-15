@@ -8,6 +8,7 @@ import { LabelTag } from '@/svg-icons';
 import { tailwind, useBoxShadow } from '@infrastructure/theme';
 import { Label } from '@domain/types';
 import { BottomSheetBackdrop, Icon, SearchBar } from '@infrastructure/ui';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import i18n from '@infrastructure/i18n';
 import { useAppSelector, useAppDispatch } from '@/hooks';
 import { filterLabels } from '@application/store/label/labelSelectors';
@@ -49,6 +50,7 @@ interface LabelSectionProps {
 
 export const ConversationLabelActions = (props: LabelSectionProps) => {
   const { labels } = props;
+  const bottomSheetInset = useBottomSheetInset();
   const [searchTerm, setSearchTerm] = useState('');
   const { conversationId } = useChatWindowContext();
   const dispatch = useAppDispatch();
@@ -156,6 +158,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={tailwind.style('bg-solid-1')}
         enablePanDownToClose
+        bottomInset={bottomSheetInset}
         snapPoints={[400, '75%']}
         index={1}
         keyboardBehavior="interactive"

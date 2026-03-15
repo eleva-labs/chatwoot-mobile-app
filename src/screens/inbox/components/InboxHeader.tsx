@@ -5,6 +5,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { spring } from '@infrastructure/animation';
 
 import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { useBottomSheetInset } from '@infrastructure/utils';
 
 import { Icon } from '@infrastructure/ui/common/icon';
 import { DoubleCheckIcon, InboxFilterIcon } from '@/svg-icons';
@@ -19,6 +20,7 @@ type InboxHeaderProps = {
 
 export const InboxHeader = (props: InboxHeaderProps) => {
   const { markAllAsRead } = props;
+  const bottomSheetInset = useBottomSheetInset();
   const { inboxFiltersSheetRef } = useRefsContext();
   const handleToggleState = () => {
     inboxFiltersSheetRef.current?.present();
@@ -55,6 +57,7 @@ export const InboxHeader = (props: InboxHeaderProps) => {
         style={tailwind.style('rounded-[26px] overflow-hidden')}
         animationConfigs={spring.sheet}
         enablePanDownToClose
+        bottomInset={bottomSheetInset}
         snapPoints={[160]}>
         <BottomSheetWrapper>
           <InboxFilters />

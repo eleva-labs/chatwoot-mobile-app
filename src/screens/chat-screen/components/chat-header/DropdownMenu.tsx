@@ -1,9 +1,9 @@
 import React, { forwardRef, PropsWithChildren, useCallback, useRef, type JSX } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetBackdropProps, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { spring } from '@infrastructure/animation';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
 import { BottomSheetHeader, BottomSheetWrapper } from '@infrastructure/ui';
@@ -88,7 +88,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
     contextMenuSheetRef.current?.close();
   };
 
-  const { bottom } = useSafeAreaInsets();
+  const bottomSheetInset = useBottomSheetInset();
 
   const renderBackDrop = useCallback(
     (backdropProps: BottomSheetBackdropProps) => (
@@ -117,7 +117,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
           style={tailwind.style('mx-3 rounded-[26px] overflow-hidden')}
           backgroundStyle={themedTailwind.style('bg-solid-1')}
           detached
-          bottomInset={bottom === 0 ? 12 : bottom}
+          bottomInset={bottomSheetInset}
           animationConfigs={spring.sheet}
           enablePanDownToClose
           snapPoints={[dropdownMenuList.length * 44 + 4 + 37]}>

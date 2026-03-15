@@ -22,6 +22,7 @@ import {
   Icon,
   AuthButton,
 } from '@infrastructure/ui';
+import { useBottomSheetInset } from '@infrastructure/utils';
 import {
   selectInstallationUrl,
   //selectBaseUrl,
@@ -45,6 +46,7 @@ type FormData = {
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const bottomSheetInset = useBottomSheetInset();
   const [showPassword, setShowPassword] = useState(false);
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
@@ -347,6 +349,7 @@ const LoginScreen = () => {
         detached
         enablePanDownToClose
         animationConfigs={spring.sheet}
+        bottomInset={bottomSheetInset}
         handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
         style={themedTailwind.style('rounded-[26px] overflow-hidden')}
         backgroundStyle={themedTailwind.style('bg-solid-1')}
