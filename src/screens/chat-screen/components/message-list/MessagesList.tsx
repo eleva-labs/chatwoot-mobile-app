@@ -10,6 +10,7 @@ import { Message } from '@domain/types';
 import { MessageComponent } from '../message-item/Message';
 // import { MessageItemContainer } from '../message-item/MessageItemContainer';
 import { useRefsContext } from '@infrastructure/context';
+import { VirtualizedListScrollView } from './VirtualizedListScrollView';
 
 export type FlashListRenderProps = {
   item: { date: string } | Message;
@@ -78,6 +79,7 @@ export const MessagesList = ({
       <FlashList
         ref={typedMessageListRef}
         inverted
+        renderScrollComponent={VirtualizedListScrollView}
         data={messages}
         renderItem={handleRender}
         estimatedItemSize={80}
@@ -90,7 +92,6 @@ export const MessagesList = ({
         onEndReachedThreshold={0.2}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={tailwind.style('px-3')}
-        keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         keyExtractor={(item: { date: string } | Message) => {
           if ('date' in item) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Keyboard, Platform, Pressable, TextInput } from 'react-native';
+import { Alert, Keyboard, Pressable, TextInput } from 'react-native';
+import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import Animated, { useDerivedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Lock, LockOpen } from 'lucide-react-native';
 
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
@@ -19,7 +19,7 @@ import {
   getTypingUsersText,
 } from '@infrastructure/utils';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
-import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES, ANDROID_NAV_BAR_INSET } from '@domain/constants';
+import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@domain/constants';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import {
   selectMessageContent,
@@ -65,18 +65,19 @@ import { selectAssignableParticipantsByInboxId } from '@application/store/assign
 import { spring, snappyLayout, standardFadeIn, instantFadeOut } from '@infrastructure/animation';
 import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
+import { useEffectiveBottom } from '../message-list';
 
 // TODO: Implement this
 // const globalConfig = {
 //   directUploadsEnabled: true,
 // };
 
+const AnimatedKeyboardStickyView = Animated.createAnimatedComponent(KeyboardStickyView);
 const BottomSheetContent = () => {
   const themedTailwind = useThemedStyles();
   const { colors } = useThemeColors();
   const hapticSelection = useHaptic();
   const dispatch = useAppDispatch();
-  const { bottom } = useSafeAreaInsets();
   const { messageListRef } = useRefsContext();
   const isSendingRef = useRef(false);
 
@@ -184,10 +185,7 @@ const BottomSheetContent = () => {
     return isAddMenuOptionSheetOpen ? withSpring(1, spring.soft) : withSpring(0, spring.soft);
   });
 
-  // On Android, useSafeAreaInsets().bottom returns 0 (no edge-to-edge), so the reply box
-  // sits behind system navigation buttons. Use a minimum inset to float above them.
-  const effectiveBottom =
-    Platform.OS === 'android' ? Math.max(bottom, ANDROID_NAV_BAR_INSET) : bottom;
+  const effectiveBottom = useEffectiveBottom();
 
   const animatedInputWrapperStyle = useAnimatedStyle(
     () => ({
@@ -422,7 +420,8 @@ const BottomSheetContent = () => {
   const shouldShowCannedResponses = messageContent?.charAt(0) === '/';
 
   return (
-    <Animated.View style={[themedTailwind.style('bg-solid-1'), animatedInputWrapperStyle]}>
+    <AnimatedKeyboardStickyView
+      style={[themedTailwind.style('bg-solid-1'), animatedInputWrapperStyle]}>
       {shouldShowCannedResponses && (
         <CannedResponses searchKey={messageContent} onSelect={onSelectCannedResponse} />
       )}
@@ -497,7 +496,7 @@ const BottomSheetContent = () => {
       ) : attachmentsLength > 0 ? (
         <AttachedMedia />
       ) : null}
-    </Animated.View>
+    </AnimatedKeyboardStickyView>
   );
 };
 

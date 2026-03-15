@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { ScrollView, Platform, Animated } from 'react-native';
 import { KeyboardGestureArea, KeyboardProvider } from 'react-native-keyboard-controller';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
@@ -11,9 +10,6 @@ import { TEXT_ONLY } from './mock-data/textOnly';
 import { getAllGroupedMessages } from './mock-data/helper';
 
 const ALL_MESSAGES_MOCKDATA = getAllGroupedMessages(TEXT_ONLY);
-
-const PlatformSpecificKeyboardWrapperComponent =
-  Platform.OS === 'android' ? Animated.View : KeyboardGestureArea;
 
 const mockSendMessageSlice = createSlice({
   name: 'sendMessage',
@@ -65,20 +61,19 @@ export const Basic: Story = {
           <RefsProvider>
             <KeyboardProvider>
               <ChatWindowProvider conversationId={29}>
-                <ScrollView contentContainerStyle={tailwind.style('flex')}>
-                  <PlatformSpecificKeyboardWrapperComponent
-                    style={tailwind.style('flex-1 bg-white')}
-                    interpolator="linear">
-                    <MessagesList
-                      currentUserId={1}
-                      isEmailInbox={false}
-                      messages={ALL_MESSAGES_MOCKDATA}
-                      isFlashListReady={false}
-                      setFlashListReady={() => {}}
-                      onEndReached={() => {}}
-                    />
-                  </PlatformSpecificKeyboardWrapperComponent>
-                </ScrollView>
+                <KeyboardGestureArea
+                  style={tailwind.style('flex-1 bg-white')}
+                  interpolator="ios"
+                  textInputNativeID="chat-input">
+                  <MessagesList
+                    currentUserId={1}
+                    isEmailInbox={false}
+                    messages={ALL_MESSAGES_MOCKDATA}
+                    isFlashListReady={false}
+                    setFlashListReady={() => {}}
+                    onEndReached={() => {}}
+                  />
+                </KeyboardGestureArea>
               </ChatWindowProvider>
             </KeyboardProvider>
           </RefsProvider>
