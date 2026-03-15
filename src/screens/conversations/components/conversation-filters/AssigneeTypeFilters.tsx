@@ -1,74 +1,26 @@
 import React from 'react';
-import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { AssigneeTypes, AssigneeOptions } from '@domain/types';
 import { useHaptic } from '@infrastructure/utils';
-import { BottomSheetHeader } from '@infrastructure/ui';
+import { BottomSheetHeader, SelectableListCell } from '@infrastructure/ui';
 import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import i18n from '@infrastructure/i18n';
-import { useSelector } from 'react-redux';
-import { selectUser } from '@application/store/auth/authSelectors';
-import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
+import { useUserPermissions } from '@infrastructure/hooks/useConversationPermission';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 
-type AssigneeTypeCellProps = {
-  value: string;
-  index: number;
-};
-
 const assigneeTypeList = Object.keys(AssigneeOptions) as AssigneeTypes[];
 
-const AssigneeTypeCell = (props: AssigneeTypeCellProps) => {
-  const { filtersModalSheetRef } = useRefsContext();
-  const { value, index } = props;
-  const dispatch = useAppDispatch();
-  const filters = useAppSelector(selectFilters);
-  const hapticSelection = useHaptic();
-
-  const handlePreferredAssigneeTypePress = () => {
-    hapticSelection?.();
-    dispatch(setFilters({ key: 'assignee_type', value }));
-    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
-      filterType: 'assignee_type',
-      filterValue: value,
-    });
-    setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
-  };
-
-  return (
-    <Pressable
-      onPress={handlePreferredAssigneeTypePress}
-      style={tailwind.style('flex flex-row items-center')}>
-      <Animated.View
-        style={tailwind.style(
-          'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          index !== assigneeTypeList.length - 1 ? 'border-b-[1px] border-slate-6' : '',
-        )}>
-        <Animated.Text
-          style={tailwind.style(
-            'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
-          {i18n.t(`CONVERSATION.FILTERS.ASSIGNEE_TYPE.OPTIONS.${value.toUpperCase()}`)}
-        </Animated.Text>
-        {filters.assignee_type === value ? (
-          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
-        ) : null}
-      </Animated.View>
-    </Pressable>
-  );
-};
-
 export const AssigneeTypeFilters = () => {
-  const user = useSelector(selectUser);
-  const { account_id: activeAccountId } = user || { account_id: null };
-
-  const userPermissions = user ? getUserPermissions(user, activeAccountId) : [];
+  const userPermissions = useUserPermissions();
+  const { filtersModalSheetRef } = useRefsContext();
+  const filters = useAppSelector(selectFilters);
+  const dispatch = useAppDispatch();
+  const hapticSelection = useHaptic();
 
   // If userPermissions contains any values conversation_manage_permission,administrator, agent then keep all the assignee types
   // If conversation_manage is not available and conversation_unassigned_manage only is available, then return only unassigned and mine
@@ -86,12 +38,29 @@ export const AssigneeTypeFilters = () => {
   } else {
     assigneeTypes = assigneeTypeList.filter(type => type !== 'unassigned');
   }
+
+  const handlePress = (value: string) => {
+    hapticSelection?.();
+    dispatch(setFilters({ key: 'assignee_type', value }));
+    AnalyticsHelper.track(CONVERSATION_EVENTS.APPLY_FILTER, {
+      filterType: 'assignee_type',
+      filterValue: value,
+    });
+    setTimeout(() => filtersModalSheetRef.current?.dismiss({ overshootClamping: true }), 1);
+  };
+
   return (
     <Animated.View>
       <BottomSheetHeader headerText={i18n.t('CONVERSATION.FILTERS.ASSIGNEE_TYPE.TITLE')} />
       <Animated.View style={tailwind.style('py-1 pl-3')}>
         {assigneeTypes.map((value, index) => (
-          <AssigneeTypeCell key={index} {...{ value, index }} />
+          <SelectableListCell
+            key={value}
+            label={i18n.t(`CONVERSATION.FILTERS.ASSIGNEE_TYPE.OPTIONS.${value.toUpperCase()}`)}
+            isSelected={filters.assignee_type === value}
+            isLastItem={index === assigneeTypes.length - 1}
+            onPress={() => handlePress(value)}
+          />
         ))}
       </Animated.View>
     </Animated.View>

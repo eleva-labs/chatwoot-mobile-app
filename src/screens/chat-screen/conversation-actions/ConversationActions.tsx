@@ -4,10 +4,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
 
-import { BottomSheetBackdrop, Button } from '@infrastructure/ui';
-import { useBottomSheetInset } from '@infrastructure/utils';
+import { Button } from '@infrastructure/ui';
+import { useSheetDefaults } from '@infrastructure/utils';
 import {
   ConversationBasicActions,
   ConversationLabelActions,
@@ -20,7 +19,7 @@ import { ConversationStatus } from '@domain/types';
 import i18n from '@infrastructure/i18n';
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
-import { useThemedStyles } from '@infrastructure/hooks';
+
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
@@ -38,8 +37,7 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
-  const themedTailwind = useThemedStyles();
-  const bottomSheetInset = useBottomSheetInset();
+  const sheetDefaults = useSheetDefaults();
   const { bottom } = useSafeAreaInsets();
   const { updateParticipantSheetRef, actionsModalSheetRef } = useRefsContext();
   const { conversationId } = useChatWindowContext();
@@ -161,17 +159,7 @@ export const ConversationActions = () => {
           />
         </Animated.View>
       </ScrollView>
-      <BottomSheetModal
-        ref={updateParticipantSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
-        animationConfigs={spring.sheet}
-        enablePanDownToClose
-        bottomInset={bottomSheetInset}
-        snapPoints={['50%']}>
+      <BottomSheetModal ref={updateParticipantSheetRef} {...sheetDefaults} snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />
       </BottomSheetModal>
     </Animated.View>

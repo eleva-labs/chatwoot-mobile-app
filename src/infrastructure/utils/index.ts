@@ -23,3 +23,5 @@ export * from './imageUtils';
 export * from './useChromeMetrics';
 export * from './useBottomSheetInset';
 export * from './useSheetDefaults';
+export * from './customAttributeUtils';
+export * from './useSearchableBottomSheet';

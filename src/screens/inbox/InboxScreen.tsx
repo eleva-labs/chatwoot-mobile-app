@@ -27,7 +27,7 @@ import { resetNotifications } from '@application/store/notification/notification
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { selectSortOrder } from '@application/store/notification/notificationFilterSlice';
-import { EmptyStateIcon } from '@/svg-icons';
+import { EmptyListState } from '@infrastructure/ui';
 import { InboxSortTypes } from '@application/store/notification/notificationTypes';
 
 const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Notification>);
@@ -135,27 +135,16 @@ const InboxList = () => {
   });
 
   const shouldShowEmptyLoader = isNotificationsLoading && notifications.length === 0;
+  const emptyState = shouldShowEmptyLoader || notifications.length === 0;
 
-  return shouldShowEmptyLoader ? (
-    <Animated.View
-      style={[
-        tailwind.style('flex-1 items-center justify-center'),
-        { paddingBottom: contentBottomPadding },
-      ]}>
-      <ActivityIndicator />
-    </Animated.View>
-  ) : notifications.length === 0 ? (
-    <Animated.ScrollView
-      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      contentContainerStyle={[
-        tailwind.style('flex-1 items-center justify-center'),
-        { paddingBottom: contentBottomPadding },
-      ]}>
-      <EmptyStateIcon />
-      <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-slate-12')}>
-        {i18n.t('NOTIFICATION.EMPTY')}
-      </Animated.Text>
-    </Animated.ScrollView>
+  return emptyState ? (
+    <EmptyListState
+      isLoading={isNotificationsLoading}
+      isEmpty={notifications.length === 0}
+      emptyText={i18n.t('NOTIFICATION.EMPTY')}
+      isRefreshing={isRefreshing}
+      onRefresh={handleRefresh}
+    />
   ) : (
     <AnimatedFlashlist
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}

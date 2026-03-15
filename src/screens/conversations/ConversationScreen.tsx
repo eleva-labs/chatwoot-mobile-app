@@ -3,7 +3,7 @@ import { ActivityIndicator, AppState, RefreshControl, StatusBar } from 'react-na
 import Animated, { runOnJS, SharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring, softLayout } from '@infrastructure/animation';
+import { softLayout } from '@infrastructure/animation';
 import { FlashList } from '@shopify/flash-list';
 
 import {
@@ -15,15 +15,13 @@ import {
   AssigneeTypeFilters,
 } from './components';
 
-import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
-
-import { EmptyStateIcon } from '@/svg-icons';
+import { ActionTabs, BottomSheetWrapper, EmptyListState } from '@infrastructure/ui';
 import {
   SCREENS,
   LAST_ACTIVE_TIMESTAMP_KEY,
   LAST_ACTIVE_TIMESTAMP_THRESHOLD,
 } from '@domain/constants';
-import { useChromeMetrics, useBottomSheetInset } from '@infrastructure/utils';
+import { useChromeMetrics, useSheetDefaults } from '@infrastructure/utils';
 import {
   ConversationListStateProvider,
   useConversationListStateContext,
@@ -77,7 +75,6 @@ type FlashListRenderItemType = {
 const ConversationList = () => {
   const { dismissAll } = useBottomSheetModal();
   const dispatch = useAppDispatch();
-  const themedTailwind = useThemedStyles();
   const { contentBottomPadding } = useChromeMetrics();
   const [appState, setAppState] = useState(AppState.currentState);
 
@@ -239,27 +236,16 @@ const ConversationList = () => {
   );
 
   const shouldShowEmptyLoader = isConversationsLoading && allConversations.length === 0;
+  const emptyState = shouldShowEmptyLoader || allConversations.length === 0;
 
-  return shouldShowEmptyLoader ? (
-    <Animated.View
-      style={[
-        tailwind.style('flex-1 items-center justify-center'),
-        { paddingBottom: contentBottomPadding },
-      ]}>
-      <ActivityIndicator />
-    </Animated.View>
-  ) : allConversations.length === 0 ? (
-    <Animated.ScrollView
-      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      contentContainerStyle={[
-        tailwind.style('flex-1 items-center justify-center'),
-        { paddingBottom: contentBottomPadding },
-      ]}>
-      <EmptyStateIcon />
-      <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-slate-12')}>
-        {i18n.t('CONVERSATION.EMPTY')}
-      </Animated.Text>
-    </Animated.ScrollView>
+  return emptyState ? (
+    <EmptyListState
+      isLoading={isConversationsLoading}
+      isEmpty={allConversations.length === 0}
+      emptyText={i18n.t('CONVERSATION.EMPTY')}
+      isRefreshing={isRefreshing}
+      onRefresh={handleRefresh}
+    />
   ) : (
     <AnimatedFlashList
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
@@ -280,7 +266,7 @@ const ConversationList = () => {
 
 const ConversationScreen = () => {
   useScreenAnalytics(SCREENS.CONVERSATION);
-  const bottomSheetInset = useBottomSheetInset();
+  const sheetDefaults = useSheetDefaults();
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
   const currentConversationState = useAppSelector(selectCurrentState);
   const { isDark } = useTheme();
@@ -325,16 +311,7 @@ const ConversationScreen = () => {
         <ConversationList />
         <BottomSheetModal
           ref={filtersModalSheetRef}
-          backdropComponent={BottomSheetBackdrop}
-          handleIndicatorStyle={tailwind.style(
-            'overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]',
-          )}
-          handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-          style={tailwind.style('rounded-[26px] overflow-hidden')}
-          backgroundStyle={themedTailwind.style('bg-solid-1')}
-          animationConfigs={spring.sheet}
-          enablePanDownToClose
-          bottomInset={bottomSheetInset}
+          {...sheetDefaults}
           snapPoints={filterSnapPoints}
           onDismiss={handleOnDismiss}>
           <BottomSheetWrapper>

@@ -1,11 +1,7 @@
 import React, { useMemo } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
-import { tailwind } from '@infrastructure/theme';
-import { BottomSheetBackdrop } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
-import { useThemedStyles } from '@infrastructure/hooks';
-import { useBottomSheetInset } from '@infrastructure/utils';
+import { useSheetDefaults } from '@infrastructure/utils';
 import {
   resetActionState,
   selectCurrentActionState,
@@ -22,10 +18,9 @@ import {
 } from '@/screens/conversations/components/conversation-actions';
 
 const ActionBottomSheet = () => {
-  const bottomSheetInset = useBottomSheetInset();
+  const sheetDefaults = useSheetDefaults();
   const dispatch = useAppDispatch();
   const currentActionState = useAppSelector(selectCurrentActionState);
-  const themedTailwind = useThemedStyles();
 
   const { actionsModalSheetRef } = useRefsContext();
 
@@ -53,14 +48,7 @@ const ActionBottomSheet = () => {
   return (
     <BottomSheetModal
       ref={actionsModalSheetRef}
-      backdropComponent={BottomSheetBackdrop}
-      handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-      handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-      style={tailwind.style('rounded-[26px] overflow-hidden')}
-      backgroundStyle={themedTailwind.style('bg-solid-1')}
-      animationConfigs={spring.sheet}
-      enablePanDownToClose
-      bottomInset={bottomSheetInset}
+      {...sheetDefaults}
       snapPoints={actionSnapPoints}
       index={actionIndex}
       onDismiss={handleOnDismiss}>

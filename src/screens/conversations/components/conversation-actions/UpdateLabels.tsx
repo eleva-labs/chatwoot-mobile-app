@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 import { useRefsContext } from '@infrastructure/context';
+import { useSearchableBottomSheet } from '@infrastructure/utils/useSearchableBottomSheet';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { selectSelectedIds } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
@@ -16,12 +17,8 @@ export const UpdateLabels = () => {
 
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
 
-  const handleFocus = () => {
-    actionsModalSheetRef.current?.expand();
-  };
-  const handleBlur = () => {
-    actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
-  };
+  const { handleFocus: onSearchFocus, handleBlur: onSearchBlur } =
+    useSearchableBottomSheet(actionsModalSheetRef);
 
   const handleLabelPress = useCallback(
     (_selectedLabel: string) => {
@@ -58,8 +55,8 @@ export const UpdateLabels = () => {
     <LabelPicker
       selectedLabels={selectedLabels}
       onToggleLabel={handleLabelPress}
-      onSearchFocus={handleFocus}
-      onSearchBlur={handleBlur}
+      onSearchFocus={onSearchFocus}
+      onSearchBlur={onSearchBlur}
     />
   );
 };

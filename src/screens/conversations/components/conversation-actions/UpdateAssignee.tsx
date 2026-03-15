@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { TickIcon } from '@/svg-icons/common/TickIcon';
-
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { Agent } from '@domain/types';
-import { Avatar, Icon, SearchBar } from '@infrastructure/ui';
+import { Avatar, Icon, SearchBar, SelectableListCell } from '@infrastructure/ui';
 import { SelfAssign, Unassigned } from '@/svg-icons';
 
 import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
@@ -23,44 +21,11 @@ import {
 } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 import { showToast } from '@infrastructure/utils/toastUtils';
+import { useSearchableBottomSheet } from '@infrastructure/utils/useSearchableBottomSheet';
 import i18n from '@infrastructure/i18n';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { selectUserId } from '@application/store/auth/authSelectors';
-
-type AssigneeCellProps = {
-  agent: Agent;
-  lastItem: boolean;
-  assigneeId: number | undefined;
-  onPress: () => void;
-};
-
-const AssigneeCell = (props: AssigneeCellProps) => {
-  const { agent, lastItem, assigneeId } = props;
-
-  return (
-    <Pressable onPress={props.onPress} style={tailwind.style('flex flex-row items-center')}>
-      <Avatar src={{ uri: agent.thumbnail || undefined }} name={agent.name ?? ''} size="md" />
-      <Animated.View
-        style={tailwind.style(
-          'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !lastItem ? 'border-b-[1px] border-slate-6' : '',
-        )}>
-        <Animated.Text
-          style={[
-            tailwind.style(
-              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
-            ),
-          ]}>
-          {agent.name}
-        </Animated.Text>
-        {assigneeId === agent.id ? (
-          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
-        ) : null}
-      </Animated.View>
-    </Pressable>
-  );
-};
 
 type AssigneeActionRowProps = {
   icon: React.ReactNode;
@@ -91,7 +56,8 @@ const AssigneeActionRow = ({ icon, label, labelColor, onPress }: AssigneeActionR
 export const UpdateAssignee = () => {
   const dispatch = useAppDispatch();
   const { actionsModalSheetRef } = useRefsContext();
-  const [searchTerm, setSearchTerm] = useState('');
+  const { searchTerm, handleChangeText, handleFocus, handleBlur } =
+    useSearchableBottomSheet(actionsModalSheetRef);
 
   const selectedInboxes = useAppSelector(selectSelectedInboxes);
   const selectedConversation = useAppSelector(selectSelectedConversation);
@@ -115,13 +81,6 @@ export const UpdateAssignee = () => {
 
   const isFetching = useAppSelector(isAssignableAgentFetching);
 
-  const handleFocus = () => {
-    actionsModalSheetRef.current?.expand();
-  };
-  const handleBlur = () => {
-    actionsModalSheetRef.current?.dismiss({ overshootClamping: true });
-  };
-
   const inboxIdKey = inboxIds.join(',');
 
   useEffect(() => {
@@ -132,10 +91,6 @@ export const UpdateAssignee = () => {
       dispatch(assignableAgentActions.fetchAgents({ inboxIds: ids }));
     }
   }, [inboxIdKey, dispatch]);
-
-  const handleChangeText = useCallback((text: string) => {
-    setSearchTerm(text);
-  }, []);
 
   const handleAssigneePress = async (agent: Agent) => {
     // Already assigned to this agent — no-op (use the dedicated Unassign row instead)
@@ -234,15 +189,22 @@ export const UpdateAssignee = () => {
               />
             )}
 
-            {agents.map((agent, index) => {
-              return (
-                <AssigneeCell
-                  key={agent.id}
-                  {...{ agent: agent as Agent, lastItem: index === agents.length - 1, assigneeId }}
-                  onPress={() => handleAssigneePress(agent as Agent)}
-                />
-              );
-            })}
+            {agents.map((agent, index) => (
+              <SelectableListCell
+                key={agent.id}
+                leftContent={
+                  <Avatar
+                    src={{ uri: (agent as Agent).thumbnail || undefined }}
+                    name={(agent as Agent).name ?? ''}
+                    size="md"
+                  />
+                }
+                label={(agent as Agent).name ?? ''}
+                isSelected={assigneeId === agent.id}
+                isLastItem={index === agents.length - 1}
+                onPress={() => handleAssigneePress(agent as Agent)}
+              />
+            ))}
           </>
         )}
       </BottomSheetScrollView>

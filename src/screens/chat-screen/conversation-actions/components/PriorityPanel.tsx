@@ -1,10 +1,7 @@
 import React from 'react';
-import { Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { CaretRight } from '@/svg-icons/common/CaretRight';
 import { Icon, PriorityIndicator } from '@infrastructure/ui';
 import { NoPriorityIcon } from '@/svg-icons';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { SettingsRow } from '@infrastructure/ui/list-components/SettingsRow';
 import { ConversationPriority } from '@domain/types';
 import i18n from '@infrastructure/i18n';
 
@@ -15,58 +12,31 @@ type PriorityPanelProps = {
   isLastItem?: boolean;
 };
 
-const priorityAvatar = (priority: ConversationPriority) => {
-  if (priority) {
-    return <PriorityIndicator priority={priority} />;
-  }
-  return <Icon icon={<NoPriorityIcon />} />;
-};
-
 const PriorityPanel = ({
   priority,
   onPress,
   isFirstItem = false,
   isLastItem = false,
 }: PriorityPanelProps) => {
-  const { colors } = useThemeColors();
-  const priorityName = priority
+  const leftContent = priority ? (
+    <PriorityIndicator priority={priority} />
+  ) : (
+    <Icon icon={<NoPriorityIcon />} />
+  );
+
+  const label = priority
     ? i18n.t(`CONVERSATION.PRIORITY.OPTIONS.${priority.toUpperCase()}`)
     : i18n.t('CONVERSATION.ACTIONS.PRIORITY.EMPTY');
+
   return (
-    <Pressable
+    <SettingsRow
+      leftContent={leftContent}
+      label={label}
+      actionText={i18n.t('CONVERSATION.ACTIONS.PRIORITY.EDIT')}
+      isFirstItem={isFirstItem}
+      isLastItem={isLastItem}
       onPress={onPress}
-      style={({ pressed }) => [
-        tailwind.style(
-          pressed ? 'bg-slate-3' : '',
-          isFirstItem ? 'rounded-t-[13px]' : '',
-          isLastItem ? 'rounded-b-[13px]' : '',
-        ),
-      ]}>
-      <Animated.View style={tailwind.style('flex-row items-center justify-between pl-3')}>
-        {priorityAvatar(priority)}
-        <Animated.View
-          style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px]',
-            !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
-          )}>
-          <Animated.Text
-            style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22.4px] tracking-[0.16px] text-slate-12 capitalize',
-            )}>
-            {priorityName}
-          </Animated.Text>
-          <Animated.View style={tailwind.style('flex-row items-center pr-3')}>
-            <Animated.Text
-              style={tailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] text-slate-12',
-              )}>
-              {i18n.t('CONVERSATION.ACTIONS.PRIORITY.EDIT')}
-            </Animated.Text>
-            <CaretRight size={20} color={colors.slate[12]} />
-          </Animated.View>
-        </Animated.View>
-      </Animated.View>
-    </Pressable>
+    />
   );
 };
 

@@ -4,34 +4,10 @@ import Animated from 'react-native-reanimated';
 import { AttributeListType, CustomAttribute } from '@domain/types';
 import { Conversation } from '@domain/types/Conversation';
 import i18n from '@infrastructure/i18n';
-import camelCase from 'lodash/camelCase';
 import { useAppSelector } from '@application/store/hooks';
+import { processContactAttributes } from '@infrastructure/utils/customAttributeUtils';
 import { getConversationCustomAttributes } from '@application/store/custom-attribute/customAttributeSlice';
 import { AttributeList } from '@infrastructure/ui';
-
-const processContactAttributes = (
-  attributes: CustomAttribute[],
-  customAttributes: Record<string, string>,
-  filterCondition: (key: string, custom: Record<string, string>) => boolean,
-) => {
-  if (!attributes.length || !customAttributes) {
-    return [];
-  }
-
-  return attributes.reduce<(CustomAttribute & { value: string })[]>((result, attribute) => {
-    const { attributeKey } = attribute;
-    const meetsCondition = filterCondition(camelCase(attributeKey), customAttributes);
-
-    if (meetsCondition) {
-      result.push({
-        ...attribute,
-        value: customAttributes[camelCase(attributeKey)] ?? '',
-      });
-    }
-
-    return result;
-  }, []);
-};
 
 export const ConversationMetaInformation = ({ conversation }: { conversation: Conversation }) => {
   const additionalAttributes = conversation.additionalAttributes;

@@ -3,7 +3,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EMAIL_REGEX } from '@domain/constants';
@@ -15,15 +14,8 @@ import { authActions } from '@application/store/auth/authActions';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { useThemedStyles } from '@infrastructure/hooks';
 
-import {
-  BottomSheetBackdrop,
-  BottomSheetHeader,
-  LanguageList,
-  Button,
-  Icon,
-  AuthButton,
-} from '@infrastructure/ui';
-import { useBottomSheetInset } from '@infrastructure/utils';
+import { BottomSheetHeader, LanguageList, Button, Icon, AuthButton } from '@infrastructure/ui';
+import { useSheetDefaults } from '@infrastructure/utils';
 import {
   selectInstallationUrl,
   //selectBaseUrl,
@@ -47,7 +39,7 @@ type FormData = {
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const bottomSheetInset = useBottomSheetInset();
+  const sheetDefaults = useSheetDefaults();
   const [showPassword, setShowPassword] = useState(false);
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
@@ -343,17 +335,8 @@ const LoginScreen = () => {
       </View>
       <BottomSheetModal
         ref={languagesModalSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={themedTailwind.style(
-          'overflow-hidden bg-slate-8 w-8 h-1 rounded-[11px]',
-        )}
+        {...sheetDefaults}
         detached
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        bottomInset={bottomSheetInset}
-        handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
-        style={themedTailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
         snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />

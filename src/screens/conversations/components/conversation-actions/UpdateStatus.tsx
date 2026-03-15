@@ -1,5 +1,4 @@
 import React from 'react';
-import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 
@@ -7,9 +6,8 @@ import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationStatus, StatusCollection, StatusOptions } from '@domain/types';
 import { getStatusTypeIcon, useHaptic } from '@infrastructure/utils';
-import { BottomSheetHeader, Icon } from '@infrastructure/ui';
+import { BottomSheetHeader, Icon, SelectableListCell } from '@infrastructure/ui';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
-import { useThemedStyles } from '@infrastructure/hooks';
 import {
   selectSelectedConversation,
   selectSelectedIds,
@@ -19,11 +17,6 @@ import { setCurrentState } from '@application/store/conversation/conversationHea
 import i18n from '@infrastructure/i18n';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
-type StatusCellProps = {
-  value: StatusCollection;
-  isLastItem: boolean;
-  onPress: (status: ConversationStatus) => void;
-};
 
 const StatusList: StatusCollection[] = [
   { id: 'open', icon: getStatusTypeIcon('open') },
@@ -31,32 +24,6 @@ const StatusList: StatusCollection[] = [
   { id: 'snoozed', icon: getStatusTypeIcon('snoozed') },
   { id: 'resolved', icon: getStatusTypeIcon('resolved') },
 ];
-
-const StatusCell = (props: StatusCellProps) => {
-  const { value, isLastItem, onPress } = props;
-  const themedTailwind = useThemedStyles();
-  return (
-    <Pressable
-      onPress={() => onPress(value.id)}
-      style={tailwind.style('flex flex-row items-center')}>
-      <Animated.View>
-        <Icon icon={value.icon} size={24} />
-      </Animated.View>
-      <Animated.View
-        style={themedTailwind.style(
-          'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
-        )}>
-        <Animated.Text
-          style={themedTailwind.style(
-            'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px] capitalize',
-          )}>
-          {i18n.t(`CONVERSATION.ASSIGNEE.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`)}
-        </Animated.Text>
-      </Animated.View>
-    </Pressable>
-  );
-};
 
 const filterStatusList = (status: ConversationStatus) => {
   return StatusList.filter(item => item.id !== status);
@@ -118,9 +85,17 @@ export const UpdateStatus = () => {
       <BottomSheetHeader headerText={i18n.t('CONVERSATION.CHANGE_STATUS')} />
       <Animated.View style={tailwind.style('py-1 pl-3')}>
         {statusList.map((value, index) => (
-          <StatusCell
-            key={index}
-            {...{ value, isLastItem: index === statusList.length - 1 }}
+          <SelectableListCell
+            key={value.id}
+            leftContent={
+              <Animated.View>
+                <Icon icon={value.icon} size={24} />
+              </Animated.View>
+            }
+            label={i18n.t(
+              `CONVERSATION.ASSIGNEE.STATUS.OPTIONS.${StatusOptions[value.id].toUpperCase()}`,
+            )}
+            isLastItem={index === statusList.length - 1}
             onPress={() => handleStatusPress(value.id)}
           />
         ))}

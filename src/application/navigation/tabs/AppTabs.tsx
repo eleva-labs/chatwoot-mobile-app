@@ -12,9 +12,6 @@ import {
   selectCurrentUserAccount,
 } from '@application/store/auth/authSelectors';
 
-import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
-import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
-
 import { AuthStack, ConversationStack, SettingsStack } from '../stack';
 // eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import ChatScreen from '@/screens/chat-screen/ChatScreen';
@@ -42,7 +39,7 @@ import { clearAllDeliveredNotifications } from '@infrastructure/utils/pushUtils'
 import { dashboardAppActions } from '@application/store/dashboard-app/dashboardAppActions';
 import { customAttributeActions } from '@application/store/custom-attribute/customAttributeActions';
 import { clearSelection } from '@application/store/conversation/conversationSelectedSlice';
-import { usePushNotifications } from '@infrastructure/hooks';
+import { usePushNotifications, useConversationPermission } from '@infrastructure/hooks';
 
 const Tab = createBottomTabNavigator();
 
@@ -135,12 +132,7 @@ const Tabs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [installationUrl]);
 
-  const userPermissions = user ? getUserPermissions(user, user.account_id) : [];
-
-  // Checking if user has conversation permission to show inbox and conversations tabs
-  const hasConversationPermission = CONVERSATION_PERMISSIONS.some(permission =>
-    userPermissions.includes(permission),
-  );
+  const hasConversationPermission = useConversationPermission();
 
   const checkAppVersion = useCallback(async () => {
     if (chatwootVersion) {

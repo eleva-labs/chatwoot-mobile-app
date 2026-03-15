@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { View, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import camelCase from 'camelcase';
-
 import { SCREENS } from '@domain/constants';
 import {
   CallIcon,
@@ -18,7 +16,8 @@ import {
   LinkedinIcon,
 } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
-import { AttributeListType, CustomAttribute, GenericListType } from '@domain/types';
+import { AttributeListType, GenericListType } from '@domain/types';
+import { processContactAttributes } from '@infrastructure/utils/customAttributeUtils';
 
 import {
   ContactDetailsScreenHeader,
@@ -91,30 +90,6 @@ const allSocialMediaProfiles: GenericListType[] = [
     link: 'https://t.me/',
   },
 ];
-
-const processContactAttributes = (
-  attributes: CustomAttribute[],
-  customAttributes: Record<string, string>,
-  filterCondition: (key: string, custom: Record<string, string>) => boolean,
-) => {
-  if (!attributes.length || !customAttributes) {
-    return [];
-  }
-
-  return attributes.reduce<(CustomAttribute & { value: string })[]>((result, attribute) => {
-    const { attributeKey } = attribute;
-    const meetsCondition = filterCondition(camelCase(attributeKey), customAttributes);
-
-    if (meetsCondition) {
-      result.push({
-        ...attribute,
-        value: customAttributes[camelCase(attributeKey)] ?? '',
-      });
-    }
-
-    return result;
-  }, []);
-};
 
 const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
   useScreenAnalytics(SCREENS.DETAIL);
