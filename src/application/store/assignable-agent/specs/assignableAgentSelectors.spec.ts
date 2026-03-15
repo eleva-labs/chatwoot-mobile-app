@@ -7,7 +7,8 @@ describe('inboxAgentSelectors', () => {
     assignableAgents: {
       records: {
         1: [agent],
-        '2,3': [agent],
+        2: [agent],
+        3: [agent],
       },
       uiFlags: { isLoading: false },
     },
@@ -26,7 +27,7 @@ describe('inboxAgentSelectors', () => {
     ]);
   });
 
-  it('selects all inbox agents for multiple inboxes', () => {
+  it('selects all inbox agents for multiple inboxes (deduplicates by id)', () => {
     expect(selectAssignableAgentsByInboxId(state, [2, 3], '')).toEqual([
       {
         confirmed: true,
@@ -35,6 +36,7 @@ describe('inboxAgentSelectors', () => {
         role: 'agent',
         accountId: 0,
       },
+      agent,
     ]);
   });
 });

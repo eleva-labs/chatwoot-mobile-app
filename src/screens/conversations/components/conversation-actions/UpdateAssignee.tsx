@@ -12,14 +12,16 @@ import { SelfAssign } from '@/svg-icons';
 
 import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAssignableAgentsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
+import {
+  selectAssignableAgentsByInboxId,
+  isAssignableAgentFetching,
+} from '@application/store/assignable-agent/assignableAgentSelectors';
 import {
   selectSelectedIds,
   selectSelectedInboxes,
   selectSelectedConversation,
 } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
-import { isAssignableAgentFetching } from '@application/store/assignable-agent/assignableAgentSelectors';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
@@ -95,7 +97,9 @@ export const UpdateAssignee = () => {
   };
 
   useEffect(() => {
-    dispatch(assignableAgentActions.fetchAgents({ inboxIds }));
+    if (inboxIds.length > 0) {
+      dispatch(assignableAgentActions.fetchAgents({ inboxIds }));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
