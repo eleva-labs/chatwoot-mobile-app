@@ -78,6 +78,40 @@ export const buildTwConfig = (isDark: boolean) => {
           'alpha-black2': semanticColors.blackAlpha2,
           'alpha-white': semanticColors.whiteAlpha,
 
+          // Semantic foreground/text
+          foreground: semanticColors.textPrimary,
+          primary: semanticColors.primary,
+          secondary: semanticColors.textSecondary,
+          muted: semanticColors.textMuted,
+          accent: semanticColors.accent,
+          destructive: semanticColors.error,
+
+          // Semantic surfaces
+          surface: semanticColors.surface,
+          'surface-elevated': semanticColors.surfaceElevated,
+          'surface-hover': semanticColors.surfaceHover,
+
+          // Semantic text (inverse only — foreground/secondary/muted cover the rest)
+          inverse: semanticColors.textInverse,
+
+          // Interactive
+          'primary-hover': semanticColors.primaryHover,
+          'primary-active': semanticColors.primaryActive,
+          'accent-hover': semanticColors.accentHover,
+
+          // Status
+          success: semanticColors.success,
+          warning: semanticColors.warning,
+          error: semanticColors.error,
+          info: semanticColors.info,
+
+          // Input
+          input: semanticColors.input,
+
+          // Overlay
+          overlay: semanticColors.overlay,
+          backdrop: semanticColors.backdrop,
+
           // Standard
           white: '#FFFFFF',
           black: '#000000',

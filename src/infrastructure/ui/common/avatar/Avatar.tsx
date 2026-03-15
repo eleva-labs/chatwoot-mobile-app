@@ -8,8 +8,7 @@ import {
   ViewProps,
 } from 'react-native';
 
-import { avatarTheme, tailwind } from '@infrastructure/theme';
-import { useTheme } from '@infrastructure/theme';
+import { avatarTheme, tailwind, useTheme } from '@infrastructure/theme';
 import { getAvatarColorsByName } from '@infrastructure/theme/colors/avatar';
 import { Channel } from '@domain/types';
 import { cx, styleAdapter } from '@infrastructure/utils';

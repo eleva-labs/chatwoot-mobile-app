@@ -10,7 +10,7 @@ import {
   setCurrentPlayingAudioSrc,
 } from '@application/store/conversation/audioPlayerSlice';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@domain/types';
 import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
 import { Avatar, Icon, Slider } from '@infrastructure/ui/common';
@@ -241,7 +241,7 @@ export const AudioCell: React.FC<AudioCellProps> = props => {
               )}>
               <Text
                 style={tailwind.style(
-                  'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
+                  `${textCaptionBook} tracking-[0.32px] leading-[14px] pr-1`,
                   isIncoming ? 'text-slate-11' : '',
                   isOutgoing ? 'text-slate-11' : '',
                 )}>

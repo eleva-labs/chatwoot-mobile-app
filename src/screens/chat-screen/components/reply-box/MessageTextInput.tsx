@@ -4,7 +4,7 @@ import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
 
 import { softLayout } from '@infrastructure/animation';
 import { useChatWindowContext } from '@infrastructure/context';
-import { tailwind, useBoxShadow } from '@infrastructure/theme';
+import { tailwind, useBoxShadow, textBodyBase } from '@infrastructure/theme';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { useThemedStyles } from '@infrastructure/hooks';
 
@@ -186,7 +186,7 @@ export const MessageTextInput = ({
           enablesReturnKeyAutomatically
           style={[
             themedTailwind.style(
-              'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
+              `${textBodyBase} tracking-[0.24px] leading-[20px] android:leading-[18px]`,
               'ml-[5px] mr-2 py-2 px-3 rounded-2xl text-slate-12',
               'min-h-9 max-h-[76px]',
               isPrivateMessage ? 'bg-solid-amber' : 'bg-slate-3',

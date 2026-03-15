@@ -5,7 +5,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { LabelTag } from '@/svg-icons';
-import { tailwind, useBoxShadow } from '@infrastructure/theme';
+import { tailwind, useBoxShadow, textLabel } from '@infrastructure/theme';
 import { Icon } from '@infrastructure/ui';
 import { useSheetDefaults } from '@infrastructure/utils';
 import i18n from '@infrastructure/i18n';
@@ -76,9 +76,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
     <Animated.View>
       <Animated.View style={tailwind.style('pl-4')}>
         <Animated.Text
-          style={tailwind.style(
-            'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
-          )}>
+          style={tailwind.style(`${textLabel} leading-[16px] tracking-[0.32px] text-slate-11`)}>
           {i18n.t('CONVERSATION.ACTIONS.LABELS.TITLE')}
         </Animated.Text>
       </Animated.View>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { tailwind, useThemeColors, textBodyBook, textBodyBase } from '@infrastructure/theme';
 
 type SettingsRowProps = {
   /** Left content — Avatar, Icon, PriorityIndicator, etc. */
@@ -48,14 +48,14 @@ export const SettingsRow = ({
           )}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12 capitalize',
+              `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12 capitalize`,
             )}>
             {label}
           </Animated.Text>
           <Animated.View style={tailwind.style('flex-row items-center pr-3')}>
             <Animated.Text
               style={tailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] text-slate-12',
+                `${textBodyBase} leading-[22px] tracking-[0.16px] text-slate-12`,
               )}>
               {actionText}
             </Animated.Text>

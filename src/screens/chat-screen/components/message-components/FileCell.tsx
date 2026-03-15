@@ -6,7 +6,7 @@ import { contentFadeIn } from '@infrastructure/animation';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 
 import { FileIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
 import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
@@ -187,7 +187,7 @@ export const FileCell = (props: FileCellProps) => {
               style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center pl-1.5')}>
               <Animated.Text
                 style={tailwind.style(
-                  'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] pr-1',
+                  `${textCaptionBook} tracking-[0.32px] leading-[14px] pr-1`,
                   isIncoming ? 'text-whiteA-A11' : '',
                   isOutgoing ? 'text-slate-11' : '',
                 )}>

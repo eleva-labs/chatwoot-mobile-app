@@ -18,7 +18,7 @@ type ReplyMessageBubbleProps = {
 
 const variantBaseMap = {
   [MESSAGE_VARIANTS.AGENT]: 'bg-solid-1',
-  [MESSAGE_VARIANTS.USER]: 'bg-blackA-A7',
+  [MESSAGE_VARIANTS.USER]: 'bg-slate-5',
 };
 
 export const ReplyMessageBubble = (props: ReplyMessageBubbleProps) => {
@@ -70,7 +70,7 @@ export const ReplyMessageBubble = (props: ReplyMessageBubbleProps) => {
         <Animated.View style={tailwind.style('pl-2.5')}>
           <Animated.Text
             style={tailwind.style(
-              'text-cxs font-inter-420-20 leading-[14.95px] tracking-[0.32px] text-blackA-A11',
+              'text-cxs font-inter-420-20 leading-[14.95px] tracking-[0.32px] text-slate-11',
             )}>
             Replying to {replyMessageItem?.sender?.name}
           </Animated.Text>

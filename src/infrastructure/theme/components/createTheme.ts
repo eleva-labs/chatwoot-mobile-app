@@ -39,7 +39,6 @@ export const createUnifiedTheme = (config: ThemeAwareConfig) => {
           muted: semanticColors.textMuted,
           accent: semanticColors.accent,
           destructive: semanticColors.error,
-          border: semanticColors.border,
           input: semanticColors.input,
           ring: semanticColors.primary,
 
@@ -48,11 +47,8 @@ export const createUnifiedTheme = (config: ThemeAwareConfig) => {
           'surface-elevated': semanticColors.surfaceElevated,
           'surface-hover': semanticColors.surfaceHover,
 
-          // Text colors
-          'text-primary': semanticColors.textPrimary,
-          'text-secondary': semanticColors.textSecondary,
-          'text-muted': semanticColors.textMuted,
-          'text-inverse': semanticColors.textInverse,
+          // Semantic text (inverse only — foreground/secondary/muted cover the rest)
+          inverse: semanticColors.textInverse,
 
           // Interactive colors
           'primary-hover': semanticColors.primaryHover,
@@ -64,15 +60,6 @@ export const createUnifiedTheme = (config: ThemeAwareConfig) => {
           warning: semanticColors.warning,
           error: semanticColors.error,
           info: semanticColors.info,
-
-          // Border colors
-          'border-strong': semanticColors.borderStrong,
-          'border-weak': semanticColors.borderWeak,
-          'border-container': semanticColors.borderContainer,
-
-          // Input colors
-          'input-border': semanticColors.inputBorder,
-          'input-focus': semanticColors.inputFocus,
 
           // Overlay colors
           overlay: semanticColors.overlay,

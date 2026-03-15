@@ -4,7 +4,13 @@ import Animated from 'react-native-reanimated';
 import { Overflow } from '@/svg-icons/common/Overflow';
 
 import { AddParticipant } from '@/svg-icons';
-import { tailwind, useBoxShadow, useThemeColors } from '@infrastructure/theme';
+import {
+  tailwind,
+  useBoxShadow,
+  useThemeColors,
+  textLabel,
+  textBodyBook,
+} from '@infrastructure/theme';
 import { Avatar, Icon } from '@infrastructure/ui';
 import { Agent } from '@domain/types';
 import i18n from '@infrastructure/i18n';
@@ -30,7 +36,7 @@ const ListItem = (props: ListItemProps) => {
           style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
+              `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12`,
             )}>
             {listItem.name}
           </Animated.Text>
@@ -52,7 +58,7 @@ const ParticipantOverflowCell = ({ count }: { count: number }) => {
           style={tailwind.style('flex-1 py-[11px] ml-2 border-b-[1px] border-b-slate-6')}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
+              `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12`,
             )}>
             {i18n.t('CONVERSATION_PARTICIPANTS.OVERFLOW_COUNT', { count })}
           </Animated.Text>
@@ -76,9 +82,7 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
     <Animated.View>
       <Animated.View style={tailwind.style('pl-4 pb-3')}>
         <Animated.Text
-          style={tailwind.style(
-            'text-sm font-inter-medium-24 tracking-[0.32px] leading-[16px] text-slate-11',
-          )}>
+          style={tailwind.style(`${textLabel} tracking-[0.32px] leading-[16px] text-slate-11`)}>
           {i18n.t('CONVERSATION_PARTICIPANTS.TITLE')}
         </Animated.Text>
       </Animated.View>
@@ -99,7 +103,7 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
             <Animated.View style={tailwind.style('flex-1 py-[11px] ml-2')}>
               <Animated.Text
                 style={tailwind.style(
-                  'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-iris-11',
+                  `${textBodyBook} leading-[22px] tracking-[0.16px] text-iris-11`,
                 )}>
                 {i18n.t('CONVERSATION_PARTICIPANTS.ADD_PARTICIPANT')}
               </Animated.Text>

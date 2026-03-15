@@ -5,7 +5,14 @@ import * as Clipboard from 'expo-clipboard';
 import * as Sentry from '@sentry/react-native';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
 
-import { tailwind, useBoxShadow, useThemeColors } from '@infrastructure/theme';
+import {
+  tailwind,
+  useBoxShadow,
+  useThemeColors,
+  textLabel,
+  textBodyBook,
+  textBodyBase,
+} from '@infrastructure/theme';
 import { AttributeListType } from '@domain/types';
 import { Icon } from '@infrastructure/ui/common';
 import { showToast } from '@infrastructure/utils/toastUtils';
@@ -71,7 +78,7 @@ const AttributeItem = (props: AttributeItemProps) => {
           <Animated.View>
             <Animated.Text
               style={tailwind.style(
-                'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
+                `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12`,
               )}>
               {listItem.title}
             </Animated.Text>
@@ -81,7 +88,7 @@ const AttributeItem = (props: AttributeItemProps) => {
               numberOfLines={1}
               ellipsizeMode="tail"
               style={tailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] overflow-hidden',
+                `${textBodyBase} leading-[22px] tracking-[0.16px] overflow-hidden`,
                 listItem.subtitleType === 'light' ? 'text-slate-12' : 'text-slate-12',
                 listItem.type === 'link' ? 'text-iris-11 underline' : '',
               )}>
@@ -108,9 +115,7 @@ export const AttributeList = (props: AttributeListProps) => {
       {sectionTitle ? (
         <Animated.View style={tailwind.style('pl-4 pb-3')}>
           <Animated.Text
-            style={tailwind.style(
-              'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
-            )}>
+            style={tailwind.style(`${textLabel} leading-[16px] tracking-[0.32px] text-slate-11`)}>
             {sectionTitle}
           </Animated.Text>
         </Animated.View>

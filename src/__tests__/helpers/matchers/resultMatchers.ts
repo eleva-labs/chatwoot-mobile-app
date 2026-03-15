@@ -1,8 +1,6 @@
 // src/__tests__/helpers/matchers/resultMatchers.ts
 // Extracted from src/modules/onboarding/__tests__/helpers/testHelpers.ts
 
-/* eslint-disable @typescript-eslint/no-namespace */
-
 export const resultMatchers = {
   toBeSuccess(received: { isSuccess: boolean; getError?: () => unknown }) {
     const pass = received.isSuccess;

@@ -2,10 +2,9 @@ import { createDraftSafeSelector, createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '@application/store';
 import { conversationAdapter } from './conversationSlice';
 import { FilterState } from '@application/store/conversation/conversationFilterSlice';
-import { CONVERSATION_PRIORITY_ORDER } from '@domain/constants';
+import { CONVERSATION_PRIORITY_ORDER, MESSAGE_TYPES } from '@domain/constants';
 import { shouldApplyFilters } from '@infrastructure/utils/conversationUtils';
 import type { Conversation } from '@domain/types';
-import { MESSAGE_TYPES } from '@domain/constants';
 
 export const selectConversationsState = (state: RootState) => state.conversations;
 

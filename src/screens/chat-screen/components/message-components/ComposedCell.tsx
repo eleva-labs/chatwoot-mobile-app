@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import { slowFadeIn } from '@infrastructure/animation';
 
 import { FileErrorIcon, LockIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { Channel, Message } from '@domain/types';
 import { getAvatarSource, isOlderThan24Hours, messageTimestamp } from '@infrastructure/utils';
 import { Avatar, Icon } from '@infrastructure/ui';
@@ -197,7 +197,7 @@ export const ComposedCell = (props: ComposedCellProps) => {
                   {isPrivate ? <Icon icon={<LockIcon />} size={12} /> : null}
                   <Text
                     style={tailwind.style(
-                      'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
+                      `${textCaptionBook} tracking-[0.32px] pr-1`,
                       isPrivate ? 'pl-1 text-slate-11' : '',
                       !isPrivate && isIncoming ? 'text-slate-11' : '',
                       !isPrivate && isOutgoing ? 'text-slate-11' : '',

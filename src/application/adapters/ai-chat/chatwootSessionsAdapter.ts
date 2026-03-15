@@ -8,8 +8,9 @@
 import type { SessionsStateAdapter } from '@domain/types/ai-chat/sessionsAdapter';
 import type { AppDispatch } from '@application/store';
 import { getStore } from '@application/store/storeAccessor';
-import { aiChatActions, setActiveSession } from '@application/store/ai-chat';
 import {
+  aiChatActions,
+  setActiveSession,
   selectSessionsByAgentBot,
   selectActiveSessionId,
   selectIsLoadingSessions,

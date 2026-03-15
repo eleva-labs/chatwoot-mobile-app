@@ -129,7 +129,6 @@ export function useAIChatScroll(
         clearTimeout(scrollTimeoutIdRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSessionId, isLoadingMessages, messagesLength]);
 
   // Auto-scroll when new messages arrive (during streaming)
@@ -161,7 +160,6 @@ export function useAIChatScroll(
         clearTimeout(scrollTimeoutIdRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messagesLength, listDataLength]); // Only depend on length, not the array itself
 
   // Handle scroll events to detect user scrolling and track position

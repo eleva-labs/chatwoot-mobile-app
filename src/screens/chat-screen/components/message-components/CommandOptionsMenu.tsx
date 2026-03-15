@@ -15,7 +15,7 @@ import { updateAttachments } from '@application/store/conversation/sendMessageSl
 import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';
 import { snappySlideInDown, snappySlideOutDown } from '@infrastructure/animation';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textBodyBase } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, processImageForUpload } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
 import { MAXIMUM_FILE_UPLOAD_SIZE } from '@domain/constants';
@@ -215,7 +215,7 @@ const MenuOption = (props: MenuOptionProps) => {
           </Animated.View>
           <Text
             style={tailwind.style(
-              'text-base font-inter-normal-20 leading-[18px] tracking-[0.24px] text-slate-12 pl-5',
+              `${textBodyBase} leading-[18px] tracking-[0.24px] text-slate-12 pl-5`,
             )}>
             {menuOption.getTitle()}
           </Text>

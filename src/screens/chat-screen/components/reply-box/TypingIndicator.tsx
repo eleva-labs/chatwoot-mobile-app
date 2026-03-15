@@ -20,7 +20,7 @@ export const TypingIndicator = ({ typingText }: TypingIndicatorProps) => {
         ]}>
         <Text
           style={tailwind.style(
-            'text-cxs font-inter-medium-24 tracking-[0.32px] leading-[18px] text-blackA-A11 text-center',
+            'text-cxs font-inter-medium-24 tracking-[0.32px] leading-[18px] text-slate-11 text-center',
           )}>
           {typingText}
         </Text>

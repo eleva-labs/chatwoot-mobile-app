@@ -58,7 +58,7 @@ const BaseBottomSheet = ({ children }: { children: React.ReactNode }) => {
               ref={filtersModalSheetRef}
               backdropComponent={BottomSheetBackdrop}
               handleIndicatorStyle={tailwind.style(
-                'overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]',
+                'overflow-hidden bg-slate-8 w-8 h-1 rounded-[11px]',
               )}
               detached
               enablePanDownToClose

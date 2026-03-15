@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textBodySmallBook } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { NativeView } from '@infrastructure/ui/native-components';
 
@@ -14,8 +14,8 @@ export const ConversationId = (props: ConversationIdProps) => {
   const themedTailwind = useThemedStyles();
   return (
     <NativeView style={tailwind.style('flex flex-row items-center gap-0.5')}>
-      <Text style={themedTailwind.style('text-sm font-inter-420-20 text-slate-11')}>#</Text>
-      <Text style={themedTailwind.style('text-sm font-inter-420-20 text-slate-11')}>{id}</Text>
+      <Text style={themedTailwind.style(`${textBodySmallBook} text-slate-11`)}>#</Text>
+      <Text style={themedTailwind.style(`${textBodySmallBook} text-slate-11`)}>{id}</Text>
     </NativeView>
   );
 };

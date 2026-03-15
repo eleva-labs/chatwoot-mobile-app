@@ -3,7 +3,7 @@ import Animated from 'react-native-reanimated';
 import { LightBox, LightBoxProps } from '@alantoa/lightbox';
 import { Image } from 'expo-image';
 import { CircleOff } from 'lucide-react-native';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 
 const AnimatedExpoImage = Animated.createAnimatedComponent(Image);
@@ -24,7 +24,7 @@ const ImageLoadErrorPlaceholder = ({ width, height }: { width: number; height: n
       ]}>
       <CircleOff size={24} color={tailwind.color('text-slate-11')} strokeWidth={1.5} />
       <Animated.Text
-        style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] text-slate-11 mt-2')}>
+        style={tailwind.style(`${textCaptionBook} tracking-[0.32px] text-slate-11 mt-2`)}>
         {i18n.t('CONVERSATION.IMAGE_LOAD_ERROR')}
       </Animated.Text>
     </Animated.View>

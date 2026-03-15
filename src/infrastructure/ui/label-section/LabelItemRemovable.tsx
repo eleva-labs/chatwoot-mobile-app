@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind, useBoxShadow } from '@infrastructure/theme';
+import { tailwind, useBoxShadow, textBodySmallBook } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { CloseIcon } from '@/svg-icons/common/CloseIcon';
 import { useHaptic } from '@infrastructure/utils';
@@ -38,7 +38,7 @@ export const LabelItemRemovable = ({ title, color, onRemove }: LabelItemRemovabl
         <Animated.Text
           numberOfLines={1}
           style={[
-            themedStyles.style('text-sm font-inter-420-20 leading-[17px] tracking-[0.24px] ml-2'),
+            themedStyles.style(`${textBodySmallBook} leading-[17px] tracking-[0.24px] ml-2`),
             { color: tailwind.color('text-slate-11') },
           ]}>
           {title}

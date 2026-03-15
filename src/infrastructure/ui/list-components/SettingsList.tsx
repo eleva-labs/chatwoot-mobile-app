@@ -5,7 +5,13 @@ import { CaretRight } from '@/svg-icons/common/CaretRight';
 
 import { GenericListType } from '@domain/types';
 import { Icon } from '@infrastructure/ui/common/icon';
-import { useBoxShadow, useThemeColors } from '@infrastructure/theme';
+import {
+  useBoxShadow,
+  useThemeColors,
+  textLabel,
+  textBodyBook,
+  textBodyBase,
+} from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 
 type GenericListProps = {
@@ -50,7 +56,7 @@ const ListItem = (props: ListItemProps) => {
           <Animated.View>
             <Animated.Text
               style={themedTailwind.style(
-                'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
+                `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12`,
               )}>
               {listItem.title}
             </Animated.Text>
@@ -58,7 +64,7 @@ const ListItem = (props: ListItemProps) => {
           <Animated.View style={themedTailwind.style('flex flex-row items-center pr-3')}>
             <Animated.Text
               style={themedTailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px]',
+                `${textBodyBase} leading-[22px] tracking-[0.16px]`,
                 listItem.subtitleType === 'light' ? 'text-slate-12' : 'text-slate-12',
               )}>
               {listItem.subtitle}
@@ -82,7 +88,7 @@ export const SettingsList = (props: GenericListProps) => {
         <Animated.View style={themedTailwind.style('pl-4 pb-3')}>
           <Animated.Text
             style={themedTailwind.style(
-              'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
+              `${textLabel} leading-[16px] tracking-[0.32px] text-slate-11`,
             )}>
             {sectionTitle}
           </Animated.Text>

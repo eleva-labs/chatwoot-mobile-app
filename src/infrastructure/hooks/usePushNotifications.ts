@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
-import { getApp } from '@react-native-firebase/app';
+import { getApp, getApps } from '@react-native-firebase/app';
 import { getMessaging, onMessage } from '@react-native-firebase/messaging';
-import { getApps } from '@react-native-firebase/app';
 import * as Notifications from 'expo-notifications';
 import { AndroidImportance } from 'expo-notifications';
 import { waitForFirebaseInit } from '@infrastructure/utils/firebaseUtils';

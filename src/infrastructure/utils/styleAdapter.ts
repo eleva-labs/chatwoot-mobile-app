@@ -8,7 +8,6 @@ import { Falsy, PressableStateCallbackType, StyleProp, StyleSheet, ViewStyle } f
  * @param {any} value - any - The value to check.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const isFunction = (value: unknown): value is Function => typeof value === 'function';
 
 /**

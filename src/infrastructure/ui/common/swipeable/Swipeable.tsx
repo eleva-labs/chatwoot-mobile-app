@@ -128,7 +128,10 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
   const isGestureActive = useSharedValue(false);
 
   const maxTranslation = WIDTH * 0.6;
+  // These resolve from the tailwind singleton, which is rebuilt by ThemeProvider on theme change.
+  // The component must re-render after theme changes for these values to update.
   const tappedBgStyle = tailwind.color('bg-slate-4') as string;
+  const baseBgStyle = (tailwind.color('bg-background') ?? '#FFFFFF') as string;
   const maxSnapPointLeft = -maxTranslation;
   const maxSnapPointRight = maxTranslation;
 
@@ -429,7 +432,7 @@ export const Swipeable = forwardRef((props: SwipeableProps, _ref) => {
 
   const tappedCellStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: interpolateColor(isTapped.value, [0, 1], ['white', tappedBgStyle]),
+      backgroundColor: interpolateColor(isTapped.value, [0, 1], [baseBgStyle, tappedBgStyle]),
     };
   });
 

@@ -13,7 +13,7 @@ import {
   snappySlideOutDown,
 } from '@infrastructure/animation';
 import { AttachFileIcon } from '@/svg-icons';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { tailwind, useThemeColors, textCaptionBook } from '@infrastructure/theme';
 import { useScaleAnimation } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
@@ -88,13 +88,13 @@ const AttachedImage = (props: AttachedImageProps) => {
         <Animated.View
           style={[
             StyleSheet.absoluteFillObject,
-            tailwind.style('border-[1px] rounded-lg border-blackA-A3 z-50'),
+            tailwind.style('border-[1px] rounded-lg border-slate-6 z-50'),
           ]}
         />
         <Animated.View
           style={[
             tailwind.style(
-              'absolute h-[19px] w-[19px] border-[1px] border-blackA-A6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
+              'absolute h-[19px] w-[19px] border-[1px] border-slate-6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
             ),
             animatedStyle,
           ]}>
@@ -147,13 +147,13 @@ const AttachedVideo = (props: AttachedVideoProps) => {
         <Animated.View
           style={[
             StyleSheet.absoluteFillObject,
-            tailwind.style('border-[1px] rounded-lg border-blackA-A3 z-50'),
+            tailwind.style('border-[1px] rounded-lg border-slate-6 z-50'),
           ]}
         />
         <Animated.View
           style={[
             tailwind.style(
-              'absolute h-[19px] w-[19px] border-[1px] border-blackA-A6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
+              'absolute h-[19px] w-[19px] border-[1px] border-slate-6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
             ),
             animatedStyle,
           ]}>
@@ -174,7 +174,7 @@ const AttachedVideo = (props: AttachedVideoProps) => {
           <PlayIcon />
           <Animated.Text
             style={tailwind.style(
-              'text-whiteA-A12 text-xs font-inter-420-20 leading-[14px] tracking-[0.32px] pl-1',
+              `text-whiteA-A12 ${textCaptionBook} leading-[14px] tracking-[0.32px] pl-1`,
             )}>
             {typeof item.duration === 'number'
               ? formatSecondsToMinutes(Math.round(item.duration))
@@ -226,13 +226,13 @@ const AttachedFile = (props: AttachedFileProps) => {
         <Animated.View
           style={[
             StyleSheet.absoluteFillObject,
-            tailwind.style('border-[1px] rounded-lg border-blackA-A3 z-50'),
+            tailwind.style('border-[1px] rounded-lg border-slate-6 z-50'),
           ]}
         />
         <Animated.View
           style={[
             tailwind.style(
-              'absolute h-[19px] w-[19px] border-[1px] border-blackA-A6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
+              'absolute h-[19px] w-[19px] border-[1px] border-slate-6 bg-whiteA-A11 rounded-full justify-center items-center right-[2px] top-[2px] z-50',
             ),
             animatedStyle,
           ]}>

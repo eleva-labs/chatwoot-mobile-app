@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AIChatSession } from '@application/store/ai-chat/aiChatTypes';
+import { textBodyBook } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 import { formatSessionTitle } from '@presentation/ai-chat/utils/ai-assistant/aiChatFormatUtils';
@@ -48,7 +49,8 @@ export const AISessionItem: React.FC<SessionItemProps> = React.memo(
             <View style={style('flex-1')}>
               <Text
                 style={style(
-                  'text-base font-inter-420-20',
+                  textBodyBook,
+                  'leading-6',
                   isActive ? sessionTokens.activeText : sessionTokens.title,
                   isActive && 'font-inter-580-24',
                 )}>

@@ -10,6 +10,9 @@ export { brandColors } from './colors/brand';
 // Token system
 export * from './colors/tokens';
 
+// Chat message tokens
+export { chatMessageTokens, getMessageTokensByVariant } from './chat-tokens';
+
 // Legacy theme (for backward compatibility — re-exports from unified)
 export * from './default';
 

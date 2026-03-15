@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { BottomSheetModalProps } from '@gorhom/bottom-sheet';
 import { spring } from '@infrastructure/animation';
-import { tailwind } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { BottomSheetBackdrop } from '@infrastructure/ui/common/bottomsheet/BottomSheetBackdrop';
 import { useBottomSheetInset } from './useBottomSheetInset';
@@ -34,9 +33,11 @@ export const useSheetDefaults = (): SheetDefaults => {
   return useMemo<SheetDefaults>(
     () => ({
       backdropComponent: BottomSheetBackdrop,
-      handleIndicatorStyle: tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]'),
-      handleStyle: tailwind.style('p-0 h-4 pt-[5px]'),
-      style: tailwind.style('rounded-[26px] overflow-hidden'),
+      handleIndicatorStyle: themedTailwind.style(
+        'overflow-hidden bg-slate-8 w-8 h-1 rounded-[11px]',
+      ),
+      handleStyle: themedTailwind.style('p-0 h-4 pt-[5px]'),
+      style: themedTailwind.style('rounded-[26px] overflow-hidden'),
       backgroundStyle: themedTailwind.style('bg-solid-1'),
       animationConfigs: spring.sheet,
       enablePanDownToClose: true,

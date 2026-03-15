@@ -15,11 +15,11 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, ScrollView, ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import { Brain } from 'lucide-react-native';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
-import { useTheme } from '@infrastructure/context/ThemeContext';
 import { useThemeColors } from '@infrastructure/theme';
+import { useMarkdownTheme } from '@infrastructure/hooks';
 import { AICollapsible } from './AICollapsible';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 import { useAIMarkdownRenderer } from '@presentation/ai-chat/hooks/ai-assistant/useAIMarkdownRenderer';
@@ -71,7 +71,6 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   const { style, tokens, getCollapsible } = useAIStyles();
   const { t } = useAIi18n();
   const irisTokens = getCollapsible('iris');
-  const { themeVersion } = useTheme();
   const { colors } = useThemeColors();
   const registryMarkdownRenderer = useAIMarkdownRenderer();
   // Prop wins over registry (allows per-instance override)
@@ -81,41 +80,40 @@ export const AIReasoningPart: React.FC<AIReasoningPartProps> = ({
   const reasoningCodeBg = colors.slate[3];
   const reasoningLinkColor = colors.blue[9];
 
-  // Markdown styles for reasoning content (smaller than main text)
+  // Shared markdown base styles from hook (smaller font for reasoning)
+  const baseMarkdownStyles = useMarkdownTheme({
+    fontSize: 13,
+    lineHeight: 19,
+    letterSpacing: 0, // Override hook default (0.32) — reasoning uses standard letter spacing
+    textColor: reasoningTextColor,
+    linkColor: reasoningLinkColor,
+    codeBackground: reasoningCodeBg,
+    includeCodeStyles: true,
+  });
+
+  // AIReasoningPart-specific override: paragraph marginBottom for spacing
   const markdownStyles = useMemo(
-    () =>
-      StyleSheet.create({
-        body: {
-          fontSize: 13,
-          lineHeight: 19,
-          color: reasoningTextColor,
-          fontFamily: 'Inter-400-20',
-        },
-        paragraph: {
-          marginTop: 0,
-          marginBottom: 4,
-        },
-        strong: {
-          fontFamily: 'Inter-600-20',
-          fontWeight: '600',
-        },
-        em: {
-          fontStyle: 'italic',
-        },
-        code_inline: {
-          backgroundColor: reasoningCodeBg,
-          borderRadius: 4,
-          paddingHorizontal: 4,
-          fontFamily: 'monospace',
-          fontSize: 12,
-        },
-        link: {
-          color: reasoningLinkColor,
-          textDecorationLine: 'underline',
-        },
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- themeVersion ensures styles recompute when tailwind is rebuilt
-    [reasoningTextColor, reasoningCodeBg, reasoningLinkColor, themeVersion],
+    () => ({
+      ...baseMarkdownStyles,
+      paragraph: {
+        ...baseMarkdownStyles.paragraph,
+        marginBottom: 4,
+      },
+      // Reasoning doesn't need list alignItems or fontWeight on icons
+      list_item: {
+        ...baseMarkdownStyles.list_item,
+        alignItems: undefined,
+      },
+      bullet_list_icon: {
+        ...baseMarkdownStyles.bullet_list_icon,
+        fontWeight: undefined,
+      },
+      ordered_list_icon: {
+        ...baseMarkdownStyles.ordered_list_icon,
+        fontWeight: undefined,
+      },
+    }),
+    [baseMarkdownStyles],
   );
 
   // Extract reasoning text (handle both 'reasoning' and 'text' fields)

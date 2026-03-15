@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EMAIL_REGEX } from '@domain/constants';
 import { EyeIcon, EyeSlash, LockIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textBodyBase } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { resetAuth } from '@application/store/auth/authSlice';
 import { authActions } from '@application/store/auth/authActions';
@@ -226,7 +226,7 @@ const LoginScreen = () => {
                 <TextInput
                   style={[
                     tailwind.style(
-                      'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
+                      `${textBodyBase} tracking-[0.24px] leading-[20px] android:leading-[18px]`,
                       'py-2 px-3 rounded-xl text-slate-12 bg-slate-3',
                       'h-10',
                     ),
@@ -266,7 +266,7 @@ const LoginScreen = () => {
                   <TextInput
                     style={[
                       tailwind.style(
-                        'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
+                        `${textBodyBase} tracking-[0.24px] leading-[20px] android:leading-[18px]`,
                         'py-2 pl-3 pr-10 rounded-xl text-slate-12 bg-slate-3',
                         'h-10',
                       ),

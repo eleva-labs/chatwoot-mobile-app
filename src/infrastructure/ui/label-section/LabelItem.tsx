@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { NativeView } from '@infrastructure/ui/native-components';
 
@@ -17,9 +17,7 @@ export const LabelItem = ({ title, color }: LabelItemProps) => {
         'flex-row items-center gap-1 h-5 py-0.5 px-1 rounded border border-slate-6 bg-transparent',
       )}>
       <NativeView style={tailwind.style('h-2 w-2 rounded-sm', `bg-[${color}]`)} />
-      <Text
-        numberOfLines={1}
-        style={themedTailwind.style('text-xs font-inter-420-20 text-slate-11')}>
+      <Text numberOfLines={1} style={themedTailwind.style(`${textCaptionBook} text-slate-11`)}>
         {title}
       </Text>
     </NativeView>

@@ -46,7 +46,7 @@ export const LanguageSelectorSheet = () => {
       <BottomSheetModal
         ref={languagesModalSheetRef}
         backdropComponent={props => <BottomSheetBackdrop {...props} />}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
+        handleIndicatorStyle={tailwind.style('overflow-hidden bg-slate-8 w-8 h-1 rounded-[11px]')}
         detached
         enablePanDownToClose
         animationConfigs={spring.sheet}

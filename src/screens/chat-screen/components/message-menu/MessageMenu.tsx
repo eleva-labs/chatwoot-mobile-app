@@ -60,7 +60,7 @@ const ContextMenuBottomSheetBackdrop = forwardRef<
 
   return (
     <Pressable onPress={handleBackdropPress} style={style}>
-      <Animated.View style={[tailwind.style('bg-blackA-A9'), style, animatedStyle]} />
+      <Animated.View style={[tailwind.style('bg-black/45'), style, animatedStyle]} />
     </Pressable>
   );
 });

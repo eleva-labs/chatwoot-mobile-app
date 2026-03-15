@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 import { contentFadeIn } from '@infrastructure/animation';
 import { Image, ImageBackground } from 'expo-image';
 import { CircleOff } from 'lucide-react-native';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
 import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
 import { Avatar } from '@infrastructure/ui/common';
@@ -104,7 +104,7 @@ export const ImageCell = (props: ImageCellProps) => {
                   <CircleOff size={24} color={tailwind.color('text-slate-11')} strokeWidth={1.5} />
                   <Animated.Text
                     style={tailwind.style(
-                      'text-xs font-inter-420-20 tracking-[0.32px] text-slate-11 mt-2',
+                      `${textCaptionBook} tracking-[0.32px] text-slate-11 mt-2`,
                     )}>
                     {i18n.t('CONVERSATION.IMAGE_LOAD_ERROR')}
                   </Animated.Text>
@@ -134,7 +134,7 @@ export const ImageCell = (props: ImageCellProps) => {
                         style={tailwind.style('flex flex-row absolute right-3 bottom-[5px]')}>
                         <Text
                           style={tailwind.style(
-                            'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
+                            `${textCaptionBook} tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1`,
                           )}>
                           {messageTimestamp(timeStamp)}
                         </Text>

@@ -9,7 +9,7 @@ import type { MarkAsReadPayload } from '@application/store/notification/notifica
 import { MarkAsRead, MarkAsUnRead, DeleteIcon } from '@/svg-icons';
 import { InboxItem } from './InboxItem';
 import { formatRelativeTime, formatTimeToShortForm } from '@infrastructure/utils/dateTimeUtils';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { tailwind, useThemeColors, textBodySmallBook } from '@infrastructure/theme';
 import { Icon, Swipeable } from '@infrastructure/ui';
 import { selectInboxById } from '@application/store/inbox/inboxSelectors';
 import i18n from '@infrastructure/i18n';
@@ -46,7 +46,7 @@ const DeleteComponent = React.memo(() => {
       <Icon icon={<DeleteIcon />} size={24} />
       <Animated.Text
         style={[
-          tailwind.style('text-sm font-inter-420-20 pt-[3px]'),
+          tailwind.style(`${textBodySmallBook} pt-[3px]`),
           { color: semanticColors.textInverse },
         ]}>
         {i18n.t('NOTIFICATION.DELETE')}
