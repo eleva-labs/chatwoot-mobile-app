@@ -29,7 +29,8 @@ import {
 } from '@infrastructure/utils/pushUtils';
 import { extractConversationIdFromUrl } from '@infrastructure/utils/conversationUtils';
 import { tailwind } from '@infrastructure/theme';
-import { useAppSelector, useThemedStyles, useAppDispatch } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { selectInstallationUrl, selectLocale } from '@application/store/settings/settingsSelectors';
 import { SSO_CALLBACK_URL } from '@domain/constants';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';

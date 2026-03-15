@@ -17,7 +17,7 @@ import {
   selectSortOrder,
   setFilters,
 } from '@application/store/notification/notificationFilterSlice';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 
 type SortByCellProps = {
   value: string;

@@ -5,7 +5,8 @@ import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
 import { softLayout } from '@infrastructure/animation';
 import { useChatWindowContext } from '@infrastructure/context';
 import { tailwind, useBoxShadow } from '@infrastructure/theme';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 import { MentionInput, MentionSuggestionsProps, Suggestion } from './mentions-input';
 import {

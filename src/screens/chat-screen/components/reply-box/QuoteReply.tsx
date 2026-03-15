@@ -11,7 +11,7 @@ import { tailwind } from '@infrastructure/theme';
 import { isMarkdown } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
 
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 
 import {
   selectQuoteMessage,

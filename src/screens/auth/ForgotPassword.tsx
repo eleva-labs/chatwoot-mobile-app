@@ -8,7 +8,7 @@ import { EMAIL_REGEX } from '@domain/constants';
 import { KeyRoundIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { authActions } from '@application/store/auth/authActions';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch } from '@application/store/hooks';
 import { resetAuth } from '@application/store/auth/authSlice';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';

@@ -5,10 +5,11 @@ import { BottomSheetView } from '@gorhom/bottom-sheet';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
-import { ConversationStatus, StatusCollection } from '@domain/types';
+import { ConversationStatus, StatusCollection, StatusOptions } from '@domain/types';
 import { getStatusTypeIcon, useHaptic } from '@infrastructure/utils';
 import { BottomSheetHeader, Icon } from '@infrastructure/ui';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import {
   selectSelectedConversation,
   selectSelectedIds,
@@ -16,7 +17,6 @@ import {
 import { conversationActions } from '@application/store/conversation/conversationActions';
 import { setCurrentState } from '@application/store/conversation/conversationHeaderSlice';
 import i18n from '@infrastructure/i18n';
-import { StatusOptions } from '@domain/types';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 type StatusCellProps = {

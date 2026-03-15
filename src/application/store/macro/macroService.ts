@@ -1,4 +1,4 @@
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import type { MacroResponse } from './macroTypes';
 import { transformMacro } from '@infrastructure/utils/camelCaseKeys';
 

@@ -9,7 +9,7 @@ import { tailwind } from '@infrastructure/theme';
 import { ConversationPriority, PriorityOptions } from '@domain/types';
 import { useHaptic } from '@infrastructure/utils';
 import { BottomSheetHeader, PriorityIndicator } from '@infrastructure/ui';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 

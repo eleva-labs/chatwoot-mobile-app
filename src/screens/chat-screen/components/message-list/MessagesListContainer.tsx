@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch, useThemedStyles } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { useChatWindowContext } from '@infrastructure/context';
 import { AppState } from 'react-native';
 import { KeyboardGestureArea } from 'react-native-keyboard-controller';

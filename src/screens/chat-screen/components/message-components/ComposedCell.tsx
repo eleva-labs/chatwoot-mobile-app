@@ -18,7 +18,7 @@ import { FilePreview } from './FileCell';
 import { ImageBubbleContainer as ImageContainer } from './ImageBubble';
 import { VideoPlayer } from './VideoCell';
 import { DeliveryStatus } from './DeliveryStatus';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { useChatWindowContext } from '@infrastructure/context';
 import { getMessagesByConversationId } from '@application/store/conversation/conversationSelectors';
 import i18n from '@infrastructure/i18n';

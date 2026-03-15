@@ -9,14 +9,14 @@ import { tailwind, useBoxShadow } from '@infrastructure/theme';
 import { Icon } from '@infrastructure/ui';
 import { useSheetDefaults } from '@infrastructure/utils';
 import i18n from '@infrastructure/i18n';
-import { useAppSelector, useAppDispatch } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { filterLabels } from '@application/store/label/labelSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import { LabelItemRemovable } from '@infrastructure/ui/label-section';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
-import { LabelPicker } from '@screens/conversations/components/conversation-actions/LabelPicker';
+import { LabelPicker } from '@infrastructure/ui/label-picker';
 
 interface LabelSectionProps {
   labels: string[];

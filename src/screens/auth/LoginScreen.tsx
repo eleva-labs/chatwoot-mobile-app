@@ -12,7 +12,8 @@ import { tailwind } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { resetAuth } from '@application/store/auth/authSlice';
 import { authActions } from '@application/store/auth/authActions';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 import {
   BottomSheetBackdrop,

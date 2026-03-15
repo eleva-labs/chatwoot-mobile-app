@@ -19,7 +19,8 @@ import { tailwind } from '@infrastructure/theme';
 import { ConversationStatus } from '@domain/types';
 import i18n from '@infrastructure/i18n';
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 

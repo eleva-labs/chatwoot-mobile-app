@@ -8,7 +8,7 @@ import { URL_WITHOUT_HTTP_REGEX } from '@domain/constants';
 import { LinkIcon } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
-import { useAppSelector, useAppDispatch } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@application/store/hooks';
 import { selectBaseUrl } from '@application/store/settings/settingsSelectors';
 import { resetSettings } from '@application/store/settings/settingsSlice';
 import { settingsActions } from '@application/store/settings/settingsActions';

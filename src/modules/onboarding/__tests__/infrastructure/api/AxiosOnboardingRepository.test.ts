@@ -9,7 +9,7 @@ import { AxiosOnboardingRepository } from '../../../infrastructure/repositories/
 import { Locale } from '../../../domain/entities/Locale';
 import { NetworkError, NotFoundError } from '../../../domain/entities/Errors';
 import { AxiosError } from 'axios';
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 
 // Helper function to create AxiosError instances that pass instanceof checks
 function createAxiosError(message: string, status?: number): AxiosError {
@@ -31,7 +31,7 @@ function createAxiosError(message: string, status?: number): AxiosError {
 global.fetch = jest.fn();
 
 // Mock APIService (still used for submitAnswers and validateField)
-jest.mock('@/services/APIService', () => ({
+jest.mock('@infrastructure/services/APIService', () => ({
   apiService: {
     get: jest.fn(),
     post: jest.fn(),

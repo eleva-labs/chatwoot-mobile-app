@@ -11,7 +11,8 @@ import { useConversationListStateContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { useHaptic } from '@infrastructure/utils';
 import { getFilteredConversations } from '@application/store/conversation/conversationSelectors';
-import { useThemedStyles, useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { selectUserId } from '@application/store/auth/authSelectors';
 import {
   resetFilters,

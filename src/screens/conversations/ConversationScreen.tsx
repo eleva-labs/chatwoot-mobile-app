@@ -33,7 +33,8 @@ import {
 
 import { tailwind } from '@infrastructure/theme';
 import { Conversation } from '@domain/types';
-import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useScreenAnalytics, useThemedStyles } from '@infrastructure/hooks';
 import {
   selectBottomSheetState,
   selectCurrentState,

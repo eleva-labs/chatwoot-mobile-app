@@ -16,7 +16,7 @@ import { AttachFileIcon } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useScaleAnimation } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import {
   selectAttachments,
   deleteAttachment,

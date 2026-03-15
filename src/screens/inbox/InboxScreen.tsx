@@ -14,7 +14,8 @@ import {
 } from '@infrastructure/context';
 import type { Notification } from '@domain/types/Notification';
 import { tailwind } from '@infrastructure/theme';
-import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useScreenAnalytics, useThemedStyles } from '@infrastructure/hooks';
 import { notificationActions } from '@application/store/notification/notificationAction';
 import {
   selectIsAllNotificationsFetched,

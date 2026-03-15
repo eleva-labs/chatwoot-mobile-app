@@ -5,7 +5,7 @@ import { AttributeListType, CustomAttribute } from '@domain/types';
 import { Conversation } from '@domain/types/Conversation';
 import i18n from '@infrastructure/i18n';
 import camelCase from 'lodash/camelCase';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { getConversationCustomAttributes } from '@application/store/custom-attribute/customAttributeSlice';
 import { AttributeList } from '@infrastructure/ui';
 

@@ -1,8 +1,4 @@
-import { PathProps } from 'react-native-svg';
-
 import { AllStatusTypes, AssigneeTypes, SortTypes } from './common';
-
-import type { JSX } from 'react';
 
 export * from './Agent';
 export * from './AgentBot';
@@ -14,42 +10,6 @@ export * from './Message';
 export * from './Team';
 export * from './Account';
 export * from './Macro';
-
-export type IconProps = PathProps & {
-  /**
-   * Color prop forwarded to the root <Svg> element.
-   * When set, `currentColor` in stroke/fill attributes resolves to this value
-   * instead of falling back to black in React Native.
-   */
-  color?: string;
-};
-
-export interface GenericListType {
-  key?: string;
-  title?: string;
-  icon?: React.ReactNode;
-  subtitle?: string;
-  subtitleType?: 'dark' | 'light';
-  hasChevron?: boolean;
-  disabled?: boolean;
-  link?: string;
-  onPressListItem?: (key?: string) => void;
-  actions?: {
-    actionName: string;
-    actionParams: string[];
-  }[];
-}
-
-export interface AttributeListType {
-  key?: string;
-  title?: string;
-  icon?: React.ReactNode;
-  subtitle?: string;
-  subtitleType?: 'dark' | 'light';
-  hasChevron?: boolean;
-  disabled?: boolean;
-  type: 'text' | 'date' | 'checkbox' | 'link';
-}
 
 /**
  * The types of Filter for Conversation List
@@ -78,6 +38,11 @@ export type FilterOption<T extends ConversationFilterOptions> = {
 
 export type LabelType = { labelText: string; labelColor: string };
 
-export type RenderPropType<T = unknown> =
-  | React.ReactNode
-  | ((args: T) => JSX.Element | React.ReactNode);
+// Re-export UI types from infrastructure for backward compatibility
+// TODO: Update consumers to import directly from @infrastructure/types/ui-types
+export type {
+  IconProps,
+  GenericListType,
+  AttributeListType,
+  RenderPropType,
+} from '@infrastructure/types/ui-types';

@@ -16,7 +16,7 @@ import { tailwind, useBoxShadow, useThemeColors } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, useChromeMetrics } from '@infrastructure/utils';
 
 import { TabParamList } from './AppTabs';
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 type TabBarIconsProps = {
   focused: boolean;

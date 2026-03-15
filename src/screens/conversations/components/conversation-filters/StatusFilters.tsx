@@ -7,12 +7,11 @@ import { TickIcon } from '@/svg-icons/common/TickIcon';
 import { useRefsContext } from '@infrastructure/context';
 import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
 import { tailwind } from '@infrastructure/theme';
-import { StatusCollection } from '@domain/types';
+import { StatusCollection, StatusOptions } from '@domain/types';
 import { getStatusTypeIcon, useHaptic } from '@infrastructure/utils';
 import { BottomSheetHeader, Icon } from '@infrastructure/ui';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import i18n from '@infrastructure/i18n';
-import { StatusOptions } from '@domain/types';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 

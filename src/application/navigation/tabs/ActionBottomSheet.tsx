@@ -3,7 +3,8 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { spring } from '@infrastructure/animation';
 import { tailwind } from '@infrastructure/theme';
 import { BottomSheetBackdrop } from '@infrastructure/ui';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { useBottomSheetInset } from '@infrastructure/utils';
 import {
   resetActionState,
@@ -11,6 +12,7 @@ import {
 } from '@application/store/conversation/conversationActionSlice';
 
 import { useRefsContext } from '@infrastructure/context';
+// eslint-disable-next-line no-restricted-imports -- Navigation uses shared conversation action components
 import {
   UpdateAssignee,
   UpdateStatus,

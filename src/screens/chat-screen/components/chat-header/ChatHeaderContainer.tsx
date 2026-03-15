@@ -3,7 +3,7 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { selectInboxById, selectHasMultipleInboxes } from '@application/store/inbox/inboxSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
@@ -64,7 +64,7 @@ export const ChatHeaderContainer = (props: ChatScreenHeaderProps) => {
           only_during_business_hours: appliedSla.slaOnlyDuringBusinessHours,
           created_at: appliedSla.createdAt,
         },
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         chat: {
           first_reply_created_at: conversation?.firstReplyCreatedAt,

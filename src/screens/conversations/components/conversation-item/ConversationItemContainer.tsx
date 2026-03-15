@@ -4,7 +4,7 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import Animated, { SharedValue } from 'react-native-reanimated';
 
 import { useRefsContext } from '@infrastructure/context';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { Conversation } from '@domain/types';
 import {
   toggleSelection,
@@ -30,9 +30,8 @@ import { isContactTyping, getLastMessage, getTypingUsersText } from '@infrastruc
 import { Icon, Swipeable } from '@infrastructure/ui/common';
 
 import { ConversationItem } from './ConversationItem';
-import { MarkAsUnRead, StatusIcon } from '@/svg-icons';
+import { MarkAsUnRead, StatusIcon, MarkAsRead } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
-import { MarkAsRead } from '@/svg-icons';
 import i18n from '@infrastructure/i18n';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';

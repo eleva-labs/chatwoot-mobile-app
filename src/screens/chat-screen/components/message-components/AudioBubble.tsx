@@ -17,7 +17,7 @@ import { Spinner } from '@infrastructure/ui/spinner';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
 import { MESSAGE_VARIANTS } from '@domain/constants';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { convertOggToWav } from '@infrastructure/utils';
 
 // eslint-disable-next-line react/display-name

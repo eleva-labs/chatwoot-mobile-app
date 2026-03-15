@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import { useAppSelector, useAppDispatch } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@application/store/hooks';
 import { useStore } from 'react-redux';
 import { selectRealtimeConfig } from './realtimeSelectors';
 import { ActionCableService } from './realtimeService';

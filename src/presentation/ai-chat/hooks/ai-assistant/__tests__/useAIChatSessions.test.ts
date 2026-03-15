@@ -25,7 +25,7 @@ const mockDispatch = jest.fn();
 const mockUseAppDispatch = jest.fn(() => mockDispatch);
 const mockUseAppSelector = jest.fn();
 
-jest.mock('@/hooks', () => ({
+jest.mock('@application/store/hooks', () => ({
   useAppDispatch: (...args: unknown[]) => mockUseAppDispatch(...(args as [])),
   useAppSelector: (...args: unknown[]) => mockUseAppSelector(...(args as [])),
 }));

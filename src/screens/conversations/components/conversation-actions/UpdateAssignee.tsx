@@ -11,7 +11,7 @@ import { Avatar, Icon, SearchBar } from '@infrastructure/ui';
 import { SelfAssign, Unassigned } from '@/svg-icons';
 
 import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import {
   selectAssignableAgentsByInboxId,
   isAssignableAgentFetching,

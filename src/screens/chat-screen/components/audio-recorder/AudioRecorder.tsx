@@ -18,7 +18,7 @@ import { SendIcon } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { Icon } from '@infrastructure/ui';
 import { PauseIcon, PlayIcon } from '../message-components';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import {
   addNewCachePath,
   selectLocalRecordedAudioCacheFilePaths,

@@ -18,7 +18,8 @@ import {
   isAnInstagramChannel,
   getTypingUsersText,
 } from '@infrastructure/utils';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { MESSAGE_MAX_LENGTH, REPLY_EDITOR_MODES } from '@domain/constants';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import {

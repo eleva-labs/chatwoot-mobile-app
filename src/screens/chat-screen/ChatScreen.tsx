@@ -15,7 +15,8 @@ import {
   selectConversationFetching,
   selectConversationError,
 } from '@application/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useScreenAnalytics, useThemedStyles } from '@infrastructure/hooks';
 
 import { notificationActions } from '@application/store/notification/notificationAction';
 import { MarkAsReadPayload } from '@application/store/notification/notificationTypes';

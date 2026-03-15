@@ -10,10 +10,12 @@ import { Agent } from '@domain/types';
 import { Avatar, SearchBar } from '@infrastructure/ui';
 
 import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import {
+  selectAssignableParticipantsByInboxId,
+  isAssignableAgentFetching,
+} from '@application/store/assignable-agent/assignableAgentSelectors';
 import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
-import { isAssignableAgentFetching } from '@application/store/assignable-agent/assignableAgentSelectors';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';

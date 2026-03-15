@@ -5,12 +5,11 @@ import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
-import { SortTypes } from '@domain/types';
+import { SortTypes, SortOptions } from '@domain/types';
 import { useHaptic } from '@infrastructure/utils';
 import { BottomSheetHeader } from '@infrastructure/ui';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import i18n from '@infrastructure/i18n';
-import { SortOptions } from '@domain/types';
 import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';

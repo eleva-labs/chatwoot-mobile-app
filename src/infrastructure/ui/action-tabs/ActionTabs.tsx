@@ -9,7 +9,7 @@ import { useThemedStyles } from '@infrastructure/hooks';
 import { useBoxShadow, useThemeColors } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, useChromeMetrics } from '@infrastructure/utils';
 import { Icon } from '../common';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
 import { selectSelectedIds } from '@application/store/conversation/conversationSelectedSlice';
 

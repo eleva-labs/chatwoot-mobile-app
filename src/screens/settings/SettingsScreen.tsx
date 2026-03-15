@@ -18,7 +18,8 @@ import { clearAllContacts } from '@application/store/contact/contactSlice';
 
 import i18n from '@infrastructure/i18n';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { useThemedStyles, useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles, useScreenAnalytics } from '@infrastructure/hooks';
 
 import {
   BottomSheetBackdrop,

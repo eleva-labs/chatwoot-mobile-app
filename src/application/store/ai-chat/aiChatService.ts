@@ -12,7 +12,7 @@
  * transport in useAIChat, which uses expoFetch directly (not apiService).
  */
 
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import { getStore } from '@application/store/storeAccessor';
 import type {
   AIChatBotsResponse,

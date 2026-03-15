@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import type { IOnboardingRepository } from '../../domain/repositories/IOnboardingRepository';
 import { Locale } from '../../domain/entities/Locale';
 import { OnboardingFlow } from '../../domain/entities/OnboardingFlow';

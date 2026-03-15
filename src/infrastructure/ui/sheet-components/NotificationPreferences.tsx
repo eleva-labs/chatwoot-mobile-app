@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Switch, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 
 import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import i18n from '@infrastructure/i18n';
 import { selectNotificationSettings } from '@application/store/settings/settingsSelectors';
 import { settingsActions } from '@application/store/settings/settingsActions';

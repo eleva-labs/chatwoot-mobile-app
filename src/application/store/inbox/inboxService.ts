@@ -1,4 +1,4 @@
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import type { InboxResponse } from './inboxTypes';
 import { transformInbox } from '@infrastructure/utils/camelCaseKeys';
 

@@ -20,7 +20,7 @@ import { MenuOption, MessageMenu } from '../message-menu';
 import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 
 export const PlayIcon = ({ fill, fillOpacity }: IconProps) => {
   return (

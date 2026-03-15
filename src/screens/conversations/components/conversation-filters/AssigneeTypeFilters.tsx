@@ -5,13 +5,12 @@ import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
-import { AssigneeTypes } from '@domain/types';
+import { AssigneeTypes, AssigneeOptions } from '@domain/types';
 import { useHaptic } from '@infrastructure/utils';
 import { BottomSheetHeader } from '@infrastructure/ui';
 import { selectFilters, setFilters } from '@application/store/conversation/conversationFilterSlice';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import i18n from '@infrastructure/i18n';
-import { AssigneeOptions } from '@domain/types';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@application/store/auth/authSelectors';
 import { getUserPermissions } from '@infrastructure/utils/permissionUtils';

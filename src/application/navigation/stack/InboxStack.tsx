@@ -1,6 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import InboxScreen from '@/screens/inbox/InboxScreen';
 
 export type InboxStackParamList = {

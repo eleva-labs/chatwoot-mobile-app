@@ -7,7 +7,7 @@ import { Button, VerificationCode } from '@infrastructure/ui';
 import { useAnimatedShake } from '@infrastructure/ui/verification-code/hooks/use-animated-shake';
 import type { StatusType } from '@infrastructure/ui/verification-code';
 import { tailwind } from '@infrastructure/theme';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { resetSettings } from '@application/store/settings/settingsSlice';
 import { authActions } from '@application/store/auth/authActions';
 import { resetAuth, clearAuthError } from '@application/store/auth/authSlice';

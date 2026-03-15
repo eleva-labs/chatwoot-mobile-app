@@ -9,15 +9,14 @@ import { tailwind } from '@infrastructure/theme';
 import { Team } from '@domain/types';
 import { Avatar, SearchBar } from '@infrastructure/ui';
 
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
-import { selectLoading } from '@application/store/team/teamSelectors';
+import { selectLoading, filterTeams } from '@application/store/team/teamSelectors';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
-import { filterTeams } from '@application/store/team/teamSelectors';
 
 type TeamCellProps = {
   value: Team;

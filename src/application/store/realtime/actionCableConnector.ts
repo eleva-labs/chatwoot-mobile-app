@@ -14,7 +14,7 @@ import {
   setTypingUsers,
   removeTypingUser,
 } from '@application/store/conversation/conversationTypingSlice';
-import BaseActionCableConnector from './baseActionCableConnector';
+import BaseActionCableConnector from '@infrastructure/utils/baseActionCableConnector';
 import type { AppDispatch, RootState } from '@application/store';
 import type { RealtimeConfig } from '@application/store/realtime/realtimeTypes';
 import { Contact, Conversation, Message, PresenceUpdateData, TypingData } from '@domain/types';
@@ -25,10 +25,12 @@ import {
   transformContact,
   transformNotificationCreatedResponse,
   transformNotificationRemovedResponse,
-} from './camelCaseKeys';
-import { addNotification } from '@application/store/notification/notificationSlice';
+} from '@infrastructure/utils/camelCaseKeys';
+import {
+  addNotification,
+  removeNotification,
+} from '@application/store/notification/notificationSlice';
 import { setCurrentUserAvailability } from '@application/store/auth/authSlice';
-import { removeNotification } from '@application/store/notification/notificationSlice';
 import {
   NotificationCreatedResponse,
   NotificationRemovedResponse,

@@ -10,7 +10,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch } from '@application/store/hooks';
 import { updateAttachments } from '@application/store/conversation/sendMessageSlice';
 import { useRefsContext } from '@infrastructure/context';
 import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';

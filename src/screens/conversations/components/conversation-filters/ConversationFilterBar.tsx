@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { selectAllInboxes } from '@application/store/inbox/inboxSelectors';
 import {
   BottomSheetType,

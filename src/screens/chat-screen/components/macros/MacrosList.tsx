@@ -8,7 +8,7 @@ import i18n from '@infrastructure/i18n';
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { Macro } from '@domain/types';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { selectAllMacros } from '@application/store/macro/macroSelectors';
 
 import MacroStack from './MacroStack';

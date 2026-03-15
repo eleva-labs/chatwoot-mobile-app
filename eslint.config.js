@@ -81,10 +81,9 @@ module.exports = defineConfig([
     },
   },
 
-  // Exception for pre-existing IconProps technical debt
-  // IconProps in domain/types/index.ts imports react-native-svg (used by 43 icon files)
-  // This violates domain layer purity but requires refactoring 43 files to fix
-  // TODO: Move IconProps to @infrastructure/types/IconProps.ts in future cycle
+  // Exception: domain/types/index.ts re-exports UI types from infrastructure for backward compat.
+  // These re-exports will be removed once all consumers import directly from @infrastructure/types/ui-types.
+  // TODO: Remove this exemption when backward-compat re-exports are cleaned up.
   {
     files: ['src/domain/types/index.ts'],
     rules: {
@@ -101,7 +100,7 @@ module.exports = defineConfig([
         {
           patterns: [
             {
-              group: ['@screens/*', '@presentation/*'],
+              group: ['@screens/*', '@presentation/*', '@/screens/*', '@/presentation/*'],
               message: 'Infrastructure layer cannot import from screens or presentation layers.',
             },
             // NOTE: infrastructure CAN import from @application/* (for repositories, adapters)
@@ -120,8 +119,26 @@ module.exports = defineConfig([
         {
           patterns: [
             {
-              group: ['@screens/*', '@presentation/*'],
+              group: ['@screens/*', '@presentation/*', '@/screens/*', '@/presentation/*'],
               message: 'Application layer cannot import from screens or presentation layers.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // Dependency injection: Composition root (can import infrastructure, domain, application)
+  {
+    files: ['src/dependency-injection/**/*'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@screens/*', '@presentation/*', '@/screens/*', '@/presentation/*'],
+              message: 'Dependency injection cannot import from screens or presentation layers.',
             },
           ],
         },

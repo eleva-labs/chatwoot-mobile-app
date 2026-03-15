@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Macro } from '@domain/types';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch } from '@application/store/hooks';
 import { macroActions } from '@application/store/macro/macroActions';
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';

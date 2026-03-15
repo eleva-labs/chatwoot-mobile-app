@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 
 import { useRefsContext } from '@infrastructure/context';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { selectSelectedIds } from '@application/store/conversation/conversationSelectedSlice';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { LABEL_EVENTS } from '@domain/constants/analyticsEvents';
 
-import { LabelPicker } from './LabelPicker';
+import { LabelPicker } from '@infrastructure/ui/label-picker';
 
 export const UpdateLabels = () => {
   const { actionsModalSheetRef } = useRefsContext();

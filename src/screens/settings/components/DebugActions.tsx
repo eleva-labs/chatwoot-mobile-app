@@ -3,9 +3,9 @@ import { Pressable, Text, Animated, View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { showToast } from '@infrastructure/utils/toastUtils';
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { useHaptic } from '@infrastructure/utils';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import {
   selectChatwootVersion,
   selectInstallationUrl,

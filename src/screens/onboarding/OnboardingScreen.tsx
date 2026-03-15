@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import { OnboardingModule } from '@/modules/onboarding';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { selectLocale, selectIsLocaleSet } from '@application/store/settings/settingsSelectors';
 import { setOnboardingCompleted } from '@application/store/settings/settingsSlice';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { TabBarExcludedScreenParamList } from '@application/navigation/tabs/AppTabs';
 import { AppDispatch } from '@application/store';
-import { useOnboardingAnalytics } from '@/hooks';
+import { useOnboardingAnalytics } from '@infrastructure/hooks';
 import { getLocaleFromDevice } from '@infrastructure/utils/localeUtils';
 
 type OnboardingScreenNavigationProp = NativeStackNavigationProp<TabBarExcludedScreenParamList>;

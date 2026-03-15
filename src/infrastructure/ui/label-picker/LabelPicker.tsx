@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 
 import { BottomSheetHeader, SearchBar } from '@infrastructure/ui';
 import { LabelStack } from '@infrastructure/ui/label-section';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { filterLabels } from '@application/store/label/labelSelectors';
 import i18n from '@infrastructure/i18n';
 

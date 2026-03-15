@@ -9,7 +9,7 @@ import { ReplyMessageBubble } from './ReplyMessageBubble';
 
 import { ImageBubbleContainer } from './ImageBubble';
 
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { useChatWindowContext } from '@infrastructure/context';
 import { getMessagesByConversationId } from '@application/store/conversation/conversationSelectors';
 import { ATTACHMENT_TYPES, MESSAGE_STATUS } from '@domain/constants';

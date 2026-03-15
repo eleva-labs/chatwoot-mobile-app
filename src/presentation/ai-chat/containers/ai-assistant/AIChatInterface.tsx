@@ -18,7 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import type { UIMessage } from 'ai';
 import { tailwind } from '@infrastructure/theme';
-import { useAppSelector, useAppDispatch } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@application/store/hooks';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { chatwootChatConfig } from '@application/adapters/ai-chat/chatwootChatConfig';
 import { createChatwootSessionsAdapter } from '@application/adapters/ai-chat/chatwootSessionsAdapter';
