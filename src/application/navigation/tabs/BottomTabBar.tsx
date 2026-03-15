@@ -1,7 +1,6 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { Platform, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { BlurView, BlurViewProps } from 'expo-blur';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 
@@ -13,14 +12,11 @@ import {
   SettingsIconFilled,
   SettingsIconOutline,
 } from '@/svg-icons';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { tailwind, useBoxShadow, useThemeColors } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation, useChromeMetrics } from '@infrastructure/utils';
 
 import { TabParamList } from './AppTabs';
 import { useThemedStyles } from '@/hooks';
-import { useTheme } from '@infrastructure/context';
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 type TabBarIconsProps = {
   focused: boolean;
@@ -54,20 +50,6 @@ const TabBarIcons = ({ focused, route }: TabBarIconsProps) => {
         <SettingsIconOutline color={iconColor} size={32} />
       );
   }
-};
-
-type TabBarBackgroundProps = BlurViewProps & PropsWithChildren;
-
-const TabBarBackground = (props: TabBarBackgroundProps) => {
-  const { children, style, intensity, tint } = props;
-
-  return Platform.OS === 'ios' ? (
-    <AnimatedBlurView {...{ intensity, tint }} style={style}>
-      {children}
-    </AnimatedBlurView>
-  ) : (
-    <Animated.View style={style}>{children}</Animated.View>
-  );
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,8 +90,8 @@ const TabItem = (props: any) => {
 export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const hapticSelection = useHaptic();
   const { tabBarHeight, footerBottomInset, bottomPadding } = useChromeMetrics();
-  const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
+  const cardShadow = useBoxShadow('card');
 
   // Memoize press handlers using useCallback
   const createPressHandler = React.useCallback(
@@ -144,21 +126,24 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
   );
 
   return (
-    <TabBarBackground
-      intensity={25}
-      tint={isDark ? 'dark' : 'light'}
+    <Animated.View
       style={Platform.select({
         ios: [
           themedTailwind.style(
             'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] bg-solid-1',
           ),
-          { height: tabBarHeight, paddingBottom: bottomPadding },
+          { height: tabBarHeight, paddingBottom: bottomPadding, boxShadow: cardShadow },
         ],
         android: [
           themedTailwind.style(
-            'flex flex-row absolute w-full pl-[72px] pr-[71px] pt-[12px] pb-[12px] bg-solid-1',
+            'flex flex-row absolute w-full pl-[72px] pr-[71px] pt-[12px] bg-solid-1',
           ),
-          { height: tabBarHeight, bottom: footerBottomInset },
+          {
+            height: tabBarHeight,
+            bottom: footerBottomInset,
+            paddingBottom: bottomPadding,
+            boxShadow: cardShadow,
+          },
         ],
       })}>
       <Animated.View style={themedTailwind.style('absolute inset-0 h-[1px] bg-slate-6')} />
@@ -177,6 +162,6 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
           />
         );
       })}
-    </TabBarBackground>
+    </Animated.View>
   );
 };
