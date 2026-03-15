@@ -12,6 +12,7 @@ import { useScaleAnimation, useHaptic } from '@infrastructure/utils';
 import { Sparkles } from 'lucide-react-native';
 import { AIChatInterface } from './AIChatInterface';
 import type { FloatingAIAssistantProps } from './types';
+import { useBoxShadow } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 
@@ -31,6 +32,7 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
     const { handlers, animatedStyle: scaleStyle } = useScaleAnimation();
     const { style, tokens } = useAIStyles();
     const { t } = useAIi18n();
+    const fabShadow = useBoxShadow('fab');
 
     // Animation values using Reanimated (useSharedValue for performance)
     const opacity = useSharedValue(0);
@@ -102,7 +104,8 @@ export const FloatingAIAssistant: React.FC<FloatingAIAssistantProps> = React.mem
             onPress={handlePress}
             style={({ pressed }) => [
               styles.fab,
-              style('rounded-full', tokens.fab.background, tokens.fab.shadow),
+              style('rounded-full', tokens.fab.background),
+              { boxShadow: fabShadow },
               pressed && style('opacity-80'),
             ]}
             accessible

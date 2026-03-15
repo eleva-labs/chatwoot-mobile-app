@@ -21,5 +21,8 @@ export { useTheme as useThemeContext } from './components/ThemeProvider';
 
 export { createUnifiedTheme, createDefaultTheme } from './components/createTheme';
 
+// Shadow tokens
+export { BOX_SHADOWS, type BoxShadowTier, useBoxShadow } from './shadows';
+
 // Text styles
 export * from './text-styles';

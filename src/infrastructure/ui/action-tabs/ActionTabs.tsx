@@ -1,20 +1,16 @@
 import React from 'react';
-import { Dimensions, Platform, Pressable } from 'react-native';
+import { Dimensions, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 
-import { useRefsContext, useTheme } from '@infrastructure/context';
+import { ACTION_TAB_HEIGHT } from '@domain/constants/chrome';
+import { useRefsContext } from '@infrastructure/context';
 import { useThemedStyles } from '@infrastructure/hooks';
-import { useThemeColors } from '@infrastructure/theme';
-import { useHaptic, useScaleAnimation, useTabBarHeight } from '@infrastructure/utils';
+import { useBoxShadow, useThemeColors } from '@infrastructure/theme';
+import { useHaptic, useScaleAnimation, useChromeMetrics } from '@infrastructure/utils';
 import { Icon } from '../common';
 import { useAppDispatch } from '@/hooks';
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
-
-const ACTION_TAB_HEIGHT = 58;
-const ACTION_TABS_GAP = 8;
-const ANDROID_FOOTER_BOTTOM_INSET = 16;
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 
@@ -87,28 +83,13 @@ const ActionItem = (props: ActionItemProps) => {
   );
 };
 
-// Theme-aware boxShadow values for the floating action pill.
-// Light: subtle dark shadow for depth against light backgrounds.
-// Dark: stronger shadow + faint light glow for edge definition against dark backgrounds.
-const PILL_BOX_SHADOW_LIGHT = '0px 1px 4px rgba(0, 0, 0, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.08)';
-const PILL_BOX_SHADOW_DARK =
-  '0px 1px 4px rgba(0, 0, 0, 0.6), 0px 0px 1px rgba(255, 255, 255, 0.08)';
-
 export const ActionTabs = () => {
-  const { bottom } = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const { colors } = useThemeColors();
-  const { isDark } = useTheme();
+  const pillShadow = useBoxShadow('pill');
   const themedTailwind = useThemedStyles();
-  const tabBarHeight = useTabBarHeight();
+  const { actionTabsBottomOffset } = useChromeMetrics();
   const actionTabsLeft = (SCREEN_WIDTH - 220) / 2;
-
-  const footerTopFromBottom =
-    Platform.select({
-      ios: tabBarHeight,
-      android: tabBarHeight + Math.max(bottom, ANDROID_FOOTER_BOTTOM_INSET),
-    }) ?? tabBarHeight;
-  const actionTabsBottom = footerTopFromBottom + ACTION_TABS_GAP;
 
   const { actionsModalSheetRef } = useRefsContext();
 
@@ -153,9 +134,9 @@ export const ActionTabs = () => {
         ),
         {
           height: ACTION_TAB_HEIGHT,
-          bottom: actionTabsBottom,
+          bottom: actionTabsBottomOffset,
           left: actionTabsLeft,
-          boxShadow: isDark ? PILL_BOX_SHADOW_DARK : PILL_BOX_SHADOW_LIGHT,
+          boxShadow: pillShadow,
         },
       ]}>
       {bulkSelectActions.map(actionItem => {

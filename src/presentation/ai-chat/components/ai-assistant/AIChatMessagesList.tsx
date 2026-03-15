@@ -12,7 +12,7 @@ import { FlashList } from '@shopify/flash-list';
 import Animated from 'react-native-reanimated';
 import type { UIMessage } from 'ai';
 import { ChevronDown, ChevronUp } from 'lucide-react-native';
-import { useThemeColors } from '@infrastructure/theme';
+import { useBoxShadow, useThemeColors } from '@infrastructure/theme';
 import { AIMessageBubble } from './AIMessageBubble';
 import { AIChatError } from './AIChatError';
 import { AIChatEmptyState } from './AIChatEmptyState';
@@ -84,6 +84,7 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
     const { style, tokens } = useAIStyles();
     const { t } = useAIi18n();
     const { colors } = useThemeColors();
+    const fabShadow = useBoxShadow('fab');
 
     // Memoize render item
     const renderItem = useCallback(
@@ -184,18 +185,24 @@ export const AIChatMessagesList: React.FC<AIChatMessagesListProps> = React.memo(
         {!isAtBottom && (
           <Pressable
             onPress={onScrollToBottom}
-            style={style(
-              'absolute bottom-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6 shadow-md',
-            )}>
+            style={[
+              style(
+                'absolute bottom-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6',
+              ),
+              { boxShadow: fabShadow },
+            ]}>
             <ChevronDown size={16} color={colors.slate[11]} strokeWidth={2} />
           </Pressable>
         )}
         {!isAtTop && (
           <Pressable
             onPress={onScrollToTop}
-            style={style(
-              'absolute top-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6 shadow-md',
-            )}>
+            style={[
+              style(
+                'absolute top-2 right-2 w-9 h-9 rounded-full bg-slate-3 items-center justify-center border border-slate-6',
+              ),
+              { boxShadow: fabShadow },
+            ]}>
             <ChevronUp size={16} color={colors.slate[11]} strokeWidth={2} />
           </Pressable>
         )}

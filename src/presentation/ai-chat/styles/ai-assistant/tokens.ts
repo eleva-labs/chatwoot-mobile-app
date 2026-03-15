@@ -121,8 +121,6 @@ export interface AIFabTokens {
   background: string;
   /** FAB icon color */
   icon: string;
-  /** FAB shadow */
-  shadow: string;
 }
 
 /** Session list tokens */
@@ -226,7 +224,6 @@ export const aiInputTokens: AIInputTokens = {
 export const aiFabTokens: AIFabTokens = {
   background: 'bg-brand',
   icon: 'text-white',
-  shadow: 'shadow-lg',
 };
 
 /**

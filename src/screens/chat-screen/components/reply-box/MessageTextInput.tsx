@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, type ReactNode } from 'react';
-import { Platform, StyleSheet, ScrollView } from 'react-native';
+import { Platform, ScrollView } from 'react-native';
 import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
 
 import { softLayout } from '@infrastructure/animation';
 import { useChatWindowContext } from '@infrastructure/context';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useBoxShadow } from '@infrastructure/theme';
 import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
 
 import { MentionInput, MentionSuggestionsProps, Suggestion } from './mentions-input';
@@ -39,6 +39,7 @@ export const MessageTextInput = ({
   const themedTailwind = useThemedStyles();
   const dispatch = useAppDispatch();
   const messageContent = useAppSelector(selectMessageContent);
+  const cardShadow = useBoxShadow('card');
 
   const { setAddMenuOptionSheetState, textInputRef, setIsTextInputFocused, conversationId } =
     useChatWindowContext();
@@ -138,10 +139,7 @@ export const MessageTextInput = ({
               'bg-solid-1 border-t border-slate-6 rounded-[13px] mx-4 px-2 w-full max-h-[250px]',
               Platform.OS === 'ios' ? 'absolute bottom-full' : 'relative h-[150px]',
             ),
-            styles.listShadow,
-            Platform.OS === 'android' && {
-              backgroundColor: tailwind.color('bg-solid-1') ?? 'white',
-            },
+            { boxShadow: cardShadow },
           ]}>
           <ScrollView keyboardShouldPersistTaps="always">
             {filteredSuggestions.map(agent => {
@@ -213,19 +211,3 @@ export const MessageTextInput = ({
     </LayoutAnimationConfig>
   );
 };
-
-const styles = StyleSheet.create({
-  listShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)', // Intentional: shadow alpha, universal across themes
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});

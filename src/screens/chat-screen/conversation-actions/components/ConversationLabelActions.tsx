@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { Platform, Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
 import { LabelTag } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useBoxShadow } from '@infrastructure/theme';
 import { Label } from '@domain/types';
 import { BottomSheetBackdrop, Icon, SearchBar } from '@infrastructure/ui';
 import i18n from '@infrastructure/i18n';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@/hooks';
 import { filterLabels } from '@application/store/label/labelSelectors';
-import { useAppDispatch } from '@/hooks';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import { LabelCell, LabelItemRemovable } from '@infrastructure/ui/label-section';
@@ -53,6 +52,7 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const { conversationId } = useChatWindowContext();
   const dispatch = useAppDispatch();
+  const cardShadow = useBoxShadow('card');
 
   const [selectedLabels, setSelectedLabels] = useState(labels);
 
@@ -133,14 +133,11 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
         <Pressable
           onPress={handleAddLabelPress}
           style={({ pressed }) => [
-            styles.labelShadow,
             tailwind.style(
               'flex flex-row items-center bg-solid-1 px-3 py-[7px] rounded-lg mr-2 mt-3',
               pressed ? 'bg-iris-3' : '',
             ),
-            Platform.OS === 'android' && {
-              backgroundColor: tailwind.color('bg-solid-1') ?? 'white',
-            },
+            { boxShadow: cardShadow },
           ]}>
           <Icon icon={<LabelTag />} size={16} />
           <Animated.Text
@@ -185,19 +182,3 @@ export const ConversationLabelActions = (props: LabelSectionProps) => {
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  labelShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});

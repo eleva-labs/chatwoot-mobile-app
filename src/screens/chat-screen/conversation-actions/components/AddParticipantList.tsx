@@ -1,10 +1,10 @@
 import React from 'react';
-import { Platform, Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Overflow } from '@/svg-icons/common/Overflow';
 
 import { AddParticipant } from '@/svg-icons';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { tailwind, useBoxShadow, useThemeColors } from '@infrastructure/theme';
 import { Avatar, Icon } from '@infrastructure/ui';
 import { Agent } from '@domain/types';
 import i18n from '@infrastructure/i18n';
@@ -69,6 +69,7 @@ type AddParticipantListProps = {
 
 export const AddParticipantList = (props: AddParticipantListProps) => {
   const { conversationParticipants, onAddParticipant } = props;
+  const cardShadow = useBoxShadow('card');
 
   const overflowCount = conversationParticipants?.length;
   return (
@@ -82,11 +83,7 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
         </Animated.Text>
       </Animated.View>
       <Animated.View
-        style={[
-          tailwind.style('rounded-[13px] mx-4 bg-solid-1'),
-          styles.listShadow,
-          Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
-        ]}>
+        style={[tailwind.style('rounded-[13px] mx-4 bg-solid-1'), { boxShadow: cardShadow }]}>
         {conversationParticipants &&
           conversationParticipants.slice(0, 4).map((listItem, index) => {
             return <ListItem key={index} {...{ listItem, index }} />;
@@ -113,19 +110,3 @@ export const AddParticipantList = (props: AddParticipantListProps) => {
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  listShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});
