@@ -191,9 +191,9 @@ const BottomSheetContent = () => {
 
   const animatedInputWrapperStyle = useAnimatedStyle(
     () => ({
-      marginBottom: effectiveBottom,
+      marginBottom: isTextInputFocused ? 0 : effectiveBottom,
     }),
-    [effectiveBottom],
+    [isTextInputFocused, effectiveBottom],
   );
 
   const handleShowAddMenuOption = () => {

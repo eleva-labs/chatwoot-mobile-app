@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import PagerView, { PagerViewOnPageSelectedEvent } from 'react-native-pager-view';
 import Animated from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { Platform, ActivityIndicator, Pressable } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { ChatHeaderContainer, ReplyBoxContainer, MessagesListContainer } from './components';
@@ -27,7 +28,6 @@ import { conversationActions } from '@application/store/conversation/conversatio
 import { SCREENS } from '@domain/constants';
 import { ErrorIcon } from '@/svg-icons';
 import { Button } from '@infrastructure/ui';
-import { ActivityIndicator, Pressable } from 'react-native';
 import i18n from '@infrastructure/i18n';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { StackActions, useNavigation } from '@react-navigation/native';
@@ -36,9 +36,12 @@ import { macroActions } from '@application/store/macro/macroActions';
 import { LightBoxProvider } from '@alantoa/lightbox';
 
 export const ChatWindow = (props: ChatScreenProps) => {
-  // translate-with-padding: translates content + adds padding to shrink flex layout (ideal for chat)
+  const insets = useSafeAreaInsets();
   return (
-    <KeyboardAvoidingView style={tailwind.style('flex-1')} behavior="translate-with-padding">
+    <KeyboardAvoidingView
+      style={tailwind.style('flex-1')}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={insets.top}>
       <MessagesListContainer />
       <ReplyBoxContainer />
       <MacrosList conversationId={props.route.params.conversationId} />
