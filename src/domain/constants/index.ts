@@ -10,6 +10,10 @@ export const SCREENS = {
   INBOX: 'InboxScreen',
 };
 
+export * from './chrome';
+
+/** @deprecated Was 51 + 32 = 83, but the true rendered iOS height is 51 + 34 = 85.
+ *  Use `useChromeMetrics().tabBarHeight` from `@infrastructure/utils` instead. */
 export const TAB_BAR_HEIGHT = 83;
 export const TEXT_INPUT_CONTAINER_HEIGHT = 57;
 

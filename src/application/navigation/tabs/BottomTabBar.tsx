@@ -4,7 +4,6 @@ import Animated from 'react-native-reanimated';
 import { BlurView, BlurViewProps } from 'expo-blur';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   ConversationIconFilled,
@@ -15,15 +14,13 @@ import {
   SettingsIconOutline,
 } from '@/svg-icons';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { useHaptic, useScaleAnimation, useTabBarHeight } from '@infrastructure/utils';
+import { useHaptic, useScaleAnimation, useChromeMetrics } from '@infrastructure/utils';
 
 import { TabParamList } from './AppTabs';
 import { useThemedStyles } from '@/hooks';
 import { useTheme } from '@infrastructure/context';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-const IOS_TAB_BAR_BOTTOM_PADDING = 34;
-const ANDROID_TAB_BAR_BOTTOM_INSET = 8;
 
 type TabBarIconsProps = {
   focused: boolean;
@@ -110,12 +107,9 @@ const TabItem = (props: any) => {
 
 export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const hapticSelection = useHaptic();
-  const tabBarHeight = useTabBarHeight();
+  const { tabBarHeight, footerBottomInset, bottomPadding } = useChromeMetrics();
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
-  const { bottom } = useSafeAreaInsets();
-  const iosBottomPadding = Math.max(bottom, IOS_TAB_BAR_BOTTOM_PADDING);
-  const androidBottomInset = Math.max(bottom, ANDROID_TAB_BAR_BOTTOM_INSET);
 
   // Memoize press handlers using useCallback
   const createPressHandler = React.useCallback(
@@ -158,13 +152,13 @@ export const BottomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
           themedTailwind.style(
             'flex flex-row absolute w-full bottom-0 pl-[72px] pr-[71px] pt-[12px] bg-solid-1',
           ),
-          { height: tabBarHeight, paddingBottom: iosBottomPadding },
+          { height: tabBarHeight, paddingBottom: bottomPadding },
         ],
         android: [
           themedTailwind.style(
             'flex flex-row absolute w-full pl-[72px] pr-[71px] pt-[12px] pb-[12px] bg-solid-1',
           ),
-          { height: tabBarHeight, bottom: androidBottomInset },
+          { height: tabBarHeight, bottom: footerBottomInset },
         ],
       })}>
       <Animated.View style={themedTailwind.style('absolute inset-0 h-[1px] bg-slate-6')} />
