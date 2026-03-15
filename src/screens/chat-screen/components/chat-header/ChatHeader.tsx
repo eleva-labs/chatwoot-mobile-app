@@ -9,7 +9,7 @@ import { Avatar, Icon, BottomSheetWrapper } from '@infrastructure/ui';
 import { InboxIndicator } from '@infrastructure/ui/list-components';
 import { Inbox } from '@domain/types/Inbox';
 import { ConversationAdditionalAttributes } from '@domain/types/Conversation';
-import { /* OpenIcon, ResolvedIcon, */ SLAIcon } from '@/svg-icons';
+import { SLAIcon } from '@/svg-icons';
 import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
@@ -113,18 +113,6 @@ export const ChatHeader = ({
               </Pressable>
             )}
             <AIHeaderButton isEnabled={isAIEnabled} onPress={onToggleAI} />
-            {/* Status icon temporarily hidden - was causing user confusion
-            <Icon
-              icon={
-                isResolved ? (
-                  <ResolvedIcon strokeWidth={2} stroke={colors.teal[9]} />
-                ) : (
-                  <OpenIcon strokeWidth={2} stroke={colors.slate[12]} />
-                )
-              }
-              size={24}
-            />
-            */}
           </Animated.View>
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>

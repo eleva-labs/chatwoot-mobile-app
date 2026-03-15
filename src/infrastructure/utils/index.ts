@@ -3,7 +3,6 @@ export * from './statusTypeIcon';
 export * from './styleAdapter';
 export * from './useHaptic';
 export * from './useScaleAnimation';
-export * from './common';
 export * from './withAnchorPoint';
 export * from './dateTimeUtils';
 export * from './conversationUtils';

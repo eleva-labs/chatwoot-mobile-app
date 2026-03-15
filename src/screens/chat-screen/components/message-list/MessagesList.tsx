@@ -8,7 +8,6 @@ import { tailwind } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { Message } from '@domain/types';
 import { MessageComponent } from '../message-item/Message';
-// import { MessageItemContainer } from '../message-item/MessageItemContainer';
 import { useRefsContext } from '@infrastructure/context';
 import { VirtualizedListScrollView } from './VirtualizedListScrollView';
 
@@ -70,8 +69,6 @@ export const MessagesList = ({
         currentUserId={currentUserId}
       />
     );
-    // TODO: Deprecate this after the new message item is ready
-    // return <MessageItemContainer item={item} index={index} />;
   };
 
   return (
@@ -82,7 +79,6 @@ export const MessagesList = ({
         renderScrollComponent={VirtualizedListScrollView}
         data={messages}
         renderItem={handleRender}
-        estimatedItemSize={80}
         onScroll={() => {
           if (!isFlashListReady) {
             setFlashListReady(true);

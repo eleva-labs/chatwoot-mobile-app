@@ -11,12 +11,7 @@ import { useThemeColors } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useAIi18n } from '@presentation/ai-chat/hooks/ai-assistant/useAIi18n';
 
-// TODO: Re-enable when prompt list is finalized (see JSX comment below)
-// const SUGGESTED_PROMPT_KEYS = [
-//   'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.SUMMARIZE',
-//   'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.DRAFT',
-//   'AI_ASSISTANT.CHAT.SUGGESTED_PROMPTS.CAPABILITIES',
-// ] as const;
+// TODO: Re-enable suggested prompt chips when prompt list is finalized
 
 interface AIChatEmptyStateProps {
   hasActiveSession?: boolean;
@@ -51,30 +46,6 @@ export const AIChatEmptyState: React.FC<AIChatEmptyStateProps> = ({
           ? t('AI_ASSISTANT.CHAT.EMPTY_STATE.DESCRIPTION_WITH_SESSION')
           : t('AI_ASSISTANT.CHAT.EMPTY_STATE.DESCRIPTION_NO_SESSION')}
       </Text>
-
-      {/* TODO: Re-enable suggestion chips when prompt list is finalized
-      {!hasActiveSession && onSendPrompt && (
-        <View style={style('mt-6 gap-2 w-full max-w-[340px]')}>
-          {SUGGESTED_PROMPT_KEYS.map(key => {
-            const prompt = t(key);
-            return (
-              <Pressable
-                key={key}
-                onPress={() => onSendPrompt(prompt)}
-                accessibilityRole="button"
-                accessibilityLabel={prompt}
-                style={({ pressed }) =>
-                  style(
-                    'px-4 py-3 rounded-xl border border-slate-6 bg-slate-2',
-                    pressed && 'bg-slate-3',
-                  )
-                }>
-                <Text style={style('text-sm text-slate-11')}>{prompt}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      )} */}
     </View>
   );
 };

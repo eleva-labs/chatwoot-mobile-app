@@ -194,18 +194,6 @@ const SettingsScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLocale]);
 
-  //  const openURL = async () => {
-  //    await WebBrowser.openBrowserAsync(HELP_URL);
-  //    };
-
-  // const openSystemSettings = () => {
-  //   if (Platform.OS === 'ios') {
-  //     Linking.openURL('app-settings:');
-  //   } else {
-  //     Linking.openSettings();
-  //   }
-  // };
-
   const onClickLogout = useCallback(async () => {
     await AsyncStorage.removeItem('cwCookie');
     await dispatch(settingsActions.removeDevice({ pushToken }));
@@ -242,7 +230,6 @@ const SettingsScreen = () => {
       subtitleType: 'light',
       disabled: !hasConversationPermission,
       onPressListItem: () => notificationPreferencesSheetRef.current?.present(),
-      // onPressListItem: openSystemSettings,
     },
     {
       hasChevron: true,
@@ -281,25 +268,6 @@ const SettingsScreen = () => {
     },
   ];
 
-  /* const supportList: GenericListType[] = [
-    {
-      hasChevron: true,
-      title: i18n.t('SETTINGS.READ_DOCS'),
-      icon: <SwitchIcon />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: openURL,
-    },
-    {
-      hasChevron: true,
-      title: i18n.t('SETTINGS.CHAT_WITH_US'),
-      icon: <ChatwootIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: () => toggleWidget(true),
-    },
-  ]; */
-
   return (
     <SafeAreaView
       edges={['top']}
@@ -337,9 +305,6 @@ const SettingsScreen = () => {
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
-        {/* <Animated.View style={tailwind.style('pt-6')}>
-          <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
-        </Animated.View> */}
         <Animated.View style={tailwind.style('pt-6 mx-4')}>
           <Button
             variant="secondary"

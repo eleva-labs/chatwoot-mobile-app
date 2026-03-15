@@ -67,10 +67,7 @@ import { AudioRecorder } from '../audio-recorder/AudioRecorder';
 import { VoiceRecordButton } from './buttons/VoiceRecordButton';
 import { useEffectiveBottom } from '../message-list';
 
-// TODO: Implement this
-// const globalConfig = {
-//   directUploadsEnabled: true,
-// };
+// TODO: Implement direct uploads (globalConfig.directUploadsEnabled)
 
 const AnimatedKeyboardStickyView = Animated.createAnimatedComponent(KeyboardStickyView);
 const BottomSheetContent = () => {
@@ -212,11 +209,8 @@ const BottomSheetContent = () => {
     }
   };
 
-  // TODO: Implement this
+  // TODO: Implement quote reply in-reply-to payload (contentAttributes.inReplyTo)
   const setReplyToInPayload = (messagePayload: SendMessagePayload): SendMessagePayload => {
-    //     ...(quoteMessage?.id && {
-    //       contentAttributes: { inReplyTo: quoteMessage.id },
-    //     }),
     return messagePayload;
   };
 
@@ -262,16 +256,7 @@ const BottomSheetContent = () => {
         conversationId,
         attachmentCount: attachedFiles.length,
       });
-      // messagePayload.files = [];
-      // TODO: Implement this
-      // attachedFiles.forEach(attachment => {
-      //   if (globalConfig.directUploadsEnabled) {
-      //     messagePayload.files.push(attachment.blobSignedId);
-      //   } else {
-      //     messagePayload.files.push(attachment.resource.file);
-      //   }
-      // });
-      // TODO: Add support for multiple files later
+      // TODO: Implement multi-file attachment upload (direct uploads vs resource.file)
       const asset = attachedFiles[0];
       if (!asset.uri) {
         console.warn('ReplyBoxContainer: Attachment missing URI, skipping file attach');
@@ -310,11 +295,6 @@ const BottomSheetContent = () => {
       (textInputRef.current as TextInput).clear();
     }
 
-    // const isOnWhatsApp =
-    //   isATwilioWhatsAppChannel(inbox) ||
-    //   isAWhatsAppCloudChannel(inbox) ||
-    //   is360DialogWhatsAppChannel(inbox?.channelType);
-
     if (isPrivate) {
       AnalyticsHelper.track(CONVERSATION_EVENTS.SENT_PRIVATE_NOTE, { conversationId });
     } else {
@@ -335,12 +315,9 @@ const BottomSheetContent = () => {
       const messagePayload = getMessagePayload(messageContent, audioFile);
       sendMessage(messagePayload);
     }
-    // TODO: Implement this once we have add the support for multiple attachments
+    // TODO: Implement WhatsApp multi-message splitting for multiple attachments
     // https://github.com/chatwoot/chatwoot/pull/6125
     // https://github.com/chatwoot/chatwoot/pull/6428
-    // if (isOnWhatsApp && !isPrivate) {
-    // sendMessageAsMultipleMessages(messageContent);
-    // }
   };
 
   const sendMessage = (messagePayload: SendMessagePayload) => {

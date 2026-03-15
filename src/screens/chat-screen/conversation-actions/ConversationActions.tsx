@@ -1,5 +1,4 @@
 import React from 'react';
-// import { useEffect } from 'react'; // Team assignment disabled — not currently in use
 import { Alert, Dimensions, Platform, Share } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -26,8 +25,6 @@ import { conversationActions } from '@application/store/conversation/conversatio
 
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
 import { selectSingleConversation } from '@application/store/conversation/conversationSelectedSlice';
-// import { teamActions } from '@application/store/team/teamActions';
-// import { selectAllTeams } from '@application/store/team/teamSelectors';
 import { selectInstallationUrl } from '@application/store/settings/settingsSelectors';
 import { ConversationMetaInformation } from './components/ConversationMetaInformation';
 import { selectConversationParticipantsByConversationId } from '@application/store/conversation-participant/conversationParticipantSelectors';
@@ -51,22 +48,12 @@ export const ConversationActions = () => {
 
   const { status, muted: isMuted, meta, priority = null } = conversation || {};
   const { assignee } = meta || {};
-  // Team assignment disabled — not currently in use
-  // const { team } = meta || {};
-  // const teams = useAppSelector(selectAllTeams);
-  // const currentTeam = teams.find(t => t.id === team?.id) || null;
 
   const currentLabels = conversation?.labels || [];
 
   const conversationParticipants = useAppSelector(state =>
     selectConversationParticipantsByConversationId(state, conversationId),
   );
-
-  // Team assignment disabled — not currently in use
-  // useEffect(() => {
-  //   dispatch(teamActions.fetchTeams());
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const onShareConversation = async () => {
     try {
@@ -121,14 +108,6 @@ export const ConversationActions = () => {
     dispatch(setActionState('Assign'));
     actionsModalSheetRef.current?.present();
   };
-
-  // Team assignment disabled — not currently in use
-  // const onChangeTeamAssignee = () => {
-  //   if (!conversation) return;
-  //   dispatch(selectSingleConversation(conversation));
-  //   dispatch(setActionState('TeamAssign'));
-  //   actionsModalSheetRef.current?.present();
-  // };
 
   const onChangePriority = () => {
     if (!conversation) return;

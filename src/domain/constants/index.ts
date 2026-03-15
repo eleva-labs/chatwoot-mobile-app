@@ -12,16 +12,7 @@ export const SCREENS = {
 
 export * from './chrome';
 
-/** @deprecated Was 51 + 32 = 83, but the true rendered iOS height is 51 + 34 = 85.
- *  Use `useChromeMetrics().tabBarHeight` from `@infrastructure/utils` instead. */
-export const TAB_BAR_HEIGHT = 83;
 export const TEXT_INPUT_CONTAINER_HEIGHT = 57;
-
-export const userStatusList = [
-  { statusColor: 'bg-teal-9', status: 'online' },
-  { statusColor: 'bg-amber-9', status: 'busy' },
-  { statusColor: 'bg-slate-8', status: 'offline' },
-];
 
 export const AVAILABILITY_STATUS_LIST = [
   { statusColor: 'bg-teal-9', status: 'online' },
