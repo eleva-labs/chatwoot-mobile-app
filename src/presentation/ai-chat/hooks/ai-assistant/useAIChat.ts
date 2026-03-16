@@ -315,7 +315,7 @@ export function useAIChat(config: ChatConfig, options?: UseAIChatOptions): UseAI
       }
     },
     // Empty deps — reads from refs only. SDK captures this once at Chat construction.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [],
   );
 
@@ -337,7 +337,7 @@ export function useAIChat(config: ChatConfig, options?: UseAIChatOptions): UseAI
       }
     },
     // Empty deps — reads from refs only. SDK captures this once at Chat construction.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [],
   );
 

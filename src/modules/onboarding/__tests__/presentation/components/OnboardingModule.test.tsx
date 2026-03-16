@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-// eslint-disable-next-line import/no-unresolved
+
 import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { OnboardingModule } from '../../../presentation/components/OnboardingModule';
 import { useOnboarding } from '../../../presentation/hooks/useOnboarding';

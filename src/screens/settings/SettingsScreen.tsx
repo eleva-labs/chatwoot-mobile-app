@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StatusBar, Platform, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-// import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
+
 import * as Device from 'expo-device';
 import ChatWootWidget from '@chatwoot/react-native-widget';
 import { useSelector } from 'react-redux';
@@ -19,10 +18,14 @@ import { clearAllContacts } from '@application/store/contact/contactSlice';
 
 import i18n from '@infrastructure/i18n';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { useThemedStyles, useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import {
+  useThemedStyles,
+  useScreenAnalytics,
+  useConversationPermission,
+} from '@infrastructure/hooks';
 
 import {
-  BottomSheetBackdrop,
   BottomSheetHeader,
   BottomSheetWrapper,
   Button,
@@ -35,11 +38,11 @@ import {
 import { UserAvatar } from './components/UserAvatar';
 import { BuildInfo } from '@infrastructure/ui/common';
 
-import { LANGUAGES, SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { LANGUAGES, SCREENS } from '@domain/constants';
+import { useChromeMetrics, useHaptic, useSheetDefaults } from '@infrastructure/utils';
 import { useRefsContext, useTheme } from '@infrastructure/context';
 import { NotificationIcon, SwitchIcon, TranslateIcon, ThemeIcon } from '@/svg-icons';
 
-import { useHaptic } from '@infrastructure/utils';
 import { SettingsHeader } from './SettingsHeader';
 import { DebugActions } from './components/DebugActions';
 import {
@@ -59,8 +62,6 @@ import { setLocale } from '@application/store/settings/settingsSlice';
 
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { PROFILE_EVENTS, ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';
-import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
-import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
 
 const appName = Application.applicationName;
 const appVersion = Application.nativeApplicationVersion;
@@ -76,8 +77,6 @@ const SettingsScreen = () => {
   const dispatch = useAppDispatch();
   const availabilityStatus =
     (useSelector(selectCurrentUserAvailability) as AvailabilityStatus) || 'offline';
-
-  // const { bottom } = useSafeAreaInsets();
 
   const [showWidget, toggleWidget] = useState(false);
   const user = useSelector(selectUser);
@@ -95,11 +94,7 @@ const SettingsScreen = () => {
 
   const pushToken = useAppSelector(selectPushToken);
 
-  const userPermissions = user ? getUserPermissions(user, activeAccountId ?? null) : [];
-
-  const hasConversationPermission = CONVERSATION_PERMISSIONS.some(permission =>
-    userPermissions.includes(permission),
-  );
+  const hasConversationPermission = useConversationPermission();
 
   const userDetails = {
     identifier: email,
@@ -142,6 +137,8 @@ const SettingsScreen = () => {
   const { theme, setTheme, isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const { colors } = useThemeColors();
+  const { contentBottomPadding } = useChromeMetrics();
+  const sheetDefaults = useSheetDefaults();
   const hapticSelection = useHaptic();
 
   const openSheet = () => {
@@ -195,18 +192,6 @@ const SettingsScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLocale]);
 
-  //  const openURL = async () => {
-  //    await WebBrowser.openBrowserAsync(HELP_URL);
-  //    };
-
-  // const openSystemSettings = () => {
-  //   if (Platform.OS === 'ios') {
-  //     Linking.openURL('app-settings:');
-  //   } else {
-  //     Linking.openSettings();
-  //   }
-  // };
-
   const onClickLogout = useCallback(async () => {
     await AsyncStorage.removeItem('cwCookie');
     await dispatch(settingsActions.removeDevice({ pushToken }));
@@ -243,7 +228,6 @@ const SettingsScreen = () => {
       subtitleType: 'light',
       disabled: !hasConversationPermission,
       onPressListItem: () => notificationPreferencesSheetRef.current?.present(),
-      // onPressListItem: openSystemSettings,
     },
     {
       hasChevron: true,
@@ -282,28 +266,9 @@ const SettingsScreen = () => {
     },
   ];
 
-  /* const supportList: GenericListType[] = [
-    {
-      hasChevron: true,
-      title: i18n.t('SETTINGS.READ_DOCS'),
-      icon: <SwitchIcon />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: openURL,
-    },
-    {
-      hasChevron: true,
-      title: i18n.t('SETTINGS.CHAT_WITH_US'),
-      icon: <ChatwootIcon stroke={tailwind.color('text-slate-12') ?? '#202020'} />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: () => toggleWidget(true),
-    },
-  ]; */
-
   return (
     <SafeAreaView
-      edges={['top', 'bottom']}
+      edges={['top']}
       style={themedTailwind.style('flex-1 bg-solid-1 font-inter-normal-20')}>
       <StatusBar
         translucent
@@ -313,7 +278,7 @@ const SettingsScreen = () => {
       <SettingsHeader />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}>
+        contentContainerStyle={{ paddingBottom: contentBottomPadding }}>
         <Animated.View style={tailwind.style('flex justify-center items-center pt-4 gap-4')}>
           <Animated.View>
             <UserAvatar src={avatarUrl} name={name} status={availabilityStatus} />
@@ -338,9 +303,6 @@ const SettingsScreen = () => {
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
-        {/* <Animated.View style={tailwind.style('pt-6')}>
-          <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
-        </Animated.View> */}
         <Animated.View style={tailwind.style('pt-6 mx-4')}>
           <Button
             variant="secondary"
@@ -355,18 +317,7 @@ const SettingsScreen = () => {
           <BuildInfo />
         </Pressable>
       </Animated.ScrollView>
-      <BottomSheetModal
-        ref={userAvailabilityStatusSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
-        snapPoints={[190]}>
+      <BottomSheetModal ref={userAvailabilityStatusSheetRef} {...sheetDefaults} snapPoints={[190]}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_AVAILABILITY')} />
           <AvailabilityStatusList
@@ -375,18 +326,7 @@ const SettingsScreen = () => {
           />
         </BottomSheetWrapper>
       </BottomSheetModal>
-      <BottomSheetModal
-        ref={languagesModalSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
-        snapPoints={['70%']}>
+      <BottomSheetModal ref={languagesModalSheetRef} {...sheetDefaults} snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />
           <LanguageList onChangeLanguage={onChangeLanguage} currentLanguage={activeLocale} />
@@ -394,33 +334,14 @@ const SettingsScreen = () => {
       </BottomSheetModal>
       <BottomSheetModal
         ref={notificationPreferencesSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
+        {...sheetDefaults}
         snapPoints={['52%']}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.NOTIFICATION_PREFERENCES')} />
           <NotificationPreferences />
         </BottomSheetWrapper>
       </BottomSheetModal>
-      <BottomSheetModal
-        ref={switchAccountSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        // TODO: Fix this later
-        // bottomInset={bottom === 0 ? 12 : bottom}
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
-        snapPoints={['50%']}>
+      <BottomSheetModal ref={switchAccountSheetRef} {...sheetDefaults} snapPoints={['50%']}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SWITCH_ACCOUNT')} />
           <SwitchAccount
@@ -430,16 +351,7 @@ const SettingsScreen = () => {
           />
         </BottomSheetWrapper>
       </BottomSheetModal>
-      <BottomSheetModal
-        ref={debugActionsSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
-        snapPoints={['36%']}>
+      <BottomSheetModal ref={debugActionsSheetRef} {...sheetDefaults} snapPoints={['36%']}>
         <BottomSheetWrapper>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.DEBUG_ACTIONS')} />
           <DebugActions />

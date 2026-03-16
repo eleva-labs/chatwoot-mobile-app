@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
 
-import { BottomSheetBackdrop } from '@infrastructure/ui';
+import { useSheetDefaults } from '@infrastructure/utils';
 import i18n from '@infrastructure/i18n';
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { Macro } from '@domain/types';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { selectAllMacros } from '@application/store/macro/macroSelectors';
 
 import MacroStack from './MacroStack';
@@ -17,6 +16,7 @@ import MacroDetails from './MacroDetails';
 import { MacroProvider } from './MacroContext';
 
 export const MacrosList = ({ conversationId }: { conversationId: number }) => {
+  const sheetDefaults = useSheetDefaults();
   const macros = useAppSelector(selectAllMacros);
   const [selectedMacro, setSelectedMacro] = useState<Macro | null>(null);
 
@@ -39,14 +39,10 @@ export const MacrosList = ({ conversationId }: { conversationId: number }) => {
     <Animated.View>
       <BottomSheetModal
         ref={macrosListSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
+        {...sheetDefaults}
         style={tailwind.style('rounded-t-[26px] overflow-hidden')}
-        enablePanDownToClose
         snapPoints={['75%']}
-        enableDynamicSizing={false}
-        animationConfigs={spring.sheet}>
+        enableDynamicSizing={false}>
         <MacroProvider conversationId={conversationId} onClose={onClose}>
           <Animated.View style={tailwind.style('flex-1')}>
             {selectedMacro ? (

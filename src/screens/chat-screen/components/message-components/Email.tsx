@@ -2,7 +2,7 @@ import React from 'react';
 import { Animated, Text, Dimensions } from 'react-native';
 import AutoHeightWebView from '@infrastructure/ui/components/AutoHeightWebView';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { Channel, Message, MessageStatus, MessageType } from '@domain/types';
 import { messageTimestamp } from '@infrastructure/utils';
 
@@ -92,7 +92,7 @@ export const Email = (props: EmailProps) => {
         style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
         <Text
           style={tailwind.style(
-            'text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-slate-11',
+            `${textCaptionBook} tracking-[0.32px] pr-1 text-slate-11`,
             isMessageFailed ? 'text-whiteA-A11' : '',
           )}>
           {messageTimestamp(timeStamp)}

@@ -1,5 +1,5 @@
 import type { Team } from '@domain/types';
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import { transformTeam } from '@infrastructure/utils/camelCaseKeys';
 
 export class TeamService {

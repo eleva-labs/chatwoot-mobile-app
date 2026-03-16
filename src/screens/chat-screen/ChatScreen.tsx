@@ -15,7 +15,8 @@ import {
   selectConversationFetching,
   selectConversationError,
 } from '@application/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useScreenAnalytics, useThemedStyles } from '@infrastructure/hooks';
 
 import { notificationActions } from '@application/store/notification/notificationAction';
 import { MarkAsReadPayload } from '@application/store/notification/notificationTypes';
@@ -23,7 +24,7 @@ import { PrimaryActorType } from '@domain/types/Notification';
 import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
 import ActionBottomSheet from '@application/navigation/tabs/ActionBottomSheet';
 import { conversationActions } from '@application/store/conversation/conversationActions';
-import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { SCREENS } from '@domain/constants';
 import { ErrorIcon } from '@/svg-icons';
 import { Button } from '@infrastructure/ui';
 import { ActivityIndicator, Pressable } from 'react-native';
@@ -164,11 +165,7 @@ const ChatScreen = (props: ChatScreenProps) => {
 
   if (conversationFetching) {
     return (
-      <Animated.View
-        style={themedTailwind.style(
-          'flex-1 items-center justify-center bg-solid-1',
-          `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+      <Animated.View style={themedTailwind.style('flex-1 items-center justify-center bg-solid-1')}>
         <ActivityIndicator />
       </Animated.View>
     );
@@ -178,10 +175,7 @@ const ChatScreen = (props: ChatScreenProps) => {
     return (
       <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-solid-1')}>
         <Animated.View
-          style={themedTailwind.style(
-            'flex-1 items-center justify-center gap-8 px-4',
-            `pb-[${TAB_BAR_HEIGHT}px]`,
-          )}>
+          style={themedTailwind.style('flex-1 items-center justify-center gap-8 px-4')}>
           <ErrorIcon />
           <Animated.View style={tailwind.style('flex items-center justify-center gap-4')}>
             <Animated.Text

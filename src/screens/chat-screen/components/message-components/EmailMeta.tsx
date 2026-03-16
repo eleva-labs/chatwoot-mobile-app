@@ -3,8 +3,7 @@ import { Animated } from 'react-native';
 import i18n from '@infrastructure/i18n';
 
 import { tailwind } from '@infrastructure/theme';
-import { Message } from '@domain/types';
-import { MessageContentAttributes } from '@domain/types';
+import { Message, MessageContentAttributes } from '@domain/types';
 
 type EmailMetaProps = {
   contentAttributes: MessageContentAttributes;

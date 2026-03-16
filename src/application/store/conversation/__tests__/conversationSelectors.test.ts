@@ -21,7 +21,6 @@ import {
 } from '../conversationSelectors';
 
 jest.mock('@infrastructure/utils/conversationUtils', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const actual = jest.requireActual('@infrastructure/utils/conversationUtils');
   return {
     ...actual,
@@ -59,7 +58,7 @@ const defaultFilters: FilterState = {
 describe('conversationSelectors', () => {
   beforeEach(() => {
     // Restore real implementation after jest.clearAllMocks() in global afterEach
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+
     const actual = jest.requireActual('@infrastructure/utils/conversationUtils');
     mockShouldApplyFilters.mockImplementation(actual.shouldApplyFilters);
   });

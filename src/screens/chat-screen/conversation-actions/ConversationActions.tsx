@@ -1,12 +1,12 @@
 import React from 'react';
-// import { useEffect } from 'react'; // Team assignment disabled — not currently in use
 import { Alert, Dimensions, Platform, Share } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
 
-import { BottomSheetBackdrop, Button } from '@infrastructure/ui';
+import { Button } from '@infrastructure/ui';
+import { useSheetDefaults } from '@infrastructure/utils';
 import {
   ConversationBasicActions,
   ConversationLabelActions,
@@ -14,19 +14,17 @@ import {
   AddParticipantList,
   UpdateParticipant,
 } from './components';
-import { TAB_BAR_HEIGHT } from '@domain/constants';
 import { tailwind } from '@infrastructure/theme';
 import { ConversationStatus } from '@domain/types';
 import i18n from '@infrastructure/i18n';
 import { useChatWindowContext, useRefsContext } from '@infrastructure/context';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { conversationActions } from '@application/store/conversation/conversationActions';
 
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
 import { selectSingleConversation } from '@application/store/conversation/conversationSelectedSlice';
-// import { teamActions } from '@application/store/team/teamActions';
-// import { selectAllTeams } from '@application/store/team/teamSelectors';
 import { selectInstallationUrl } from '@application/store/settings/settingsSelectors';
 import { ConversationMetaInformation } from './components/ConversationMetaInformation';
 import { selectConversationParticipantsByConversationId } from '@application/store/conversation-participant/conversationParticipantSelectors';
@@ -39,7 +37,8 @@ export type ConversationActionType = 'mute' | 'status' | 'unmute';
 
 export const ConversationActions = () => {
   const dispatch = useAppDispatch();
-  const themedTailwind = useThemedStyles();
+  const sheetDefaults = useSheetDefaults();
+  const { bottom } = useSafeAreaInsets();
   const { updateParticipantSheetRef, actionsModalSheetRef } = useRefsContext();
   const { conversationId } = useChatWindowContext();
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
@@ -48,22 +47,12 @@ export const ConversationActions = () => {
 
   const { status, muted: isMuted, meta, priority = null } = conversation || {};
   const { assignee } = meta || {};
-  // Team assignment disabled — not currently in use
-  // const { team } = meta || {};
-  // const teams = useAppSelector(selectAllTeams);
-  // const currentTeam = teams.find(t => t.id === team?.id) || null;
 
   const currentLabels = conversation?.labels || [];
 
   const conversationParticipants = useAppSelector(state =>
     selectConversationParticipantsByConversationId(state, conversationId),
   );
-
-  // Team assignment disabled — not currently in use
-  // useEffect(() => {
-  //   dispatch(teamActions.fetchTeams());
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const onShareConversation = async () => {
     try {
@@ -119,14 +108,6 @@ export const ConversationActions = () => {
     actionsModalSheetRef.current?.present();
   };
 
-  // Team assignment disabled — not currently in use
-  // const onChangeTeamAssignee = () => {
-  //   if (!conversation) return;
-  //   dispatch(selectSingleConversation(conversation));
-  //   dispatch(setActionState('TeamAssign'));
-  //   actionsModalSheetRef.current?.present();
-  // };
-
   const onChangePriority = () => {
     if (!conversation) return;
     dispatch(selectSingleConversation(conversation));
@@ -144,7 +125,7 @@ export const ConversationActions = () => {
     <Animated.View style={tailwind.style('', `w-[${SCREEN_WIDTH}px]`)}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
+        contentContainerStyle={{ paddingBottom: Math.max(bottom, 16) }}>
         <ConversationBasicActions
           status={status}
           updateConversationStatus={updateConversationStatus}
@@ -178,16 +159,7 @@ export const ConversationActions = () => {
           />
         </Animated.View>
       </ScrollView>
-      <BottomSheetModal
-        ref={updateParticipantSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
-        animationConfigs={spring.sheet}
-        enablePanDownToClose
-        snapPoints={['50%']}>
+      <BottomSheetModal ref={updateParticipantSheetRef} {...sheetDefaults} snapPoints={['50%']}>
         <UpdateParticipant activeConversationParticipants={conversationParticipants} />
       </BottomSheetModal>
     </Animated.View>

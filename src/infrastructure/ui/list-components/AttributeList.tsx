@@ -1,11 +1,18 @@
 import React, { useMemo } from 'react';
-import { Platform, Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import * as Clipboard from 'expo-clipboard';
 import * as Sentry from '@sentry/react-native';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
 
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import {
+  tailwind,
+  useBoxShadow,
+  useThemeColors,
+  textLabel,
+  textBodyBook,
+  textBodyBase,
+} from '@infrastructure/theme';
 import { AttributeListType } from '@domain/types';
 import { Icon } from '@infrastructure/ui/common';
 import { showToast } from '@infrastructure/utils/toastUtils';
@@ -71,7 +78,7 @@ const AttributeItem = (props: AttributeItemProps) => {
           <Animated.View>
             <Animated.Text
               style={tailwind.style(
-                'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
+                `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12`,
               )}>
               {listItem.title}
             </Animated.Text>
@@ -81,7 +88,7 @@ const AttributeItem = (props: AttributeItemProps) => {
               numberOfLines={1}
               ellipsizeMode="tail"
               style={tailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] overflow-hidden',
+                `${textBodyBase} leading-[22px] tracking-[0.16px] overflow-hidden`,
                 listItem.subtitleType === 'light' ? 'text-slate-12' : 'text-slate-12',
                 listItem.type === 'link' ? 'text-iris-11 underline' : '',
               )}>
@@ -101,25 +108,20 @@ type AttributeListProps = {
 };
 export const AttributeList = (props: AttributeListProps) => {
   const { list, sectionTitle } = props;
+  const cardShadow = useBoxShadow('card');
 
   return (
     <Animated.View>
       {sectionTitle ? (
         <Animated.View style={tailwind.style('pl-4 pb-3')}>
           <Animated.Text
-            style={tailwind.style(
-              'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
-            )}>
+            style={tailwind.style(`${textLabel} leading-[16px] tracking-[0.32px] text-slate-11`)}>
             {sectionTitle}
           </Animated.Text>
         </Animated.View>
       ) : null}
       <Animated.View
-        style={[
-          tailwind.style('rounded-[13px] mx-4 bg-solid-1'),
-          styles.listShadow,
-          Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
-        ]}>
+        style={[tailwind.style('rounded-[13px] mx-4 bg-solid-1'), { boxShadow: cardShadow }]}>
         {list.map(
           (listItem, index) =>
             !listItem.disabled &&
@@ -136,19 +138,3 @@ export const AttributeList = (props: AttributeListProps) => {
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  listShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});

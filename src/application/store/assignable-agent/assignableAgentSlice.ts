@@ -33,10 +33,9 @@ const assignableAgentSlice = createSlice({
       })
       .addCase(assignableAgentActions.fetchAgents.fulfilled, (state, action) => {
         const { inboxIds, agents } = action.payload;
-        state.records = {
-          ...state.records,
-          [inboxIds.join(',')]: agents,
-        };
+        for (const id of inboxIds) {
+          state.records[id] = agents;
+        }
         state.uiFlags.isLoading = false;
       })
       .addCase(assignableAgentActions.fetchAgents.rejected, (state, { error }) => {

@@ -1,4 +1,4 @@
-import { ActionCableConnector } from '@infrastructure/utils/actionCableConnector';
+import { ActionCableConnector } from './actionCableConnector';
 import { ActionCableReconnectService } from './realtimeReconnectService';
 import type { RealtimeConfig } from './realtimeTypes';
 import type { AppDispatch, RootState } from '@application/store';

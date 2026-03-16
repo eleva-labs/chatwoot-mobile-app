@@ -5,7 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList, ListRenderItem } from '@shopify/flash-list';
 
 import { softLayout } from '@infrastructure/animation';
-import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { SCREENS } from '@domain/constants';
+import { useChromeMetrics } from '@infrastructure/utils';
 import {
   InboxListStateProvider,
   useTheme,
@@ -13,7 +14,8 @@ import {
 } from '@infrastructure/context';
 import type { Notification } from '@domain/types/Notification';
 import { tailwind } from '@infrastructure/theme';
-import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useScreenAnalytics, useThemedStyles } from '@infrastructure/hooks';
 import { notificationActions } from '@application/store/notification/notificationAction';
 import {
   selectIsAllNotificationsFetched,
@@ -25,12 +27,13 @@ import { resetNotifications } from '@application/store/notification/notification
 import { showToast } from '@infrastructure/utils/toastUtils';
 import i18n from '@infrastructure/i18n';
 import { selectSortOrder } from '@application/store/notification/notificationFilterSlice';
-import { EmptyStateIcon } from '@/svg-icons';
+import { EmptyListState } from '@infrastructure/ui';
 import { InboxSortTypes } from '@application/store/notification/notificationTypes';
 
 const AnimatedFlashlist = Animated.createAnimatedComponent(FlashList<Notification>);
 
 const InboxList = () => {
+  const { contentBottomPadding } = useChromeMetrics();
   const [pageNumber, setPageNumber] = useState(1);
 
   const [isFlashListReady, setFlashListReady] = useState(false);
@@ -59,10 +62,10 @@ const InboxList = () => {
     if (isAllNotificationsFetched) return null;
     return (
       <Animated.View
-        style={tailwind.style(
-          'flex-1 items-center justify-center pt-8',
-          `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+        style={[
+          tailwind.style('flex-1 items-center justify-center pt-8'),
+          { paddingBottom: contentBottomPadding },
+        ]}>
         {isAllNotificationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -132,24 +135,16 @@ const InboxList = () => {
   });
 
   const shouldShowEmptyLoader = isNotificationsLoading && notifications.length === 0;
+  const emptyState = shouldShowEmptyLoader || notifications.length === 0;
 
-  return shouldShowEmptyLoader ? (
-    <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
-      <ActivityIndicator />
-    </Animated.View>
-  ) : notifications.length === 0 ? (
-    <Animated.ScrollView
-      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      contentContainerStyle={tailwind.style(
-        'flex-1 items-center justify-center',
-        `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}>
-      <EmptyStateIcon />
-      <Animated.Text style={tailwind.style('pt-6 text-md tracking-[0.32px] text-slate-12')}>
-        {i18n.t('NOTIFICATION.EMPTY')}
-      </Animated.Text>
-    </Animated.ScrollView>
+  return emptyState ? (
+    <EmptyListState
+      isLoading={isNotificationsLoading}
+      isEmpty={notifications.length === 0}
+      emptyText={i18n.t('NOTIFICATION.EMPTY')}
+      isRefreshing={isRefreshing}
+      onRefresh={handleRefresh}
+    />
   ) : (
     <AnimatedFlashlist
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
@@ -161,7 +156,7 @@ const InboxList = () => {
       onEndReachedThreshold={0.5}
       ListFooterComponent={ListFooterComponent}
       renderItem={handleRender}
-      contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
+      contentContainerStyle={{ paddingBottom: contentBottomPadding }}
     />
   );
 };
@@ -181,7 +176,7 @@ const InboxScreen = () => {
   }, [dispatch]);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
+    <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
         backgroundColor={themedTailwind.color('bg-solid-1')}

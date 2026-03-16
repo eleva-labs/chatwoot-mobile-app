@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Platform, Pressable, View } from 'react-native';
-import { PlayBackType } from 'react-native-audio-recorder-player';
 import Animated, { FadeIn, FadeOut, useSharedValue } from 'react-native-reanimated';
 import Svg, { Path, Rect } from 'react-native-svg';
 import * as Sentry from '@sentry/react-native';
@@ -14,10 +13,18 @@ import { tailwind } from '@infrastructure/theme';
 import { IconProps } from '@domain/types';
 import { Icon, Slider } from '@infrastructure/ui/common';
 import { Spinner } from '@infrastructure/ui/spinner';
-import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
+import {
+  AudioPlayerState,
+  PlayBackData,
+  pausePlayer,
+  resumePlayer,
+  seekTo,
+  startPlayer,
+  stopPlayer,
+} from '../audio-recorder';
 import { MESSAGE_VARIANTS } from '@domain/constants';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { convertOggToWav } from '@infrastructure/utils';
 
 // eslint-disable-next-line react/display-name
@@ -62,17 +69,17 @@ export const AudioBubblePlayer = React.memo((props: AudioPlayerProps) => {
   const totalDuration = useSharedValue(0);
 
   const audioPlayBackStatus = useCallback(
-    (args: { status: unknown; data?: PlayBackType }) => {
+    (args: { status: AudioPlayerState; data?: PlayBackData }) => {
       const playBackData = args.data;
       if (playBackData) {
         currentPosition.value = playBackData.currentPosition;
         totalDuration.value = playBackData.duration;
-        if (playBackData.currentPosition === playBackData.duration) {
-          currentPosition.value = 0;
-          totalDuration.value = 0;
-          setAudioPlaying(false);
-          dispatch(setCurrentPlayingAudioSrc(''));
-        }
+      }
+      if (args.status === AudioPlayerState.STOPPED) {
+        currentPosition.value = 0;
+        totalDuration.value = 0;
+        setAudioPlaying(false);
+        dispatch(setCurrentPlayingAudioSrc(''));
       }
     },
     [currentPosition, totalDuration, dispatch],

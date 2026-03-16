@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { contentFadeIn } from '@infrastructure/animation';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
 import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
 import { Avatar, Icon } from '@infrastructure/ui/common';
@@ -104,7 +104,7 @@ export const LocationCell: React.FC<LocationCellProps> = props => {
               style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
               <Text
                 style={tailwind.style(
-                  'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
+                  `${textCaptionBook} tracking-[0.32px] pr-1`,
                   isIncoming ? 'text-whiteA-A11' : '',
                   isOutgoing ? 'text-slate-11' : '',
                   isMessageFailed ? 'text-ruby-12' : '',

@@ -152,7 +152,7 @@ export const ConversationItemDetail = memo((props: ConversationDetailSubCellProp
               <PersonIcon color={themedTailwind.style('text-slate-10').color as string} />
               <Text
                 numberOfLines={1}
-                style={themedTailwind.style('text-xs font-inter-normal-28 text-slate-10 ml-0.5')}>
+                style={themedTailwind.style('text-xs font-inter-normal-20 text-slate-10 ml-0.5')}>
                 {assignee.name}
               </Text>
             </NativeView>

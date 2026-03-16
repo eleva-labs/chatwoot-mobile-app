@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated';
 
 import { tailwind } from '@infrastructure/theme';
 import { selectAllCannedResponses } from '@application/store/canned-response/cannedResponseSlice';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { cannedResponseActions } from '@application/store/canned-response/cannedResponseActions';
 import { CannedResponse } from '@domain/types';
 import { FlashList } from '@shopify/flash-list';

@@ -10,14 +10,9 @@ export const SCREENS = {
   INBOX: 'InboxScreen',
 };
 
-export const TAB_BAR_HEIGHT = 83;
-export const TEXT_INPUT_CONTAINER_HEIGHT = 57;
+export * from './chrome';
 
-export const userStatusList = [
-  { statusColor: 'bg-teal-9', status: 'online' },
-  { statusColor: 'bg-amber-9', status: 'busy' },
-  { statusColor: 'bg-slate-8', status: 'offline' },
-];
+export const TEXT_INPUT_CONTAINER_HEIGHT = 57;
 
 export const AVAILABILITY_STATUS_LIST = [
   { statusColor: 'bg-teal-9', status: 'online' },

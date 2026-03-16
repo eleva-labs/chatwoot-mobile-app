@@ -1,6 +1,10 @@
-import authReducer, { logout, resetAuth, setAccount } from '@application/store/auth/authSlice';
+import authReducer, {
+  logout,
+  resetAuth,
+  setAccount,
+  AuthState,
+} from '@application/store/auth/authSlice';
 import { mockUser } from './authMockData';
-import { AuthState } from '@application/store/auth/authSlice';
 import { authActions } from '@application/store/auth/authActions';
 import { AvailabilityStatus, UserRole } from '@domain/types';
 
@@ -16,7 +20,7 @@ jest.mock('@infrastructure/utils/toastUtils', () => ({
   showToast: jest.fn(),
 }));
 
-jest.mock('@/services/APIService', () => ({
+jest.mock('@infrastructure/services/APIService', () => ({
   apiService: {
     get: jest.fn(),
     post: jest.fn(),

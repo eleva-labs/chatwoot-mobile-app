@@ -1,6 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import SettingsScreen from '@/screens/settings/SettingsScreen';
 
 export type SettingsStackParamList = {

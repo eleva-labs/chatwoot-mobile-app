@@ -28,7 +28,7 @@ const meta: Meta<typeof ConversationHeaderPresenter> = {
   },
   decorators: [
     Story => (
-      <View style={tailwind.style('border-b-[1px] border-blackA-A3')}>
+      <View style={tailwind.style('border-b-[1px] border-slate-6')}>
         <Story />
       </View>
     ),
@@ -51,7 +51,7 @@ const Title = ({ title }: { title: string }) => (
 );
 
 const HeaderContainer = ({ children }: { children: React.ReactNode }) => (
-  <View style={tailwind.style('flex-1 border-b-[1px] border-blackA-A3 ')}>{children}</View>
+  <View style={tailwind.style('flex-1 border-b-[1px] border-slate-6')}>{children}</View>
 );
 
 export const AllVariants: Story = {

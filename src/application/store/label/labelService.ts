@@ -1,4 +1,4 @@
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import type { LabelResponse } from './labelTypes';
 import { transformLabel } from '@infrastructure/utils/camelCaseKeys';
 

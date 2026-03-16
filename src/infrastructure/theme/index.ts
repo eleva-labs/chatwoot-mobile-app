@@ -10,6 +10,9 @@ export { brandColors } from './colors/brand';
 // Token system
 export * from './colors/tokens';
 
+// Chat message tokens
+export { chatMessageTokens, getMessageTokensByVariant } from './chat-tokens';
+
 // Legacy theme (for backward compatibility — re-exports from unified)
 export * from './default';
 
@@ -20,6 +23,9 @@ export { ThemeProvider, useTheme, useThemeColors, useThemeState } from './compon
 export { useTheme as useThemeContext } from './components/ThemeProvider';
 
 export { createUnifiedTheme, createDefaultTheme } from './components/createTheme';
+
+// Shadow tokens
+export { BOX_SHADOWS, type BoxShadowTier, useBoxShadow } from './shadows';
 
 // Text styles
 export * from './text-styles';

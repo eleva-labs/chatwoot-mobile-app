@@ -1,57 +1,31 @@
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useBoxShadow } from '@infrastructure/theme';
 import { Agent, ConversationPriority } from '@domain/types';
 import AssigneePanel from './AssigneePanel';
-// import TeamPanel from './TeamPanel';
 import PriorityPanel from './PriorityPanel';
 
 type ConversationSettingsPanelProps = {
   priority: ConversationPriority;
-  // team: Team | null;
   assignee: Agent | null;
   onChangeAssignee: () => void;
-  // onChangeTeamAssignee: () => void;
   onChangePriority: () => void;
 };
 
 export const ConversationSettingsPanel = ({
   assignee,
-  // team,
   priority,
   onChangeAssignee,
-  // onChangeTeamAssignee,
   onChangePriority,
 }: ConversationSettingsPanelProps) => {
+  const cardShadow = useBoxShadow('card');
+
   return (
     <Animated.View
-      style={[
-        tailwind.style('rounded-[13px] mx-4 bg-solid-1'),
-        styles.listShadow,
-        Platform.OS === 'android' && { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
-      ]}>
+      style={[tailwind.style('rounded-[13px] mx-4 bg-solid-1'), { boxShadow: cardShadow }]}>
       <AssigneePanel assignee={assignee} onPress={onChangeAssignee} isFirstItem={true} />
-      {/* Team assignment disabled — not currently in use */}
-      {/* <TeamPanel team={team} onPress={onChangeTeamAssignee} /> */}
       <PriorityPanel priority={priority} onPress={onChangePriority} isLastItem={true} />
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  listShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});

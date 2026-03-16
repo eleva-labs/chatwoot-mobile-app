@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports */
 
 import React from 'react';
-// eslint-disable-next-line import/no-unresolved
+
 import { render, fireEvent } from '@testing-library/react-native';
 import { QuestionRenderer } from '../../../presentation/components/QuestionRenderer';
 import { aScreen } from '../../helpers/builders';
@@ -29,7 +29,6 @@ jest.mock('../../../presentation/hooks/useScreenTransition', () => ({
 }));
 
 jest.mock('react-native-reanimated', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const View = require('react-native').View;
   return {
     __esModule: true,
@@ -42,16 +41,14 @@ jest.mock('react-native-reanimated', () => {
 // Mock all input components
 jest.mock('../../../presentation/components/inputs/TextInput', () => ({
   TextInput: ({ value, onChangeText }: { value: string; onChangeText: (text: string) => void }) => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { TextInput: RNTextInput } = require('react-native');
     return <RNTextInput testID="text-input" value={value} onChangeText={onChangeText} />;
   },
 }));
 
 jest.mock('../../../presentation/components/inputs/SingleSelectChips', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+
   const { View, Text, TouchableOpacity } = require('react-native');
   return {
     SingleSelectChips: ({
@@ -120,9 +117,8 @@ jest.mock('../../../presentation/components/inputs/SingleSelectChips', () => {
 });
 
 jest.mock('../../../presentation/components/inputs/MultiSelectChips', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+
   const { View, Text, TouchableOpacity } = require('react-native');
   return {
     MultiSelectChips: ({
@@ -162,9 +158,8 @@ jest.mock('../../../presentation/components/inputs/MultiSelectChips', () => {
 });
 
 jest.mock('../../../presentation/components/inputs/DatePicker', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+
   const { View, Text, TouchableOpacity } = require('react-native');
   return {
     DatePicker: ({ onChange }: { onChange: (date: Date | null) => void }) =>
@@ -184,9 +179,8 @@ jest.mock('../../../presentation/components/inputs/DatePicker', () => {
 });
 
 jest.mock('../../../presentation/components/inputs/Rating', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+
   const { View, Text, TouchableOpacity } = require('react-native');
   return {
     Rating: ({ maxRating, onChange }: { maxRating?: number; onChange: (value: number) => void }) =>
@@ -206,9 +200,8 @@ jest.mock('../../../presentation/components/inputs/Rating', () => {
 });
 
 jest.mock('../../../presentation/components/inputs/Slider', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+
   const { View, Text, TouchableOpacity } = require('react-native');
   return {
     SliderInput: ({

@@ -5,7 +5,7 @@ import Animated from 'react-native-reanimated';
 import { useRefsContext } from '@infrastructure/context';
 
 import { CaretBottomSmall } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textLabel } from '@infrastructure/theme';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
 import { Icon } from '../icon';
 
@@ -36,7 +36,7 @@ export const FilterButton = (props: FilterButtonProps) => {
         {...handlers}>
         <Animated.Text
           style={tailwind.style(
-            'text-sm font-inter-medium-24 leading-[16px] tracking-[0.24px] pr-1 capitalize text-slate-12',
+            `${textLabel} leading-[16px] tracking-[0.24px] pr-1 capitalize text-slate-12`,
           )}>
           {value}
         </Animated.Text>

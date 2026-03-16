@@ -3,7 +3,8 @@ import { Trash } from '@/svg-icons/common/Trash';
 import { Channel, Message } from '@domain/types';
 import Animated from 'react-native-reanimated';
 import { quickFadeIn } from '@infrastructure/animation';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
 import { useChatWindowContext } from '@infrastructure/context';
 import { conversationActions } from '@application/store/conversation/conversationActions';
@@ -36,7 +37,7 @@ import i18n from '@infrastructure/i18n';
 import * as Clipboard from 'expo-clipboard';
 import { CopyIcon } from '@/svg-icons';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { useThemeColors } from '@infrastructure/theme';
+import { useThemeColors, textCaptionBook, getMessageTokensByVariant } from '@infrastructure/theme';
 import { Dimensions, View } from 'react-native';
 import { Avatar } from '@infrastructure/ui';
 
@@ -63,44 +64,8 @@ type MessageWrapperProps = {
   channel?: Channel;
 };
 
-/**
- * Variant styling maps aligned with web BaseBubble.vue:
- *
- * AGENT (outgoing, right) => bg-n-solid-blue   => bg-solid-blue
- * USER  (incoming, left)  => bg-n-slate-4      => bg-slate-4
- * BOT/TEMPLATE            => bg-n-solid-iris   => bg-solid-iris
- * PRIVATE                 => bg-n-solid-amber  => bg-solid-amber
- * ERROR                   => bg-n-ruby-4       => bg-ruby-4
- */
-const variantTextMap: Record<string, string> = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-slate-11',
-  [MESSAGE_VARIANTS.USER]: 'text-slate-11',
-  [MESSAGE_VARIANTS.BOT]: 'text-slate-11',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-11',
-  [MESSAGE_VARIANTS.PRIVATE]: 'text-slate-11',
-  [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
-};
-
-const variantBaseMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'bg-solid-blue',
-  [MESSAGE_VARIANTS.PRIVATE]: 'bg-solid-amber',
-  [MESSAGE_VARIANTS.USER]: 'bg-slate-4',
-  [MESSAGE_VARIANTS.BOT]: 'bg-solid-iris',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'bg-solid-iris',
-  [MESSAGE_VARIANTS.ERROR]: 'bg-ruby-4',
-  [MESSAGE_VARIANTS.EMAIL]: 'bg-slate-3',
-  [MESSAGE_VARIANTS.UNSUPPORTED]: 'bg-solid-amber border border-dashed border-amber-12',
-};
-
-const variantBorderMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'border-slate-6',
-  [MESSAGE_VARIANTS.USER]: 'border-slate-4',
-  [MESSAGE_VARIANTS.BOT]: 'border-slate-4',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'border-slate-4',
-  [MESSAGE_VARIANTS.ERROR]: 'border-ruby-6',
-  [MESSAGE_VARIANTS.EMAIL]: 'border-slate-4',
-  [MESSAGE_VARIANTS.UNSUPPORTED]: 'border-amber-12',
-};
+// Variant styling comes from chatMessageTokens via getMessageTokensByVariant()
+// (see infrastructure/theme/chat-tokens.ts)
 
 const MessageWrapper = ({
   children,
@@ -115,6 +80,7 @@ const MessageWrapper = ({
   channel,
 }: MessageWrapperProps) => {
   const themedTailwind = useThemedStyles();
+  const variantTokens = getMessageTokensByVariant(variant);
   const flexOrientationClass = () => {
     const map = {
       [ORIENTATION.LEFT]: 'items-start',
@@ -153,8 +119,8 @@ const MessageWrapper = ({
               themedTailwind.style(
                 'relative pl-3 pr-2.5 py-2 rounded-xl overflow-hidden',
                 `${variant === MESSAGE_VARIANTS.EMAIL ? `max-w-[${EMAIL_WIDTH}px]` : `max-w-[${TEXT_MAX_WIDTH}px]`}`,
-                variantBaseMap[variant],
-                variantBorderMap[variant],
+                variantTokens.background,
+                variantTokens.border,
                 // Avatar-adjacent corner is always sharper (matches web BaseBubble.vue)
                 orientation === ORIENTATION.LEFT ? 'rounded-bl-sm' : '',
                 orientation === ORIENTATION.RIGHT ? 'rounded-br-sm' : '',
@@ -174,8 +140,8 @@ const MessageWrapper = ({
               {!shouldGroupWithNext && (
                 <Animated.Text
                   style={themedTailwind.style(
-                    'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
-                    variantTextMap[variant],
+                    `${textCaptionBook} tracking-[0.32px] pr-1`,
+                    variantTokens.timestamp || variantTokens.text,
                   )}>
                   {messageTimestamp(item.createdAt)}
                 </Animated.Text>
@@ -187,8 +153,8 @@ const MessageWrapper = ({
                 channel={channel}
                 sourceId={item.sourceId}
                 errorMessage={item.contentAttributes?.externalError || ''}
-                deliveredColor="text-slate-11"
-                sentColor="text-slate-11"
+                deliveredColor={variantTokens.deliveryStatus || 'text-slate-11'}
+                sentColor={variantTokens.deliveryStatus || 'text-slate-11'}
               />
             </Animated.View>
           </Animated.View>

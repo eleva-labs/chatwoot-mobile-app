@@ -1,4 +1,4 @@
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import type { AssignableAgentAPIResponse, AssignableAgentResponse } from './assignableAgentTypes';
 import { transformInboxAgent } from '@infrastructure/utils/camelCaseKeys';
 

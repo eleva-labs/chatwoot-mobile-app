@@ -5,7 +5,8 @@ import { ArrowUp } from 'lucide-react-native';
 import { softLayout } from '@infrastructure/animation';
 import { useScaleAnimation } from '@infrastructure/utils';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { selectIsPrivateMessage } from '@application/store/conversation/sendMessageSlice';
 import { SendMessageButtonProps } from '../types';
 import {

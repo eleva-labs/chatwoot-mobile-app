@@ -1,7 +1,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import { Avatar } from '@infrastructure/ui';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textBodySmallBook } from '@infrastructure/theme';
 import type { NotificationType } from '@domain/types/Notification';
 import { ConversationPriority } from '@domain/types/common';
 import { AnimatedNativeView, NativeView } from '@infrastructure/ui/native-components';
@@ -65,10 +65,10 @@ export const InboxItemComponent = (props: InboxItemProps) => {
               {sender.name || ''}
             </Animated.Text>
             <NativeView style={tailwind.style('flex flex-row items-center gap-0.5')}>
-              <Animated.Text style={tailwind.style('text-sm font-inter-420-20 text-slate-11')}>
+              <Animated.Text style={tailwind.style(`${textBodySmallBook} text-slate-11`)}>
                 #
               </Animated.Text>
-              <Animated.Text style={tailwind.style('text-sm font-inter-420-20 text-slate-11')}>
+              <Animated.Text style={tailwind.style(`${textBodySmallBook} text-slate-11`)}>
                 {conversationId}
               </Animated.Text>
             </NativeView>
@@ -81,7 +81,7 @@ export const InboxItemComponent = (props: InboxItemProps) => {
             <NativeView>
               <Animated.Text
                 style={tailwind.style(
-                  'text-sm font-inter-420-20 leading-[16px] tracking-[0.32px] text-slate-11',
+                  `${textBodySmallBook} leading-[16px] tracking-[0.32px] text-slate-11`,
                 )}>
                 {lastActivityAt()}
               </Animated.Text>

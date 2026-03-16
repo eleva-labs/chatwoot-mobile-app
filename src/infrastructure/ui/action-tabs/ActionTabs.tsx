@@ -1,32 +1,19 @@
-import React, { PropsWithChildren } from 'react';
-import { Dimensions, Platform, Pressable, StyleSheet } from 'react-native';
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useDerivedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React from 'react';
+import { Dimensions, Pressable } from 'react-native';
+import Animated from 'react-native-reanimated';
 import Svg, { Path } from 'react-native-svg';
-import { BlurView, BlurViewProps } from 'expo-blur';
 
-import { TAB_BAR_HEIGHT } from '@domain/constants';
+import { ACTION_TAB_HEIGHT } from '@domain/constants/chrome';
 import { useRefsContext } from '@infrastructure/context';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
-import { spring } from '@infrastructure/animation';
-import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
+import { useThemedStyles } from '@infrastructure/hooks';
+import { useBoxShadow, useThemeColors } from '@infrastructure/theme';
+import { useHaptic, useScaleAnimation, useChromeMetrics } from '@infrastructure/utils';
 import { Icon } from '../common';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectCurrentState } from '@application/store/conversation/conversationHeaderSlice';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import { setActionState } from '@application/store/conversation/conversationActionSlice';
-
-const ACTION_TAB_HEIGHT = 58;
+import { selectSelectedIds } from '@application/store/conversation/conversationSelectedSlice';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-
-type ActionTabBarBackgroundProps = BlurViewProps & PropsWithChildren;
 
 const ActionLabelTag = ({ stroke }: { stroke: string }) => (
   <Svg width="29" height="28" viewBox="0 0 29 28" fill="none">
@@ -66,66 +53,33 @@ const ActionStatusIcon = ({ stroke }: { stroke: string }) => (
   </Svg>
 );
 
-const ActionTabBarBackground = (props: ActionTabBarBackgroundProps) => {
-  const { children, intensity, tint, style } = props;
-
-  const currentState = useAppSelector(selectCurrentState);
-
-  const derivedAnimatedState = useDerivedValue(() =>
-    currentState === 'Select' ? withSpring(0, spring.tabEnter) : withSpring(1, spring.tabExit),
-  );
-
-  const animatedTabBarStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(derivedAnimatedState.value, [0, 1], [0, TAB_BAR_HEIGHT]),
-        },
-      ],
-    };
-  });
-
-  return Platform.OS === 'ios' ? (
-    <AnimatedBlurView {...{ intensity, tint }} style={[style, animatedTabBarStyle]}>
-      {children}
-    </AnimatedBlurView>
-  ) : (
-    <Animated.View
-      style={[
-        style,
-        animatedTabBarStyle,
-        styles.listShadow,
-        { backgroundColor: tailwind.color('bg-solid-1') ?? 'white' },
-      ]}>
-      {children}
-    </Animated.View>
-  );
-};
-
 type ActionItemProps = {
   actionItem: {
     action: string;
     icon: React.ReactNode;
     onPress: () => void;
   };
+  disabled?: boolean;
 };
 
 const ActionItem = (props: ActionItemProps) => {
-  const { actionItem } = props;
+  const { actionItem, disabled } = props;
   const { handlers, animatedStyle } = useScaleAnimation();
 
   const hapticSelection = useHaptic();
 
   const handleOnPress = () => {
+    if (disabled) return;
     actionItem.onPress();
     hapticSelection?.();
   };
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View style={[animatedStyle, disabled && { opacity: 0.35 }]}>
       <Pressable
         {...handlers}
         hitSlop={{ left: 10, right: 10, bottom: 8, top: 4 }}
         onPress={handleOnPress}
+        disabled={disabled}
         key={actionItem.action}>
         <Icon size={28} icon={actionItem.icon} />
       </Pressable>
@@ -134,11 +88,16 @@ const ActionItem = (props: ActionItemProps) => {
 };
 
 export const ActionTabs = () => {
-  const { bottom } = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const { colors } = useThemeColors();
+  const pillShadow = useBoxShadow('pill');
+  const themedTailwind = useThemedStyles();
+  const { actionTabsBottomOffset } = useChromeMetrics();
+  const actionTabsLeft = (SCREEN_WIDTH - 220) / 2;
 
   const { actionsModalSheetRef } = useRefsContext();
+  const selectedIds = useAppSelector(selectSelectedIds);
+  const hasSelection = selectedIds.length > 0;
 
   const iconStroke = colors.slate[12];
 
@@ -157,7 +116,7 @@ export const ActionTabs = () => {
 
   const bulkSelectActions = [
     {
-      action: 'change_status',
+      action: 'set_labels',
       icon: <ActionLabelTag stroke={iconStroke} />,
       onPress: handleBulkSetLabels,
     },
@@ -167,53 +126,30 @@ export const ActionTabs = () => {
       onPress: handleBulkChangeAssignee,
     },
     {
-      action: 'assign_team',
+      action: 'change_status',
       icon: <ActionStatusIcon stroke={iconStroke} />,
       onPress: handleBulkChangeStatus,
     },
   ];
 
   return (
-    <ActionTabBarBackground
-      intensity={25}
-      tint="light"
-      style={Platform.select({
-        ios: [
-          tailwind.style(
-            'flex flex-row rounded-[30px] items-center absolute justify-between w-[220px] px-6 py-[15px] bg-[#00000009]',
-            `h-[${ACTION_TAB_HEIGHT}px] bottom-[${bottom + 8}px] left-[${
-              (SCREEN_WIDTH - 220) / 2
-            }px]`,
-          ),
-        ],
-        android: [
-          tailwind.style(
-            'flex flex-row rounded-[30px] items-center absolute justify-between w-[220px] px-6 py-[15px] bg-solid-1',
-            `h-[${ACTION_TAB_HEIGHT}px] bottom-[${bottom + 8}px] left-[${
-              (SCREEN_WIDTH - 220) / 2
-            }px]`,
-          ),
-        ],
-      })}>
+    <Animated.View
+      style={[
+        themedTailwind.style(
+          'flex flex-row rounded-[30px] items-center absolute justify-between w-[220px] px-6 py-[15px] bg-solid-1 border-[1px] border-slate-6',
+        ),
+        {
+          height: ACTION_TAB_HEIGHT,
+          bottom: actionTabsBottomOffset,
+          left: actionTabsLeft,
+          boxShadow: pillShadow,
+        },
+      ]}>
       {bulkSelectActions.map(actionItem => {
-        return <ActionItem key={actionItem.action} {...{ actionItem }} />;
+        return (
+          <ActionItem key={actionItem.action} actionItem={actionItem} disabled={!hasSelection} />
+        );
       })}
-    </ActionTabBarBackground>
+    </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  listShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)', // Platform shadow, theme-independent
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});

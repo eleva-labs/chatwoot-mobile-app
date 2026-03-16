@@ -3,25 +3,19 @@ import { Controller, useForm } from 'react-hook-form';
 import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EMAIL_REGEX } from '@domain/constants';
 import { EyeIcon, EyeSlash, LockIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textBodyBase } from '@infrastructure/theme';
 import i18n from '@infrastructure/i18n';
 import { resetAuth } from '@application/store/auth/authSlice';
 import { authActions } from '@application/store/auth/authActions';
-import { useAppDispatch, useAppSelector, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 
-import {
-  BottomSheetBackdrop,
-  BottomSheetHeader,
-  LanguageList,
-  Button,
-  Icon,
-  AuthButton,
-} from '@infrastructure/ui';
+import { BottomSheetHeader, LanguageList, Button, Icon, AuthButton } from '@infrastructure/ui';
+import { useSheetDefaults } from '@infrastructure/utils';
 import {
   selectInstallationUrl,
   //selectBaseUrl,
@@ -45,6 +39,7 @@ type FormData = {
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const sheetDefaults = useSheetDefaults();
   const [showPassword, setShowPassword] = useState(false);
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
@@ -231,7 +226,7 @@ const LoginScreen = () => {
                 <TextInput
                   style={[
                     tailwind.style(
-                      'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
+                      `${textBodyBase} tracking-[0.24px] leading-[20px] android:leading-[18px]`,
                       'py-2 px-3 rounded-xl text-slate-12 bg-slate-3',
                       'h-10',
                     ),
@@ -271,7 +266,7 @@ const LoginScreen = () => {
                   <TextInput
                     style={[
                       tailwind.style(
-                        'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
+                        `${textBodyBase} tracking-[0.24px] leading-[20px] android:leading-[18px]`,
                         'py-2 pl-3 pr-10 rounded-xl text-slate-12 bg-slate-3',
                         'h-10',
                       ),
@@ -340,16 +335,8 @@ const LoginScreen = () => {
       </View>
       <BottomSheetModal
         ref={languagesModalSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={themedTailwind.style(
-          'overflow-hidden bg-slate-8 w-8 h-1 rounded-[11px]',
-        )}
+        {...sheetDefaults}
         detached
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        handleStyle={themedTailwind.style('p-0 h-4 pt-[5px]')}
-        style={themedTailwind.style('rounded-[26px] overflow-hidden')}
-        backgroundStyle={themedTailwind.style('bg-solid-1')}
         snapPoints={['70%']}>
         <BottomSheetScrollView showsVerticalScrollIndicator={false}>
           <BottomSheetHeader headerText={i18n.t('SETTINGS.SET_LANGUAGE')} />

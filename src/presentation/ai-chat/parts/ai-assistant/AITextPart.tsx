@@ -15,15 +15,15 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import { useTheme } from '@infrastructure/context/ThemeContext';
-import { useThemeColors } from '@infrastructure/theme';
+import { useThemeColors, textBodyBase } from '@infrastructure/theme';
+import { useMarkdownTheme } from '@infrastructure/hooks';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import { useAIMarkdownRenderer } from '@presentation/ai-chat/hooks/ai-assistant/useAIMarkdownRenderer';
 
@@ -72,7 +72,6 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   MarkdownRenderer: CustomMarkdownRenderer,
 }) => {
   const { style } = useAIStyles();
-  const { themeVersion } = useTheme();
   const { colors } = useThemeColors();
   const registryMarkdownRenderer = useAIMarkdownRenderer();
   // Prop wins over registry (allows per-instance override)
@@ -124,79 +123,46 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   const codeBackground = isUser ? 'rgba(255,255,255,0.15)' : colors.slate[3];
   const cursorColor = isUser ? colors.iris[12] : colors.slate[9];
 
-  // Markdown styles based on role using Radix colors (memoized for performance)
+  // Shared markdown base styles from hook
+  const baseMarkdownStyles = useMarkdownTheme({
+    fontSize: 15,
+    lineHeight: 22,
+    letterSpacing: 0.2,
+    textColor,
+    linkColor,
+    codeBackground,
+    includeCodeStyles: true,
+  });
+
+  // AITextPart-specific overrides: paddingBottom on body, flexDirection on paragraph
   const markdownStyles = useMemo(
-    () =>
-      StyleSheet.create({
-        body: {
-          fontSize: 15,
-          lineHeight: 22,
-          letterSpacing: 0.2,
-          color: textColor,
-          fontFamily: 'Inter-400-20',
-          // Small safety margin; the onLayout minHeight fix handles the main
-          // Yoga height under-reporting issue.
-          paddingBottom: 4,
-        },
-        paragraph: {
-          marginTop: 0,
-          marginBottom: 0,
-          // Defense-in-depth: override the library's flex-row+wrap default to
-          // reduce Yoga height mis-measurement on paragraphs.
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-        },
-        strong: {
-          fontFamily: 'Inter-600-20',
-          fontWeight: '600',
-        },
-        em: {
-          fontStyle: 'italic',
-        },
-        code_inline: {
-          backgroundColor: codeBackground,
-          borderRadius: 4,
-          paddingHorizontal: 4,
-          fontFamily: 'monospace',
-          fontSize: 13,
-        },
-        code_block: {
-          backgroundColor: codeBackground,
-          borderRadius: 8,
-          padding: 12,
-          fontFamily: 'monospace',
-          fontSize: 13,
-        },
-        fence: {
-          backgroundColor: codeBackground,
-          borderRadius: 8,
-          padding: 12,
-          fontFamily: 'monospace',
-          fontSize: 13,
-        },
-        link: {
-          color: linkColor,
-          textDecorationLine: 'underline',
-        },
-        bullet_list: {
-          minWidth: 200,
-        },
-        ordered_list: {
-          minWidth: 200,
-        },
-        list_item: {
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        },
-        bullet_list_icon: {
-          marginLeft: 0,
-          marginRight: 8,
-          color: textColor,
-        },
-      }),
-    // themeVersion ensures styles recompute when tailwind is rebuilt
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [textColor, linkColor, codeBackground, themeVersion],
+    () => ({
+      ...baseMarkdownStyles,
+      body: {
+        ...baseMarkdownStyles.body,
+        // Small safety margin; the onLayout minHeight fix handles the main
+        // Yoga height under-reporting issue.
+        paddingBottom: 4,
+      },
+      paragraph: {
+        ...baseMarkdownStyles.paragraph,
+        // Defense-in-depth: override the library's flex-row+wrap default to
+        // reduce Yoga height mis-measurement on paragraphs.
+        flexDirection: 'column' as const,
+        flexWrap: 'nowrap' as const,
+      },
+      // AI parts don't need alignItems on list_item (override the shared default)
+      list_item: {
+        ...baseMarkdownStyles.list_item,
+        alignItems: undefined,
+      },
+      // AI parts don't use fontWeight on bullet icons
+      bullet_list_icon: {
+        ...baseMarkdownStyles.bullet_list_icon,
+        fontWeight: undefined,
+      },
+    }),
+    [baseMarkdownStyles],
   );
 
   // If no text and not streaming, return null
@@ -208,9 +174,7 @@ export const AITextPart: React.FC<AITextPartProps> = ({
   if (isUser || !enableMarkdown) {
     return (
       <View style={style('flex-row items-end')}>
-        <Text style={[style('text-base font-inter-normal-20 leading-5'), { color: textColor }]}>
-          {text}
-        </Text>
+        <Text style={[style(textBodyBase), { color: textColor }]}>{text}</Text>
         {isStreaming && (
           <Animated.View
             style={[

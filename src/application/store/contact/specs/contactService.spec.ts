@@ -1,5 +1,5 @@
 import { ContactService } from '../contactService';
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import { mockContactLabelsResponse } from './contactMockData';
 
 jest.mock('@sentry/react-native', () => ({
@@ -14,7 +14,7 @@ jest.mock('@infrastructure/utils/toastUtils', () => ({
   showToast: jest.fn(),
 }));
 
-jest.mock('@/services/APIService', () => ({
+jest.mock('@infrastructure/services/APIService', () => ({
   apiService: {
     get: jest.fn(),
     post: jest.fn(),

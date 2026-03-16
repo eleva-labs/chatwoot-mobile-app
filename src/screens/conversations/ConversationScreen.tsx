@@ -3,7 +3,7 @@ import { ActivityIndicator, AppState, RefreshControl, StatusBar } from 'react-na
 import Animated, { runOnJS, SharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomSheetModal, useBottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring, softLayout } from '@infrastructure/animation';
+import { softLayout } from '@infrastructure/animation';
 import { FlashList } from '@shopify/flash-list';
 
 import {
@@ -15,17 +15,13 @@ import {
   AssigneeTypeFilters,
 } from './components';
 
-import { ActionTabs, BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
-// AI assistant FAB disabled — not yet ready for production
-// import { FloatingAIAssistant } from '@/presentation';
-
-import { EmptyStateIcon } from '@/svg-icons';
+import { ActionTabs, BottomSheetWrapper, EmptyListState } from '@infrastructure/ui';
 import {
   SCREENS,
-  TAB_BAR_HEIGHT,
   LAST_ACTIVE_TIMESTAMP_KEY,
   LAST_ACTIVE_TIMESTAMP_THRESHOLD,
 } from '@domain/constants';
+import { useChromeMetrics, useSheetDefaults } from '@infrastructure/utils';
 import {
   ConversationListStateProvider,
   useConversationListStateContext,
@@ -35,9 +31,11 @@ import {
 
 import { tailwind } from '@infrastructure/theme';
 import { Conversation } from '@domain/types';
-import { useAppDispatch, useAppSelector, useScreenAnalytics, useThemedStyles } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useScreenAnalytics, useThemedStyles } from '@infrastructure/hooks';
 import {
   selectBottomSheetState,
+  selectCurrentState,
   setBottomSheetState,
 } from '@application/store/conversation/conversationHeaderSlice';
 import { resetActionState } from '@application/store/conversation/conversationActionSlice';
@@ -77,7 +75,7 @@ type FlashListRenderItemType = {
 const ConversationList = () => {
   const { dismissAll } = useBottomSheetModal();
   const dispatch = useAppDispatch();
-  const themedTailwind = useThemedStyles();
+  const { contentBottomPadding } = useChromeMetrics();
   const [appState, setAppState] = useState(AppState.currentState);
 
   // This is used to prevent the infinite scrolling before the list is ready
@@ -142,10 +140,10 @@ const ConversationList = () => {
     if (isAllConversationsFetched) return null;
     return (
       <Animated.View
-        style={tailwind.style(
-          'flex-1 items-center justify-center pt-8',
-          `pb-[${TAB_BAR_HEIGHT}px]`,
-        )}>
+        style={[
+          tailwind.style('flex-1 items-center justify-center pt-8'),
+          { paddingBottom: contentBottomPadding },
+        ]}>
         {isAllConversationsFetched ? null : <ActivityIndicator size="small" />}
       </Animated.View>
     );
@@ -238,24 +236,16 @@ const ConversationList = () => {
   );
 
   const shouldShowEmptyLoader = isConversationsLoading && allConversations.length === 0;
+  const emptyState = shouldShowEmptyLoader || allConversations.length === 0;
 
-  return shouldShowEmptyLoader ? (
-    <Animated.View
-      style={tailwind.style('flex-1 items-center justify-center', `pb-[${TAB_BAR_HEIGHT}px]`)}>
-      <ActivityIndicator />
-    </Animated.View>
-  ) : allConversations.length === 0 ? (
-    <Animated.ScrollView
-      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-      contentContainerStyle={tailwind.style(
-        'flex-1 items-center justify-center',
-        `pb-[${TAB_BAR_HEIGHT}px]`,
-      )}>
-      <EmptyStateIcon />
-      <Animated.Text style={themedTailwind.style('pt-6 text-md  tracking-[0.32px] text-slate-12')}>
-        {i18n.t('CONVERSATION.EMPTY')}
-      </Animated.Text>
-    </Animated.ScrollView>
+  return emptyState ? (
+    <EmptyListState
+      isLoading={isConversationsLoading}
+      isEmpty={allConversations.length === 0}
+      emptyText={i18n.t('CONVERSATION.EMPTY')}
+      isRefreshing={isRefreshing}
+      onRefresh={handleRefresh}
+    />
   ) : (
     <AnimatedFlashList
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
@@ -269,14 +259,16 @@ const ConversationList = () => {
       ListFooterComponent={ListFooterComponent}
       // @ts-ignore
       renderItem={handleRender}
-      contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT - 1}px]`)}
+      contentContainerStyle={{ paddingBottom: contentBottomPadding }}
     />
   );
 };
 
 const ConversationScreen = () => {
   useScreenAnalytics(SCREENS.CONVERSATION);
+  const sheetDefaults = useSheetDefaults();
   const currentBottomSheet = useAppSelector(selectBottomSheetState);
+  const currentConversationState = useAppSelector(selectCurrentState);
   const { isDark } = useTheme();
   const themedTailwind = useThemedStyles();
   const dispatch = useAppDispatch();
@@ -308,7 +300,7 @@ const ConversationScreen = () => {
   }, [currentBottomSheet]);
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={themedTailwind.style('flex-1 bg-solid-1')}>
+    <SafeAreaView edges={['top']} style={themedTailwind.style('flex-1 bg-solid-1')}>
       <StatusBar
         translucent
         backgroundColor={themedTailwind.color('bg-solid-1')}
@@ -319,15 +311,7 @@ const ConversationScreen = () => {
         <ConversationList />
         <BottomSheetModal
           ref={filtersModalSheetRef}
-          backdropComponent={BottomSheetBackdrop}
-          handleIndicatorStyle={tailwind.style(
-            'overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]',
-          )}
-          handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-          style={tailwind.style('rounded-[26px] overflow-hidden')}
-          backgroundStyle={themedTailwind.style('bg-solid-1')}
-          animationConfigs={spring.sheet}
-          enablePanDownToClose
+          {...sheetDefaults}
           snapPoints={filterSnapPoints}
           onDismiss={handleOnDismiss}>
           <BottomSheetWrapper>
@@ -338,9 +322,7 @@ const ConversationScreen = () => {
           </BottomSheetWrapper>
         </BottomSheetModal>
         <ActionBottomSheet />
-        <ActionTabs />
-        {/* AI assistant FAB disabled — not yet ready for production */}
-        {/* <FloatingAIAssistant /> */}
+        {currentConversationState === 'Select' && <ActionTabs />}
       </ConversationListStateProvider>
     </SafeAreaView>
   );

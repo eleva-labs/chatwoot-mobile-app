@@ -1,17 +1,15 @@
 /* eslint-disable react/display-name */
 import React, { useCallback } from 'react';
-import { SharedValue } from 'react-native-reanimated';
-import Animated from 'react-native-reanimated';
+import Animated, { SharedValue } from 'react-native-reanimated';
 
 import { notificationActions } from '@application/store/notification/notificationAction';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import type { Notification } from '@domain/types/Notification';
 import type { MarkAsReadPayload } from '@application/store/notification/notificationTypes';
 import { MarkAsRead, MarkAsUnRead, DeleteIcon } from '@/svg-icons';
 import { InboxItem } from './InboxItem';
-import { formatRelativeTime } from '@infrastructure/utils/dateTimeUtils';
-import { formatTimeToShortForm } from '@infrastructure/utils/dateTimeUtils';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { formatRelativeTime, formatTimeToShortForm } from '@infrastructure/utils/dateTimeUtils';
+import { tailwind, useThemeColors, textBodySmallBook } from '@infrastructure/theme';
 import { Icon, Swipeable } from '@infrastructure/ui';
 import { selectInboxById } from '@application/store/inbox/inboxSelectors';
 import i18n from '@infrastructure/i18n';
@@ -48,7 +46,7 @@ const DeleteComponent = React.memo(() => {
       <Icon icon={<DeleteIcon />} size={24} />
       <Animated.Text
         style={[
-          tailwind.style('text-sm font-inter-420-20 pt-[3px]'),
+          tailwind.style(`${textBodySmallBook} pt-[3px]`),
           { color: semanticColors.textInverse },
         ]}>
         {i18n.t('NOTIFICATION.DELETE')}

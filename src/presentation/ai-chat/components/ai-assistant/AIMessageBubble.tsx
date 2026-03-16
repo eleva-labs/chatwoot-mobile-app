@@ -19,7 +19,7 @@ import * as Clipboard from 'expo-clipboard';
 import { useHaptic } from '@infrastructure/utils';
 import { Copy } from 'lucide-react-native';
 import { TickIcon } from '@/svg-icons/common/TickIcon';
-import { useThemeColors } from '@infrastructure/theme';
+import { useThemeColors, textLabel } from '@infrastructure/theme';
 import { useAIStyles } from '@presentation/ai-chat/styles/ai-assistant';
 import type { AIMessageBubbleProps } from '@presentation/ai-chat/containers/ai-assistant/types';
 import { AIPartRenderer } from '@presentation/ai-chat/parts/ai-assistant/AIPartRenderer';
@@ -121,9 +121,7 @@ export const AIMessageBubble: React.FC<AIMessageBubbleProps> = ({
               style('w-7 h-7 rounded-full items-center justify-center'),
               { backgroundColor: avatarColors.bg },
             ]}>
-            <Text
-              style={[style('text-sm font-inter-medium-24'), { color: avatarColors.text }]}
-              allowFontScaling={false}>
+            <Text style={[style(textLabel), { color: avatarColors.text }]} allowFontScaling={false}>
               {getAvatarInitials(
                 avatarName ||
                   (isUser

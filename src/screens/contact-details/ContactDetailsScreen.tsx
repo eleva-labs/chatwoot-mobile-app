@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
-import camelCase from 'camelcase';
-
-import { SCREENS, TAB_BAR_HEIGHT } from '@domain/constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SCREENS } from '@domain/constants';
 import {
   CallIcon,
   EmailIcon,
@@ -17,7 +16,8 @@ import {
   LinkedinIcon,
 } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
-import { AttributeListType, CustomAttribute, GenericListType } from '@domain/types';
+import { AttributeListType, GenericListType } from '@domain/types';
+import { processContactAttributes } from '@infrastructure/utils/customAttributeUtils';
 
 import {
   ContactDetailsScreenHeader,
@@ -28,7 +28,8 @@ import { AttributeList } from '@infrastructure/ui';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TabBarExcludedScreenParamList } from '@application/navigation/tabs/AppTabs';
 import { selectConversationById } from '@application/store/conversation/conversationSelectors';
-import { useAppDispatch, useAppSelector, useScreenAnalytics } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import { useScreenAnalytics } from '@infrastructure/hooks';
 import { contactLabelActions } from '@application/store/contact/contactLabelActions';
 import { getContactCustomAttributes } from '@application/store/custom-attribute/customAttributeSlice';
 import { selectContactById } from '@application/store/contact/contactSelectors';
@@ -90,34 +91,11 @@ const allSocialMediaProfiles: GenericListType[] = [
   },
 ];
 
-const processContactAttributes = (
-  attributes: CustomAttribute[],
-  customAttributes: Record<string, string>,
-  filterCondition: (key: string, custom: Record<string, string>) => boolean,
-) => {
-  if (!attributes.length || !customAttributes) {
-    return [];
-  }
-
-  return attributes.reduce<(CustomAttribute & { value: string })[]>((result, attribute) => {
-    const { attributeKey } = attribute;
-    const meetsCondition = filterCondition(camelCase(attributeKey), customAttributes);
-
-    if (meetsCondition) {
-      result.push({
-        ...attribute,
-        value: customAttributes[camelCase(attributeKey)] ?? '',
-      });
-    }
-
-    return result;
-  }, []);
-};
-
 const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
   useScreenAnalytics(SCREENS.DETAIL);
   const { conversationId } = props.route.params;
   const dispatch = useAppDispatch();
+  const { bottom } = useSafeAreaInsets();
 
   const conversation = useAppSelector(state => selectConversationById(state, conversationId));
 
@@ -219,7 +197,7 @@ const ContactDetailsScreen = (props: ContactDetailsScreenProps) => {
       />
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={tailwind.style(`pb-[${TAB_BAR_HEIGHT}]`)}>
+        contentContainerStyle={{ paddingBottom: Math.max(bottom, 16) }}>
         {email || phoneNumber ? (
           <Animated.View style={tailwind.style('mt-[23px] px-4')}>
             <ContactBasicActions phoneNumber={phoneNumber || ''} email={email || ''} />

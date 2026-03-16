@@ -44,7 +44,6 @@ export const SLAIndicator = ({
         only_during_business_hours: appliedSla.slaOnlyDuringBusinessHours,
         created_at: appliedSla.createdAt,
       },
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       chat: {
         first_reply_created_at: appliedSlaConversationDetails.firstReplyCreatedAt,

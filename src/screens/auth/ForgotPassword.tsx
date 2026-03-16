@@ -6,9 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Icon } from '@infrastructure/ui';
 import { EMAIL_REGEX } from '@domain/constants';
 import { KeyRoundIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textBodyBase } from '@infrastructure/theme';
 import { authActions } from '@application/store/auth/authActions';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch } from '@application/store/hooks';
 import { resetAuth } from '@application/store/auth/authSlice';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { ACCOUNT_EVENTS } from '@domain/constants/analyticsEvents';
@@ -79,8 +79,8 @@ const ForgotPassword = () => {
                 <TextInput
                   style={[
                     tailwind.style(
-                      'text-base font-inter-normal-20 tracking-[0.24px] leading-[20px] android:leading-[18px]',
-                      'py-2 px-3 rounded-xl text-slate-12 bg-blackA-A4',
+                      `${textBodyBase} tracking-[0.24px] leading-[20px] android:leading-[18px]`,
+                      'py-2 px-3 rounded-xl text-slate-12 bg-slate-3',
                       'h-10',
                     ),
                   ]}

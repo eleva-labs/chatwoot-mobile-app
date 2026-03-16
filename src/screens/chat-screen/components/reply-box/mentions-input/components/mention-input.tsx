@@ -121,6 +121,7 @@ const MentionInput = React.forwardRef<TextInput, MentionInputProps>(
         <TextInput
           multiline
           {...textInputProps}
+          nativeID="chat-input"
           ref={handleTextInputRef}
           onChangeText={onChangeInput}
           onSelectionChange={handleSelectionChange}>

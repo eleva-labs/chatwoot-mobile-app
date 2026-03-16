@@ -17,8 +17,10 @@ import {
 } from '@domain/types';
 import type { Inbox } from '@domain/types/Inbox';
 import type { NotificationMeta, Notification } from '@domain/types/Notification';
-import { NotificationCreatedResponse } from '@application/store/notification/notificationTypes';
-import { NotificationRemovedResponse } from '@application/store/notification/notificationTypes';
+import {
+  NotificationCreatedResponse,
+  NotificationRemovedResponse,
+} from '@application/store/notification/notificationTypes';
 
 export const transformConversation = (conversation: any): Conversation => {
   return camelcaseKeys(conversation, { deep: true }) as unknown as Conversation;

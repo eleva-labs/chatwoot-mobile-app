@@ -166,6 +166,7 @@
       "BCC": "Bcc"
     },
     "SELF_ASSIGN": "Assign to me",
+    "UNASSIGN": "Unassign",
     "UN_ASSIGN": "Unassign conversation",
     "CONVERSATION_NOT_FOUND": "Could not fetch conversation",
     "MARK_AS_PENDING": "Mark as pending",
@@ -711,7 +712,9 @@
   },
   "AUDIO": {
     "RECORDING_ERROR": "Recording Error",
-    "PREPARE_ERROR": "Error preparing audio file"
+    "PREPARE_ERROR": "Error preparing audio file",
+    "PERMISSION_DENIED": "Microphone permission denied",
+    "PERMISSION_DENIED_MESSAGE": "Please enable microphone access in your device settings to record audio."
   },
   "CLIPBOARD": {
     "COPIED": "%{item} copied to clipboard"

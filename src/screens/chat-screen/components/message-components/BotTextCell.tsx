@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, Text } from 'react-native';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { Channel, MessageStatus, MessageType } from '@domain/types';
 import { messageTimestamp } from '@infrastructure/utils';
 
@@ -47,8 +47,7 @@ export const BotTextCell = (props: BotTextCellProps) => {
 
       <Animated.View
         style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
-        <Text
-          style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pr-1 text-slate-11')}>
+        <Text style={tailwind.style(`${textCaptionBook} tracking-[0.32px] pr-1 text-slate-11`)}>
           {messageTimestamp(timeStamp)}
         </Text>
         <DeliveryStatus

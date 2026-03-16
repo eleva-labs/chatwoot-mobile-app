@@ -6,7 +6,7 @@ import { useVideoPlayer, VideoView } from 'expo-video';
 import { useEvent } from 'expo';
 import { Image, ImageBackground } from 'expo-image';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { Channel, Message, MessageStatus, UnixTimestamp } from '@domain/types';
 import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
 import { Avatar } from '@infrastructure/ui/common';
@@ -191,7 +191,7 @@ export const VideoCell = (props: VideoCellProps) => {
                   style={tailwind.style('flex flex-row absolute right-3 bottom-[5px]')}>
                   <Text
                     style={tailwind.style(
-                      'text-xs font-inter-420-20 tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1',
+                      `${textCaptionBook} tracking-[0.32px] leading-[14px] text-whiteA-A12 pr-1`,
                     )}>
                     {messageTimestamp(timeStamp)}
                   </Text>

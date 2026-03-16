@@ -1,11 +1,11 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
 import { CheckCheck, Clock } from 'lucide-react-native';
 import { TickIcon } from '@/svg-icons/common/TickIcon';
 
-import { BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { BottomSheetWrapper } from '@infrastructure/ui';
+import { useSheetDefaults } from '@infrastructure/utils';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { WarningIcon } from '@/svg-icons';
 import { Icon } from '@infrastructure/ui/common';
@@ -40,6 +40,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
   } = props;
 
   const { colors, semanticColors } = useThemeColors();
+  const sheetDefaults = useSheetDefaults();
   const { deliveryStatusSheetRef } = useRefsContext();
 
   const isDelivered = status === MESSAGE_STATUS.DELIVERED;
@@ -139,17 +140,7 @@ export const DeliveryStatus = (props: DeliveryStatusProps) => {
     return (
       <Pressable onPress={() => deliveryStatusSheetRef.current?.present()}>
         <Icon icon={<WarningIcon stroke={semanticColors.textInverse} />} size={14} />
-        <BottomSheetModal
-          ref={deliveryStatusSheetRef}
-          backdropComponent={BottomSheetBackdrop}
-          handleIndicatorStyle={tailwind.style(
-            'overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]',
-          )}
-          enablePanDownToClose
-          animationConfigs={spring.sheet}
-          handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-          style={tailwind.style('rounded-[26px] overflow-hidden')}
-          snapPoints={['15']}>
+        <BottomSheetModal ref={deliveryStatusSheetRef} {...sheetDefaults} snapPoints={['15%']}>
           <BottomSheetWrapper>
             <ErrorInformation errorMessage={errorMessage} />
           </BottomSheetWrapper>

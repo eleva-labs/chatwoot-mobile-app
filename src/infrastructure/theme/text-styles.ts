@@ -42,6 +42,18 @@ export const textLabel = 'text-sm font-inter-medium-24 leading-5' as const;
 /** Overline — small uppercase text */
 export const textOverline = 'text-xs font-inter-580-24 leading-4 tracking-wider uppercase' as const;
 
+/** Caption book — small supplementary text (420 book weight) */
+export const textCaptionBook = 'text-xs font-inter-420-20 leading-4' as const;
+
+/** Body small book — compact text (420 book weight) */
+export const textBodySmallBook = 'text-sm font-inter-420-20 leading-5' as const;
+
+/** Body book — standard text at base size (420 book weight) */
+export const textBodyBook = 'text-base font-inter-420-20 leading-5' as const;
+
+/** Body base — standard text at base size (400 regular weight) */
+export const textBodyBase = 'text-base font-inter-normal-20 leading-5' as const;
+
 /**
  * All text style presets as a single object for convenient access.
  */
@@ -56,4 +68,8 @@ export const textStyles = {
   captionXs: textCaptionXs,
   label: textLabel,
   overline: textOverline,
+  captionBook: textCaptionBook,
+  bodySmallBook: textBodySmallBook,
+  bodyBook: textBodyBook,
+  bodyBase: textBodyBase,
 } as const;

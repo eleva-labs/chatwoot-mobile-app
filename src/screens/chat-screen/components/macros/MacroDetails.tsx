@@ -10,7 +10,7 @@ import i18n from '@infrastructure/i18n';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { Agent, Macro } from '@domain/types';
 import { useHaptic, useScaleAnimation } from '@infrastructure/utils';
-import { useAppSelector } from '@/hooks';
+import { useAppSelector } from '@application/store/hooks';
 import { selectAllLabels } from '@application/store/label/labelSelectors';
 import { selectAllTeams } from '@application/store/team/teamSelectors';
 import { selectAssignableAgentsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';

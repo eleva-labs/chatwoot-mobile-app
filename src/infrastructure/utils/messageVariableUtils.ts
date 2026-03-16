@@ -1,5 +1,4 @@
-import { Conversation } from '@domain/types';
-import { Contact } from '@domain/types';
+import { Conversation, Contact } from '@domain/types';
 
 import {
   getMessageVariables,
@@ -15,10 +14,9 @@ export const allMessageVariables = ({ conversation }: { conversation: Conversati
   if (!conversation) return {};
   const contact = conversation?.meta?.sender as Contact;
   return getMessageVariables({
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     conversation,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
     // @ts-ignore
     contact,
   }) as MessageVariables;
@@ -29,7 +27,7 @@ export const replaceMessageVariables = ({
   variables,
 }: {
   message: string;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
   // @ts-ignore
   variables: MessageVariables;
 }) => {

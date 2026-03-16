@@ -1,23 +1,13 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useMemo } from 'react';
 import Markdown, { MarkdownIt } from '@ronradtke/react-native-markdown-display';
 import { openURL } from '@infrastructure/utils/urlUtils';
 
-import { MESSAGE_VARIANTS } from '@domain/constants';
-import { useThemedStyles } from '@infrastructure/hooks';
+import { useMarkdownTheme, useThemedStyles } from '@infrastructure/hooks';
+import { getMessageTokensByVariant } from '@infrastructure/theme/chat-tokens';
 
 type MarkdownBubbleProps = {
   messageContent: string;
   variant: string;
-};
-
-const variantTextMap = {
-  [MESSAGE_VARIANTS.AGENT]: 'text-slate-12',
-  [MESSAGE_VARIANTS.USER]: 'text-slate-12',
-  [MESSAGE_VARIANTS.BOT]: 'text-slate-12',
-  [MESSAGE_VARIANTS.TEMPLATE]: 'text-slate-12',
-  [MESSAGE_VARIANTS.ERROR]: 'text-ruby-12',
-  [MESSAGE_VARIANTS.PRIVATE]: 'text-amber-12 font-inter-medium-24',
 };
 
 export const MarkdownBubble = (props: MarkdownBubbleProps) => {
@@ -28,52 +18,34 @@ export const MarkdownBubble = (props: MarkdownBubbleProps) => {
     return true;
   };
 
-  const textStyle = themedTailwind.style(variantTextMap[variant]);
+  const tokens = getMessageTokensByVariant(variant);
+  const textStyle = themedTailwind.style(tokens.text);
+  const textColor = textStyle.color as string | undefined;
 
-  const styles = StyleSheet.create({
-    text: {
-      fontSize: 16,
-      letterSpacing: 0.32,
-      lineHeight: 22,
-      ...textStyle,
-    },
-    strong: {
-      fontFamily: 'Inter-600-20',
-      fontWeight: '600',
-    },
-    em: {
-      fontStyle: 'italic',
-    },
-    paragraph: {
-      marginTop: 0,
-      marginBottom: 0,
-      fontFamily: 'Inter-400-20',
-    },
-    bullet_list: {
-      minWidth: 200,
-    },
-    ordered_list: {
-      minWidth: 200,
-    },
-    list_item: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      ...textStyle,
-    },
-    bullet_list_icon: {
-      marginLeft: 0,
-      marginRight: 8,
-      fontWeight: '900',
-      ...textStyle,
-    },
-    ordered_list_icon: {
-      marginLeft: 0,
-      marginRight: 8,
-      fontWeight: '900',
-      ...textStyle,
-    },
+  const baseStyles = useMarkdownTheme({
+    textColor,
   });
+
+  // Merge variant-specific text color into list items and icons
+  const styles = useMemo(
+    () => ({
+      ...baseStyles,
+      list_item: {
+        ...baseStyles.list_item,
+        ...textStyle,
+      },
+      bullet_list_icon: {
+        ...baseStyles.bullet_list_icon,
+        ...textStyle,
+      },
+      ordered_list_icon: {
+        ...baseStyles.ordered_list_icon,
+        ...textStyle,
+      },
+    }),
+    [baseStyles, textStyle],
+  );
+
   return (
     <Markdown
       mergeStyle

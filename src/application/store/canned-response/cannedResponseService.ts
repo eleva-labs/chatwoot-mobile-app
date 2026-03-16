@@ -1,4 +1,4 @@
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import type { CannedResponseResponse } from './cannedResponseTypes';
 import { transformCannedResponse } from '@infrastructure/utils/camelCaseKeys';
 import { CannedResponse } from '@domain/types';

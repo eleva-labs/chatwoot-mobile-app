@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '@infrastructure/context/ThemeContext';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useBoxShadow } from '@infrastructure/theme';
 
 export const ThemeToggle: React.FC = () => {
   const { theme, setTheme } = useTheme();
+  const cardShadow = useBoxShadow('card');
 
   const themes = [
     { key: 'light', label: 'Light' },
@@ -17,11 +18,14 @@ export const ThemeToggle: React.FC = () => {
       {themes.map(themeOption => (
         <TouchableOpacity
           key={themeOption.key}
-          style={tailwind.style(
-            theme === themeOption.key
-              ? 'flex-1 py-2 px-3 rounded-md bg-solid-1 shadow-sm'
-              : 'flex-1 py-2 px-3 rounded-md bg-transparent',
-          )}
+          style={[
+            tailwind.style(
+              theme === themeOption.key
+                ? 'flex-1 py-2 px-3 rounded-md bg-solid-1'
+                : 'flex-1 py-2 px-3 rounded-md bg-transparent',
+            ),
+            theme === themeOption.key ? { boxShadow: cardShadow } : undefined,
+          ]}
           onPress={() => setTheme(themeOption.key)}>
           <Text
             style={tailwind.style(

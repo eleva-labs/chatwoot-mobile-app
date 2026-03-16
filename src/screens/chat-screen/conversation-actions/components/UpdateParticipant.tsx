@@ -1,57 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
+import React, { useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { TickIcon } from '@/svg-icons/common/TickIcon';
 
 import { useRefsContext } from '@infrastructure/context';
 import { tailwind } from '@infrastructure/theme';
 import { Agent } from '@domain/types';
-import { Avatar, SearchBar } from '@infrastructure/ui';
+import { Avatar, SearchBar, SelectableListCell } from '@infrastructure/ui';
 
 import { assignableAgentActions } from '@application/store/assignable-agent/assignableAgentActions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import { selectAssignableParticipantsByInboxId } from '@application/store/assignable-agent/assignableAgentSelectors';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
+import {
+  selectAssignableParticipantsByInboxId,
+  isAssignableAgentFetching,
+} from '@application/store/assignable-agent/assignableAgentSelectors';
 import { selectSelectedConversation } from '@application/store/conversation/conversationSelectedSlice';
-import { isAssignableAgentFetching } from '@application/store/assignable-agent/assignableAgentSelectors';
 import { showToast } from '@infrastructure/utils/toastUtils';
+import { useSearchableBottomSheet } from '@infrastructure/utils/useSearchableBottomSheet';
 import i18n from '@infrastructure/i18n';
 import { CONVERSATION_EVENTS } from '@domain/constants/analyticsEvents';
 import AnalyticsHelper from '@infrastructure/utils/analyticsUtils';
 import { conversationParticipantActions } from '@application/store/conversation-participant/conversationParticipantActions';
-
-type ParticipantCellProps = {
-  value: Agent & { isParticipant: boolean };
-  lastItem: boolean;
-  onPress: (item: Agent & { isParticipant: boolean }) => void;
-};
-
-const ParticipantCell = (props: ParticipantCellProps) => {
-  const { value, lastItem, onPress } = props;
-
-  return (
-    <Pressable onPress={() => onPress(value)} style={tailwind.style('flex flex-row items-center')}>
-      <Avatar src={{ uri: value.thumbnail || undefined }} name={value.name ?? ''} size="md" />
-      <Animated.View
-        style={tailwind.style(
-          'flex-1 ml-3 flex-row justify-between py-[11px] pr-3',
-          !lastItem ? 'border-b-[1px] border-slate-6' : '',
-        )}>
-        <Animated.Text
-          style={[
-            tailwind.style(
-              'text-base text-slate-12 font-inter-420-20 leading-[21px] tracking-[0.16px]',
-            ),
-          ]}>
-          {value.name}
-        </Animated.Text>
-        {value.isParticipant ? (
-          <TickIcon size={20} color={tailwind.color('text-slate-12')} />
-        ) : null}
-      </Animated.View>
-    </Pressable>
-  );
-};
 
 const ParticipantStack = ({
   allAgents,
@@ -102,18 +70,22 @@ const ParticipantStack = ({
       {isFetching ? (
         <ActivityIndicator />
       ) : (
-        updatedAgents.map((value, index) => {
-          return (
-            <ParticipantCell
-              key={index}
-              {...{
-                value,
-                lastItem: index === updatedAgents.length - 1,
-                onPress: handleAssigneePress,
-              }}
-            />
-          );
-        })
+        updatedAgents.map((value, index) => (
+          <SelectableListCell
+            key={value.id}
+            leftContent={
+              <Avatar
+                src={{ uri: value.thumbnail || undefined }}
+                name={value.name ?? ''}
+                size="md"
+              />
+            }
+            label={value.name ?? ''}
+            isSelected={value.isParticipant}
+            isLastItem={index === updatedAgents.length - 1}
+            onPress={() => handleAssigneePress(value)}
+          />
+        ))
       )}
     </BottomSheetScrollView>
   );
@@ -127,7 +99,8 @@ export const UpdateParticipant = (props: UpdateParticipantProps) => {
   const { activeConversationParticipants } = props;
   const dispatch = useAppDispatch();
   const { updateParticipantSheetRef } = useRefsContext();
-  const [searchTerm, setSearchTerm] = useState('');
+  const { searchTerm, handleChangeText, handleFocus, handleBlur } =
+    useSearchableBottomSheet(updateParticipantSheetRef);
 
   const selectedConversation = useAppSelector(selectSelectedConversation);
 
@@ -138,21 +111,10 @@ export const UpdateParticipant = (props: UpdateParticipantProps) => {
   const selectAgents = useAppSelector(selectAssignableParticipantsByInboxId);
   const allAgents = inboxId ? selectAgents(inboxId, searchTerm) : [];
 
-  const handleFocus = () => {
-    updateParticipantSheetRef.current?.expand();
-  };
-  const handleBlur = () => {
-    updateParticipantSheetRef.current?.dismiss({ overshootClamping: true });
-  };
-
   useEffect(() => {
     dispatch(assignableAgentActions.fetchAgents({ inboxIds }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleChangeText = (text: string) => {
-    setSearchTerm(text);
-  };
 
   return (
     <React.Fragment>

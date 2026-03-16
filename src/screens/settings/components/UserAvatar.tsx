@@ -6,7 +6,7 @@ import { AvailabilityStatus } from '@domain/types/common/AvailabilityStatus';
 import { tailwind } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { cx, styleAdapter } from '@infrastructure/utils';
-import { userStatusList } from '@domain/constants';
+import { AVAILABILITY_STATUS_LIST } from '@domain/constants';
 
 function getInitials(name: string) {
   if (!name) {
@@ -23,7 +23,7 @@ function getInitials(name: string) {
 }
 
 const getBgColorBasedOnStatus = (status: AvailabilityStatus) => {
-  return userStatusList.find(value => value.status === status)?.statusColor || '';
+  return AVAILABILITY_STATUS_LIST.find(value => value.status === status)?.statusColor || '';
 };
 
 const AvatarStatus = ({

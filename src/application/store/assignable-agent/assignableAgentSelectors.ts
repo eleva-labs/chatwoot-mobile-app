@@ -22,18 +22,9 @@ export const selectAssignableAgentsByInboxId = createSelector(
     (_state: RootState, _inboxIds: number | number[], searchTerm: string) => searchTerm,
   ],
   (state, inboxIds, searchTerm) => {
-    const agents = inboxIds.flatMap(id => state[id] || []);
-    const agentsList = [
-      {
-        confirmed: true,
-        name: 'None',
-        id: 0,
-        role: 'agent',
-        accountId: 0,
-      },
-      ...agents,
-    ];
-    return searchTerm ? agentsList.filter(agent => agent?.name?.includes(searchTerm)) : agentsList;
+    const allAgents = inboxIds.flatMap(id => state[id] || []);
+    const agents = [...new Map(allAgents.map(a => [a.id, a])).values()];
+    return searchTerm ? agents.filter(agent => agent?.name?.includes(searchTerm)) : agents;
   },
 );
 
@@ -43,7 +34,8 @@ export const selectAssignableParticipantsByInboxId = createSelector(
     // Create a memoized function that we can reuse
     return (inboxIds: number | number[], searchTerm: string = '') => {
       const normalizedInboxIds = Array.isArray(inboxIds) ? inboxIds : [inboxIds];
-      const agents = normalizedInboxIds.flatMap(id => state[id] || []);
+      const allAgents = normalizedInboxIds.flatMap(id => state[id] || []);
+      const agents = [...new Map(allAgents.map(a => [a.id, a])).values()];
 
       if (!searchTerm) {
         return agents;

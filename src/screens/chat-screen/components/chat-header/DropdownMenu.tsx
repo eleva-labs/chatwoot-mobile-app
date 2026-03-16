@@ -1,9 +1,8 @@
 import React, { forwardRef, PropsWithChildren, useCallback, useRef, type JSX } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetBackdropProps, BottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
+import { useSheetDefaults } from '@infrastructure/utils';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
 import { BottomSheetHeader, BottomSheetWrapper } from '@infrastructure/ui';
@@ -66,7 +65,7 @@ const DropdownMenuBottomSheetBackdrop = forwardRef<
 
   return (
     <Pressable onPress={handleBackdropPress} style={style}>
-      <Animated.View style={[tailwind.style('bg-blackA-A9'), style, animatedStyle]} />
+      <Animated.View style={[tailwind.style('bg-black/45'), style, animatedStyle]} />
     </Pressable>
   );
 });
@@ -88,7 +87,7 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
     contextMenuSheetRef.current?.close();
   };
 
-  const { bottom } = useSafeAreaInsets();
+  const sheetDefaults = useSheetDefaults();
 
   const renderBackDrop = useCallback(
     (backdropProps: BottomSheetBackdropProps) => (
@@ -109,17 +108,10 @@ export const ChatDropdownMenu = (props: PropsWithChildren<ChatDropdownMenuProps>
         </Pressable>
         <BottomSheetModal
           ref={contextMenuSheetRef}
+          {...sheetDefaults}
           backdropComponent={renderBackDrop}
-          handleIndicatorStyle={tailwind.style(
-            'overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]',
-          )}
-          handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
           style={tailwind.style('mx-3 rounded-[26px] overflow-hidden')}
-          backgroundStyle={themedTailwind.style('bg-solid-1')}
           detached
-          bottomInset={bottom === 0 ? 12 : bottom}
-          animationConfigs={spring.sheet}
-          enablePanDownToClose
           snapPoints={[dropdownMenuList.length * 44 + 4 + 37]}>
           <BottomSheetWrapper>
             <BottomSheetHeader headerText="Select action" />

@@ -2,7 +2,7 @@ import React from 'react';
 import { Animated, Text } from 'react-native';
 
 import { LockIcon } from '@/svg-icons';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { messageTimestamp } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
 
@@ -29,8 +29,7 @@ export const PrivateTextCell = (props: PrivateTextCellProps) => {
       <Animated.View
         style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
         <Icon icon={<LockIcon />} size={12} />
-        <Text
-          style={tailwind.style('text-xs font-inter-420-20 tracking-[0.32px] pl-1 text-slate-11')}>
+        <Text style={tailwind.style(`${textCaptionBook} tracking-[0.32px] pl-1 text-slate-11`)}>
           {messageTimestamp(timeStamp)}
         </Text>
       </Animated.View>

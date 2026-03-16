@@ -5,7 +5,7 @@ import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 import { SearchIcon } from '@/svg-icons';
 import { timing } from '@infrastructure/animation';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { tailwind, useThemeColors, textBodyBase } from '@infrastructure/theme';
 import { RenderPropType } from '@domain/types';
 import { Spinner } from '@infrastructure/ui/spinner';
 import { Icon } from '../icon';
@@ -49,7 +49,7 @@ export const SearchBar = (props: SearchBarProps) => {
       <SearchTextInput
         style={[
           tailwind.style(
-            'h-9 px-8.5 py-[7px] bg-blackA-A3 text-slate-12 text-base font-inter-normal-20 leading-[19.5px] rounded-[11px]',
+            `${textBodyBase} h-9 px-8.5 py-[7px] bg-slate-3 text-slate-12 leading-[19.5px] rounded-[11px]`,
             isLoading ? 'px-8.5' : 'pl-8.5 pr-4',
           ),
         ]}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Animated, Text, Dimensions } from 'react-native';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textCaptionBook } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 import { Channel, Message, MessageStatus, MessageType } from '@domain/types';
 import { messageTimestamp } from '@infrastructure/utils';
@@ -78,7 +78,7 @@ export const MessageTextCell = (props: MessageTextCellProps) => {
         style={tailwind.style('h-[21px] pt-2 pb-0.5 flex flex-row items-center justify-end')}>
         <Text
           style={tailwind.style(
-            'text-xs font-inter-420-20 tracking-[0.32px] pr-1',
+            `${textCaptionBook} tracking-[0.32px] pr-1`,
             isIncoming ? 'text-slate-11' : '',
             isOutgoing ? 'text-slate-11' : '',
             isMessageFailed ? 'text-ruby-12' : '',

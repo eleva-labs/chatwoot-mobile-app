@@ -3,7 +3,7 @@ import Animated from 'react-native-reanimated';
 
 import { messageTimestamp } from '@infrastructure/utils/dateTimeUtils';
 import { localizeActivityMessage } from '@infrastructure/utils/activityMessageUtils';
-import { useThemedStyles } from '@/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 
 type ActivityBubbleProps = {
   text: string;

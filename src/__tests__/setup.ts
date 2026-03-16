@@ -236,10 +236,16 @@ jest.mock('@react-native-community/netinfo', () => ({
   addEventListener: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('react-native-keyboard-controller', () => ({
-  useKeyboardHandler: jest.fn(() => ({})),
-  KeyboardProvider: ({ children }: { children: React.ReactNode }) => children,
-}));
+jest.mock('react-native-keyboard-controller', () => {
+  const { View, ScrollView } = require('react-native');
+  return {
+    useKeyboardHandler: jest.fn(() => ({})),
+    KeyboardProvider: ({ children }: { children: React.ReactNode }) => children,
+    KeyboardGestureArea: View,
+    KeyboardStickyView: View,
+    KeyboardChatScrollView: ScrollView,
+  };
+});
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(() => Promise.resolve()),

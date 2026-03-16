@@ -5,7 +5,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "*": ["src/*"],
       
       // Domain layer (extraction-ready)
       "@domain/*": ["src/domain/*"],

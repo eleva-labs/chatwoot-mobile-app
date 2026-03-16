@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch, useThemedStyles } from '@/hooks';
+import { useAppSelector, useAppDispatch } from '@application/store/hooks';
+import { useThemedStyles } from '@infrastructure/hooks';
 import { useChatWindowContext } from '@infrastructure/context';
-import { AppState, Platform, Animated } from 'react-native';
+import { AppState } from 'react-native';
 import { KeyboardGestureArea } from 'react-native-keyboard-controller';
 import flatMap from 'lodash/flatMap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -64,9 +65,6 @@ const shouldGroupWithNext = (index: number, searchList: MessageOrDate[]) => {
   // Check if messages are in the same minute by rounding down to nearest minute
   return Math.floor(next.createdAt / 60) === Math.floor(current.createdAt / 60);
 };
-
-const PlatformSpecificKeyboardWrapperComponent =
-  Platform.OS === 'android' ? Animated.View : KeyboardGestureArea;
 
 export const MessagesListContainer = () => {
   const themedTailwind = useThemedStyles();
@@ -182,9 +180,10 @@ export const MessagesListContainer = () => {
   const canReply = conversation?.canReply;
 
   return (
-    <PlatformSpecificKeyboardWrapperComponent
+    <KeyboardGestureArea
       style={themedTailwind.style('flex-1 bg-solid-1')}
-      interpolator="linear">
+      interpolator="ios"
+      textInputNativeID="chat-input">
       {!canReply && inbox && conversation && (
         <ReplyWarning inbox={inbox} conversation={conversation} />
       )}
@@ -196,6 +195,6 @@ export const MessagesListContainer = () => {
         isEmailInbox={isEmailInbox}
         currentUserId={userId as number}
       />
-    </PlatformSpecificKeyboardWrapperComponent>
+    </KeyboardGestureArea>
   );
 };

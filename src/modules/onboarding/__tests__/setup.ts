@@ -4,7 +4,7 @@
  * This file configures the test environment with custom matchers,
  * global mocks, and test utilities.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports, @typescript-eslint/no-unused-vars, @typescript-eslint/no-namespace */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports, @typescript-eslint/no-unused-vars */
 
 import 'reflect-metadata';
 import { resultMatchers } from './helpers/testHelpers';
@@ -116,10 +116,16 @@ jest.mock('expo-haptics', () => ({
 }));
 
 // Mock react-native-keyboard-controller
-jest.mock('react-native-keyboard-controller', () => ({
-  useKeyboardHandler: jest.fn(() => ({})),
-  KeyboardProvider: ({ children }: { children: React.ReactNode }) => children,
-}));
+jest.mock('react-native-keyboard-controller', () => {
+  const { View, ScrollView } = require('react-native');
+  return {
+    useKeyboardHandler: jest.fn(() => ({})),
+    KeyboardProvider: ({ children }: { children: React.ReactNode }) => children,
+    KeyboardGestureArea: View,
+    KeyboardStickyView: View,
+    KeyboardChatScrollView: ScrollView,
+  };
+});
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {

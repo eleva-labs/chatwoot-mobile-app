@@ -1,11 +1,17 @@
 import React from 'react';
-import { Pressable, StyleSheet, Platform } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { CaretRight } from '@/svg-icons/common/CaretRight';
 
 import { GenericListType } from '@domain/types';
 import { Icon } from '@infrastructure/ui/common/icon';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import {
+  useBoxShadow,
+  useThemeColors,
+  textLabel,
+  textBodyBook,
+  textBodyBase,
+} from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
 
 type GenericListProps = {
@@ -50,7 +56,7 @@ const ListItem = (props: ListItemProps) => {
           <Animated.View>
             <Animated.Text
               style={themedTailwind.style(
-                'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
+                `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12`,
               )}>
               {listItem.title}
             </Animated.Text>
@@ -58,7 +64,7 @@ const ListItem = (props: ListItemProps) => {
           <Animated.View style={themedTailwind.style('flex flex-row items-center pr-3')}>
             <Animated.Text
               style={themedTailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px]',
+                `${textBodyBase} leading-[22px] tracking-[0.16px]`,
                 listItem.subtitleType === 'light' ? 'text-slate-12' : 'text-slate-12',
               )}>
               {listItem.subtitle}
@@ -74,14 +80,7 @@ const ListItem = (props: ListItemProps) => {
 export const SettingsList = (props: GenericListProps) => {
   const { list, sectionTitle } = props;
   const themedTailwind = useThemedStyles();
-
-  // Create theme-aware shadow styles
-  const themedShadowStyles = {
-    ...styles.listShadow,
-    ...(Platform.OS === 'android' && {
-      backgroundColor: tailwind.color('bg-solid-1') ?? 'white',
-    }),
-  };
+  const cardShadow = useBoxShadow('card');
 
   return (
     <Animated.View>
@@ -89,14 +88,14 @@ export const SettingsList = (props: GenericListProps) => {
         <Animated.View style={themedTailwind.style('pl-4 pb-3')}>
           <Animated.Text
             style={themedTailwind.style(
-              'text-sm font-inter-medium-24 leading-[16px] tracking-[0.32px] text-slate-11',
+              `${textLabel} leading-[16px] tracking-[0.32px] text-slate-11`,
             )}>
             {sectionTitle}
           </Animated.Text>
         </Animated.View>
       ) : null}
       <Animated.View
-        style={[themedTailwind.style('rounded-[13px] mx-4 bg-solid-1'), themedShadowStyles]}>
+        style={[themedTailwind.style('rounded-[13px] mx-4 bg-solid-1'), { boxShadow: cardShadow }]}>
         {list.map(
           (listItem, index) =>
             !listItem.disabled && (
@@ -111,18 +110,3 @@ export const SettingsList = (props: GenericListProps) => {
     </Animated.View>
   );
 };
-const styles = StyleSheet.create({
-  listShadow:
-    Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0,0.25)',
-        shadowOffset: { width: 0, height: 0.15 },
-        shadowRadius: 2,
-        shadowOpacity: 0.35,
-        elevation: 2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }) || {}, // Add fallback empty object
-});

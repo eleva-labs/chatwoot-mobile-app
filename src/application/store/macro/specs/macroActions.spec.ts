@@ -15,7 +15,7 @@ jest.mock('@infrastructure/utils/toastUtils', () => ({
   showToast: jest.fn(),
 }));
 
-jest.mock('@/services/APIService', () => ({
+jest.mock('@infrastructure/services/APIService', () => ({
   apiService: {
     get: jest.fn(),
     post: jest.fn(),

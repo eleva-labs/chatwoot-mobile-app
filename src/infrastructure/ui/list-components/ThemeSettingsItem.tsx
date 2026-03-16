@@ -2,7 +2,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 
 import { ThemeIcon } from '@/svg-icons/common';
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, textBodyBook } from '@infrastructure/theme';
 import { Icon } from '@infrastructure/ui/common/icon';
 import { ThemeToggle } from '@infrastructure/ui/common/ThemeToggle';
 import { useTheme } from '@infrastructure/context/ThemeContext';
@@ -41,7 +41,7 @@ export const ThemeSettingsItem: React.FC<ThemeSettingsItemProps> = ({ isLastItem
         <Animated.View style={tailwind.style('flex-1')}>
           <Animated.Text
             style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
+              `${textBodyBook} leading-[22px] tracking-[0.16px] text-slate-12`,
             )}>
             {i18n.t('SETTINGS.THEME')}
           </Animated.Text>

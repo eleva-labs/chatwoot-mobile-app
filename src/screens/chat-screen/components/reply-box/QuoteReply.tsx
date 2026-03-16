@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import Markdown, { MarkdownIt } from '@ronradtke/react-native-markdown-display';
 import Animated from 'react-native-reanimated';
 import { Image } from 'expo-image';
@@ -10,8 +10,9 @@ import { FileIcon, VoiceNote } from '@/svg-icons';
 import { tailwind } from '@infrastructure/theme';
 import { isMarkdown } from '@infrastructure/utils';
 import { Icon } from '@infrastructure/ui/common';
+import { useMarkdownTheme } from '@infrastructure/hooks';
 
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 
 import {
   selectQuoteMessage,
@@ -45,45 +46,7 @@ export const QuoteReply = () => {
 
   const { messageListRef } = useRefsContext();
 
-  const textStyle = tailwind.style('text-slate-12');
-
-  const styles = StyleSheet.create({
-    text: {
-      fontSize: 16,
-      letterSpacing: 0.32,
-      lineHeight: 22,
-      ...textStyle,
-    },
-    strong: {
-      fontFamily: 'Inter-600-20',
-      fontWeight: '600',
-    },
-    em: {
-      fontStyle: 'italic',
-    },
-    paragraph: {
-      marginTop: 0,
-      marginBottom: 0,
-      fontFamily: 'Inter-400-20',
-    },
-    bullet_list: {
-      minWidth: 200,
-    },
-    ordered_list: {
-      minWidth: 200,
-    },
-    list_item: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-    },
-    bullet_list_icon: {
-      marginLeft: 0,
-      marginRight: 8,
-      fontWeight: '900',
-      ...textStyle,
-    },
-  });
+  const styles = useMarkdownTheme();
 
   const handleOnPressClose = () => {
     dispatch(setQuoteMessage(null));
@@ -134,7 +97,7 @@ export const QuoteReply = () => {
         <Animated.View>
           <Animated.Text
             style={tailwind.style(
-              'text-cxs tracking-[0.32px] leading-[15px] font-inter-420-20 text-blackA-A11',
+              'text-cxs tracking-[0.32px] leading-[15px] font-inter-420-20 text-slate-11',
             )}>
             Replying to {quoteMessage?.sender?.name}
           </Animated.Text>

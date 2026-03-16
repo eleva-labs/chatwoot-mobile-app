@@ -47,9 +47,7 @@ export const ContactDetailsScreenHeader = (props: ContactDetailsScreenHeaderProp
           </Animated.View>
         </Animated.View>
       </Animated.View>
-      <Animated.View style={tailwind.style('flex-1 items-end')}>
-        {/* <Icon icon={<Overflow strokeWidth={2} />} size={24} /> */}
-      </Animated.View>
+      <Animated.View style={tailwind.style('flex-1 items-end')} />
     </Animated.View>
   );
 };

@@ -77,7 +77,6 @@ const rootReducer = (state: ReturnType<typeof appReducer>, action: AnyAction) =>
   return appReducer(state, action);
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

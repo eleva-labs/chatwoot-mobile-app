@@ -1,19 +1,19 @@
 import React from 'react';
 import { ImageSourcePropType, Keyboard, Platform, Pressable } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { spring } from '@infrastructure/animation';
 import Animated from 'react-native-reanimated';
 import { ChevronLeft } from '@/svg-icons/common/ChevronLeft';
 import { Overflow } from '@/svg-icons/common/Overflow';
 
-import { Avatar, Icon, BottomSheetBackdrop, BottomSheetWrapper } from '@infrastructure/ui';
+import { Avatar, Icon, BottomSheetWrapper } from '@infrastructure/ui';
 import { InboxIndicator } from '@infrastructure/ui/list-components';
 import { Inbox } from '@domain/types/Inbox';
 import { ConversationAdditionalAttributes } from '@domain/types/Conversation';
-import { /* OpenIcon, ResolvedIcon, */ SLAIcon } from '@/svg-icons';
+import { SLAIcon } from '@/svg-icons';
 import { AIHeaderButton } from '@infrastructure/ui/ai-status/AIHeaderButton';
 import { tailwind, useThemeColors } from '@infrastructure/theme';
 import { useThemedStyles } from '@infrastructure/hooks';
+import { useSheetDefaults } from '@infrastructure/utils';
 import { ChatDropdownMenu, DashboardList } from './DropdownMenu';
 import { SLAEvent } from '@domain/types/common';
 import { useRefsContext } from '@infrastructure/context';
@@ -55,6 +55,7 @@ export const ChatHeader = ({
   onToggleAI,
 }: ChatHeaderProps) => {
   const themedTailwind = useThemedStyles();
+  const sheetDefaults = useSheetDefaults();
   const { colors } = useThemeColors();
   const { slaEventsSheetRef } = useRefsContext();
 
@@ -112,18 +113,6 @@ export const ChatHeader = ({
               </Pressable>
             )}
             <AIHeaderButton isEnabled={isAIEnabled} onPress={onToggleAI} />
-            {/* Status icon temporarily hidden - was causing user confusion
-            <Icon
-              icon={
-                isResolved ? (
-                  <ResolvedIcon strokeWidth={2} stroke={colors.teal[9]} />
-                ) : (
-                  <OpenIcon strokeWidth={2} stroke={colors.slate[12]} />
-                )
-              }
-              size={24}
-            />
-            */}
           </Animated.View>
           {dashboardsList.length > 0 && (
             <ChatDropdownMenu dropdownMenuList={dashboardsList}>
@@ -132,15 +121,7 @@ export const ChatHeader = ({
           )}
         </Animated.View>
       </Animated.View>
-      <BottomSheetModal
-        ref={slaEventsSheetRef}
-        backdropComponent={BottomSheetBackdrop}
-        handleIndicatorStyle={tailwind.style('overflow-hidden bg-blackA-A6 w-8 h-1 rounded-[11px]')}
-        enablePanDownToClose
-        animationConfigs={spring.sheet}
-        handleStyle={tailwind.style('p-0 h-4 pt-[5px]')}
-        style={tailwind.style('rounded-[26px] overflow-hidden')}
-        snapPoints={['36%']}>
+      <BottomSheetModal ref={slaEventsSheetRef} {...sheetDefaults} snapPoints={['36%']}>
         <BottomSheetWrapper>
           <SlaEvents slaEvents={slaEvents} statusText={statusText ?? ''} />
         </BottomSheetWrapper>

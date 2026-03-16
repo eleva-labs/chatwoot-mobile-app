@@ -5,29 +5,30 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { authActions } from '@application/store/auth/authActions';
 import * as Sentry from '@sentry/react-native';
 
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import {
   selectLoggedIn,
   selectUser,
   selectCurrentUserAccount,
 } from '@application/store/auth/authSelectors';
 
-import { getUserPermissions } from '@infrastructure/utils/permissionUtils';
-import { CONVERSATION_PERMISSIONS } from '@domain/constants/permissions';
-
 import { AuthStack, ConversationStack, SettingsStack } from '../stack';
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import ChatScreen from '@/screens/chat-screen/ChatScreen';
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import ContactDetailsScreen from '@/screens/contact-details/ContactDetailsScreen';
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import DashboardScreen from '@/screens/dashboard/DashboardScreen';
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import { OnboardingScreen } from '@/screens/onboarding/OnboardingScreen';
 
 import {
   selectInstallationUrl,
   selectOnboardingCompleted,
+  selectChatwootVersion,
 } from '@application/store/settings/settingsSelectors';
 import { BottomTabBar } from './BottomTabBar';
 import { settingsActions } from '@application/store/settings/settingsActions';
-import { selectChatwootVersion } from '@application/store/settings/settingsSelectors';
 import { checkServerSupport } from '@infrastructure/utils/serverUtils';
 import { inboxActions } from '@application/store/inbox/inboxActions';
 import { labelActions } from '@application/store/label/labelActions';
@@ -38,7 +39,7 @@ import { clearAllDeliveredNotifications } from '@infrastructure/utils/pushUtils'
 import { dashboardAppActions } from '@application/store/dashboard-app/dashboardAppActions';
 import { customAttributeActions } from '@application/store/custom-attribute/customAttributeActions';
 import { clearSelection } from '@application/store/conversation/conversationSelectedSlice';
-import { usePushNotifications } from '@/hooks';
+import { usePushNotifications, useConversationPermission } from '@infrastructure/hooks';
 
 const Tab = createBottomTabNavigator();
 
@@ -131,12 +132,7 @@ const Tabs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [installationUrl]);
 
-  const userPermissions = user ? getUserPermissions(user, user.account_id) : [];
-
-  // Checking if user has conversation permission to show inbox and conversations tabs
-  const hasConversationPermission = CONVERSATION_PERMISSIONS.some(permission =>
-    userPermissions.includes(permission),
-  );
+  const hasConversationPermission = useConversationPermission();
 
   const checkAppVersion = useCallback(async () => {
     if (chatwootVersion) {

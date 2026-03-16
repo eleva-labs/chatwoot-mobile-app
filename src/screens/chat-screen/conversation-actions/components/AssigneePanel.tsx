@@ -1,10 +1,7 @@
 import React from 'react';
-import { Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { CaretRight } from '@/svg-icons/common/CaretRight';
 import { Avatar, Icon } from '@infrastructure/ui';
 import { UnassignedIcon } from '@/svg-icons';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { SettingsRow } from '@infrastructure/ui/list-components/SettingsRow';
 import { Agent } from '@domain/types';
 import i18n from '@infrastructure/i18n';
 
@@ -15,61 +12,33 @@ type AssigneePanelProps = {
   isLastItem?: boolean;
 };
 
-const assigneeAvatar = (assignee: Agent | null) => {
-  if (assignee) {
-    return (
-      <Avatar size={'md'} src={{ uri: assignee?.thumbnail || '' }} name={assignee?.name || ''} />
-    );
-  }
-  return <Icon icon={<UnassignedIcon />} />;
-};
-
 const AssigneePanel = ({
   assignee,
   onPress,
   isFirstItem = false,
   isLastItem = false,
 }: AssigneePanelProps) => {
-  const { colors } = useThemeColors();
-  const assigneeName = assignee ? assignee.name : i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EMPTY');
-  const assigneeActionText = assignee
+  const leftContent = assignee ? (
+    <Avatar size="md" src={{ uri: assignee?.thumbnail || '' }} name={assignee?.name || ''} />
+  ) : (
+    <Icon icon={<UnassignedIcon />} />
+  );
+
+  const label = assignee ? (assignee.name ?? '') : i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EMPTY');
+
+  const actionText = assignee
     ? i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.EDIT')
     : i18n.t('CONVERSATION.ACTIONS.ASSIGNEE.ASSIGN');
+
   return (
-    <Pressable
+    <SettingsRow
+      leftContent={leftContent}
+      label={label}
+      actionText={actionText}
+      isFirstItem={isFirstItem}
+      isLastItem={isLastItem}
       onPress={onPress}
-      style={({ pressed }) => [
-        tailwind.style(
-          pressed ? 'bg-slate-3' : '',
-          isFirstItem ? 'rounded-t-[13px]' : '',
-          isLastItem ? 'rounded-b-[13px]' : '',
-        ),
-      ]}>
-      <Animated.View style={tailwind.style('flex-row items-center justify-between pl-3')}>
-        {assigneeAvatar(assignee)}
-        <Animated.View
-          style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px] ml-[10px]',
-            !isLastItem ? 'border-b-[1px] border-b-slate-6' : '',
-          )}>
-          <Animated.Text
-            style={tailwind.style(
-              'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-slate-12',
-            )}>
-            {assigneeName}
-          </Animated.Text>
-          <Animated.View style={tailwind.style('flex-row items-center pr-3')}>
-            <Animated.Text
-              style={tailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px] text-slate-12',
-              )}>
-              {assigneeActionText}
-            </Animated.Text>
-            <CaretRight size={20} color={colors.slate[12]} />
-          </Animated.View>
-        </Animated.View>
-      </Animated.View>
-    </Pressable>
+    />
   );
 };
 

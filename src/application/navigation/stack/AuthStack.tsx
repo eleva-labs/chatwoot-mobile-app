@@ -1,9 +1,13 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import ConfigInstallationURL from '@/screens/auth/ConfigURLScreen';
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import Login from '@/screens/auth/LoginScreen';
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import ForgotPassword from '@/screens/auth/ForgotPassword';
+// eslint-disable-next-line no-restricted-imports -- Navigation requires screen component references
 import MFAScreen from '@/screens/auth/MFAScreen';
 
 export type AuthStackParamList = {

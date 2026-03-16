@@ -1,4 +1,4 @@
-import { apiService } from '@/services/APIService';
+import { apiService } from '@infrastructure/services/APIService';
 import type { DashboardAppResponse } from './dashboardAppTypes';
 import { transformDashboardApp } from '@infrastructure/utils/camelCaseKeys';
 import { DashboardApp } from '@domain/types';

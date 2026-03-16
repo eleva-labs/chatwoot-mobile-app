@@ -54,7 +54,6 @@ export const NamedIcon: React.FC<NamedIconProps> = ({
 
   if (!entry) {
     if (__DEV__) {
-      // eslint-disable-next-line no-console
       console.warn(`[NamedIcon] Icon "${name}" not found in registry`);
     }
     return null;

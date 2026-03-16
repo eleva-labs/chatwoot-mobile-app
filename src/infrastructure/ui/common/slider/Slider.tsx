@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutChangeEvent, StyleSheet } from 'react-native';
+import { LayoutChangeEvent } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   clamp,
@@ -13,7 +13,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { tailwind } from '@infrastructure/theme';
+import { tailwind, useBoxShadow } from '@infrastructure/theme';
 import { spring } from '@infrastructure/animation';
 
 type SliderProps = {
@@ -36,6 +36,8 @@ export const Slider = (props: SliderProps) => {
     filledTrackColor,
     knobStyle,
   } = props;
+
+  const knobShadow = useBoxShadow('knob');
 
   const sliderActive = useSharedValue(0);
 
@@ -118,7 +120,7 @@ export const Slider = (props: SliderProps) => {
               'absolute justify-center items-center h-4 w-4 bg-solid-1 rounded-full -bottom-1.5',
               knobStyle,
             ),
-            styles.knobShadow,
+            { boxShadow: knobShadow },
             animatedKnobOneStyle,
           ]}
         />
@@ -126,16 +128,3 @@ export const Slider = (props: SliderProps) => {
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  knobShadow: {
-    // box-shadow: 0px 1px 2px 0px #00000026;
-    // box-shadow: 0px 0px 1px 0px #00000066;
-    // box-shadow: [horizontal offset] [vertical offset] [blur radius] [optional spread radius] [color];
-    shadowColor: '#00000066', // Intentional: shadow alpha color, universal across themes
-    shadowOffset: { width: 0, height: 0.35 },
-    shadowRadius: 4,
-    shadowOpacity: 0.6,
-    elevation: 2,
-  },
-});

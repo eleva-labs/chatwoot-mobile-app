@@ -201,7 +201,6 @@ export const AIToolPart: React.FC<AIToolPartProps> = ({
         ?.tool_name as string) ||
       '';
     return formatToolName(name, t('AI_ASSISTANT.CHAT.TOOLS.UNKNOWN_TOOL'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- part.toolName is extracted from part
   }, [part, t]);
 
   // Build title — show only tool name (state is conveyed by icon color)
