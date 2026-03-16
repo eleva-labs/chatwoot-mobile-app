@@ -1,15 +1,27 @@
 /**
- * This code was taken from https://github.com/GetStream/react-native-samples/blob/main/projects/WhatsAppClone/src/utils/AudioManager.ts
- * All credits goes the Awesome Developer [@vanGalilea](https://github.com/vanGalilea/vanGalilea)
+ * Audio playback manager — singleton module that manages a single AudioPlayer instance.
+ *
+ * Migrated from react-native-audio-recorder-player to expo-audio.
+ * All time values passed to consumers remain in milliseconds.
+ * Conversion between expo-audio's seconds and our milliseconds happens here.
  */
 
-import AudioRecorderPlayer, { PlayBackType } from 'react-native-audio-recorder-player';
+import { createAudioPlayer, AudioPlayer, AudioStatus } from 'expo-audio';
 
-export type Callback = (args: { status: AudioStatus; data?: PlayBackType }) => void;
+/**
+ * Playback data passed to consumer callbacks.
+ * Units: milliseconds (same as before migration).
+ */
+export type PlayBackData = {
+  currentPosition: number; // ms
+  duration: number; // ms
+};
 
-type Path = string | undefined;
-
-export enum AudioStatus {
+/**
+ * Audio playback status enum.
+ * Renamed from AudioStatus to AudioPlayerState to avoid collision with expo-audio's AudioStatus type.
+ */
+export enum AudioPlayerState {
   PLAYING = 'PLAYING',
   STARTED = 'STARTED',
   PAUSED = 'PAUSED',
@@ -17,78 +29,110 @@ export enum AudioStatus {
   STOPPED = 'STOPPED',
 }
 
-let audioRecorderPlayer: AudioRecorderPlayer | undefined;
+export type Callback = (args: { status: AudioPlayerState; data?: PlayBackData }) => void;
+
+type Path = string | undefined;
+
+let audioPlayer: AudioPlayer | undefined;
 let currentPath: Path;
 let currentCallback: Callback = () => {};
 let currentPosition = 0;
+let statusSubscription: { remove: () => void } | undefined;
 
 export const startPlayer = async (path: string, callback: Callback) => {
   if (currentPath === undefined) {
     currentPath = path;
     currentCallback = callback;
   } else if (currentPath !== path) {
-    if (audioRecorderPlayer !== undefined) {
+    if (audioPlayer !== undefined) {
       await stopPlayer();
     }
     currentPath = path;
     currentCallback = callback;
   }
 
-  if (audioRecorderPlayer === undefined) {
-    audioRecorderPlayer = new AudioRecorderPlayer();
-  }
-
   const shouldBeResumed = currentPath === path && currentPosition > 0;
 
   if (shouldBeResumed) {
-    await audioRecorderPlayer.resumePlayer();
-    currentCallback({
-      status: AudioStatus.RESUMED,
-    });
+    audioPlayer?.play();
+    currentCallback({ status: AudioPlayerState.RESUMED });
     return;
   }
 
-  await audioRecorderPlayer.startPlayer(currentPath);
-  currentCallback({
-    status: AudioStatus.STARTED,
-  });
-  audioRecorderPlayer.addPlayBackListener(async e => {
-    if (e.currentPosition === e.duration) {
-      currentCallback({
-        status: AudioStatus.STOPPED,
-        data: e,
-      });
-      await stopPlayer();
+  try {
+    if (audioPlayer === undefined) {
+      audioPlayer = createAudioPlayer({ uri: currentPath });
     } else {
-      currentPosition = e.currentPosition;
-      currentCallback({
-        status: AudioStatus.PLAYING,
-        data: e,
-      });
+      audioPlayer.replace({ uri: currentPath });
     }
-    return;
-  });
+
+    currentCallback({ status: AudioPlayerState.STARTED });
+
+    statusSubscription?.remove();
+    statusSubscription = audioPlayer.addListener('playbackStatusUpdate', (status: AudioStatus) => {
+      if (status.didJustFinish) {
+        currentCallback({
+          status: AudioPlayerState.STOPPED,
+          data: {
+            currentPosition: status.currentTime * 1000,
+            duration: status.duration * 1000,
+          },
+        });
+        // Clean up without re-notifying consumer (stopPlayer would send a second STOPPED callback)
+        audioPlayer?.pause();
+        statusSubscription?.remove();
+        statusSubscription = undefined;
+        currentPosition = 0;
+        audioPlayer?.remove();
+        audioPlayer = undefined;
+        currentPath = undefined;
+        return;
+      } else {
+        currentPosition = status.currentTime * 1000;
+        currentCallback({
+          status: AudioPlayerState.PLAYING,
+          data: {
+            currentPosition: status.currentTime * 1000,
+            duration: status.duration * 1000,
+          },
+        });
+      }
+    });
+
+    audioPlayer.play();
+  } catch {
+    currentCallback({ status: AudioPlayerState.STOPPED });
+    audioPlayer?.remove();
+    audioPlayer = undefined;
+    currentPath = undefined;
+    statusSubscription?.remove();
+    statusSubscription = undefined;
+    currentPosition = 0;
+  }
 };
 
 export const pausePlayer = async () => {
-  await audioRecorderPlayer?.pausePlayer();
-  currentCallback({ status: AudioStatus.PAUSED });
+  audioPlayer?.pause();
+  currentCallback({ status: AudioPlayerState.PAUSED });
 };
 
 export const resumePlayer = async () => {
-  await audioRecorderPlayer?.resumePlayer();
-  currentCallback({ status: AudioStatus.RESUMED });
+  audioPlayer?.play();
+  currentCallback({ status: AudioPlayerState.RESUMED });
 };
 
-export const seekTo = async (position: number) => {
-  await audioRecorderPlayer?.seekToPlayer(position);
-  currentCallback({ status: AudioStatus.PLAYING });
+export const seekTo = async (positionMs: number) => {
+  await audioPlayer?.seekTo(positionMs / 1000);
+  currentCallback({ status: AudioPlayerState.PLAYING });
 };
 
 export const stopPlayer = async () => {
-  await audioRecorderPlayer?.stopPlayer();
-  audioRecorderPlayer?.removePlayBackListener();
+  audioPlayer?.pause();
+  statusSubscription?.remove();
+  statusSubscription = undefined;
   currentPosition = 0;
-  currentCallback({ status: AudioStatus.STOPPED });
-  audioRecorderPlayer = undefined;
+  currentCallback({ status: AudioPlayerState.STOPPED });
+  audioPlayer?.remove();
+  audioPlayer = undefined;
+  currentPath = undefined;
 };

@@ -711,7 +711,9 @@
   },
   "AUDIO": {
     "RECORDING_ERROR": "Error de grabación",
-    "PREPARE_ERROR": "Error al preparar el archivo de audio"
+    "PREPARE_ERROR": "Error al preparar el archivo de audio",
+    "PERMISSION_DENIED": "Permiso de micrófono denegado",
+    "PERMISSION_DENIED_MESSAGE": "Por favor, habilite el acceso al micrófono en la configuración de su dispositivo para grabar audio."
   },
   "CLIPBOARD": {
     "COPIED": "%{item} copiado al portapapeles"

@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, PermissionsAndroid, Platform, Pressable } from 'react-native';
-import AudioRecorderPlayer, {
-  RecordBackType,
-  AVEncodingOption,
-} from 'react-native-audio-recorder-player';
+import { Alert, Dimensions, Platform, Pressable } from 'react-native';
+import {
+  useAudioRecorder,
+  useAudioRecorderState,
+  requestRecordingPermissionsAsync,
+  setAudioModeAsync,
+  RecordingOptions,
+  IOSOutputFormat,
+  AudioQuality,
+} from 'expo-audio';
 import Animated from 'react-native-reanimated';
 import isUndefined from 'lodash/isUndefined';
 import * as Sentry from '@sentry/react-native';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import { ArrowUp } from 'lucide-react-native';
 import { Trash } from '@/svg-icons/common/Trash';
 
 import { snappySlideInDown, snappySlideOutDown } from '@infrastructure/animation';
 import { TEXT_INPUT_CONTAINER_HEIGHT } from '@domain/constants';
 import { useChatWindowContext } from '@infrastructure/context';
+import { useThemedStyles } from '@infrastructure/hooks';
 import i18n from '@infrastructure/i18n';
-import { SendIcon } from '@/svg-icons';
-import { tailwind, useThemeColors } from '@infrastructure/theme';
+import { useThemeColors } from '@infrastructure/theme';
 import { Icon } from '@infrastructure/ui';
+import { useScaleAnimation } from '@infrastructure/utils';
 import { PauseIcon, PlayIcon } from '../message-components';
 import { useAppDispatch, useAppSelector } from '@application/store/hooks';
 import {
@@ -27,12 +34,31 @@ import { convertAacToWav } from '@infrastructure/utils/audioConverter';
 
 const RecorderSegmentWidth = Dimensions.get('screen').width - 8 - 80 - 12;
 
-const ARPlayer = new AudioRecorderPlayer();
-
-/**
- * ! Handling Audio Server Side
- * https://github.com/jsierles/react-native-audio/issues/107
- */
+const RECORDING_OPTIONS: RecordingOptions = {
+  extension: '.m4a',
+  sampleRate: 44100,
+  numberOfChannels: 2,
+  bitRate: 128000,
+  isMeteringEnabled: false,
+  android: {
+    audioSource: 'mic',
+    outputFormat: 'aac_adts',
+    audioEncoder: 'aac',
+    sampleRate: 16000, // Match current Android config
+    extension: '.aac',
+  },
+  ios: {
+    outputFormat: IOSOutputFormat.MPEG4AAC,
+    audioQuality: AudioQuality.MAX,
+    linearPCMBitDepth: 16,
+    linearPCMIsBigEndian: false,
+    linearPCMIsFloat: false,
+  },
+  web: {
+    mimeType: 'audio/webm',
+    bitsPerSecond: 128000,
+  },
+};
 
 /**
  * The function `millisecondsToTimeString` converts a given number of milliseconds into a formatted
@@ -74,90 +100,59 @@ export const AudioRecorder = ({
   const localRecordedAudioCacheFilePaths = useAppSelector(selectLocalRecordedAudioCacheFilePaths);
   const dispatch = useAppDispatch();
   const [isSending, setIsSending] = useState(false);
-  const { colors } = useThemeColors();
+  const { colors, semanticColors } = useThemeColors();
+  const themedTailwind = useThemedStyles();
+  const { animatedStyle, handlers } = useScaleAnimation();
 
   const { setIsVoiceRecorderOpen } = useChatWindowContext();
 
   const [isAudioRecording, setIsAudioRecording] = useState(false);
 
-  const [recorderData, setRecorderData] = useState<RecordBackType | undefined>(undefined);
+  const recorder = useAudioRecorder(RECORDING_OPTIONS);
+  const recorderState = useAudioRecorderState(recorder, 500);
 
   useEffect(() => {
-    const requestAndroidPermission = async () => {
-      try {
-        const grants = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        );
-
-        if (grants === PermissionsAndroid.RESULTS.GRANTED) {
-          addRecorderListener();
-        } else {
-          return;
-        }
-      } catch (err) {
-        console.warn(err);
+    const startRecording = async () => {
+      const { granted } = await requestRecordingPermissionsAsync();
+      if (!granted) {
+        Alert.alert(i18n.t('AUDIO.PERMISSION_DENIED'), i18n.t('AUDIO.PERMISSION_DENIED_MESSAGE'));
+        deleteRecorder();
         return;
       }
+      await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: true });
+      await recorder.prepareToRecordAsync();
+      recorder.record();
+      setIsAudioRecording(true);
     };
-    const addRecorderListener = () => {
-      ARPlayer.addRecordBackListener((recordingMeta: RecordBackType) => {
-        setRecorderData(recordingMeta);
-      });
-      const dirs = ReactNativeBlobUtil.fs.dirs;
-      const path = Platform.select({
-        ios: `audio-${localRecordedAudioCacheFilePaths.length}.m4a`,
-        android: `${dirs.CacheDir}/audio-${localRecordedAudioCacheFilePaths.length}.aac`,
-      });
 
-      ARPlayer.startRecorder(path, {
-        AVFormatIDKeyIOS: AVEncodingOption.aac,
-        AVNumberOfChannelsKeyIOS: 2,
-        AVSampleRateKeyIOS: 44100,
-        AudioSourceAndroid: 1, // MIC
-        OutputFormatAndroid: 6, // AAC_ADTS
-        AudioEncoderAndroid: 3, // AAC
-        AudioSamplingRateAndroid: 16000,
-        AudioEncodingBitRateAndroid: 128000,
-        AudioChannelsAndroid: 2,
-      })
-        .then((value: string) => {
-          if (value) {
-            setIsAudioRecording(true);
-          }
-        })
-        .catch(error => {
-          Alert.alert(
-            i18n.t('AUDIO.PREPARE_ERROR'),
-            error instanceof Error ? error.message : String(error),
-          );
-          deleteRecorder();
-        });
-    };
-    if (Platform.OS === 'android') {
-      requestAndroidPermission();
-    } else {
-      addRecorderListener();
-    }
+    startRecording().catch(error => {
+      Alert.alert(
+        i18n.t('AUDIO.PREPARE_ERROR'),
+        error instanceof Error ? error.message : String(error),
+      );
+      deleteRecorder();
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const deleteRecorder = async () => {
-    await ARPlayer.stopRecorder();
+    try {
+      await recorder.stop();
+    } catch {
+      // Recorder may not be in a recording state, ignore stop errors
+    }
     setIsVoiceRecorderOpen(false);
   };
 
-  const createAudioFile = async (value: string) => {
-    const cleanPath =
-      Platform.select({
-        ios: value.replace('file://', ''),
-        android: value.replace(/\/\/+/g, '/'),
-      }) || value;
+  const createAudioFile = async (uri: string) => {
+    // expo-audio returns well-formed file:// URIs on both platforms
+    const cleanPath = uri.replace(/^file:\/\//, '');
     let finalPath = cleanPath;
     const stats = await ReactNativeBlobUtil.fs.stat(finalPath);
 
     if (Platform.OS === 'android') {
       return {
-        uri: finalPath,
+        uri: `file://${finalPath}`,
         originalPath: finalPath,
         type: 'audio/aac',
         fileName: `audio-${localRecordedAudioCacheFilePaths.length}.aac`,
@@ -188,38 +183,33 @@ export const AudioRecorder = ({
     return audioFile;
   };
 
-  const sendRecordedMessage = () => {
+  const sendRecordedMessage = async () => {
     if (isSending) return;
     setIsSending(true);
-    ARPlayer.stopRecorder()
-      .then(async value => {
-        try {
-          const audioFile = await createAudioFile(value);
-          dispatch(addNewCachePath(audioFile.originalPath));
-          setIsVoiceRecorderOpen(false);
-          onRecordingComplete(audioFile as MobileAudioFileType);
-        } catch (error) {
-          Sentry.captureException(error);
-          Alert.alert(
-            i18n.t('AUDIO.PREPARE_ERROR'),
-            error instanceof Error ? error.message : String(error),
-          );
-        }
-      })
-      .catch(e => {
-        console.error('Recording error:', e);
-        Alert.alert(i18n.t('AUDIO.RECORDING_ERROR'), e.toString());
-      })
-      .finally(() => {
-        setIsSending(false);
-      });
+    try {
+      await recorder.stop();
+      const uri = recorder.uri;
+      if (!uri) throw new Error('No recording URI');
+      const audioFile = await createAudioFile(uri);
+      dispatch(addNewCachePath(audioFile.originalPath));
+      setIsVoiceRecorderOpen(false);
+      onRecordingComplete(audioFile as MobileAudioFileType);
+    } catch (error) {
+      Sentry.captureException(error);
+      Alert.alert(
+        i18n.t('AUDIO.PREPARE_ERROR'),
+        error instanceof Error ? error.message : String(error),
+      );
+    } finally {
+      setIsSending(false);
+    }
   };
 
-  const toggleRecorder = async () => {
+  const toggleRecorder = () => {
     if (isAudioRecording) {
-      await ARPlayer.pauseRecorder();
+      recorder.pause();
     } else {
-      await ARPlayer.resumeRecorder();
+      recorder.record();
     }
 
     setIsAudioRecording(!isAudioRecording);
@@ -229,45 +219,51 @@ export const AudioRecorder = ({
     <Animated.View
       exiting={snappySlideOutDown()}
       entering={snappySlideInDown()}
-      style={tailwind.style(
+      style={themedTailwind.style(
         'px-1 flex flex-row items-center overflow-hidden',
         `max-h-[${TEXT_INPUT_CONTAINER_HEIGHT}px]`,
       )}>
       <Pressable
         onPress={deleteRecorder}
-        style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
+        style={themedTailwind.style('h-10 w-10 flex items-center justify-center')}>
         <Trash size={28} color={colors.ruby[9]} />
       </Pressable>
       <Animated.View
-        style={tailwind.style(
-          'bg-iris-9 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
+        style={themedTailwind.style(
+          'bg-slate-3 px-3 py-[7px] rounded-2xl min-h-9 flex flex-row items-center justify-between mx-1.5',
           `w-[${RecorderSegmentWidth}px]`,
         )}>
         <Pressable onPress={toggleRecorder} hitSlop={12}>
           {isAudioRecording ? (
             <Animated.View>
-              <Icon icon={<PauseIcon fill={'white'} />} />
+              <Icon icon={<PauseIcon fill={colors.slate[12]} />} />
             </Animated.View>
           ) : (
             <Animated.View>
-              <Icon icon={<PlayIcon fill={'white'} />} />
+              <Icon icon={<PlayIcon fill={colors.slate[12]} />} />
             </Animated.View>
           )}
         </Pressable>
         <Animated.Text
-          style={tailwind.style(
-            'text-xs leading-[14px] font-inter-420-20 tracking-[0.32px] text-whiteA-A12',
+          style={themedTailwind.style(
+            'text-xs leading-[14px] font-inter-420-20 tracking-[0.32px] text-slate-12',
           )}>
-          {millisecondsToTimeString(recorderData?.currentPosition)}
+          {millisecondsToTimeString(recorderState.durationMillis)}
         </Animated.Text>
       </Animated.View>
-      <Pressable
-        disabled={isSending}
-        onPress={sendRecordedMessage}
-        style={tailwind.style('h-10 w-10 flex items-center justify-center')}>
+      <Pressable disabled={isSending} onPress={sendRecordedMessage} {...handlers}>
         <Animated.View
-          style={tailwind.style('flex items-center justify-center h-7 w-7 rounded-full bg-iris-9')}>
-          <Icon icon={<SendIcon />} size={16} />
+          style={[
+            themedTailwind.style('flex items-center justify-center h-12 w-12'),
+            animatedStyle,
+          ]}>
+          <Animated.View
+            style={themedTailwind.style(
+              'flex items-center justify-center h-9 w-9 rounded-full bg-slate-12',
+              isSending && 'opacity-50',
+            )}>
+            <ArrowUp size={21} strokeWidth={2} color={semanticColors.textInverse} />
+          </Animated.View>
         </Animated.View>
       </Pressable>
     </Animated.View>

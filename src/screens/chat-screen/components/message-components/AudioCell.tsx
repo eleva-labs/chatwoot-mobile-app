@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { PlayBackType } from 'react-native-audio-recorder-player';
 import Animated, { FadeIn, FadeOut, useSharedValue } from 'react-native-reanimated';
 import { contentFadeIn } from '@infrastructure/animation';
 import Svg, { Path, Rect } from 'react-native-svg';
@@ -15,7 +14,15 @@ import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@doma
 import { getAvatarSource, messageTimestamp } from '@infrastructure/utils';
 import { Avatar, Icon, Slider } from '@infrastructure/ui/common';
 import { Spinner } from '@infrastructure/ui/spinner';
-import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
+import {
+  AudioPlayerState,
+  PlayBackData,
+  pausePlayer,
+  resumePlayer,
+  seekTo,
+  startPlayer,
+  stopPlayer,
+} from '../audio-recorder';
 import { MenuOption, MessageMenu } from '../message-menu';
 import { MESSAGE_TYPES } from '@domain/constants';
 import { DeliveryStatus } from './DeliveryStatus';
@@ -70,17 +77,17 @@ export const AudioPlayer = (props: AudioPlayerProps) => {
   const currentPosition = useSharedValue(0);
   const totalDuration = useSharedValue(0);
 
-  const audioPlayBackStatus = (args: { status: unknown; data?: PlayBackType }) => {
+  const audioPlayBackStatus = (args: { status: AudioPlayerState; data?: PlayBackData }) => {
     const playBackData = args.data;
     if (playBackData) {
       currentPosition.value = playBackData.currentPosition;
       totalDuration.value = playBackData.duration;
-      if (playBackData.currentPosition === playBackData.duration) {
-        currentPosition.value = 0;
-        totalDuration.value = 0;
-        setAudioPlaying(false);
-        dispatch(setCurrentPlayingAudioSrc(''));
-      }
+    }
+    if (args.status === AudioPlayerState.STOPPED) {
+      currentPosition.value = 0;
+      totalDuration.value = 0;
+      setAudioPlaying(false);
+      dispatch(setCurrentPlayingAudioSrc(''));
     }
   };
 

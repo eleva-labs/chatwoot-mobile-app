@@ -524,7 +524,9 @@
     "LOAD_ERROR": "Erro ao carregar o arquivo"
   },
   "AUDIO": {
-    "RECORDING_ERROR": "Erro de gravação"
+    "RECORDING_ERROR": "Erro de gravação",
+    "PERMISSION_DENIED": "Permissão de microfone negada",
+    "PERMISSION_DENIED_MESSAGE": "Por favor, habilite o acesso ao microfone nas configurações do seu dispositivo para gravar áudio."
   },
   "CLIPBOARD": {
     "COPIED": "{item} copiado para a área de transferência"
